@@ -13,8 +13,9 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Getting Started
 
-1. Run `npm install`
-2. Run `npm install axios react-router-dom`
-3. Run `npm run dev`
+1. Deploy API from [here](https://github.com/dliechty/recipe_api)
+2. Run `npm install`
+3. Run `npm install axios react-router-dom`
+4. Run `npm run dev`
 
 The react app will be running at [http://localhost:5173](http://localhost:5173)
