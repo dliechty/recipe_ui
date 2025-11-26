@@ -25,7 +25,7 @@ const RecipeList = () => {
     if (loading) {
         return (
             <Center h="50vh">
-                <Spinner size="xl" color="github.accent" />
+                <Spinner size="xl" color="vscode.accent" />
             </Center>
         );
     }
@@ -43,7 +43,7 @@ const RecipeList = () => {
                         borderRadius="lg"
                         boxShadow="md"
                         bg="bg.surface"
-                        _hover={{ boxShadow: 'lg', borderColor: 'github.accent' }}
+                        _hover={{ boxShadow: 'lg', borderColor: 'vscode.accent' }}
                         transition="all 0.2s"
                     >
                         <Heading size="md" mb={2} color="fg.default">{recipe.title}</Heading>

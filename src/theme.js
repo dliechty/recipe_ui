@@ -4,31 +4,31 @@ const config = defineConfig({
     theme: {
         tokens: {
             colors: {
-                github: {
-                    bg: { value: "#0d1117" },
-                    surface: { value: "#161b22" },
-                    border: { value: "#30363d" },
-                    text: { value: "#c9d1d9" },
-                    textMuted: { value: "#8b949e" },
-                    accent: { value: "#58a6ff" },
-                    button: { value: "#238636" },
-                    buttonHover: { value: "#2ea043" },
-                    inputBg: { value: "#0d1117" },
+                vscode: {
+                    bg: { value: "#1e1e1e" },
+                    surface: { value: "#252526" },
+                    border: { value: "#454545" },
+                    text: { value: "#d4d4d4" },
+                    textMuted: { value: "#a0a0a0" },
+                    accent: { value: "#007acc" },
+                    button: { value: "#0e639c" },
+                    buttonHover: { value: "#1177bb" },
+                    inputBg: { value: "#3c3c3c" },
                 },
             },
         },
         semanticTokens: {
             colors: {
                 bg: {
-                    canvas: { value: "{colors.github.bg}" },
-                    surface: { value: "{colors.github.surface}" },
+                    canvas: { value: "{colors.vscode.bg}" },
+                    surface: { value: "{colors.vscode.surface}" },
                 },
                 fg: {
-                    default: { value: "{colors.github.text}" },
-                    muted: { value: "{colors.github.textMuted}" },
+                    default: { value: "{colors.vscode.text}" },
+                    muted: { value: "{colors.vscode.textMuted}" },
                 },
                 border: {
-                    default: { value: "{colors.github.border}" },
+                    default: { value: "{colors.vscode.border}" },
                 },
             },
         },

@@ -22,7 +22,7 @@ function App() {
                             <HStack spacing={8} alignItems={'center'}>
                                 <Box color="fg.default" fontWeight="bold">Recipe App</Box>
                                 <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-                                    <Link as={RouterLink} to="/recipes" color="fg.default" _hover={{ textDecoration: 'none', color: 'github.accent' }}>
+                                    <Link as={RouterLink} to="/recipes" color="fg.default" _hover={{ textDecoration: 'none', color: 'vscode.accent' }}>
                                         Recipes
                                     </Link>
                                 </HStack>
@@ -30,9 +30,9 @@ function App() {
                             <Flex alignItems={'center'}>
                                 <Button
                                     variant={'solid'}
-                                    bg="github.button"
+                                    bg="vscode.button"
                                     color="white"
-                                    _hover={{ bg: 'github.buttonHover' }}
+                                    _hover={{ bg: 'vscode.buttonHover' }}
                                     size={'sm'}
                                     mr={4}
                                     onClick={handleLogout}

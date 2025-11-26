@@ -61,11 +61,11 @@ const LoginPage = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 required
-                                bg="github.inputBg"
+                                bg="vscode.inputBg"
                                 borderColor="border.default"
                                 color="fg.default"
-                                _hover={{ borderColor: 'github.accent' }}
-                                _focus={{ borderColor: 'github.accent', boxShadow: '0 0 0 1px var(--chakra-colors-github-accent)' }}
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                         </Box>
                         <Box w="full">
@@ -77,18 +77,18 @@ const LoginPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
                                 required
-                                bg="github.inputBg"
+                                bg="vscode.inputBg"
                                 borderColor="border.default"
                                 color="fg.default"
-                                _hover={{ borderColor: 'github.accent' }}
-                                _focus={{ borderColor: 'github.accent', boxShadow: '0 0 0 1px var(--chakra-colors-github-accent)' }}
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                         </Box>
                         <Button
                             type="submit"
-                            bg="github.button"
+                            bg="vscode.button"
                             color="white"
-                            _hover={{ bg: 'github.buttonHover' }}
+                            _hover={{ bg: 'vscode.buttonHover' }}
                             width="full"
                             mt={4}
                         >
