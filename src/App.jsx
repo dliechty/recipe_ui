@@ -15,14 +15,14 @@ function App() {
 
     return (
         <Router>
-            <Box minH="100vh">
+            <Box minH="100vh" bg="bg.canvas" color="fg.default">
                 {token && (
-                    <Box bg="gray.800" px={4} py={3}>
+                    <Box bg="bg.surface" px={4} py={3} borderBottomWidth={1} borderColor="border.default">
                         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                             <HStack spacing={8} alignItems={'center'}>
-                                <Box color="white" fontWeight="bold">Recipe App</Box>
+                                <Box color="fg.default" fontWeight="bold">Recipe App</Box>
                                 <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-                                    <Link as={RouterLink} to="/recipes" color="white" _hover={{ textDecoration: 'none', color: 'gray.300' }}>
+                                    <Link as={RouterLink} to="/recipes" color="fg.default" _hover={{ textDecoration: 'none', color: 'github.accent' }}>
                                         Recipes
                                     </Link>
                                 </HStack>
@@ -30,7 +30,9 @@ function App() {
                             <Flex alignItems={'center'}>
                                 <Button
                                     variant={'solid'}
-                                    colorScheme={'teal'}
+                                    bg="github.button"
+                                    color="white"
+                                    _hover={{ bg: 'github.buttonHover' }}
                                     size={'sm'}
                                     mr={4}
                                     onClick={handleLogout}

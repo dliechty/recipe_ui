@@ -31,28 +31,29 @@ const LoginPage = () => {
     return (
         <Container maxW="container.sm" centerContent py={10}>
             <VStack spacing={8} w="full">
-                <Heading as="h1" size="xl" textAlign="center">
+                <Heading as="h1" size="xl" textAlign="center" color="fg.default">
                     Recipes and Meal Planning
                 </Heading>
                 <Box
                     w="full"
                     p={8}
                     borderWidth={1}
+                    borderColor="border.default"
                     borderRadius="lg"
                     boxShadow="lg"
-                    bg="gray.700"
+                    bg="bg.surface"
                 >
                     <VStack spacing={4} as="form" onSubmit={handleSubmit}>
-                        <Heading as="h2" size="md" mb={4}>
+                        <Heading as="h2" size="md" mb={4} color="fg.default">
                             Welcome Back
                         </Heading>
                         {error && (
-                            <Box w="full" p={3} bg="red.500" color="white" borderRadius="md">
+                            <Box w="full" p={3} bg="red.900" color="white" borderRadius="md" borderColor="red.500" borderWidth={1}>
                                 <Text fontSize="sm">{error}</Text>
                             </Box>
                         )}
                         <Box w="full">
-                            <Text as="label" htmlFor="email" mb={2} display="block">Email</Text>
+                            <Text as="label" htmlFor="email" mb={2} display="block" color="fg.default">Email</Text>
                             <Input
                                 id="email"
                                 type="email"
@@ -60,10 +61,15 @@ const LoginPage = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 required
+                                bg="github.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'github.accent' }}
+                                _focus={{ borderColor: 'github.accent', boxShadow: '0 0 0 1px var(--chakra-colors-github-accent)' }}
                             />
                         </Box>
                         <Box w="full">
-                            <Text as="label" htmlFor="password" mb={2} display="block">Password</Text>
+                            <Text as="label" htmlFor="password" mb={2} display="block" color="fg.default">Password</Text>
                             <Input
                                 id="password"
                                 type="password"
@@ -71,11 +77,18 @@ const LoginPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
                                 required
+                                bg="github.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'github.accent' }}
+                                _focus={{ borderColor: 'github.accent', boxShadow: '0 0 0 1px var(--chakra-colors-github-accent)' }}
                             />
                         </Box>
                         <Button
                             type="submit"
-                            colorScheme="teal"
+                            bg="github.button"
+                            color="white"
+                            _hover={{ bg: 'github.buttonHover' }}
                             width="full"
                             mt={4}
                         >

@@ -25,27 +25,29 @@ const RecipeList = () => {
     if (loading) {
         return (
             <Center h="50vh">
-                <Spinner size="xl" />
+                <Spinner size="xl" color="github.accent" />
             </Center>
         );
     }
 
     return (
         <Container maxW="container.xl" py={8}>
-            <Heading mb={8}>All Recipes</Heading>
+            <Heading mb={8} color="fg.default">All Recipes</Heading>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
                 {recipes.map((recipe) => (
                     <Box
                         key={recipe.id}
                         p={6}
                         borderWidth={1}
+                        borderColor="border.default"
                         borderRadius="lg"
                         boxShadow="md"
-                        _hover={{ boxShadow: 'lg' }}
+                        bg="bg.surface"
+                        _hover={{ boxShadow: 'lg', borderColor: 'github.accent' }}
                         transition="all 0.2s"
                     >
-                        <Heading size="md" mb={2}>{recipe.title}</Heading>
-                        <Text color="gray.600">{recipe.description}</Text>
+                        <Heading size="md" mb={2} color="fg.default">{recipe.title}</Heading>
+                        <Text color="fg.muted">{recipe.description}</Text>
                     </Box>
                 ))}
             </SimpleGrid>

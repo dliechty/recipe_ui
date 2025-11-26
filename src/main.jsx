@@ -1,10 +1,9 @@
-import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-
-const system = createSystem(defaultConfig)
+import { system } from './theme'
 
 async function enableMocking() {
   if (process.env.NODE_ENV !== 'development') {
