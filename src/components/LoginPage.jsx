@@ -19,7 +19,7 @@ const LoginPage = () => {
 
     return (
         <div className="login-container">
-            <h1 className="app-title">Culinary Canvas</h1>
+            <h1 className="app-title">Recipes and Meal Planning</h1>
             <div className="login-card">
                 <h2>Welcome Back</h2>
                 <form onSubmit={handleSubmit}>
