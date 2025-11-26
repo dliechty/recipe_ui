@@ -28,7 +28,7 @@ describe('LoginPage', () => {
         // Verify redirection (or token storage)
         await waitFor(() => {
             expect(localStorage.getItem('token')).toBe('fake-jwt-token');
-            expect(window.location.href).toBe('/');
+            expect(window.location.href).toBe('/recipes');
         });
     });
 });

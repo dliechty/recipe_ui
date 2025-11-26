@@ -10,7 +10,7 @@ const LoginPage = () => {
         try {
             const response = await login(email, password);
             localStorage.setItem('token', response.data.access_token);
-            window.location.href = '/';
+            window.location.href = '/recipes';
         } catch (error) {
             console.error("Login failed:", error);
             alert("Login failed!");
