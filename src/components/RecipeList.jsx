@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container } from '@chakra-ui/react';
 import { getRecipes } from '../services/api';
 
 const RecipeList = () => {
@@ -21,20 +22,34 @@ const RecipeList = () => {
         fetchRecipes();
     }, []);
 
-    if (loading) return <p>Loading recipes...</p>;
+    if (loading) {
+        return (
+            <Center h="50vh">
+                <Spinner size="xl" />
+            </Center>
+        );
+    }
 
     return (
-        <div>
-            <h2>All Recipes</h2>
-            <div className="recipe-grid">
+        <Container maxW="container.xl" py={8}>
+            <Heading mb={8}>All Recipes</Heading>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
                 {recipes.map((recipe) => (
-                    <div key={recipe.id} className="recipe-card">
-                        <h3>{recipe.title}</h3>
-                        <p>{recipe.description}</p>
-                    </div>
+                    <Box
+                        key={recipe.id}
+                        p={6}
+                        borderWidth={1}
+                        borderRadius="lg"
+                        boxShadow="md"
+                        _hover={{ boxShadow: 'lg' }}
+                        transition="all 0.2s"
+                    >
+                        <Heading size="md" mb={2}>{recipe.title}</Heading>
+                        <Text color="gray.600">{recipe.description}</Text>
+                    </Box>
                 ))}
-            </div>
-        </div>
+            </SimpleGrid>
+        </Container>
     );
 };
 

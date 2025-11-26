@@ -1,7 +1,10 @@
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
+
+const system = createSystem(defaultConfig)
 
 async function enableMocking() {
   if (process.env.NODE_ENV !== 'development') {
@@ -18,7 +21,9 @@ async function enableMocking() {
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-      <App />
+      <ChakraProvider value={system}>
+        <App />
+      </ChakraProvider>
     </React.StrictMode>,
   )
 })

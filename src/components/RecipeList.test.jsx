@@ -1,14 +1,18 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import RecipeList from './RecipeList';
 import { describe, it, expect } from 'vitest';
 
+const system = createSystem(defaultConfig);
+
 describe('RecipeList', () => {
     it('renders recipes from API', async () => {
-        render(<RecipeList />);
-
-        // Check for loading state initially
-        expect(screen.getByText(/loading recipes/i)).toBeInTheDocument();
+        render(
+            <ChakraProvider value={system}>
+                <RecipeList />
+            </ChakraProvider>
+        );
 
         // Wait for the recipes to be displayed
         await waitFor(() => {

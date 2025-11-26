@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link as RouterLink, Navigate } from 'react-router-dom';
+import { Box, Flex, Button, HStack, Link } from '@chakra-ui/react';
 import RecipeList from './components/RecipeList';
 import LoginPage from './components/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -14,28 +15,46 @@ function App() {
 
     return (
         <Router>
-            <div>
+            <Box minH="100vh">
                 {token && (
-                    <nav>
-                        <ul>
-                            <li><Link to="/recipes">Recipes</Link></li>
-                            <li><button onClick={handleLogout}>Logout</button></li>
-                        </ul>
-                    </nav>
+                    <Box bg="gray.800" px={4} py={3}>
+                        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+                            <HStack spacing={8} alignItems={'center'}>
+                                <Box color="white" fontWeight="bold">Recipe App</Box>
+                                <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+                                    <Link as={RouterLink} to="/recipes" color="white" _hover={{ textDecoration: 'none', color: 'gray.300' }}>
+                                        Recipes
+                                    </Link>
+                                </HStack>
+                            </HStack>
+                            <Flex alignItems={'center'}>
+                                <Button
+                                    variant={'solid'}
+                                    colorScheme={'teal'}
+                                    size={'sm'}
+                                    mr={4}
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </Button>
+                            </Flex>
+                        </Flex>
+                    </Box>
                 )}
-                {token && <hr />}
-                <Routes>
-                    <Route path="/" element={token ? <Navigate to="/recipes" /> : <LoginPage />} />
-                    <Route
-                        path="/recipes"
-                        element={
-                            <ProtectedRoute>
-                                <RecipeList />
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </div>
+                <Box p={4}>
+                    <Routes>
+                        <Route path="/" element={token ? <Navigate to="/recipes" /> : <LoginPage />} />
+                        <Route
+                            path="/recipes"
+                            element={
+                                <ProtectedRoute>
+                                    <RecipeList />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </Box>
+            </Box>
         </Router>
     );
 }

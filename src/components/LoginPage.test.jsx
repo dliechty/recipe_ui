@@ -1,7 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import LoginPage from './LoginPage';
 import { describe, it, expect, vi } from 'vitest';
+
+const system = createSystem(defaultConfig);
 
 describe('LoginPage', () => {
     it('allows user to login', async () => {
@@ -12,7 +15,11 @@ describe('LoginPage', () => {
             writable: true,
         });
 
-        render(<LoginPage />);
+        render(
+            <ChakraProvider value={system}>
+                <LoginPage />
+            </ChakraProvider>
+        );
 
         // Fill in the form
         fireEvent.change(screen.getByLabelText(/email/i), {
