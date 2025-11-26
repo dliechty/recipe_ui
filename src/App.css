@@ -91,29 +91,53 @@ hr {
     font-size: 0.95rem;
 }
 
-/* Login Page */
+/* --- Login Page --- */
 .login-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 60vh;
+    min-height: 100vh;
+    padding: 2rem;
+    /* Background is already set on body, but we can ensure it covers here */
+}
+
+.app-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+    background: linear-gradient(45deg, var(--accent-color), #ff9a9e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .login-card {
-    background: var(--surface-color);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
     max-width: 400px;
-    box-shadow: var(--shadow-md);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(233, 69, 96, 0.2);
+    border-color: var(--accent-color);
 }
 
 .login-card h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    font-weight: 600;
 }
 
 .form-group {
@@ -124,39 +148,45 @@ hr {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-secondary);
     font-size: 0.9rem;
+    color: #a0a0a0;
 }
 
 .form-group input {
     width: 100%;
-    padding: 0.8rem;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--text-primary);
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, background 0.3s ease;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .login-btn {
     width: 100%;
-    padding: 1rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: none;
     background: var(--accent-color);
     color: white;
-    border: none;
-    border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
-    margin-top: 1rem;
-    transition: background 0.3s ease;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-btn:hover {
-    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
 }

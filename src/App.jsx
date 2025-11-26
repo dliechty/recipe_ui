@@ -15,19 +15,15 @@ function App() {
     return (
         <Router>
             <div>
-                <nav>
-                    <ul>
-                        {token ? (
-                            <>
-                                <li><Link to="/recipes">Recipes</Link></li>
-                                <li><button onClick={handleLogout}>Logout</button></li>
-                            </>
-                        ) : (
-                            <li><Link to="/">Login</Link></li>
-                        )}
-                    </ul>
-                </nav>
-                <hr />
+                {token && (
+                    <nav>
+                        <ul>
+                            <li><Link to="/recipes">Recipes</Link></li>
+                            <li><button onClick={handleLogout}>Logout</button></li>
+                        </ul>
+                    </nav>
+                )}
+                {token && <hr />}
                 <Routes>
                     <Route path="/" element={token ? <Navigate to="/recipes" /> : <LoginPage />} />
                     <Route
