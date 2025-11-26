@@ -32,5 +32,10 @@
     "msw": "^2.12.3",
     "vite": "^7.0.0",
     "vitest": "^4.0.14"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

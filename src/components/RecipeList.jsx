@@ -26,14 +26,14 @@ const RecipeList = () => {
     return (
         <div>
             <h2>All Recipes</h2>
-            <ul>
+            <div className="recipe-grid">
                 {recipes.map((recipe) => (
-                    <li key={recipe.id}>
+                    <div key={recipe.id} className="recipe-card">
                         <h3>{recipe.title}</h3>
                         <p>{recipe.description}</p>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

@@ -4,45 +4,47 @@ import { login } from '../services/api';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
         try {
             const response = await login(email, password);
-            // The token schema is { access_token: string, token_type: "bearer" }
             localStorage.setItem('token', response.data.access_token);
-            window.location.href = '/'; // Redirect to home on successful login
-        } catch (err) {
-            setError('Incorrect email or password.'); // Error from api/auth.py
-            console.error(err);
+            window.location.href = '/';
+        } catch (error) {
+            console.error("Login failed:", error);
+            alert("Login failed!");
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    required
-                />
-                <br />
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    required
-                />
-                <br />
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit">Login</button>
-            </form>
+        <div className="login-container">
+            <div className="login-card">
+                <h2>Welcome Back</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            placeholder="Enter your email"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            placeholder="Enter your password"
+                        />
+                    </div>
+                    <button type="submit" className="login-btn">Login</button>
+                </form>
+            </div>
         </div>
     );
 };
