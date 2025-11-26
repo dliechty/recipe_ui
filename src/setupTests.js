@@ -1,6 +1,12 @@
 import '@testing-library/jest-dom';
 import { beforeAll, afterEach, afterAll } from 'vitest';
 import { server } from './mocks/server';
+import { fetch, Headers, Request, Response } from 'undici';
+
+global.fetch = fetch;
+global.Headers = Headers;
+global.Request = Request;
+global.Response = Response;
 
 // Establish API mocking before all tests.
 beforeAll(() => server.listen());

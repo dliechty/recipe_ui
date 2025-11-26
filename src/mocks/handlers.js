@@ -22,4 +22,13 @@ export const handlers = [
             },
         ]);
     }),
+
+    // Intercept "POST /auth/token" requests...
+    http.post('http://localhost:8000/auth/token', async () => {
+        // Simulate a successful login
+        return HttpResponse.json({
+            access_token: 'fake-jwt-token',
+            token_type: 'bearer',
+        });
+    }),
 ];

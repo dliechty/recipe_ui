@@ -22,13 +22,13 @@ export const registerUser = (email, password) => {
 // Login to get an access token
 // Corresponds to POST /auth/token in api/auth.py
 export const login = (email, password) => {
-    const formData = new FormData();
-    formData.append('username', email);
-    formData.append('password', password);
+    const params = new URLSearchParams();
+    params.append('username', email);
+    params.append('password', password);
 
-    return api.post('/auth/token', formData, {
+    return api.post('/auth/token', params, {
         headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/x-www-form-urlencoded',
         },
     });
 };
