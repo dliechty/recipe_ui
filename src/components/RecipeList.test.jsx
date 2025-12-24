@@ -2,7 +2,11 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import RecipeList from './RecipeList';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+vi.mock('../context/AuthContext', () => ({
+    useAuth: () => ({ token: 'mock-token' }),
+}));
 
 const system = createSystem(defaultConfig);
 

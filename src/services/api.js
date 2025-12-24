@@ -38,11 +38,23 @@ export const login = (email, password) => {
 
 // Get all recipes
 // Corresponds to GET /recipes/ in api/recipes.py
-export const getRecipes = () => api.get('/recipes/');
+export const getRecipes = (token) => {
+    return api.get('/recipes/', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 // Get a single recipe by ID
 // Corresponds to GET /recipes/{recipe_id} in api/recipes.py
-export const getRecipeById = (id) => api.get(`/recipes/${id}`);
+export const getRecipeById = (id, token) => {
+    return api.get(`/recipes/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
 
 // Create a new recipe (requires token)
 // Corresponds to POST /recipes/ in api/recipes.py

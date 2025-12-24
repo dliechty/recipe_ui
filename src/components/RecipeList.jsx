@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container } from '@chakra-ui/react';
 import { getRecipes } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const RecipeList = () => {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await getRecipes();
+                const response = await getRecipes(token);
                 // The Recipe schema includes id, title, description, etc.
                 setRecipes(response.data);
             } catch (error) {
@@ -20,7 +22,7 @@ const RecipeList = () => {
         };
 
         fetchRecipes();
-    }, []);
+    }, [token]);
 
     if (loading) {
         return (
