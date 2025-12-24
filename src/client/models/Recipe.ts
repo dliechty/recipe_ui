@@ -2,11 +2,20 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Instruction } from './Instruction';
+import type { RecipeIngredient } from './RecipeIngredient';
+import type { Tag } from './Tag';
 export type Recipe = {
-    id?: number;
-    title?: string;
-    description?: string;
-    ingredients?: Array<string>;
-    steps?: Array<string>;
+    name: string;
+    description?: (string | null);
+    prep_time_minutes: number;
+    cook_time_minutes: number;
+    servings: number;
+    source?: (string | null);
+    id: number;
+    owner_id: number;
+    ingredients?: Array<RecipeIngredient>;
+    instructions?: Array<Instruction>;
+    tags?: Array<Tag>;
 };
 
