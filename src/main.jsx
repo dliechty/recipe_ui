@@ -1,4 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react'
+import { AuthProvider } from './context/AuthContext'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
@@ -21,7 +22,9 @@ enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
       <ChakraProvider value={system}>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </ChakraProvider>
     </React.StrictMode>,
   )

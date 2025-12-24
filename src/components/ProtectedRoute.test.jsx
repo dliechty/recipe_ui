@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
+import { AuthProvider } from '../context/AuthContext';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 describe('ProtectedRoute', () => {
@@ -11,19 +12,21 @@ describe('ProtectedRoute', () => {
 
     it('redirects to login if no token', () => {
         render(
-            <MemoryRouter initialEntries={['/protected']}>
-                <Routes>
-                    <Route path="/" element={<div>Login Page</div>} />
-                    <Route
-                        path="/protected"
-                        element={
-                            <ProtectedRoute>
-                                <div>Protected Content</div>
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
+            <AuthProvider>
+                <MemoryRouter initialEntries={['/protected']}>
+                    <Routes>
+                        <Route path="/" element={<div>Login Page</div>} />
+                        <Route
+                            path="/protected"
+                            element={
+                                <ProtectedRoute>
+                                    <div>Protected Content</div>
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </MemoryRouter>
+            </AuthProvider>
         );
 
         expect(screen.getByText('Login Page')).toBeInTheDocument();
@@ -34,18 +37,20 @@ describe('ProtectedRoute', () => {
         localStorage.setItem('token', 'fake-token');
 
         render(
-            <MemoryRouter initialEntries={['/protected']}>
-                <Routes>
-                    <Route
-                        path="/protected"
-                        element={
-                            <ProtectedRoute>
-                                <div>Protected Content</div>
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
+            <AuthProvider>
+                <MemoryRouter initialEntries={['/protected']}>
+                    <Routes>
+                        <Route
+                            path="/protected"
+                            element={
+                                <ProtectedRoute>
+                                    <div>Protected Content</div>
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </MemoryRouter>
+            </AuthProvider>
         );
 
         expect(screen.getByText('Protected Content')).toBeInTheDocument();

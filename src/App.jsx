@@ -4,19 +4,15 @@ import { Box, Flex, Button, HStack, Link } from '@chakra-ui/react';
 import RecipeList from './components/RecipeList';
 import LoginPage from './components/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './context/AuthContext';
 
 function App() {
-    const token = localStorage.getItem('token');
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.href = '/';
-    };
+    const { isAuthenticated, logout } = useAuth();
 
     return (
         <Router>
             <Box minH="100vh" bg="bg.canvas" color="fg.default">
-                {token && (
+                {isAuthenticated && (
                     <Box bg="bg.surface" px={4} py={3} borderBottomWidth={1} borderColor="border.default">
                         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                             <HStack spacing={8} alignItems={'center'}>
@@ -35,7 +31,7 @@ function App() {
                                     _hover={{ bg: 'vscode.buttonHover' }}
                                     size={'sm'}
                                     mr={4}
-                                    onClick={handleLogout}
+                                    onClick={logout}
                                 >
                                     Logout
                                 </Button>
@@ -45,7 +41,7 @@ function App() {
                 )}
                 <Box p={4}>
                     <Routes>
-                        <Route path="/" element={token ? <Navigate to="/recipes" /> : <LoginPage />} />
+                        <Route path="/" element={isAuthenticated ? <Navigate to="/recipes" /> : <LoginPage />} />
                         <Route
                             path="/recipes"
                             element={

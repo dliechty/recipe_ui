@@ -8,20 +8,24 @@ import {
     VStack,
     Text
 } from '@chakra-ui/react';
-import { login } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { login as apiLogin } from '../services/api';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         try {
-            const response = await login(email, password);
-            localStorage.setItem('token', response.data.access_token);
-            window.location.href = '/recipes';
+            const response = await apiLogin(email, password);
+            login(response.data.access_token);
+            navigate('/recipes');
         } catch (err) {
             console.error("Login failed:", err);
             setError("Login failed. Please check your credentials and try again.");
