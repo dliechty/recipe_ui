@@ -8,6 +8,9 @@ global.Headers = Headers;
 global.Request = Request;
 global.Response = Response;
 
+import { OpenAPI } from './client';
+OpenAPI.BASE = 'http://localhost:8000';
+
 // Establish API mocking before all tests.
 beforeAll(() => server.listen());
 

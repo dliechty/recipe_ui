@@ -1,5 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { AuthProvider } from './context/AuthContext'
+import { OpenAPI } from './client'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
@@ -17,6 +18,9 @@ async function enableMocking() {
   // once the Service Worker is up and ready to intercept requests.
   return worker.start()
 }
+
+
+OpenAPI.BASE = 'http://localhost:8000';
 
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')).render(

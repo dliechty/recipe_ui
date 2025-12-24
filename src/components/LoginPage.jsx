@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { login as apiLogin } from '../services/api';
+import { DefaultService } from '../client';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -23,8 +23,11 @@ const LoginPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await apiLogin(email, password);
-            login(response.data.access_token);
+            const response = await DefaultService.login({
+                username: email,
+                password: password
+            });
+            login(response.access_token);
             navigate('/recipes');
         } catch (err) {
             console.error("Login failed:", err);

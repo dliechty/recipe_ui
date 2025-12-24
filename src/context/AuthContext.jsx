@@ -1,9 +1,14 @@
+import { OpenAPI } from '../client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token'));
+
+    useEffect(() => {
+        OpenAPI.TOKEN = token;
+    }, [token]);
 
     const login = (newToken) => {
         localStorage.setItem('token', newToken);

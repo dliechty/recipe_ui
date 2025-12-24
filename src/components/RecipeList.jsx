@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container } from '@chakra-ui/react';
-import { getRecipes } from '../services/api';
+import { DefaultService } from '../client';
 import { useAuth } from '../context/AuthContext';
 
 const RecipeList = () => {
@@ -11,9 +11,9 @@ const RecipeList = () => {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await getRecipes(token);
+                const response = await DefaultService.getRecipes();
                 // The Recipe schema includes id, title, description, etc.
-                setRecipes(response.data);
+                setRecipes(response);
             } catch (error) {
                 console.error("Failed to fetch recipes:", error);
             } finally {
