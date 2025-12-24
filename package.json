@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "api:sync": "openapi --input ./openapi.json --output ./src/client --client axios"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.30.0",
@@ -35,6 +36,8 @@
     "globals": "^16.2.0",
     "jsdom": "^27.2.0",
     "msw": "^2.12.3",
+    "openapi-typescript-codegen": "^0.30.0",
+    "typescript": "^5.9.3",
     "vite": "^7.0.0",
     "vitest": "^4.0.14"
   },
