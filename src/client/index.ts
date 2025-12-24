@@ -7,7 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
-export type { Body_login_for_access_token_auth_token_post } from './models/Body_login_for_access_token_auth_token_post';
+export type { Body_login_auth_token_post } from './models/Body_login_auth_token_post';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { Ingredient } from './models/Ingredient';
 export type { Instruction } from './models/Instruction';

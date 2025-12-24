@@ -23,7 +23,7 @@ const LoginPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await AuthenticationService.loginForAccessTokenAuthTokenPost({
+            const response = await AuthenticationService.loginAuthTokenPost({
                 username: email,
                 password: password
             });

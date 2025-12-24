@@ -14,7 +14,8 @@ export const handlers = [
                 servings: 4,
                 ingredients: [],
                 instructions: [],
-                tags: [{ id: 1, name: 'Italian' }, { id: 2, name: 'Pasta' }]
+                tags: [{ id: 1, name: 'Italian' }, { id: 2, name: 'Pasta' }],
+                owner_id: 1
             },
             {
                 id: 2,
@@ -25,7 +26,8 @@ export const handlers = [
                 servings: 6,
                 ingredients: [],
                 instructions: [],
-                tags: []
+                tags: [],
+                owner_id: 1
             },
             {
                 id: 3,
@@ -36,7 +38,8 @@ export const handlers = [
                 servings: 1,
                 ingredients: [],
                 instructions: [],
-                tags: []
+                tags: [],
+                owner_id: 1
             },
         ]);
     }),

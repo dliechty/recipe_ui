@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Body_login_for_access_token_auth_token_post } from '../models/Body_login_for_access_token_auth_token_post';
+import type { Body_login_auth_token_post } from '../models/Body_login_auth_token_post';
 import type { Token } from '../models/Token';
 import type { User } from '../models/User';
 import type { UserCreate } from '../models/UserCreate';
@@ -31,14 +31,14 @@ export class AuthenticationService {
         });
     }
     /**
-     * Login For Access Token
+     * Login
      * Endpoint to log in a user and get an access token.
      * @param formData
      * @returns Token Successful Response
      * @throws ApiError
      */
-    public static loginForAccessTokenAuthTokenPost(
-        formData: Body_login_for_access_token_auth_token_post,
+    public static loginAuthTokenPost(
+        formData: Body_login_auth_token_post,
     ): CancelablePromise<Token> {
         return __request(OpenAPI, {
             method: 'POST',
