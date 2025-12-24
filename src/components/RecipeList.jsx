@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container } from '@chakra-ui/react';
-import { DefaultService } from '../client';
+import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge } from '@chakra-ui/react';
+import { RecipesService } from '../client';
 import { useAuth } from '../context/AuthContext';
 
 const RecipeList = () => {
@@ -11,8 +11,7 @@ const RecipeList = () => {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await DefaultService.getRecipes();
-                // The Recipe schema includes id, title, description, etc.
+                const response = await RecipesService.readRecipesRecipesGet();
                 setRecipes(response);
             } catch (error) {
                 console.error("Failed to fetch recipes:", error);
@@ -48,8 +47,18 @@ const RecipeList = () => {
                         _hover={{ boxShadow: 'lg', borderColor: 'vscode.accent' }}
                         transition="all 0.2s"
                     >
-                        <Heading size="md" mb={2} color="fg.default">{recipe.title}</Heading>
-                        <Text color="fg.muted">{recipe.description}</Text>
+                        <Heading size="md" mb={2} color="fg.default">{recipe.name}</Heading>
+                        <Text color="fg.muted" mb={4}>{recipe.description}</Text>
+                        <HStack spacing={2} mb={2}>
+                            <Badge colorScheme="green" variant="subtle">Prep: {recipe.prep_time_minutes}m</Badge>
+                            <Badge colorScheme="orange" variant="subtle">Cook: {recipe.cook_time_minutes}m</Badge>
+                            <Badge colorScheme="blue" variant="subtle">Servings: {recipe.servings}</Badge>
+                        </HStack>
+                        <HStack spacing={2}>
+                            {recipe.tags.map((tag) => (
+                                <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
+                            ))}
+                        </HStack>
                     </Box>
                 ))}
             </SimpleGrid>

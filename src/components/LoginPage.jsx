@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { DefaultService } from '../client';
+import { AuthenticationService } from '../client';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const LoginPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await DefaultService.login({
+            const response = await AuthenticationService.loginForAccessTokenAuthTokenPost({
                 username: email,
                 password: password
             });

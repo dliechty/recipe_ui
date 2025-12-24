@@ -7,18 +7,36 @@ export const handlers = [
         return HttpResponse.json([
             {
                 id: 1,
-                title: 'Spaghetti Carbonara',
+                name: 'Spaghetti Carbonara',
                 description: 'A classic Italian pasta dish.',
+                prep_time_minutes: 15,
+                cook_time_minutes: 15,
+                servings: 4,
+                ingredients: [],
+                instructions: [],
+                tags: [{ id: 1, name: 'Italian' }, { id: 2, name: 'Pasta' }]
             },
             {
                 id: 2,
-                title: 'Chicken Curry',
+                name: 'Chicken Curry',
                 description: 'Spicy and delicious chicken curry.',
+                prep_time_minutes: 20,
+                cook_time_minutes: 45,
+                servings: 6,
+                ingredients: [],
+                instructions: [],
+                tags: []
             },
             {
                 id: 3,
-                title: 'Avocado Toast',
+                name: 'Avocado Toast',
                 description: 'Healthy breakfast option.',
+                prep_time_minutes: 5,
+                cook_time_minutes: 0,
+                servings: 1,
+                ingredients: [],
+                instructions: [],
+                tags: []
             },
         ]);
     }),
