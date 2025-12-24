@@ -1,21 +1,73 @@
-# React + Vite
+# Recipe UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for managing recipes and meal planning, built with React and Vite.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Recipe UI is a frontend application that allows users to view, manage, and plan their meals. It connects to a backend API to retrieve recipe data and handles user authentication and session management.
 
-## Expanding the ESLint configuration
+## Tech Stack & Components
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project is built using the following key technologies and libraries:
+
+- **Core**: [React](https://react.dev/) + [Vite](https://vitejs.dev/) - For a fast and efficient development experience.
+- **UI Framework**: [Chakra UI](https://chakra-ui.com/) - A simple, modular, and accessible component library.
+- **Routing**: [React Router](https://reactrouter.com/) - Client-side routing.
+- **HTTP Client**: [Axios](https://axios-http.com/) - For making API requests.
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) - For production-ready animations.
+- **API Client Generation**: [OpenAPI TypeScript Codegen](https://github.com/ferdikoomen/openapi-typescript-codegen) - Generates a strongly-typed client from the OpenAPI specification.
 
 ## Getting Started
 
-1. Deploy API from [here](https://github.com/dliechty/recipe_api)
-2. Run `npm install`
-3. Run `npm install axios react-router-dom`
-4. Run `npm run dev`
+### Prerequisites
 
-The react app will be running at [http://localhost:5173](http://localhost:5173)
+- Node.js (v18 or higher recommended)
+- npm
+
+### Installation
+
+1.  Clone the repository.
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+### Running the Application
+
+To start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`.
+
+## Testing
+
+This project uses [Vitest](https://vitest.dev/) for unit and component testing, along with [MSW (Mock Service Worker)](https://mswjs.io/) to mock API requests.
+
+To run the tests:
+
+```bash
+npm test
+```
+
+This will run all tests in the project.
+
+## Updating the API Client
+
+The application uses an auto-generated client to interact with the backend API. This ensures that the frontend code is always in sync with the backend specification.
+
+The client is generated from an `openapi.json` file located in the root of the project.
+
+### How to Update
+
+1.  **Obtain the latest `openapi.json`**: Ensure you have the latest OpenAPI specification file in the project root.
+2.  **Run the sync command**:
+    ```bash
+    npm run api:sync
+    ```
+
+This command runs `openapi-typescript-codegen` to regenerate the client code in `src/client`. It uses the `axios` client and types defined in the spec.
+
+**Note**: Do not modify files in `src/client` manually, as they will be overwritten the next time the sync command is run.
