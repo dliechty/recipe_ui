@@ -71,3 +71,7 @@ The client is generated from an `openapi.json` file located in the root of the p
 This command runs `openapi-typescript-codegen` to regenerate the client code in `src/client`. It uses the `axios` client and types defined in the spec.
 
 **Note**: Do not modify files in `src/client` manually, as they will be overwritten the next time the sync command is run.
+
+## Deployment
+
+For instructions on how to deploy this application using Docker, please refer to the [Deployment Guide](./deployment_guide.md).

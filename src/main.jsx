@@ -20,7 +20,7 @@ async function enableMocking() {
 }
 
 
-OpenAPI.BASE = 'http://localhost:8000';
+OpenAPI.BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')).render(
