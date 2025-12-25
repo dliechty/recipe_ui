@@ -10,7 +10,7 @@ function App() {
     const { isAuthenticated, logout } = useAuth();
 
     return (
-        <Router basename={import.meta.env.BASE_URL}>
+        <Router basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
             <Layout>
                 <Routes>
                     <Route path="/" element={isAuthenticated ? <Navigate to="/recipes" /> : <LoginPage />} />
