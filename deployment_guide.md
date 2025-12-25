@@ -52,3 +52,24 @@ If you prefer to run it locally without Docker:
     ```bash
     npm run preview
     ```
+
+## Troubleshooting
+
+### Mixed Content Error (HTTPS vs HTTP)
+
+If you deploy the application with SSL (HTTPS) but configure the `VITE_API_URL` to use `http://`, you will encounter a "Mixed Content" error in the browser because secure pages cannot make insecure requests.
+
+**Symptoms:**
+- Error: `Mixed Content: The page at 'https://...' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://...'`
+- Login or API calls fail silently or show network errors.
+
+**Solution:**
+1.  **Expose your API via HTTPS:**
+    - If using Nginx Proxy Manager, create a Proxy Host for your API (e.g., `api.yourdomain.com`).
+    - Ensure it points to your backend container/service.
+2.  **Rebuild the Frontend:**
+    - Rebuild the Docker image with the secure HTTPS URL.
+    - Example: `docker build --build-arg VITE_API_URL=https://api.yourdomain.com -t recipe-ui .`
+3.  **Do NOT use `host.docker.internal`:**
+    - `host.docker.internal` is only accessible from within the local machine or Docker network, NOT from a user's browser over the internet.
+    - Always use the public domain name for the API URL when deploying.
