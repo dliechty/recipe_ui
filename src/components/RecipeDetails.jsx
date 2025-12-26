@@ -64,11 +64,11 @@ const RecipeDetails = () => {
 
     return (
         <Container maxW="container.xl" py={8}>
-            <Button mb={6} onClick={() => navigate('/recipes')} variant="ghost">
+            <Button mb={6} onClick={() => navigate('/recipes')} variant="ghost" className="no-print">
                 &larr; Back to Recipes
             </Button>
 
-            <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default">
+            <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.name}</Heading>
 
                 <HStack spacing={2} mb={6}>

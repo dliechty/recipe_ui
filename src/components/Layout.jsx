@@ -32,7 +32,7 @@ const Layout = ({ children }) => {
     return (
         <Box minH="100vh" bg="bg.canvas" color="fg.default">
             {isAuthenticated && (
-                <Box bg="bg.surface" px={4} py={3} borderBottomWidth={1} borderColor="border.default">
+                <Box bg="bg.surface" px={4} py={3} borderBottomWidth={1} borderColor="border.default" className="no-print">
                     <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                         <HStack spacing={8} alignItems={'center'}>
                             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
