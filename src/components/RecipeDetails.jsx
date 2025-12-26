@@ -101,7 +101,7 @@ const RecipeDetails = () => {
                 <Heading size="md" mb={4} color="fg.default">Instructions</Heading>
                 <VStack align="stretch" spacing={4}>
                     {recipe.instructions.map((step) => (
-                        <Box key={step.step_number} p={4} bg="gray.50" _dark={{ bg: 'whiteAlpha.100' }} borderRadius="md">
+                        <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
                             <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
                             <Text>{step.description}</Text>
                         </Box>
