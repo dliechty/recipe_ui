@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge } from '@chakra-ui/react';
 import { RecipesService } from '../client';
 import { useAuth } from '../context/AuthContext';
@@ -23,6 +24,12 @@ const RecipeList = () => {
         fetchRecipes();
     }, [token]);
 
+    const navigate = useNavigate();
+
+    const handleRecipeClick = (id) => {
+        navigate(`/recipes/${id}`);
+    };
+
     if (loading) {
         return (
             <Center h="50vh">
@@ -44,8 +51,9 @@ const RecipeList = () => {
                         borderRadius="lg"
                         boxShadow="md"
                         bg="bg.surface"
-                        _hover={{ boxShadow: 'lg', borderColor: 'vscode.accent' }}
+                        _hover={{ boxShadow: 'lg', borderColor: 'vscode.accent', cursor: 'pointer' }}
                         transition="all 0.2s"
+                        onClick={() => handleRecipeClick(recipe.id)}
                     >
                         <Heading size="md" mb={2} color="fg.default">{recipe.name}</Heading>
                         <Text color="fg.muted" mb={4}>{recipe.description}</Text>

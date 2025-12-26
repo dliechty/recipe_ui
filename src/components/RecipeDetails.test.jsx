@@ -1,0 +1,82 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import RecipeDetails from './RecipeDetails';
+import { describe, it, expect, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../mocks/server';
+
+// Mock AuthContext
+vi.mock('../context/AuthContext', () => ({
+    useAuth: () => ({ token: 'mock-token' }),
+}));
+
+const system = createSystem(defaultConfig);
+
+describe('RecipeDetails', () => {
+    it('renders recipe details from API', async () => {
+        // Setup MSW handler for this specific test if needed, or rely on global handlers
+        // The global handler in handlers.js returns id: 1 as Spaghetti Carbonara so we use that.
+
+        render(
+            <ChakraProvider value={system}>
+                <MemoryRouter initialEntries={['/recipes/1']}>
+                    <Routes>
+                        <Route path="/recipes/:id" element={<RecipeDetails />} />
+                    </Routes>
+                </MemoryRouter>
+            </ChakraProvider>
+        );
+
+        // Check for loading state first if possible, or straight to waiting for content
+        // expect(screen.getByText(/loading/i)).toBeInTheDocument(); 
+
+        await waitFor(() => {
+            expect(screen.getByText('Spaghetti Carbonara')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
+        expect(screen.getByText('Prep: 15m')).toBeInTheDocument();
+        expect(screen.getByText('Cook: 15m')).toBeInTheDocument();
+        expect(screen.getByText('Servings: 4')).toBeInTheDocument();
+
+        // Tags
+        expect(screen.getByText('Italian')).toBeInTheDocument();
+        expect(screen.getByText('Pasta')).toBeInTheDocument();
+
+        // Ingredients
+        expect(screen.getByText('Spaghetti')).toBeInTheDocument();
+        expect(screen.getByText('400 g')).toBeInTheDocument();
+        expect(screen.getByText('Eggs')).toBeInTheDocument();
+
+        // Instructions
+        expect(screen.getByText('Step 1')).toBeInTheDocument();
+        expect(screen.getByText('Boil the pasta in salted water.')).toBeInTheDocument();
+    });
+
+    it('renders not found when recipe does not exist', async () => {
+        // Override handler to return 404
+        server.use(
+            http.get('http://localhost:8000/recipes/:id', () => {
+                return new HttpResponse(null, { status: 404 });
+            })
+        );
+
+        render(
+            <ChakraProvider value={system}>
+                <MemoryRouter initialEntries={['/recipes/999']}>
+                    <Routes>
+                        <Route path="/recipes/:id" element={<RecipeDetails />} />
+                    </Routes>
+                </MemoryRouter>
+            </ChakraProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Recipe not found.')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Back to Recipes')).toBeInTheDocument();
+    });
+});

@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { MemoryRouter } from 'react-router-dom';
 import RecipeList from './RecipeList';
 import { describe, it, expect, vi } from 'vitest';
 
@@ -14,7 +15,9 @@ describe('RecipeList', () => {
     it('renders recipes from API', async () => {
         render(
             <ChakraProvider value={system}>
-                <RecipeList />
+                <MemoryRouter>
+                    <RecipeList />
+                </MemoryRouter>
             </ChakraProvider>
         );
 

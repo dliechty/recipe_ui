@@ -1,0 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+    Box,
+    Container,
+    Heading,
+    Text,
+    Spinner,
+    Center,
+    VStack,
+    HStack,
+    Badge,
+    Button,
+    List,
+    ListItem,
+    Icon
+} from '@chakra-ui/react';
+import { FaCheckCircle } from 'react-icons/fa';
+import { RecipesService } from '../client';
+import { useAuth } from '../context/AuthContext';
+
+const RecipeDetails = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [recipe, setRecipe] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const { token } = useAuth();
+
+    useEffect(() => {
+        const fetchRecipe = async () => {
+            try {
+                const response = await RecipesService.readRecipeRecipesRecipeIdGet(Number(id));
+                setRecipe(response);
+            } catch (error) {
+                console.error("Failed to fetch recipe:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (token && id) {
+            fetchRecipe();
+        }
+    }, [token, id]);
+
+    if (loading) {
+        return (
+            <Center h="50vh">
+                <Spinner size="xl" color="vscode.accent" />
+            </Center>
+        );
+    }
+
+    if (!recipe) {
+        return (
+            <Container maxW="container.md" py={8}>
+                <Text>Recipe not found.</Text>
+                <Button mt={4} onClick={() => navigate('/recipes')}>Back to Recipes</Button>
+            </Container>
+        );
+    }
+
+    return (
+        <Container maxW="container.md" py={8}>
+            <Button mb={6} onClick={() => navigate('/recipes')} variant="ghost">
+                &larr; Back to Recipes
+            </Button>
+
+            <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default">
+                <Heading mb={2} color="fg.default">{recipe.name}</Heading>
+                <Text color="fg.muted" mb={4}>{recipe.description}</Text>
+
+                <HStack spacing={4} mb={6}>
+                    <Badge colorScheme="green" variant="subtle" fontSize="0.9em" p={1}>Prep: {recipe.prep_time_minutes}m</Badge>
+                    <Badge colorScheme="orange" variant="subtle" fontSize="0.9em" p={1}>Cook: {recipe.cook_time_minutes}m</Badge>
+                    <Badge colorScheme="blue" variant="subtle" fontSize="0.9em" p={1}>Servings: {recipe.servings}</Badge>
+                </HStack>
+
+                <HStack spacing={2} mb={6}>
+                    {recipe.tags.map((tag) => (
+                        <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
+                    ))}
+                </HStack>
+
+                <Box as="hr" borderColor="border.default" mb={6} />
+
+                <Heading size="md" mb={4} color="fg.default">Ingredients</Heading>
+                <List.Root spacing={3} mb={8}>
+                    {recipe.ingredients.map((ingredient, index) => (
+                        <ListItem key={index} display="flex" alignItems="center">
+                            <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                            <Text>
+                                <Text as="span" fontWeight="bold">{ingredient.amount} {ingredient.unit}</Text> {ingredient.name}
+                            </Text>
+                        </ListItem>
+                    ))}
+                </List.Root>
+
+                <Box as="hr" borderColor="border.default" mb={6} />
+
+                <Heading size="md" mb={4} color="fg.default">Instructions</Heading>
+                <VStack align="stretch" spacing={4}>
+                    {recipe.instructions.map((step) => (
+                        <Box key={step.step_number} p={4} bg="gray.50" _dark={{ bg: 'whiteAlpha.100' }} borderRadius="md">
+                            <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
+                            <Text>{step.description}</Text>
+                        </Box>
+                    ))}
+                </VStack>
+            </Box>
+        </Container>
+    );
+};
+
+export default RecipeDetails;

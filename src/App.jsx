@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import RecipeList from './components/RecipeList';
+import RecipeDetails from './components/RecipeDetails';
 import LoginPage from './components/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -19,6 +20,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <RecipeList />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/recipes/:id"
+                        element={
+                            <ProtectedRoute>
+                                <RecipeDetails />
                             </ProtectedRoute>
                         }
                     />
