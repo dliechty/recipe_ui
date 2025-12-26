@@ -70,19 +70,37 @@ const RecipeDetails = () => {
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default">
                 <Heading mb={2} color="fg.default">{recipe.name}</Heading>
-                <Text color="fg.muted" mb={4}>{recipe.description}</Text>
-
-                <HStack spacing={4} mb={6}>
-                    <Badge colorScheme="green" variant="subtle" fontSize="0.9em" p={1}>Prep: {recipe.prep_time_minutes}m</Badge>
-                    <Badge colorScheme="orange" variant="subtle" fontSize="0.9em" p={1}>Cook: {recipe.cook_time_minutes}m</Badge>
-                    <Badge colorScheme="blue" variant="subtle" fontSize="0.9em" p={1}>Servings: {recipe.servings}</Badge>
-                </HStack>
 
                 <HStack spacing={2} mb={6}>
                     {recipe.tags.map((tag) => (
                         <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
                     ))}
                 </HStack>
+
+                <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
+                    <GridItem>
+                        <VStack align="start" spacing={4} mb={8}>
+                            <Box>
+                                <Grid templateColumns="auto 1fr" gap={2} rowGap={1}>
+                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
+                                    <Text fontSize="sm">{recipe.prep_time_minutes + recipe.cook_time_minutes} min</Text>
+
+                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Active Time:</Text>
+                                    <Text fontSize="sm">{recipe.prep_time_minutes} min</Text>
+
+                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Cooking Time:</Text>
+                                    <Text fontSize="sm">{recipe.cook_time_minutes} min</Text>
+
+                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Yield:</Text>
+                                    <Text fontSize="sm" mt={4}>{recipe.servings} servings</Text>
+                                </Grid>
+                            </Box>
+                        </VStack>
+                    </GridItem>
+                    <GridItem>
+                        <Text color="fg.muted" mb={6}>{recipe.description}</Text>
+                    </GridItem>
+                </Grid>
 
                 <Box as="hr" borderColor="border.default" mb={6} />
 
