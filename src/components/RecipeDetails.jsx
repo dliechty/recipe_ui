@@ -13,7 +13,9 @@ import {
     Button,
     List,
     ListItem,
-    Icon
+    Icon,
+    Grid,
+    GridItem
 } from '@chakra-ui/react';
 import { FaCheckCircle } from 'react-icons/fa';
 import { RecipesService } from '../client';
@@ -61,7 +63,7 @@ const RecipeDetails = () => {
     }
 
     return (
-        <Container maxW="container.md" py={8}>
+        <Container maxW="container.xl" py={8}>
             <Button mb={6} onClick={() => navigate('/recipes')} variant="ghost">
                 &larr; Back to Recipes
             </Button>
@@ -84,29 +86,33 @@ const RecipeDetails = () => {
 
                 <Box as="hr" borderColor="border.default" mb={6} />
 
-                <Heading size="md" mb={4} color="fg.default">Ingredients</Heading>
-                <List.Root spacing={3} mb={8}>
-                    {recipe.ingredients.map((ingredient, index) => (
-                        <ListItem key={index} display="flex" alignItems="center">
-                            <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
-                            <Text>
-                                <Text as="span" fontWeight="bold">{ingredient.amount} {ingredient.unit}</Text> {ingredient.name}
-                            </Text>
-                        </ListItem>
-                    ))}
-                </List.Root>
+                <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
+                    <GridItem>
+                        <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
+                        <List.Root spacing={3} mb={8}>
+                            {recipe.ingredients.map((ingredient, index) => (
+                                <ListItem key={index} display="flex" alignItems="center">
+                                    <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                                    <Text>
+                                        <Text as="span" fontWeight="bold">{ingredient.amount} {ingredient.unit}</Text> {ingredient.name}
+                                    </Text>
+                                </ListItem>
+                            ))}
+                        </List.Root>
+                    </GridItem>
 
-                <Box as="hr" borderColor="border.default" mb={6} />
-
-                <Heading size="md" mb={4} color="fg.default">Instructions</Heading>
-                <VStack align="stretch" spacing={4}>
-                    {recipe.instructions.map((step) => (
-                        <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
-                            <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
-                            <Text>{step.description}</Text>
-                        </Box>
-                    ))}
-                </VStack>
+                    <GridItem>
+                        <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
+                        <VStack align="stretch" spacing={4}>
+                            {recipe.instructions.map((step) => (
+                                <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
+                                    <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
+                                    <Text>{step.description}</Text>
+                                </Box>
+                            ))}
+                        </VStack>
+                    </GridItem>
+                </Grid>
             </Box>
         </Container>
     );
