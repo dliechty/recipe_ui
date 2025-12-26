@@ -1,7 +1,30 @@
 import React from 'react';
 import { Box, Flex, HStack, Link, Button } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
+
+const NavItem = ({ to, children }) => (
+    <Link
+        as={NavLink}
+        to={to}
+        px={3}
+        py={2}
+        rounded={'md'}
+        _hover={{
+            textDecoration: 'none',
+            bg: 'whiteAlpha.200',
+        }}
+        _activeLink={{
+            bg: 'vscode.button',
+            color: 'white',
+        }}
+        color="fg.default"
+        fontWeight="medium"
+    >
+        {children}
+    </Link>
+);
 
 const Layout = ({ children }) => {
     const { isAuthenticated, logout } = useAuth();
@@ -12,11 +35,8 @@ const Layout = ({ children }) => {
                 <Box bg="bg.surface" px={4} py={3} borderBottomWidth={1} borderColor="border.default">
                     <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                         <HStack spacing={8} alignItems={'center'}>
-                            <Box color="fg.default" fontWeight="bold">Recipe App</Box>
                             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-                                <Link as={RouterLink} to="/recipes" color="fg.default" _hover={{ textDecoration: 'none', color: 'vscode.accent' }}>
-                                    Recipes
-                                </Link>
+                                <NavItem to="/recipes">Recipes</NavItem>
                             </HStack>
                         </HStack>
                         <Flex alignItems={'center'}>
