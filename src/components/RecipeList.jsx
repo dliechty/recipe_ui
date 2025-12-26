@@ -58,9 +58,9 @@ const RecipeList = () => {
                         <Heading size="md" mb={2} color="fg.default">{recipe.name}</Heading>
                         <Text color="fg.muted" mb={4}>{recipe.description}</Text>
                         <HStack spacing={2} mb={2}>
-                            <Badge colorScheme="green" variant="subtle">Prep: {recipe.prep_time_minutes}m</Badge>
+                            <Badge colorScheme="green" variant="subtle">Active: {recipe.prep_time_minutes}m</Badge>
                             <Badge colorScheme="orange" variant="subtle">Cook: {recipe.cook_time_minutes}m</Badge>
-                            <Badge colorScheme="blue" variant="subtle">Servings: {recipe.servings}</Badge>
+                            <Badge colorScheme="blue" variant="subtle">Yield: {recipe.servings} servings</Badge>
                         </HStack>
                         <HStack spacing={2}>
                             {recipe.tags.map((tag) => (
