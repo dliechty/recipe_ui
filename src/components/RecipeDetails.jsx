@@ -89,7 +89,7 @@ const RecipeDetails = () => {
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
-                        <List.Root spacing={3} mb={8}>
+                        <List.Root spacing={3} mb={8} pt={4}>
                             {recipe.ingredients.map((ingredient, index) => (
                                 <ListItem key={index} display="flex" alignItems="center">
                                     <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
