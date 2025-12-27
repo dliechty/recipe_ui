@@ -61,8 +61,7 @@ const RecipeList = () => {
                         <Heading size="md" mb={2} color="fg.default">{recipe.core.name}</Heading>
                         <Text color="fg.muted" mb={4}>{recipe.core.description_short || recipe.core.description_long}</Text>
                         <HStack gap={2} mb={2}>
-                            <Badge colorPalette="green" variant="subtle">Active: {recipe.times.active_time_minutes}m</Badge>
-                            <Badge colorPalette="orange" variant="subtle">Cook: {recipe.times.cook_time_minutes}m</Badge>
+                            <Badge colorPalette="green" variant="subtle">Total Time: {recipe.times.total_time_minutes}m</Badge>
                             <Badge colorPalette="blue" variant="subtle">Yield: {recipe.core.yield_amount} {recipe.core.yield_unit}</Badge>
                         </HStack>
                         <HStack gap={2}>
