@@ -97,9 +97,9 @@ const RecipeDetails = () => {
                 )}
 
                 <HStack gap={2} mb={6}>
-                    {recipe.core.cuisine && <Badge colorScheme="purple">{recipe.core.cuisine}</Badge>}
+                    {recipe.core.cuisine && <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>}
                     {recipe.core.difficulty && (
-                        <Badge colorScheme={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
+                        <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
                             {recipe.core.difficulty}
                         </Badge>
                     )}

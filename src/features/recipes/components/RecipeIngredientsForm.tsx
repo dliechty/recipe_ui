@@ -65,7 +65,7 @@ const RecipeIngredientsForm = ({
                         </Box>
                         <Box pt={index === 0 ? 8 : 0}>
                             <IconButton
-                                colorScheme="red"
+                                colorPalette="red"
                                 variant="ghost"
                                 onClick={() => removeIngredient(index)}
                                 aria-label="Remove ingredient"

@@ -44,7 +44,7 @@ const RecipeInstructionsForm = ({
                         </Box>
                         <Box pt={1}>
                             <IconButton
-                                colorScheme="red"
+                                colorPalette="red"
                                 variant="ghost"
                                 onClick={() => removeInstruction(index)}
                                 aria-label="Remove instruction"
