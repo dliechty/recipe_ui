@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 
-const system = createSystem(defaultConfig);
+import { system } from './theme';
 
 const createTestQueryClient = () => new QueryClient({
     defaultOptions: {
@@ -17,7 +17,7 @@ export function renderWithProviders(ui) {
     const testQueryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={testQueryClient}>
-            <ChakraProvider value={system}>
+            <ChakraProvider theme={system}>
                 {ui}
             </ChakraProvider>
         </QueryClientProvider>

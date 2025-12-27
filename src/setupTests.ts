@@ -3,10 +3,10 @@ import { beforeAll, afterEach, afterAll } from 'vitest';
 import { server } from './mocks/server';
 import { fetch, Headers, Request, Response } from 'undici';
 
-global.fetch = fetch;
-global.Headers = Headers;
-global.Request = Request;
-global.Response = Response;
+global.fetch = fetch as any;
+global.Headers = Headers as any;
+global.Request = Request as any;
+global.Response = Response as any;
 
 import { OpenAPI } from './client';
 OpenAPI.BASE = 'http://localhost:8000';

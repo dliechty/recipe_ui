@@ -10,7 +10,7 @@ Recipe UI is a frontend application that allows users to view, manage, and plan 
 
 This project is built using the following key technologies and libraries:
 
-- **Core**: [React](https://react.dev/) + [Vite](https://vitejs.dev/) - For a fast and efficient development experience.
+- **Core**: [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) + [Vite](https://vitejs.dev/) - For a fast, typed, and efficient development experience.
 - **UI Framework**: [Chakra UI](https://chakra-ui.com/) - A simple, modular, and accessible component library.
 - **Routing**: [React Router](https://reactrouter.com/) - Client-side routing.
 - **HTTP Client**: [Axios](https://axios-http.com/) - For making API requests.
@@ -49,6 +49,12 @@ This project uses [Vitest](https://vitest.dev/) for unit and component testing, 
 To run the tests:
 
 ```bash
+npm run test:once
+```
+
+This will run all tests in the project once and exit. To run tests in watch mode, use:
+
+```bash
 npm test
 ```
 
@@ -68,7 +74,7 @@ The client is generated from an `openapi.json` file located in the root of the p
     npm run api:sync
     ```
 
-This command runs `openapi-typescript-codegen` to regenerate the client code in `src/client`. It uses the `axios` client and types defined in the spec.
+This command runs `openapi-typescript-codegen` to regenerate the typed client code in `src/client`. It uses the `axios` client and TypeScript interfaces defined in the spec.
 
 **Note**: Do not modify files in `src/client` manually, as they will be overwritten the next time the sync command is run.
 

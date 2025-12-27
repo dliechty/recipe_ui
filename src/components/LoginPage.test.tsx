@@ -1,17 +1,17 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import LoginPage from './LoginPage';
 import { MemoryRouter } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
 import { describe, it, expect } from 'vitest';
 
-const system = createSystem(defaultConfig);
+import { system } from '../theme';
 
 describe('LoginPage', () => {
     it('allows user to login', async () => {
         render(
-            <ChakraProvider value={system}>
+            <ChakraProvider theme={system}>
                 <AuthProvider>
                     <MemoryRouter>
                         <LoginPage />

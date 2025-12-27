@@ -9,7 +9,7 @@ This guide explains how to deploy the Recipe UI application using Docker.
 
 ## Docker Deployment
 
-The application is containerized using a multi-stage Docker build. It builds the React application and serves it using Nginx.
+The application is containerized using a multi-stage Docker build. It builds the React TypeScript application and serves it using Nginx.
 
 ### 1. Build the Docker Image
 

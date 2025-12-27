@@ -24,7 +24,7 @@ export const handlers = [
 
     // Intercept "POST /recipes/" requests...
     http.post('*/recipes/', async ({ request }) => {
-        const newRecipe = await request.json();
+        const newRecipe = await request.json() as any;
         const createdRecipe = {
             ...newRecipe,
             id: Math.floor(Math.random() * 1000) + 4, // Generate random ID
@@ -51,7 +51,7 @@ export const handlers = [
     // Intercept "PUT /recipes/:id" requests...
     http.put('*/recipes/:id', async ({ request, params }) => {
         const { id } = params;
-        const updatedData = await request.json();
+        const updatedData = await request.json() as any;
 
         const index = recipes.findIndex(r => r.id === Number(id));
         if (index === -1) {
