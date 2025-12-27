@@ -11,7 +11,7 @@ export const recipes = [
             cuisine: 'Italian',
             category: 'Main Course',
             source: 'Grandma',
-            source_url: null,
+            source_url: 'https://www.example.com/spaghetti-carbonara',
             slug: 'spaghetti-carbonara',
             owner_id: "1"
         },

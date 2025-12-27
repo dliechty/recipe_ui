@@ -16,7 +16,8 @@ import {
     Icon,
     Grid,
     GridItem,
-    Spacer
+    Spacer,
+    Link
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
@@ -80,6 +81,18 @@ const RecipeDetails = () => {
                 {recipe.core.description_short && (
                     <Text color="fg.muted" mb={4} fontStyle="italic">
                         {recipe.core.description_short}
+                    </Text>
+                )}
+
+                {recipe.core.source && (
+                    <Text color="fg.muted" mb={4} fontSize="sm">
+                        Source: {recipe.core.source_url ? (
+                            <Link href={recipe.core.source_url} target="_blank" rel="noopener noreferrer" color="blue.500" textDecoration="underline">
+                                {recipe.core.source}
+                            </Link>
+                        ) : (
+                            recipe.core.source
+                        )}
                     </Text>
                 )}
 
