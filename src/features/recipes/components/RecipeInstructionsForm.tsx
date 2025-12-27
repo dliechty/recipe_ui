@@ -37,7 +37,7 @@ const RecipeInstructionsForm = ({
                         <Box flex={1}>
                             <Textarea
                                 placeholder={`Step ${index + 1} description`}
-                                value={instruction.description}
+                                value={instruction.text}
                                 onChange={(e) => handleInstructionChange(index, e.target.value)}
                                 rows={2}
                             />

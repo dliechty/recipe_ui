@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Tag = {
+import type { RecipeIngredient } from './RecipeIngredient';
+export type Component = {
     name: string;
-    id: number;
+    ingredients: Array<RecipeIngredient>;
 };
 

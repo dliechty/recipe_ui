@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type RecipeIngredientCreate = {
-    ingredient_name: string;
-    quantity: (number | string);
+    quantity: number;
     unit: string;
+    ingredient_name: string;
     notes?: (string | null);
 };
 

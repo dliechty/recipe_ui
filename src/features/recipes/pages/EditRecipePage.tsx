@@ -9,11 +9,11 @@ import { toaster } from '../../../toaster';
 const EditRecipePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { data: recipeData, isLoading: isFetching, error } = useRecipe(Number(id));
+    const { data: recipeData, isLoading: isFetching, error } = useRecipe(id || '');
     const updateRecipeMutation = useUpdateRecipe();
 
     const handleSubmit = (formData: RecipeCreate) => {
-        updateRecipeMutation.mutate({ id: Number(id), requestBody: formData }, {
+        updateRecipeMutation.mutate({ id: id || '', requestBody: formData }, {
             onSuccess: () => {
                 toaster.create({
                     title: "Recipe updated",
@@ -49,24 +49,36 @@ const EditRecipePage = () => {
     }
 
     // Transform data for the form
+    // Transform data for the form
     const initialData: RecipeCreate = {
-        name: recipeData.name,
-        description: recipeData.description,
-        prep_time_minutes: recipeData.prep_time_minutes,
-        cook_time_minutes: recipeData.cook_time_minutes,
-        servings: recipeData.servings,
-        source: recipeData.source,
-        tags: recipeData.tags?.map(t => t.name) || [],
-        ingredients: recipeData.ingredients?.map(i => ({
-            ingredient_name: i.ingredient.name,
-            quantity: i.quantity,
-            unit: i.unit,
-            notes: i.notes
-        })) || [],
-        instructions: recipeData.instructions?.map(i => ({
+        core: {
+            name: recipeData.core.name,
+            description_short: recipeData.core.description_short,
+            description_long: recipeData.core.description_long,
+            source: recipeData.core.source,
+            yield_amount: recipeData.core.yield_amount,
+            yield_unit: recipeData.core.yield_unit,
+            difficulty: recipeData.core.difficulty,
+            cuisine: recipeData.core.cuisine,
+            category: recipeData.core.category,
+            source_url: recipeData.core.source_url,
+            slug: recipeData.core.slug
+        },
+        times: recipeData.times,
+        nutrition: recipeData.nutrition,
+        components: recipeData.components.map(comp => ({
+            name: comp.name,
+            ingredients: comp.ingredients.map(i => ({
+                ingredient_name: i.item,
+                quantity: i.quantity,
+                unit: i.unit,
+                notes: i.notes
+            }))
+        })),
+        instructions: recipeData.instructions.map(i => ({
             step_number: i.step_number,
-            description: i.description
-        })) || []
+            text: i.text
+        }))
     };
 
     return (

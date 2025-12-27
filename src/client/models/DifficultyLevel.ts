@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Ingredient = {
-    name: string;
-    id: number;
-};
-
+export enum DifficultyLevel {
+    EASY = 'Easy',
+    MEDIUM = 'Medium',
+    HARD = 'Hard',
+}

@@ -13,7 +13,7 @@ export const handlers = [
     // Intercept "GET /recipes/:id" requests...
     http.get('*/recipes/:id', ({ params }) => {
         const { id } = params;
-        const recipe = recipes.find(r => r.id === Number(id));
+        const recipe = recipes.find(r => r.core.id === id);
 
         if (!recipe) {
             return new HttpResponse(null, { status: 404 });
@@ -26,21 +26,33 @@ export const handlers = [
     http.post('*/recipes/', async ({ request }) => {
         const newRecipe = await request.json() as any;
         const createdRecipe = {
-            ...newRecipe,
-            id: Math.floor(Math.random() * 1000) + 4, // Generate random ID
-            owner_id: 1,
-            ingredients: newRecipe.ingredients.map((ing: any, i: number) => ({
-                id: i + 1,
-                ingredient: { id: i + 1, name: ing.ingredient_name },
-                quantity: ing.quantity,
-                unit: ing.unit,
-                notes: ing.notes
+            core: {
+                ...newRecipe.core,
+                id: crypto.randomUUID(), // Generate UUID
+                owner_id: "1",
+                slug: newRecipe.core.name.toLowerCase().replace(/\s+/g, '-')
+            },
+            times: newRecipe.times,
+            nutrition: newRecipe.nutrition,
+            components: newRecipe.components.map((comp: any) => ({
+                name: comp.name,
+                ingredients: comp.ingredients.map((ing: any) => ({
+                    quantity: ing.quantity,
+                    unit: ing.unit,
+                    item: ing.ingredient_name || ing.item, // Handle potential client request diff
+                    notes: ing.notes
+                }))
             })),
-            instructions: newRecipe.instructions.map((inst: any, i: number) => ({
-                id: i + 1,
+            instructions: newRecipe.instructions.map((inst: any) => ({
                 step_number: inst.step_number,
-                description: inst.description
-            }))
+                text: inst.text || inst.description // Handle potential client request diff
+            })),
+            audit: {
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                version: 1,
+                parent_recipe_id: null
+            }
         };
 
         recipes.push(createdRecipe);
@@ -53,29 +65,38 @@ export const handlers = [
         const { id } = params;
         const updatedData = await request.json() as any;
 
-        const index = recipes.findIndex(r => r.id === Number(id));
+        const index = recipes.findIndex(r => r.core.id === id);
         if (index === -1) {
             return new HttpResponse(null, { status: 404 });
         }
 
         const updatedRecipe = {
-            ...recipes[index], // keep existing fields like owner_id if not present
-            ...updatedData,
-            id: Number(id),
-            owner_id: 1,
-            ingredients: updatedData.ingredients.map((ing: any, i: number) => ({
-                id: i + 1,
-                // reuse existing ingredient id if plausible, or generate new
-                ingredient: { id: i + 1, name: ing.ingredient_name },
-                quantity: ing.quantity,
-                unit: ing.unit,
-                notes: ing.notes
+            ...recipes[index],
+            core: {
+                ...recipes[index].core,
+                ...updatedData.core,
+                id: String(id), // ensure ID mapping
+            },
+            times: updatedData.times,
+            nutrition: updatedData.nutrition,
+            components: updatedData.components.map((comp: any) => ({
+                name: comp.name,
+                ingredients: comp.ingredients.map((ing: any) => ({
+                    quantity: ing.quantity,
+                    unit: ing.unit,
+                    item: ing.ingredient_name || ing.item,
+                    notes: ing.notes
+                }))
             })),
-            instructions: updatedData.instructions.map((inst: any, i: number) => ({
-                id: i + 1,
+            instructions: updatedData.instructions.map((inst: any) => ({
                 step_number: inst.step_number,
-                description: inst.description
-            }))
+                text: inst.text || inst.description
+            })),
+            audit: {
+                ...recipes[index].audit,
+                updated_at: new Date().toISOString(),
+                version: (recipes[index].audit?.version || 0) + 1
+            }
         };
 
         recipes[index] = updatedRecipe;

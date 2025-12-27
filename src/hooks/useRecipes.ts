@@ -8,7 +8,7 @@ export const useRecipes = () => {
     });
 };
 
-export const useRecipe = (id: number) => {
+export const useRecipe = (id: string) => {
     return useQuery<Recipe>({
         queryKey: ['recipes', id],
         queryFn: () => RecipesService.readRecipeRecipesRecipeIdGet(id),
@@ -28,7 +28,7 @@ export const useCreateRecipe = () => {
 
 export const useUpdateRecipe = () => {
     const queryClient = useQueryClient();
-    return useMutation<Recipe, Error, { id: number, requestBody: RecipeCreate }>({
+    return useMutation<Recipe, Error, { id: string, requestBody: RecipeCreate }>({
         mutationFn: ({ id, requestBody }) => RecipesService.updateRecipeRecipesRecipeIdPut(id, requestBody),
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['recipes'] });

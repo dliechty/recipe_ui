@@ -31,12 +31,11 @@ describe('RecipeList', () => {
         expect(screen.getByText('Cook: 15m')).toBeInTheDocument();
         expect(screen.getByText('Yield: 4 servings')).toBeInTheDocument();
 
-        expect(screen.getByText('Active: 20m')).toBeInTheDocument();
+        expect(screen.getByText('Active: 30m')).toBeInTheDocument();
         expect(screen.getByText('Cook: 45m')).toBeInTheDocument();
         expect(screen.getByText('Yield: 6 servings')).toBeInTheDocument();
 
         // Verify tags are displayed
         expect(screen.getByText('Italian')).toBeInTheDocument();
-        expect(screen.getByText('Pasta')).toBeInTheDocument();
     });
 });

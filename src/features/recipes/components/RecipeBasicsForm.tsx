@@ -5,32 +5,26 @@ import {
     Textarea,
     VStack,
     HStack,
-    Icon,
     Heading,
     SimpleGrid,
     Text
 } from '@chakra-ui/react';
-import { FaTrash } from 'react-icons/fa';
-import { RecipeCreate } from '../../../client';
+import { RecipeCoreCreate, RecipeTimes } from '../../../client';
 
 interface RecipeBasicsFormProps {
-    formData: RecipeCreate;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    handleNumberChange: (name: keyof RecipeCreate, valueString: string) => void;
-    tagInput: string;
-    setTagInput: (value: string) => void;
-    handleTagKeyDown: (e: React.KeyboardEvent) => void;
-    removeTag: (tag: string) => void;
+    core: RecipeCoreCreate;
+    times: RecipeTimes;
+    handleCoreChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    handleCoreNumberChange: (name: string, valueString: string) => void;
+    handleTimesChange: (name: string, valueString: string) => void;
 }
 
 const RecipeBasicsForm = ({
-    formData,
-    handleChange,
-    handleNumberChange,
-    tagInput,
-    setTagInput,
-    handleTagKeyDown,
-    removeTag
+    core,
+    times,
+    handleCoreChange,
+    handleCoreNumberChange,
+    handleTimesChange
 }: RecipeBasicsFormProps) => {
     return (
         <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
@@ -40,62 +34,63 @@ const RecipeBasicsForm = ({
                 <VStack gap={4} align="stretch" maxW="md">
                     <Box>
                         <Text as="label" mb={2} display="block" fontWeight="bold">Recipe Name</Text>
-                        <Input data-testid="recipe-name" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Chocolate Cake" />
+                        <Input data-testid="recipe-name" name="name" value={core.name} onChange={handleCoreChange} placeholder="e.g. Chocolate Cake" />
                     </Box>
 
                     <Box>
                         <Text as="label" mb={2} display="block" fontWeight="bold">Source</Text>
-                        <Input data-testid="recipe-source" name="source" value={formData.source || ''} onChange={handleChange} placeholder="e.g. Grandma's cookbook" />
+                        <Input data-testid="recipe-source" name="source" value={core.source || ''} onChange={handleCoreChange} placeholder="e.g. Grandma's cookbook" />
                     </Box>
 
                     <HStack gap={2}>
                         <Box flex={1}>
                             <Text as="label" mb={2} display="block" fontWeight="bold">Active Time (min)</Text>
-                            <Input data-testid="recipe-prep-time" type="number" min={0} value={formData.prep_time_minutes} onChange={(e) => handleNumberChange('prep_time_minutes', e.target.value)} />
+                            <Input data-testid="recipe-prep-time" type="number" min={0} value={times.active_time_minutes || 0} onChange={(e) => handleTimesChange('active_time_minutes', e.target.value)} />
                         </Box>
 
                         <Box flex={1}>
                             <Text as="label" mb={2} display="block" fontWeight="bold">Cook Time (min)</Text>
-                            <Input data-testid="recipe-cook-time" type="number" min={0} value={formData.cook_time_minutes} onChange={(e) => handleNumberChange('cook_time_minutes', e.target.value)} />
+                            <Input data-testid="recipe-cook-time" type="number" min={0} value={times.cook_time_minutes || 0} onChange={(e) => handleTimesChange('cook_time_minutes', e.target.value)} />
                         </Box>
                     </HStack>
 
                     <HStack gap={2} align="start">
                         <Box flex={1}>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Yield (servings)</Text>
-                            <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Prep Time (min)</Text>
+                            <Input data-testid="recipe-total-time" type="number" min={0} value={times.prep_time_minutes || 0} onChange={(e) => handleTimesChange('prep_time_minutes', e.target.value)} />
                         </Box>
 
                         <Box flex={1}>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Tags (Press Enter to add)</Text>
-                            <Input
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                onKeyDown={handleTagKeyDown}
-                                placeholder="Add tags..."
-                            />
-                            <HStack mt={2} wrap="wrap" gap={2}>
-                                {(formData.tags || []).map((tag: string, index: number) => (
-                                    <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
-                                        {tag}
-                                        <Icon as={FaTrash} ml={2} cursor="pointer" onClick={() => removeTag(tag)} boxSize={3} />
-                                    </Box>
-                                ))}
-                            </HStack>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Yield (amount)</Text>
+                            <Input data-testid="recipe-yield" type="number" min={1} value={core.yield_amount || 1} onChange={(e) => handleCoreNumberChange('yield_amount', e.target.value)} />
+                        </Box>
+                        <Box flex={1}>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Yield (unit)</Text>
+                            <Input data-testid="recipe-yield-unit" name="yield_unit" value={core.yield_unit || ''} onChange={handleCoreChange} placeholder="servings" />
                         </Box>
                     </HStack>
                 </VStack>
 
-                {/* Right Column: Description */}
+                {/* Right Column: Descriptions */}
                 <Box>
-                    <Text as="label" mb={2} display="block" fontWeight="bold">Description</Text>
+                    <Text as="label" mb={2} display="block" fontWeight="bold">Short Description</Text>
                     <Textarea
-                        data-testid="recipe-description"
-                        name="description"
-                        value={formData.description || ''}
-                        onChange={handleChange}
-                        placeholder="Brief description of the recipe"
-                        rows={8}
+                        data-testid="recipe-description-short"
+                        name="description_short"
+                        value={core.description_short || ''}
+                        onChange={handleCoreChange}
+                        placeholder="Brief summary"
+                        rows={2}
+                        mb={4}
+                    />
+                    <Text as="label" mb={2} display="block" fontWeight="bold">Long Description</Text>
+                    <Textarea
+                        data-testid="recipe-description-long"
+                        name="description_long"
+                        value={core.description_long || ''}
+                        onChange={handleCoreChange}
+                        placeholder="Detailed description"
+                        rows={6}
                     />
                 </Box>
             </SimpleGrid>

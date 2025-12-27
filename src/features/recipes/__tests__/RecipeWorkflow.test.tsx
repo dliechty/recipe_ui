@@ -55,10 +55,10 @@ describe('Recipe Workflows', () => {
 
         // Fill Form
         fireEvent.change(screen.getByTestId('recipe-name'), { target: { value: 'Test Recipe' } });
-        fireEvent.change(screen.getByTestId('recipe-description'), { target: { value: 'Test Description' } });
+        fireEvent.change(screen.getByTestId('recipe-description-short'), { target: { value: 'Test Description' } });
         fireEvent.change(screen.getByTestId('recipe-prep-time'), { target: { value: '10' } });
         fireEvent.change(screen.getByTestId('recipe-cook-time'), { target: { value: '20' } });
-        fireEvent.change(screen.getByTestId('recipe-servings'), { target: { value: '4' } });
+        fireEvent.change(screen.getByTestId('recipe-yield'), { target: { value: '4' } });
 
         // Add Ingredient
         const ingredientInputs = screen.getAllByPlaceholderText(/Ingredient/i);

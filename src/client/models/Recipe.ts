@@ -2,20 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Component } from './Component';
 import type { Instruction } from './Instruction';
-import type { RecipeIngredient } from './RecipeIngredient';
-import type { Tag } from './Tag';
+import type { RecipeAudit } from './RecipeAudit';
+import type { RecipeCore } from './RecipeCore';
+import type { RecipeNutrition } from './RecipeNutrition';
+import type { RecipeTimes } from './RecipeTimes';
 export type Recipe = {
-    name: string;
-    description?: (string | null);
-    prep_time_minutes: number;
-    cook_time_minutes: number;
-    servings: number;
-    source?: (string | null);
-    id: number;
-    owner_id: number;
-    ingredients?: Array<RecipeIngredient>;
-    instructions?: Array<Instruction>;
-    tags?: Array<Tag>;
+    core: RecipeCore;
+    times: RecipeTimes;
+    components: Array<Component>;
+    instructions: Array<Instruction>;
+    nutrition: RecipeNutrition;
+    audit: RecipeAudit;
 };
 

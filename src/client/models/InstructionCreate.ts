@@ -4,6 +4,6 @@
 /* eslint-disable */
 export type InstructionCreate = {
     step_number: number;
-    description: string;
+    text: string;
 };
 

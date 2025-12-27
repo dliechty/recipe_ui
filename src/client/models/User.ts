@@ -2,11 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Recipe } from './Recipe';
 export type User = {
     email: string;
-    id: number;
+    id: string;
     is_active: boolean;
-    recipes?: Array<Recipe>;
 };
 

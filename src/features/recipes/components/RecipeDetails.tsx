@@ -25,7 +25,7 @@ import ErrorAlert from '../../../components/common/ErrorAlert';
 const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { data: recipe, isLoading: loading, error } = useRecipe(Number(id));
+    const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
 
     if (error) {
         return (
@@ -76,12 +76,15 @@ const RecipeDetails = () => {
             </HStack>
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
-                <Heading mb={2} color="fg.default">{recipe.name}</Heading>
+                <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>
 
                 <HStack gap={2} mb={6}>
-                    {(recipe.tags || []).map((tag) => (
-                        <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
-                    ))}
+                    {recipe.core.cuisine && <Badge colorScheme="purple">{recipe.core.cuisine}</Badge>}
+                    {recipe.core.difficulty && (
+                        <Badge colorScheme={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
+                            {recipe.core.difficulty}
+                        </Badge>
+                    )}
                 </HStack>
 
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
@@ -90,22 +93,22 @@ const RecipeDetails = () => {
                             <Box>
                                 <Grid templateColumns="auto 1fr" gap={2} rowGap={1}>
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
-                                    <Text fontSize="sm">{recipe.prep_time_minutes + recipe.cook_time_minutes} min</Text>
+                                    <Text fontSize="sm">{recipe.times.total_time_minutes} min</Text>
 
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Active Time:</Text>
-                                    <Text fontSize="sm">{recipe.prep_time_minutes} min</Text>
+                                    <Text fontSize="sm">{recipe.times.active_time_minutes} min</Text>
 
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Cooking Time:</Text>
-                                    <Text fontSize="sm">{recipe.cook_time_minutes} min</Text>
+                                    <Text fontSize="sm">{recipe.times.cook_time_minutes} min</Text>
 
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Yield:</Text>
-                                    <Text fontSize="sm" mt={4}>{recipe.servings} servings</Text>
+                                    <Text fontSize="sm" mt={4}>{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
                                 </Grid>
                             </Box>
                         </VStack>
                     </GridItem>
                     <GridItem>
-                        <Text color="fg.muted" mb={6}>{recipe.description}</Text>
+                        <Text color="fg.muted" mb={6}>{recipe.core.description_long || recipe.core.description_short}</Text>
                     </GridItem>
                 </Grid>
 
@@ -114,18 +117,27 @@ const RecipeDetails = () => {
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
-                        <List.Root gap={3} mb={8} pt={4}>
-                            {(recipe.ingredients || []).map((ingredient, index) => (
-                                <List.Item key={index} display="flex" alignItems="center">
-                                    <List.Indicator asChild>
-                                        <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
-                                    </List.Indicator>
-                                    <Text>
-                                        <Text as="span" fontWeight="bold">{ingredient.quantity} {ingredient.unit}</Text> {ingredient.ingredient.name}
-                                    </Text>
-                                </List.Item>
+                        <VStack align="stretch" gap={4}>
+                            {recipe.components.map((component, cIndex) => (
+                                <Box key={cIndex}>
+                                    {component.name && component.name !== 'Main' && (
+                                        <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
+                                    )}
+                                    <List.Root gap={3} mb={component.name ? 4 : 0}>
+                                        {component.ingredients.map((ingredient, index) => (
+                                            <List.Item key={index} display="flex" alignItems="center">
+                                                <List.Indicator asChild>
+                                                    <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                                                </List.Indicator>
+                                                <Text>
+                                                    <Text as="span" fontWeight="bold">{ingredient.quantity} {ingredient.unit}</Text> {ingredient.item}
+                                                </Text>
+                                            </List.Item>
+                                        ))}
+                                    </List.Root>
+                                </Box>
                             ))}
-                        </List.Root>
+                        </VStack>
                     </GridItem>
 
                     <GridItem>
@@ -134,7 +146,7 @@ const RecipeDetails = () => {
                             {(recipe.instructions || []).map((step) => (
                                 <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
                                     <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
-                                    <Text>{step.description}</Text>
+                                    <Text>{step.text}</Text>
                                 </Box>
                             ))}
                         </VStack>

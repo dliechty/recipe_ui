@@ -1,68 +1,152 @@
 export const recipes = [
     {
-        id: 1,
-        name: 'Spaghetti Carbonara',
-        description: 'A classic Italian pasta dish.',
-        prep_time_minutes: 15,
-        cook_time_minutes: 15,
-        servings: 4,
-        ingredients: [
-            { id: 1, ingredient: { id: 1, name: 'Spaghetti' }, quantity: '400', unit: 'g' },
-            { id: 2, ingredient: { id: 2, name: 'Eggs' }, quantity: '4', unit: 'large' },
-            { id: 3, ingredient: { id: 3, name: 'Pecorino Romano' }, quantity: '100', unit: 'g' },
-            { id: 4, ingredient: { id: 4, name: 'Guanciale' }, quantity: '150', unit: 'g' },
-            { id: 5, ingredient: { id: 5, name: 'Black Pepper' }, quantity: '1', unit: 'tsp' }
+        core: {
+            id: "1",
+            name: 'Spaghetti Carbonara',
+            description_short: 'A classic Italian pasta dish.',
+            description_long: 'Authentication spaghetti.',
+            yield_amount: 4,
+            yield_unit: 'servings',
+            difficulty: 'Medium',
+            cuisine: 'Italian',
+            category: 'Main Course',
+            source: 'Grandma',
+            source_url: null,
+            slug: 'spaghetti-carbonara',
+            owner_id: "1"
+        },
+        times: {
+            prep_time_minutes: 15,
+            cook_time_minutes: 15,
+            active_time_minutes: 15,
+            total_time_minutes: 30
+        },
+        nutrition: {
+            calories: 600,
+            serving_size: '1 plate'
+        },
+        components: [
+            {
+                name: 'Main',
+                ingredients: [
+                    { quantity: 400, unit: 'g', item: 'Spaghetti', notes: null },
+                    { quantity: 4, unit: 'large', item: 'Eggs', notes: null },
+                    { quantity: 100, unit: 'g', item: 'Pecorino Romano', notes: null },
+                    { quantity: 150, unit: 'g', item: 'Guanciale', notes: null },
+                    { quantity: 1, unit: 'tsp', item: 'Black Pepper', notes: null }
+                ]
+            }
         ],
         instructions: [
-            { step_number: 1, description: 'Boil the pasta in salted water.' },
-            { step_number: 2, description: 'Fry the guanciale until crisp.' },
-            { step_number: 3, description: 'Mix eggs and cheese.' },
-            { step_number: 4, description: 'Combine pasta, guanciale, and egg mixture off heat.' }
+            { step_number: 1, text: 'Boil the pasta in salted water.' },
+            { step_number: 2, text: 'Fry the guanciale until crisp.' },
+            { step_number: 3, text: 'Mix eggs and cheese.' },
+            { step_number: 4, text: 'Combine pasta, guanciale, and egg mixture off heat.' }
         ],
-        tags: [{ id: 1, name: 'Italian' }, { id: 2, name: 'Pasta' }],
-        owner_id: 1
+        audit: {
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            version: 1,
+            parent_recipe_id: null
+        }
     },
     {
-        id: 2,
-        name: 'Chicken Curry',
-        description: 'Spicy and delicious chicken curry.',
-        prep_time_minutes: 20,
-        cook_time_minutes: 45,
-        servings: 6,
-        ingredients: [
-            { id: 6, ingredient: { id: 6, name: 'Chicken Breast' }, quantity: '500', unit: 'g' },
-            { id: 7, ingredient: { id: 7, name: 'Coconut Milk' }, quantity: '400', unit: 'ml' },
-            { id: 8, ingredient: { id: 8, name: 'Curry Powder' }, quantity: '3', unit: 'tbsp' },
-            { id: 9, ingredient: { id: 9, name: 'Onion' }, quantity: '1', unit: 'large' }
+        core: {
+            id: "2",
+            name: 'Chicken Curry',
+            description_short: 'Spicy and delicious chicken curry.',
+            description_long: null,
+            yield_amount: 6,
+            yield_unit: 'servings',
+            difficulty: 'Medium',
+            cuisine: 'Indian',
+            category: 'Main Course',
+            source: null,
+            source_url: null,
+            slug: 'chicken-curry',
+            owner_id: "1"
+        },
+        times: {
+            prep_time_minutes: 20,
+            cook_time_minutes: 45,
+            active_time_minutes: 30,
+            total_time_minutes: 65
+        },
+        nutrition: {
+            calories: 500,
+            serving_size: '1 bowl'
+        },
+        components: [
+            {
+                name: 'Main',
+                ingredients: [
+                    { quantity: 500, unit: 'g', item: 'Chicken Breast', notes: null },
+                    { quantity: 400, unit: 'ml', item: 'Coconut Milk', notes: null },
+                    { quantity: 3, unit: 'tbsp', item: 'Curry Powder', notes: null },
+                    { quantity: 1, unit: 'large', item: 'Onion', notes: null }
+                ]
+            }
         ],
         instructions: [
-            { step_number: 1, description: 'Sauté onions manually.' },
-            { step_number: 2, description: 'Add chicken and brown.' },
-            { step_number: 3, description: 'Add spices and coconut milk.' },
-            { step_number: 4, description: 'Simmer until cooked.' }
+            { step_number: 1, text: 'Sauté onions manually.' },
+            { step_number: 2, text: 'Add chicken and brown.' },
+            { step_number: 3, text: 'Add spices and coconut milk.' },
+            { step_number: 4, text: 'Simmer until cooked.' }
         ],
-        tags: [],
-        owner_id: 1
+        audit: {
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            version: 1,
+            parent_recipe_id: null
+        }
     },
     {
-        id: 3,
-        name: 'Avocado Toast',
-        description: 'Healthy breakfast option.',
-        prep_time_minutes: 5,
-        cook_time_minutes: 0,
-        servings: 1,
-        ingredients: [
-            { id: 10, ingredient: { id: 10, name: 'Bread' }, quantity: '2', unit: 'slices' },
-            { id: 11, ingredient: { id: 11, name: 'Avocado' }, quantity: '1', unit: 'ripe' },
-            { id: 12, ingredient: { id: 12, name: 'Salt' }, quantity: '1', unit: 'pinch' },
-            { id: 13, ingredient: { id: 13, name: 'Chili Flakes' }, quantity: '1', unit: 'pinch' }
+        core: {
+            id: "3",
+            name: 'Avocado Toast',
+            description_short: 'Healthy breakfast option.',
+            description_long: null,
+            yield_amount: 1,
+            yield_unit: 'serving',
+            difficulty: 'Easy',
+            cuisine: 'Modern',
+            category: 'Breakfast',
+            source: null,
+            source_url: null,
+            slug: 'avocado-toast',
+            owner_id: "1"
+        },
+        times: {
+            prep_time_minutes: 5,
+            cook_time_minutes: 0,
+            active_time_minutes: 5,
+            total_time_minutes: 5
+        },
+        nutrition: {
+            calories: 250,
+            serving_size: '1 slice'
+        },
+        components: [
+            {
+                name: 'Main',
+                ingredients: [
+                    { quantity: 2, unit: 'slices', item: 'Bread', notes: null },
+                    { quantity: 1, unit: 'ripe', item: 'Avocado', notes: null },
+                    { quantity: 1, unit: 'pinch', item: 'Salt', notes: null },
+                    { quantity: 1, unit: 'pinch', item: 'Chili Flakes', notes: null }
+                ]
+            }
         ],
         instructions: [
-            { step_number: 1, description: 'Toast the bread.' },
-            { step_number: 2, description: 'Mash avocado and spread on toast.' },
-            { step_number: 3, description: 'Sprinkle with salt and chili flakes.' }
+            { step_number: 1, text: 'Toast the bread.' },
+            { step_number: 2, text: 'Mash avocado and spread on toast.' },
+            { step_number: 3, text: 'Sprinkle with salt and chili flakes.' }
         ],
-        tags: [],
-        owner_id: 1
+        audit: {
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            version: 1,
+            parent_recipe_id: null
+        }
     },
 ];

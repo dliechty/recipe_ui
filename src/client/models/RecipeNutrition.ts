@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Instruction = {
-    step_number: number;
-    text: string;
+export type RecipeNutrition = {
+    calories?: (number | null);
+    serving_size?: (string | null);
 };
 

@@ -18,7 +18,7 @@ const RecipeList = () => {
 
     const navigate = useNavigate();
 
-    const handleRecipeClick = (id: number) => {
+    const handleRecipeClick = (id: string) => {
         navigate(`/recipes/${id}`);
     };
 
@@ -47,7 +47,7 @@ const RecipeList = () => {
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={8}>
                 {recipes.map((recipe) => (
                     <Box
-                        key={recipe.id}
+                        key={recipe.core.id}
                         p={6}
                         borderWidth={1}
                         borderColor="border.default"
@@ -56,19 +56,24 @@ const RecipeList = () => {
                         bg="bg.surface"
                         _hover={{ boxShadow: 'lg', borderColor: 'vscode.accent', cursor: 'pointer' }}
                         transition="all 0.2s"
-                        onClick={() => handleRecipeClick(recipe.id)}
+                        onClick={() => handleRecipeClick(recipe.core.id)}
                     >
-                        <Heading size="md" mb={2} color="fg.default">{recipe.name}</Heading>
-                        <Text color="fg.muted" mb={4}>{recipe.description}</Text>
+                        <Heading size="md" mb={2} color="fg.default">{recipe.core.name}</Heading>
+                        <Text color="fg.muted" mb={4}>{recipe.core.description_short || recipe.core.description_long}</Text>
                         <HStack gap={2} mb={2}>
-                            <Badge colorScheme="green" variant="subtle">Active: {recipe.prep_time_minutes}m</Badge>
-                            <Badge colorScheme="orange" variant="subtle">Cook: {recipe.cook_time_minutes}m</Badge>
-                            <Badge colorScheme="blue" variant="subtle">Yield: {recipe.servings} servings</Badge>
+                            <Badge colorScheme="green" variant="subtle">Active: {recipe.times.active_time_minutes}m</Badge>
+                            <Badge colorScheme="orange" variant="subtle">Cook: {recipe.times.cook_time_minutes}m</Badge>
+                            <Badge colorScheme="blue" variant="subtle">Yield: {recipe.core.yield_amount} {recipe.core.yield_unit}</Badge>
                         </HStack>
                         <HStack gap={2}>
-                            {(recipe.tags || []).map((tag) => (
-                                <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
-                            ))}
+                            {recipe.core.difficulty && (
+                                <Badge colorScheme={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
+                                    {recipe.core.difficulty}
+                                </Badge>
+                            )}
+                            {recipe.core.cuisine && (
+                                <Badge colorScheme="purple">{recipe.core.cuisine}</Badge>
+                            )}
                         </HStack>
                     </Box>
                 ))}

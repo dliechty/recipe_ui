@@ -31,7 +31,7 @@ describe('RecipeDetails', () => {
             expect(screen.getByText('Spaghetti Carbonara')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
+        expect(screen.getByText('Authentication spaghetti.')).toBeInTheDocument();
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
         expect(screen.getAllByText('15 min')).toHaveLength(2);
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
@@ -39,7 +39,6 @@ describe('RecipeDetails', () => {
 
         // Tags
         expect(screen.getByText('Italian')).toBeInTheDocument();
-        expect(screen.getByText('Pasta')).toBeInTheDocument();
 
         // Ingredients
         expect(screen.getByText('Spaghetti')).toBeInTheDocument();

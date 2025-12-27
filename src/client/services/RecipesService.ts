@@ -60,7 +60,7 @@ export class RecipesService {
      * @throws ApiError
      */
     public static readRecipeRecipesRecipeIdGet(
-        recipeId: number,
+        recipeId: string,
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -82,7 +82,7 @@ export class RecipesService {
      * @throws ApiError
      */
     public static updateRecipeRecipesRecipeIdPut(
-        recipeId: number,
+        recipeId: string,
         requestBody: RecipeCreate,
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
@@ -106,7 +106,7 @@ export class RecipesService {
      * @throws ApiError
      */
     public static deleteRecipeRecipesRecipeIdDelete(
-        recipeId: number,
+        recipeId: string,
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'DELETE',

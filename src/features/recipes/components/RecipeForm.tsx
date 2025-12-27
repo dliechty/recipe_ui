@@ -3,7 +3,7 @@ import {
     Button,
     VStack,
 } from '@chakra-ui/react';
-import { RecipeCreate, RecipeIngredientCreate, InstructionCreate } from '../../../client';
+import { RecipeCreate, RecipeIngredientCreate, InstructionCreate, ComponentCreate } from '../../../client';
 import RecipeBasicsForm from './RecipeBasicsForm';
 import RecipeIngredientsForm from './RecipeIngredientsForm';
 import RecipeInstructionsForm from './RecipeInstructionsForm';
@@ -16,14 +16,35 @@ interface RecipeFormProps {
 
 const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
     const [formData, setFormData] = useState<RecipeCreate>({
-        name: '',
-        description: '',
-        prep_time_minutes: 0,
-        cook_time_minutes: 0,
-        servings: 1,
-        source: '',
-        tags: [],
-        ingredients: [],
+        core: {
+            name: '',
+            description_long: '',
+            description_short: '',
+            source: '',
+            yield_amount: 1,
+            yield_unit: 'servings',
+            difficulty: null,
+            cuisine: null,
+            category: null,
+            source_url: null,
+            slug: null
+        },
+        times: {
+            prep_time_minutes: 0,
+            cook_time_minutes: 0,
+            active_time_minutes: 0,
+            total_time_minutes: 0
+        },
+        nutrition: {
+            calories: null,
+            serving_size: null
+        },
+        components: [
+            {
+                name: 'Main',
+                ingredients: []
+            }
+        ],
         instructions: []
     });
     const [tagInput, setTagInput] = useState('');
@@ -35,51 +56,98 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
             // Initialize with one empty ingredient and instruction for better UX
             setFormData(prev => ({
                 ...prev,
-                ingredients: [{ ingredient_name: '', quantity: '', unit: '', notes: '' } as RecipeIngredientCreate],
-                instructions: [{ step_number: 1, description: '' } as InstructionCreate]
+                components: [{
+                    name: 'Main',
+                    ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                }],
+                instructions: [{ step_number: 1, text: '' } as InstructionCreate]
             }));
         }
     }, [initialData]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // Core Handlers
+    const handleCoreChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleNumberChange = (name: keyof RecipeCreate, valueString: string) => {
-        setFormData(prev => ({ ...prev, [name]: parseInt(valueString) || 0 }));
-    };
-
-    // Ingredient Handlers
-    const handleIngredientChange = (index: number, field: keyof RecipeIngredientCreate, value: string | number) => {
-        const newIngredients = [...formData.ingredients];
-        newIngredients[index] = { ...newIngredients[index], [field]: value };
-        setFormData(prev => ({ ...prev, ingredients: newIngredients }));
-    };
-
-    const addIngredient = () => {
         setFormData(prev => ({
             ...prev,
-            ingredients: [...prev.ingredients, { ingredient_name: '', quantity: '', unit: '', notes: '' } as RecipeIngredientCreate]
+            core: { ...prev.core, [name]: value }
         }));
     };
 
+    const handleCoreNumberChange = (name: string, valueString: string) => {
+        setFormData(prev => ({
+            ...prev,
+            core: { ...prev.core, [name]: parseFloat(valueString) || 0 }
+        }));
+    };
+
+    // Times Handlers
+    const handleTimesChange = (name: string, valueString: string) => {
+        setFormData(prev => ({
+            ...prev,
+            times: { ...prev.times, [name]: parseInt(valueString) || 0 }
+        }));
+    };
+
+    // Ingredient Handlers (Assumes single component 'Main' for now)
+    const handleIngredientChange = (index: number, field: keyof RecipeIngredientCreate, value: string | number) => {
+        const newComponents = [...formData.components];
+        const newIngredients = [...newComponents[0].ingredients];
+
+        // Handle number conversion for quantity
+        let processedValue = value;
+        if (field === 'quantity') {
+            processedValue = parseFloat(value as string) || 0;
+        }
+
+        newIngredients[index] = { ...newIngredients[index], [field]: processedValue };
+        newComponents[0].ingredients = newIngredients;
+        setFormData(prev => ({ ...prev, components: newComponents }));
+    };
+
+    const addIngredient = () => {
+        setFormData(prev => {
+            const currentComponents = prev.components || [];
+            if (currentComponents.length === 0) {
+                return {
+                    ...prev,
+                    components: [{
+                        name: 'Main',
+                        ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                    }]
+                };
+            }
+            return {
+                ...prev,
+                components: prev.components.map((comp, i) => i === 0 ? {
+                    ...comp,
+                    ingredients: [...comp.ingredients, { ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                } : comp)
+            };
+        });
+    };
+
     const removeIngredient = (index: number) => {
-        const newIngredients = formData.ingredients.filter((_, i) => i !== index);
-        setFormData(prev => ({ ...prev, ingredients: newIngredients }));
+        setFormData(prev => ({
+            ...prev,
+            components: prev.components.map((comp, i) => i === 0 ? {
+                ...comp,
+                ingredients: comp.ingredients.filter((_, idx) => idx !== index)
+            } : comp)
+        }));
     };
 
     // Instruction Handlers
     const handleInstructionChange = (index: number, value: string) => {
         const newInstructions = [...formData.instructions];
-        newInstructions[index] = { ...newInstructions[index], description: value };
+        newInstructions[index] = { ...newInstructions[index], text: value };
         setFormData(prev => ({ ...prev, instructions: newInstructions }));
     };
 
     const addInstruction = () => {
         setFormData(prev => ({
             ...prev,
-            instructions: [...prev.instructions, { step_number: prev.instructions.length + 1, description: '' } as InstructionCreate]
+            instructions: [...prev.instructions, { step_number: prev.instructions.length + 1, text: '' } as InstructionCreate]
         }));
     };
 
@@ -89,30 +157,9 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         setFormData(prev => ({ ...prev, instructions: newInstructions }));
     };
 
-    // Tag Handlers
-    const handleTagKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && tagInput.trim()) {
-            e.preventDefault();
-            // tags is optional in RecipeCreate, ensure it exists
-            const currentTags = formData.tags || [];
-            if (!currentTags.includes(tagInput.trim())) {
-                setFormData(prev => ({ ...prev, tags: [...currentTags, tagInput.trim()] }));
-            }
-            setTagInput('');
-        }
-    };
-
-    const removeTag = (tagToRemove: string) => {
-        setFormData(prev => ({
-            ...prev,
-            tags: (prev.tags || []).filter(tag => tag !== tagToRemove)
-        }));
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Basic validation
-        if (!formData.name) return;
+        if (!formData.core.name) return;
         onSubmit(formData);
     };
 
@@ -120,17 +167,15 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         <form onSubmit={handleSubmit}>
             <VStack gap={6} align="stretch">
                 <RecipeBasicsForm
-                    formData={formData}
-                    handleChange={handleChange}
-                    handleNumberChange={handleNumberChange}
-                    tagInput={tagInput}
-                    setTagInput={setTagInput}
-                    handleTagKeyDown={handleTagKeyDown}
-                    removeTag={removeTag}
+                    core={formData.core}
+                    times={formData.times}
+                    handleCoreChange={handleCoreChange}
+                    handleCoreNumberChange={handleCoreNumberChange}
+                    handleTimesChange={handleTimesChange}
                 />
 
                 <RecipeIngredientsForm
-                    ingredients={formData.ingredients}
+                    ingredients={formData.components?.[0]?.ingredients || []}
                     handleIngredientChange={handleIngredientChange}
                     addIngredient={addIngredient}
                     removeIngredient={removeIngredient}
