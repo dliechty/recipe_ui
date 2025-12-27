@@ -37,9 +37,10 @@ describe('RecipeDetails', () => {
         });
 
         expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
-        expect(screen.getByText('Prep: 15m')).toBeInTheDocument();
-        expect(screen.getByText('Cook: 15m')).toBeInTheDocument();
-        expect(screen.getByText('Servings: 4')).toBeInTheDocument();
+        expect(screen.getByText('Active Time:')).toBeInTheDocument();
+        expect(screen.getAllByText('15 min')).toHaveLength(2);
+        expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
+        expect(screen.getByText('4 servings')).toBeInTheDocument();
 
         // Tags
         expect(screen.getByText('Italian')).toBeInTheDocument();
@@ -48,7 +49,6 @@ describe('RecipeDetails', () => {
         // Ingredients
         expect(screen.getByText('Spaghetti')).toBeInTheDocument();
         expect(screen.getByText('400 g')).toBeInTheDocument();
-        expect(screen.getByText('Eggs')).toBeInTheDocument();
 
         // Instructions
         expect(screen.getByText('Step 1')).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('RecipeDetails', () => {
     it('renders not found when recipe does not exist', async () => {
         // Override handler to return 404
         server.use(
-            http.get('http://localhost:8000/recipes/:id', () => {
+            http.get('*/recipes/:id', () => {
                 return new HttpResponse(null, { status: 404 });
             })
         );

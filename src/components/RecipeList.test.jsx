@@ -32,13 +32,13 @@ describe('RecipeList', () => {
         expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
 
         // Verify new fields are displayed
-        expect(screen.getByText('Prep: 15m')).toBeInTheDocument();
+        expect(screen.getByText('Active: 15m')).toBeInTheDocument();
         expect(screen.getByText('Cook: 15m')).toBeInTheDocument();
-        expect(screen.getByText('Servings: 4')).toBeInTheDocument();
+        expect(screen.getByText('Yield: 4 servings')).toBeInTheDocument();
 
-        expect(screen.getByText('Prep: 20m')).toBeInTheDocument();
+        expect(screen.getByText('Active: 20m')).toBeInTheDocument();
         expect(screen.getByText('Cook: 45m')).toBeInTheDocument();
-        expect(screen.getByText('Servings: 6')).toBeInTheDocument();
+        expect(screen.getByText('Yield: 6 servings')).toBeInTheDocument();
 
         // Verify tags are displayed
         expect(screen.getByText('Italian')).toBeInTheDocument();
