@@ -44,7 +44,13 @@ const RecipeList = () => {
             <HStack mb={8}>
                 <Heading color="fg.default">All Recipes</Heading>
                 <Spacer />
-                <Button leftIcon={<Icon as={FaPlus} />} colorScheme="blue" onClick={() => navigate('/recipes/new')}>
+                <Button
+                    leftIcon={<Icon as={FaPlus} />}
+                    onClick={() => navigate('/recipes/new')}
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                >
                     Add Recipe
                 </Button>
             </HStack>
