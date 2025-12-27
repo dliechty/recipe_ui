@@ -15,9 +15,10 @@ import {
     ListItem,
     Icon,
     Grid,
-    GridItem
+    GridItem,
+    Spacer
 } from '@chakra-ui/react';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { RecipesService } from '../client';
 import { useAuth } from '../context/AuthContext';
 
@@ -64,9 +65,15 @@ const RecipeDetails = () => {
 
     return (
         <Container maxW="container.xl" py={8}>
-            <Button mb={6} onClick={() => navigate('/recipes')} variant="ghost" className="no-print">
-                &larr; Back to Recipes
-            </Button>
+            <HStack mb={6} className="no-print">
+                <Button onClick={() => navigate('/recipes')} variant="ghost">
+                    &larr; Back to Recipes
+                </Button>
+                <Spacer />
+                <Button leftIcon={<Icon as={FaEdit} />} onClick={() => navigate(`/recipes/${id}/edit`)}>
+                    Edit Recipe
+                </Button>
+            </HStack>
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.name}</Heading>
@@ -112,7 +119,7 @@ const RecipeDetails = () => {
                                 <ListItem key={index} display="flex" alignItems="center">
                                     <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
                                     <Text>
-                                        <Text as="span" fontWeight="bold">{ingredient.amount} {ingredient.unit}</Text> {ingredient.name}
+                                        <Text as="span" fontWeight="bold">{ingredient.quantity} {ingredient.unit}</Text> {ingredient.ingredient.name}
                                     </Text>
                                 </ListItem>
                             ))}

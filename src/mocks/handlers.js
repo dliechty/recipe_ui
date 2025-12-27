@@ -13,11 +13,11 @@ export const handlers = [
                 cook_time_minutes: 15,
                 servings: 4,
                 ingredients: [
-                    { name: 'Spaghetti', amount: 400, unit: 'g' },
-                    { name: 'Eggs', amount: 4, unit: 'large' },
-                    { name: 'Pecorino Romano', amount: 100, unit: 'g' },
-                    { name: 'Guanciale', amount: 150, unit: 'g' },
-                    { name: 'Black Pepper', amount: 1, unit: 'tsp' }
+                    { id: 1, ingredient: { id: 1, name: 'Spaghetti' }, quantity: '400', unit: 'g' },
+                    { id: 2, ingredient: { id: 2, name: 'Eggs' }, quantity: '4', unit: 'large' },
+                    { id: 3, ingredient: { id: 3, name: 'Pecorino Romano' }, quantity: '100', unit: 'g' },
+                    { id: 4, ingredient: { id: 4, name: 'Guanciale' }, quantity: '150', unit: 'g' },
+                    { id: 5, ingredient: { id: 5, name: 'Black Pepper' }, quantity: '1', unit: 'tsp' }
                 ],
                 instructions: [
                     { step_number: 1, description: 'Boil the pasta in salted water.' },
@@ -36,10 +36,10 @@ export const handlers = [
                 cook_time_minutes: 45,
                 servings: 6,
                 ingredients: [
-                    { name: 'Chicken Breast', amount: 500, unit: 'g' },
-                    { name: 'Coconut Milk', amount: 400, unit: 'ml' },
-                    { name: 'Curry Powder', amount: 3, unit: 'tbsp' },
-                    { name: 'Onion', amount: 1, unit: 'large' }
+                    { id: 6, ingredient: { id: 6, name: 'Chicken Breast' }, quantity: '500', unit: 'g' },
+                    { id: 7, ingredient: { id: 7, name: 'Coconut Milk' }, quantity: '400', unit: 'ml' },
+                    { id: 8, ingredient: { id: 8, name: 'Curry Powder' }, quantity: '3', unit: 'tbsp' },
+                    { id: 9, ingredient: { id: 9, name: 'Onion' }, quantity: '1', unit: 'large' }
                 ],
                 instructions: [
                     { step_number: 1, description: 'Sauté onions manually.' },
@@ -58,10 +58,10 @@ export const handlers = [
                 cook_time_minutes: 0,
                 servings: 1,
                 ingredients: [
-                    { name: 'Bread', amount: 2, unit: 'slices' },
-                    { name: 'Avocado', amount: 1, unit: 'ripe' },
-                    { name: 'Salt', amount: 1, unit: 'pinch' },
-                    { name: 'Chili Flakes', amount: 1, unit: 'pinch' }
+                    { id: 10, ingredient: { id: 10, name: 'Bread' }, quantity: '2', unit: 'slices' },
+                    { id: 11, ingredient: { id: 11, name: 'Avocado' }, quantity: '1', unit: 'ripe' },
+                    { id: 12, ingredient: { id: 12, name: 'Salt' }, quantity: '1', unit: 'pinch' },
+                    { id: 13, ingredient: { id: 13, name: 'Chili Flakes' }, quantity: '1', unit: 'pinch' }
                 ],
                 instructions: [
                     { step_number: 1, description: 'Toast the bread.' },
@@ -86,11 +86,11 @@ export const handlers = [
                 cook_time_minutes: 15,
                 servings: 4,
                 ingredients: [
-                    { name: 'Spaghetti', amount: 400, unit: 'g' },
-                    { name: 'Eggs', amount: 4, unit: 'large' },
-                    { name: 'Pecorino Romano', amount: 100, unit: 'g' },
-                    { name: 'Guanciale', amount: 150, unit: 'g' },
-                    { name: 'Black Pepper', amount: 1, unit: 'tsp' }
+                    { id: 1, ingredient: { id: 1, name: 'Spaghetti' }, quantity: '400', unit: 'g' },
+                    { id: 2, ingredient: { id: 2, name: 'Eggs' }, quantity: '4', unit: 'large' },
+                    { id: 3, ingredient: { id: 3, name: 'Pecorino Romano' }, quantity: '100', unit: 'g' },
+                    { id: 4, ingredient: { id: 4, name: 'Guanciale' }, quantity: '150', unit: 'g' },
+                    { id: 5, ingredient: { id: 5, name: 'Black Pepper' }, quantity: '1', unit: 'tsp' }
                 ],
                 instructions: [
                     { step_number: 1, description: 'Boil the pasta in salted water.' },
@@ -109,10 +109,10 @@ export const handlers = [
                 cook_time_minutes: 45,
                 servings: 6,
                 ingredients: [
-                    { name: 'Chicken Breast', amount: 500, unit: 'g' },
-                    { name: 'Coconut Milk', amount: 400, unit: 'ml' },
-                    { name: 'Curry Powder', amount: 3, unit: 'tbsp' },
-                    { name: 'Onion', amount: 1, unit: 'large' }
+                    { id: 6, ingredient: { id: 6, name: 'Chicken Breast' }, quantity: '500', unit: 'g' },
+                    { id: 7, ingredient: { id: 7, name: 'Coconut Milk' }, quantity: '400', unit: 'ml' },
+                    { id: 8, ingredient: { id: 8, name: 'Curry Powder' }, quantity: '3', unit: 'tbsp' },
+                    { id: 9, ingredient: { id: 9, name: 'Onion' }, quantity: '1', unit: 'large' }
                 ],
                 instructions: [
                     { step_number: 1, description: 'Sauté onions manually.' },
@@ -131,10 +131,10 @@ export const handlers = [
                 cook_time_minutes: 0,
                 servings: 1,
                 ingredients: [
-                    { name: 'Bread', amount: 2, unit: 'slices' },
-                    { name: 'Avocado', amount: 1, unit: 'ripe' },
-                    { name: 'Salt', amount: 1, unit: 'pinch' },
-                    { name: 'Chili Flakes', amount: 1, unit: 'pinch' }
+                    { id: 10, ingredient: { id: 10, name: 'Bread' }, quantity: '2', unit: 'slices' },
+                    { id: 11, ingredient: { id: 11, name: 'Avocado' }, quantity: '1', unit: 'ripe' },
+                    { id: 12, ingredient: { id: 12, name: 'Salt' }, quantity: '1', unit: 'pinch' },
+                    { id: 13, ingredient: { id: 13, name: 'Chili Flakes' }, quantity: '1', unit: 'pinch' }
                 ],
                 instructions: [
                     { step_number: 1, description: 'Toast the bread.' },
@@ -149,10 +149,57 @@ export const handlers = [
         const recipe = recipes.find(r => r.id === Number(id));
 
         if (!recipe) {
+            // Fallback to searching the full list from the first handler if we wanted DRY, but here just return 404
+            if (Number(id) === 1) return HttpResponse.json(recipes[0]);
             return new HttpResponse(null, { status: 404 });
         }
 
         return HttpResponse.json(recipe);
+    }),
+
+    // Intercept "POST /recipes/" requests...
+    http.post('http://localhost:8000/recipes/', async ({ request }) => {
+        const newRecipe = await request.json();
+        return HttpResponse.json({
+            ...newRecipe,
+            id: Math.floor(Math.random() * 1000) + 4, // Generate random ID
+            owner_id: 1,
+            ingredients: newRecipe.ingredients.map((ing, i) => ({
+                id: i + 1,
+                ingredient: { id: i + 1, name: ing.ingredient_name },
+                quantity: ing.quantity,
+                unit: ing.unit,
+                notes: ing.notes
+            })),
+            instructions: newRecipe.instructions.map((inst, i) => ({
+                id: i + 1,
+                step_number: inst.step_number,
+                description: inst.description
+            }))
+        });
+    }),
+
+    // Intercept "PUT /recipes/:id" requests...
+    http.put('http://localhost:8000/recipes/:id', async ({ request, params }) => {
+        const { id } = params;
+        const updatedRecipe = await request.json();
+        return HttpResponse.json({
+            ...updatedRecipe,
+            id: Number(id),
+            owner_id: 1,
+            ingredients: updatedRecipe.ingredients.map((ing, i) => ({
+                id: i + 1,
+                ingredient: { id: i + 1, name: ing.ingredient_name },
+                quantity: ing.quantity,
+                unit: ing.unit,
+                notes: ing.notes
+            })),
+            instructions: updatedRecipe.instructions.map((inst, i) => ({
+                id: i + 1,
+                step_number: inst.step_number,
+                description: inst.description
+            }))
+        });
     }),
 
     // Intercept "POST /auth/token" requests...

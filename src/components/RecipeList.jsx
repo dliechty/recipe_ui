@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge } from '@chakra-ui/react';
+import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon } from '@chakra-ui/react';
+import { FaPlus } from 'react-icons/fa';
 import { RecipesService } from '../client';
 import { useAuth } from '../context/AuthContext';
 
@@ -40,7 +41,13 @@ const RecipeList = () => {
 
     return (
         <Container maxW="container.xl" py={8}>
-            <Heading mb={8} color="fg.default">All Recipes</Heading>
+            <HStack mb={8}>
+                <Heading color="fg.default">All Recipes</Heading>
+                <Spacer />
+                <Button leftIcon={<Icon as={FaPlus} />} colorScheme="blue" onClick={() => navigate('/recipes/new')}>
+                    Add Recipe
+                </Button>
+            </HStack>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
                 {recipes.map((recipe) => (
                     <Box

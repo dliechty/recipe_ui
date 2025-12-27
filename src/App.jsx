@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import RecipeList from './components/RecipeList';
 import RecipeDetails from './components/RecipeDetails';
+import AddRecipePage from './components/AddRecipePage';
+import EditRecipePage from './components/EditRecipePage';
 import LoginPage from './components/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -24,10 +26,26 @@ function App() {
                         }
                     />
                     <Route
+                        path="/recipes/new"
+                        element={
+                            <ProtectedRoute>
+                                <AddRecipePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
                         path="/recipes/:id"
                         element={
                             <ProtectedRoute>
                                 <RecipeDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/recipes/:id/edit"
+                        element={
+                            <ProtectedRoute>
+                                <EditRecipePage />
                             </ProtectedRoute>
                         }
                     />
