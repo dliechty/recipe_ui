@@ -73,6 +73,9 @@ const RecipeList = () => {
                             {recipe.core.cuisine && (
                                 <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>
                             )}
+                            {recipe.core.category && (
+                                <Badge colorPalette="orange">{recipe.core.category}</Badge>
+                            )}
                         </HStack>
                     </Box>
                 ))}
