@@ -67,7 +67,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Recipe not found.')).toBeInTheDocument();
+            expect(screen.getByText('Failed to load recipe')).toBeInTheDocument();
         });
 
         expect(screen.getByText('Back to Recipes')).toBeInTheDocument();

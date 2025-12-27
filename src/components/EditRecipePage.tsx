@@ -4,6 +4,7 @@ import { Container, Heading, Spinner, Center, Text } from '@chakra-ui/react';
 import RecipeForm from './RecipeForm';
 import { useRecipe, useUpdateRecipe } from '../hooks/useRecipes';
 import { RecipeCreate } from '../client';
+import { toaster } from '../toaster';
 
 const EditRecipePage = () => {
     const { id } = useParams();
@@ -14,11 +15,19 @@ const EditRecipePage = () => {
     const handleSubmit = (formData: RecipeCreate) => {
         updateRecipeMutation.mutate({ id: Number(id), requestBody: formData }, {
             onSuccess: () => {
+                toaster.create({
+                    title: "Recipe updated",
+                    type: "success",
+                });
                 navigate(`/recipes/${id}`);
             },
             onError: (error) => {
                 console.error("Failed to update recipe:", error);
-                alert("Unable to update recipe.");
+                toaster.create({
+                    title: "Failed to update recipe",
+                    description: error.message || "Unknown error",
+                    type: "error",
+                });
             }
         });
     };

@@ -4,13 +4,17 @@ import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Bad
 import { FaPlus } from 'react-icons/fa';
 import { useRecipes } from '../hooks/useRecipes';
 import { useAuth } from '../context/AuthContext';
+import ErrorAlert from './ErrorAlert';
 
 const RecipeList = () => {
     const { data: recipes = [], isLoading: loading, error } = useRecipes();
 
     if (error) {
-        console.error("Failed to fetch recipes:", error);
-        // You might want to render an error state here
+        return (
+            <Container maxW="container.xl" py={8}>
+                <ErrorAlert title="Failed to load recipes" description={error.message || "An unexpected error occurred."} />
+            </Container>
+        );
     }
 
     const navigate = useNavigate();

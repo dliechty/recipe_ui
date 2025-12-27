@@ -4,6 +4,7 @@ import { Container, Heading } from '@chakra-ui/react';
 import RecipeForm from './RecipeForm';
 import { useCreateRecipe } from '../hooks/useRecipes';
 import { RecipeCreate } from '../client';
+import { toaster } from '../toaster';
 
 const AddRecipePage = () => {
     const navigate = useNavigate();
@@ -12,11 +13,19 @@ const AddRecipePage = () => {
     const handleSubmit = async (formData: RecipeCreate) => {
         createRecipeMutation.mutate(formData, {
             onSuccess: () => {
+                toaster.create({
+                    title: "Recipe created",
+                    type: "success",
+                });
                 navigate('/recipes');
             },
             onError: (error) => {
                 console.error("Failed to create recipe:", error);
-                alert("Unable to create recipe.");
+                toaster.create({
+                    title: "Failed to create recipe",
+                    description: error.message || "Unknown error",
+                    type: "error",
+                });
             }
         });
     };

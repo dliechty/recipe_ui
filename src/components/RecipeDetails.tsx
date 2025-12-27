@@ -21,6 +21,7 @@ import {
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../hooks/useRecipes';
 import { useAuth } from '../context/AuthContext';
+import ErrorAlert from './ErrorAlert';
 
 const RecipeDetails = () => {
     const { id } = useParams();
@@ -28,7 +29,12 @@ const RecipeDetails = () => {
     const { data: recipe, isLoading: loading, error } = useRecipe(Number(id));
 
     if (error) {
-        console.error("Failed to fetch recipe:", error);
+        return (
+            <Container maxW="container.xl" py={8}>
+                <ErrorAlert title="Failed to load recipe" description={error.message || "An unexpected error occurred."} />
+                <Button mt={4} onClick={() => navigate('/recipes')}>Back to Recipes</Button>
+            </Container>
+        );
     }
 
     if (loading) {
