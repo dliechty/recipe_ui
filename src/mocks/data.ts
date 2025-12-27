@@ -4,7 +4,7 @@ export const recipes = [
             id: "1",
             name: 'Spaghetti Carbonara',
             description_short: 'A classic Italian pasta dish.',
-            description_long: 'Authentication spaghetti.',
+            description_long: 'This is a longer description of the classic Italian pasta dish recipe.',
             yield_amount: 4,
             yield_unit: 'servings',
             difficulty: 'Medium',

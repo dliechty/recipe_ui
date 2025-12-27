@@ -33,7 +33,8 @@ describe('RecipeDetails', () => {
 
         expect(screen.getByText('Authentication spaghetti.')).toBeInTheDocument();
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
-        expect(screen.getAllByText('15 min')).toHaveLength(2);
+        expect(screen.getAllByText('15 min')).toHaveLength(3);
+        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
         expect(screen.getByText('4 servings')).toBeInTheDocument();
 

@@ -77,6 +77,11 @@ const RecipeDetails = () => {
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>
+                {recipe.core.description_short && (
+                    <Text color="fg.muted" mb={4} fontStyle="italic">
+                        {recipe.core.description_short}
+                    </Text>
+                )}
 
                 <HStack gap={2} mb={6}>
                     {recipe.core.cuisine && <Badge colorScheme="purple">{recipe.core.cuisine}</Badge>}
@@ -94,6 +99,9 @@ const RecipeDetails = () => {
                                 <Grid templateColumns="auto 1fr" gap={2} rowGap={1}>
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
                                     <Text fontSize="sm">{recipe.times.total_time_minutes} min</Text>
+
+                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Prep Time:</Text>
+                                    <Text fontSize="sm">{recipe.times.prep_time_minutes} min</Text>
 
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Active Time:</Text>
                                     <Text fontSize="sm">{recipe.times.active_time_minutes} min</Text>
