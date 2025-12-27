@@ -1,26 +1,36 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { OpenAPI } from '../client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext(null);
+interface AuthContextType {
+    token: string | null;
+    isAuthenticated: boolean;
+    login: (newToken: string) => void;
+    logout: () => void;
+}
 
-export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem('token'));
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+    const isAuthenticated = !!token;
 
     useEffect(() => {
-        OpenAPI.TOKEN = token;
+        if (token) {
+            OpenAPI.TOKEN = token;
+            localStorage.setItem('token', token);
+        } else {
+            OpenAPI.TOKEN = undefined;
+            localStorage.removeItem('token');
+        }
     }, [token]);
 
-    const login = (newToken) => {
-        localStorage.setItem('token', newToken);
+    const login = (newToken: string) => {
         setToken(newToken);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
         setToken(null);
     };
-
-    const isAuthenticated = !!token;
 
     return (
         <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>

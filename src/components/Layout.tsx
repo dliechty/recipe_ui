@@ -4,7 +4,12 @@ import { Link as NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 
-const NavItem = ({ to, children }) => (
+interface NavItemProps {
+    to: string;
+    children: React.ReactNode;
+}
+
+const NavItem = ({ to, children }: NavItemProps) => (
     <Box
         as={NavLink}
         // @ts-expect-error - 'to' is passed to NavLink but Box types don't know it
@@ -28,7 +33,11 @@ const NavItem = ({ to, children }) => (
     </Box>
 );
 
-const Layout = ({ children }) => {
+interface LayoutProps {
+    children: React.ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
     const { isAuthenticated, logout } = useAuth();
 
     return (

@@ -22,7 +22,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 // Helper to wrap components
-const renderWithProviders = (ui, { route = '/' } = {}) => {
+const renderWithProviders = (ui: React.ReactElement, { route = '/' }: { route?: string } = {}) => {
     window.history.pushState({}, 'Test page', route);
     const queryClient = new QueryClient({
         defaultOptions: {

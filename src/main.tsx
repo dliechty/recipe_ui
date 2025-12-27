@@ -39,7 +39,7 @@ const queryClient = new QueryClient({
 })
 
 enableMocking().then(() => {
-  ReactDOM.createRoot(document.getElementById('root')).render(
+  ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <ChakraProvider value={system}>

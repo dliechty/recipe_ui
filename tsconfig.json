@@ -17,7 +17,7 @@
         "noEmit": true,
         "jsx": "react-jsx",
         /* Linting */
-        "strict": false, // Start loose for migration
+        "strict": true, // Start loose for migration
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true

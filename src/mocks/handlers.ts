@@ -29,14 +29,14 @@ export const handlers = [
             ...newRecipe,
             id: Math.floor(Math.random() * 1000) + 4, // Generate random ID
             owner_id: 1,
-            ingredients: newRecipe.ingredients.map((ing, i) => ({
+            ingredients: newRecipe.ingredients.map((ing: any, i: number) => ({
                 id: i + 1,
                 ingredient: { id: i + 1, name: ing.ingredient_name },
                 quantity: ing.quantity,
                 unit: ing.unit,
                 notes: ing.notes
             })),
-            instructions: newRecipe.instructions.map((inst, i) => ({
+            instructions: newRecipe.instructions.map((inst: any, i: number) => ({
                 id: i + 1,
                 step_number: inst.step_number,
                 description: inst.description
@@ -63,7 +63,7 @@ export const handlers = [
             ...updatedData,
             id: Number(id),
             owner_id: 1,
-            ingredients: updatedData.ingredients.map((ing, i) => ({
+            ingredients: updatedData.ingredients.map((ing: any, i: number) => ({
                 id: i + 1,
                 // reuse existing ingredient id if plausible, or generate new
                 ingredient: { id: i + 1, name: ing.ingredient_name },
@@ -71,7 +71,7 @@ export const handlers = [
                 unit: ing.unit,
                 notes: ing.notes
             })),
-            instructions: updatedData.instructions.map((inst, i) => ({
+            instructions: updatedData.instructions.map((inst: any, i: number) => ({
                 id: i + 1,
                 step_number: inst.step_number,
                 description: inst.description

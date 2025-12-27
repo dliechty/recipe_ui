@@ -15,7 +15,7 @@ const RecipeList = () => {
 
     const navigate = useNavigate();
 
-    const handleRecipeClick = (id) => {
+    const handleRecipeClick = (id: number) => {
         navigate(`/recipes/${id}`);
     };
 
@@ -63,7 +63,7 @@ const RecipeList = () => {
                             <Badge colorScheme="blue" variant="subtle">Yield: {recipe.servings} servings</Badge>
                         </HStack>
                         <HStack gap={2}>
-                            {recipe.tags.map((tag) => (
+                            {(recipe.tags || []).map((tag) => (
                                 <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
                             ))}
                         </HStack>

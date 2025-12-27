@@ -1,14 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Heading, Box } from '@chakra-ui/react';
+import { Container, Heading } from '@chakra-ui/react';
 import RecipeForm from './RecipeForm';
 import { useCreateRecipe } from '../hooks/useRecipes';
+import { RecipeCreate } from '../client';
 
 const AddRecipePage = () => {
     const navigate = useNavigate();
     const createRecipeMutation = useCreateRecipe();
 
-    const handleSubmit = async (formData) => {
+    const handleSubmit = async (formData: RecipeCreate) => {
         createRecipeMutation.mutate(formData, {
             onSuccess: () => {
                 navigate('/recipes');

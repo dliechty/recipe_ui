@@ -74,7 +74,7 @@ const RecipeDetails = () => {
                 <Heading mb={2} color="fg.default">{recipe.name}</Heading>
 
                 <HStack gap={2} mb={6}>
-                    {recipe.tags.map((tag) => (
+                    {(recipe.tags || []).map((tag) => (
                         <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
                     ))}
                 </HStack>
@@ -110,7 +110,7 @@ const RecipeDetails = () => {
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
                         <List.Root gap={3} mb={8} pt={4}>
-                            {recipe.ingredients.map((ingredient, index) => (
+                            {(recipe.ingredients || []).map((ingredient, index) => (
                                 <List.Item key={index} display="flex" alignItems="center">
                                     <List.Indicator asChild>
                                         <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
@@ -126,7 +126,7 @@ const RecipeDetails = () => {
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
                         <VStack align="stretch" gap={4}>
-                            {recipe.instructions.map((step) => (
+                            {(recipe.instructions || []).map((step) => (
                                 <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
                                     <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
                                     <Text>{step.description}</Text>

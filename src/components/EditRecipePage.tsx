@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Heading, Spinner, Center, Text } from '@chakra-ui/react';
 import RecipeForm from './RecipeForm';
 import { useRecipe, useUpdateRecipe } from '../hooks/useRecipes';
+import { RecipeCreate } from '../client';
 
 const EditRecipePage = () => {
     const { id } = useParams();
@@ -10,7 +11,7 @@ const EditRecipePage = () => {
     const { data: recipeData, isLoading: isFetching, error } = useRecipe(Number(id));
     const updateRecipeMutation = useUpdateRecipe();
 
-    const handleSubmit = (formData) => {
+    const handleSubmit = (formData: RecipeCreate) => {
         updateRecipeMutation.mutate({ id: Number(id), requestBody: formData }, {
             onSuccess: () => {
                 navigate(`/recipes/${id}`);
@@ -39,24 +40,24 @@ const EditRecipePage = () => {
     }
 
     // Transform data for the form
-    const initialData = {
+    const initialData: RecipeCreate = {
         name: recipeData.name,
         description: recipeData.description,
         prep_time_minutes: recipeData.prep_time_minutes,
         cook_time_minutes: recipeData.cook_time_minutes,
         servings: recipeData.servings,
         source: recipeData.source,
-        tags: recipeData.tags.map(t => t.name),
-        ingredients: recipeData.ingredients.map(i => ({
+        tags: recipeData.tags?.map(t => t.name) || [],
+        ingredients: recipeData.ingredients?.map(i => ({
             ingredient_name: i.ingredient.name,
             quantity: i.quantity,
             unit: i.unit,
             notes: i.notes
-        })),
-        instructions: recipeData.instructions.map(i => ({
+        })) || [],
+        instructions: recipeData.instructions?.map(i => ({
             step_number: i.step_number,
             description: i.description
-        }))
+        })) || []
     };
 
     return (
