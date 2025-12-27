@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
 import { useRecipes } from '../hooks/useRecipes';
-import { useAuth } from '../context/AuthContext';
 import ErrorAlert from './ErrorAlert';
 
 const RecipeList = () => {

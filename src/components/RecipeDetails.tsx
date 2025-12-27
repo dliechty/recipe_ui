@@ -20,7 +20,6 @@ import {
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../hooks/useRecipes';
-import { useAuth } from '../context/AuthContext';
 import ErrorAlert from './ErrorAlert';
 
 const RecipeDetails = () => {
