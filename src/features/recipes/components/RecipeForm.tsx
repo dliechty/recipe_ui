@@ -3,7 +3,7 @@ import {
     Button,
     VStack,
 } from '@chakra-ui/react';
-import { RecipeCreate, RecipeIngredientCreate, InstructionCreate } from '../client';
+import { RecipeCreate, RecipeIngredientCreate, InstructionCreate } from '../../../client';
 import RecipeBasicsForm from './RecipeBasicsForm';
 import RecipeIngredientsForm from './RecipeIngredientsForm';
 import RecipeInstructionsForm from './RecipeInstructionsForm';

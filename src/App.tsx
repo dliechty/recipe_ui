@@ -1,16 +1,16 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Spinner, Center } from '@chakra-ui/react';
-import ProtectedRoute from './components/ProtectedRoute';
-import Layout from './components/Layout';
+import ProtectedRoute from './features/auth/components/ProtectedRoute';
+import Layout from './components/layout/Layout';
 import { useAuth } from './context/AuthContext';
 
 // Lazy load components
-const RecipeList = React.lazy(() => import('./components/RecipeList'));
-const RecipeDetails = React.lazy(() => import('./components/RecipeDetails'));
-const AddRecipePage = React.lazy(() => import('./components/AddRecipePage'));
-const EditRecipePage = React.lazy(() => import('./components/EditRecipePage'));
-const LoginPage = React.lazy(() => import('./components/LoginPage'));
+const RecipeList = React.lazy(() => import('./features/recipes/components/RecipeList'));
+const RecipeDetails = React.lazy(() => import('./features/recipes/components/RecipeDetails'));
+const AddRecipePage = React.lazy(() => import('./features/recipes/pages/AddRecipePage'));
+const EditRecipePage = React.lazy(() => import('./features/recipes/pages/EditRecipePage'));
+const LoginPage = React.lazy(() => import('./features/auth/components/LoginPage'));
 
 function App() {
     const { isAuthenticated } = useAuth();

@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ChakraProvider } from '@chakra-ui/react';
-import LoginPage from './LoginPage';
+import LoginPage from '../components/LoginPage';
 import { MemoryRouter } from 'react-router-dom';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider } from '../../../context/AuthContext';
 import { describe, it, expect } from 'vitest';
 
-import { system } from '../theme';
+import { system } from '../../../theme';
 
 describe('LoginPage', () => {
     it('allows user to login', async () => {

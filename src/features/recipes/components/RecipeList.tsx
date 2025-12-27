@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
-import { useRecipes } from '../hooks/useRecipes';
-import ErrorAlert from './ErrorAlert';
+import { useRecipes } from '../../../hooks/useRecipes';
+import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const RecipeList = () => {
     const { data: recipes = [], isLoading: loading, error } = useRecipes();

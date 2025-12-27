@@ -19,8 +19,8 @@ import {
     Spacer
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
-import { useRecipe } from '../hooks/useRecipes';
-import ErrorAlert from './ErrorAlert';
+import { useRecipe } from '../../../hooks/useRecipes';
+import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const RecipeDetails = () => {
     const { id } = useParams();

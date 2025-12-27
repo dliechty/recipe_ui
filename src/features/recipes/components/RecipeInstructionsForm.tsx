@@ -10,7 +10,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
-import { InstructionCreate } from '../client';
+import { InstructionCreate } from '../../../client';
 
 interface RecipeInstructionsFormProps {
     instructions: InstructionCreate[];

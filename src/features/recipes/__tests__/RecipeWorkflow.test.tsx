@@ -1,11 +1,11 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
-import AddRecipePage from './AddRecipePage';
-import EditRecipePage from './EditRecipePage';
-import { AuthProvider } from '../context/AuthContext';
+import AddRecipePage from '../pages/AddRecipePage';
+import EditRecipePage from '../pages/EditRecipePage';
+import { AuthProvider } from '../../../context/AuthContext';
 import { ChakraProvider } from '@chakra-ui/react';
-import { system } from '../theme';
+import { system } from '../../../theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock useNavigate

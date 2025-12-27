@@ -10,7 +10,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
-import { RecipeIngredientCreate } from '../client';
+import { RecipeIngredientCreate } from '../../../client';
 
 interface RecipeIngredientsFormProps {
     ingredients: RecipeIngredientCreate[];

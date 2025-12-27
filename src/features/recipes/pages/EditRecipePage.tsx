@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Heading, Spinner, Center, Text } from '@chakra-ui/react';
-import RecipeForm from './RecipeForm';
-import { useRecipe, useUpdateRecipe } from '../hooks/useRecipes';
-import { RecipeCreate } from '../client';
-import { toaster } from '../toaster';
+import RecipeForm from '../components/RecipeForm';
+import { useRecipe, useUpdateRecipe } from '../../../hooks/useRecipes';
+import { RecipeCreate } from '../../../client';
+import { toaster } from '../../../toaster';
 
 const EditRecipePage = () => {
     const { id } = useParams();

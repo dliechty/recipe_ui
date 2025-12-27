@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Heading } from '@chakra-ui/react';
-import RecipeForm from './RecipeForm';
-import { useCreateRecipe } from '../hooks/useRecipes';
-import { RecipeCreate } from '../client';
-import { toaster } from '../toaster';
+import RecipeForm from '../components/RecipeForm';
+import { useCreateRecipe } from '../../../hooks/useRecipes';
+import { RecipeCreate } from '../../../client';
+import { toaster } from '../../../toaster';
 
 const AddRecipePage = () => {
     const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Flex, HStack, Link, Button } from '@chakra-ui/react';
 import { Link as NavLink } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 
 interface NavItemProps {

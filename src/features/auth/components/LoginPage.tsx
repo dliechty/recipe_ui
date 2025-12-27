@@ -9,8 +9,8 @@ import {
     Text
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { AuthenticationService } from '../client';
+import { useAuth } from '../../../context/AuthContext';
+import { AuthenticationService } from '../../../client';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');

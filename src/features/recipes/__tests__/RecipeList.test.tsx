@@ -1,10 +1,10 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor } from '../test-utils';
+import { renderWithProviders, screen, waitFor } from '../../../test-utils';
 import { MemoryRouter } from 'react-router-dom';
-import RecipeList from './RecipeList';
+import RecipeList from '../components/RecipeList';
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => ({ token: 'mock-token' }),
 }));
 

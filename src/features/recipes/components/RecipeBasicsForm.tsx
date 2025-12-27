@@ -11,7 +11,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import { FaTrash } from 'react-icons/fa';
-import { RecipeCreate } from '../client';
+import { RecipeCreate } from '../../../client';
 
 interface RecipeBasicsFormProps {
     formData: RecipeCreate;
@@ -75,7 +75,7 @@ const RecipeBasicsForm = ({
                                 placeholder="Add tags..."
                             />
                             <HStack mt={2} wrap="wrap" gap={2}>
-                                {(formData.tags || []).map((tag, index) => (
+                                {(formData.tags || []).map((tag: string, index: number) => (
                                     <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
                                         {tag}
                                         <Icon as={FaTrash} ml={2} cursor="pointer" onClick={() => removeTag(tag)} boxSize={3} />

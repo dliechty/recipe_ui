@@ -1,13 +1,13 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor } from '../test-utils';
+import { renderWithProviders, screen, waitFor } from '../../../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import RecipeDetails from './RecipeDetails';
+import RecipeDetails from '../components/RecipeDetails';
 import { describe, it, expect, vi } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { server } from '../mocks/server';
+import { server } from '../../../mocks/server';
 
 // Mock AuthContext
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => ({ token: 'mock-token' }),
 }));
 
