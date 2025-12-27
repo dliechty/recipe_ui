@@ -119,53 +119,67 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
             <VStack spacing={6} align="stretch">
                 <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
                     <Heading size="md" mb={6}>Basic Information</Heading>
-                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-                        <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Recipe Name</Text>
-                            <Input data-testid="recipe-name" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Chocolate Cake" />
-                        </Box>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} alignItems="start">
+                        {/* Left Column: Details */}
+                        <VStack spacing={4} align="stretch">
+                            <Box>
+                                <Text as="label" mb={2} display="block" fontWeight="bold">Recipe Name</Text>
+                                <Input data-testid="recipe-name" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Chocolate Cake" />
+                            </Box>
 
-                        <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Source</Text>
-                            <Input data-testid="recipe-source" name="source" value={formData.source || ''} onChange={handleChange} placeholder="e.g. Grandma's cookbook" />
-                        </Box>
+                            <Box>
+                                <Text as="label" mb={2} display="block" fontWeight="bold">Source</Text>
+                                <Input data-testid="recipe-source" name="source" value={formData.source || ''} onChange={handleChange} placeholder="e.g. Grandma's cookbook" />
+                            </Box>
 
-                        <Box gridColumn={{ md: "span 2" }}>
+                            <SimpleGrid columns={2} spacing={4}>
+                                <Box>
+                                    <Text as="label" mb={2} display="block" fontWeight="bold">Active Time (min)</Text>
+                                    <Input data-testid="recipe-prep-time" type="number" min={0} value={formData.prep_time_minutes} onChange={(e) => handleNumberChange('prep_time_minutes', e.target.value)} />
+                                </Box>
+
+                                <Box>
+                                    <Text as="label" mb={2} display="block" fontWeight="bold">Cook Time (min)</Text>
+                                    <Input data-testid="recipe-cook-time" type="number" min={0} value={formData.cook_time_minutes} onChange={(e) => handleNumberChange('cook_time_minutes', e.target.value)} />
+                                </Box>
+                            </SimpleGrid>
+
+                            <Box>
+                                <Text as="label" mb={2} display="block" fontWeight="bold">Yield (servings)</Text>
+                                <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
+                            </Box>
+
+                            <Box>
+                                <Text as="label" mb={2} display="block" fontWeight="bold">Tags (Press Enter to add)</Text>
+                                <Input
+                                    value={tagInput}
+                                    onChange={(e) => setTagInput(e.target.value)}
+                                    onKeyDown={handleTagKeyDown}
+                                    placeholder="Add tags..."
+                                />
+                                <HStack mt={2} wrap="wrap" spacing={2}>
+                                    {formData.tags.map((tag, index) => (
+                                        <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
+                                            {tag}
+                                            <Icon as={FaTrash} ml={2} cursor="pointer" onClick={() => removeTag(tag)} boxSize={3} />
+                                        </Box>
+                                    ))}
+                                </HStack>
+                            </Box>
+                        </VStack>
+
+                        {/* Right Column: Description */}
+                        <Box h="full">
                             <Text as="label" mb={2} display="block" fontWeight="bold">Description</Text>
-                            <Textarea data-testid="recipe-description" name="description" value={formData.description || ''} onChange={handleChange} placeholder="Brief description of the recipe" />
-                        </Box>
-
-                        <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Prep Time (minutes)</Text>
-                            <Input data-testid="recipe-prep-time" type="number" min={0} value={formData.prep_time_minutes} onChange={(e) => handleNumberChange('prep_time_minutes', e.target.value)} />
-                        </Box>
-
-                        <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Cook Time (minutes)</Text>
-                            <Input data-testid="recipe-cook-time" type="number" min={0} value={formData.cook_time_minutes} onChange={(e) => handleNumberChange('cook_time_minutes', e.target.value)} />
-                        </Box>
-
-                        <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Servings</Text>
-                            <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
-                        </Box>
-
-                        <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Tags (Press Enter to add)</Text>
-                            <Input
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                onKeyDown={handleTagKeyDown}
-                                placeholder="Add tags..."
+                            <Textarea
+                                data-testid="recipe-description"
+                                name="description"
+                                value={formData.description || ''}
+                                onChange={handleChange}
+                                placeholder="Brief description of the recipe"
+                                h={{ md: "full" }}
+                                minH="50px"
                             />
-                            <HStack mt={2} wrap="wrap" spacing={2}>
-                                {formData.tags.map((tag, index) => (
-                                    <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
-                                        {tag}
-                                        <Icon as={FaTrash} ml={2} cursor="pointer" onClick={() => removeTag(tag)} boxSize={3} />
-                                    </Box>
-                                ))}
-                            </HStack>
                         </Box>
                     </SimpleGrid>
                 </Box>
@@ -218,7 +232,14 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                 </Box>
                             </HStack>
                         ))}
-                        <Button leftIcon={<FaPlus />} onClick={addIngredient} variant="outline" alignSelf="start">
+                        <Button
+                            leftIcon={<FaPlus />}
+                            onClick={addIngredient}
+                            bg="vscode.button"
+                            color="white"
+                            _hover={{ bg: "vscode.buttonHover" }}
+                            alignSelf="start"
+                        >
                             Add Ingredient
                         </Button>
                     </VStack>
@@ -251,13 +272,28 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                 </Box>
                             </HStack>
                         ))}
-                        <Button leftIcon={<FaPlus />} onClick={addInstruction} variant="outline" alignSelf="start">
+                        <Button
+                            leftIcon={<FaPlus />}
+                            onClick={addInstruction}
+                            bg="vscode.button"
+                            color="white"
+                            _hover={{ bg: "vscode.buttonHover" }}
+                            alignSelf="start"
+                        >
                             Add Step
                         </Button>
                     </VStack>
                 </Box>
 
-                <Button type="submit" colorScheme="blue" size="lg" isLoading={isLoading} loadingText="Saving...">
+                <Button
+                    type="submit"
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                    size="lg"
+                    isLoading={isLoading}
+                    loadingText="Saving..."
+                >
                     Save Recipe
                 </Button>
             </VStack>

@@ -74,14 +74,6 @@ const RecipeDetails = () => {
     return (
         <Container maxW="container.xl" py={8}>
             <HStack mb={6} className="no-print">
-                <Button
-                    onClick={() => navigate('/recipes')}
-                    bg="vscode.button"
-                    color="white"
-                    _hover={{ bg: "vscode.buttonHover" }}
-                >
-                    &larr; Back to Recipes
-                </Button>
                 <Spacer />
                 <Button
                     leftIcon={<Icon as={FaEdit} />}
