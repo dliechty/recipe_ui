@@ -58,7 +58,15 @@ const RecipeDetails = () => {
         return (
             <Container maxW="container.md" py={8}>
                 <Text>Recipe not found.</Text>
-                <Button mt={4} onClick={() => navigate('/recipes')}>Back to Recipes</Button>
+                <Button
+                    mt={4}
+                    onClick={() => navigate('/recipes')}
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                >
+                    Back to Recipes
+                </Button>
             </Container>
         );
     }
@@ -66,11 +74,22 @@ const RecipeDetails = () => {
     return (
         <Container maxW="container.xl" py={8}>
             <HStack mb={6} className="no-print">
-                <Button onClick={() => navigate('/recipes')} variant="ghost">
+                <Button
+                    onClick={() => navigate('/recipes')}
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                >
                     &larr; Back to Recipes
                 </Button>
                 <Spacer />
-                <Button leftIcon={<Icon as={FaEdit} />} onClick={() => navigate(`/recipes/${id}/edit`)}>
+                <Button
+                    leftIcon={<Icon as={FaEdit} />}
+                    onClick={() => navigate(`/recipes/${id}/edit`)}
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                >
                     Edit Recipe
                 </Button>
             </HStack>
