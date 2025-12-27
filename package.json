@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
+    "test:once": "vitest --run",
     "api:sync": "openapi --input ./openapi.json --output ./src/client --client axios"
   },
   "dependencies": {
