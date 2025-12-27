@@ -33,6 +33,40 @@ docker run -d -p 8080:80 --name recipe-ui recipe-ui
 
 The application will be accessible at `http://localhost:8080`.
 
+### 3. Using Docker Compose (Recommended)
+
+To simplify the build and run process, you can use Docker Compose.
+
+1.  **Start the application:**
+    ```bash
+    docker compose up -d
+    ```
+
+    This command will build the image (if not already built) and start the container in detached mode.
+
+2.  **Stop the application:**
+    ```bash
+    docker compose down
+    ```
+
+3.  **Rebuild the application:**
+    If you make changes to the code, you need to rebuild the image:
+    ```bash
+    docker compose up -d --build
+    ```
+
+    **Configuration:**
+    Instead of setting environment variables in the command line, you can create a `.env` file in the project root:
+
+    1.  Copy the example file:
+        ```bash
+        cp .env.example .env
+        ```
+    2.  Edit `.env` and set:
+        - `VITE_API_URL` to your API server URL.
+        - `RECIPE_UI_PORT` to your desired port (default is 8080).
+    3.  Run `docker compose up -d`. Docker Compose will automatically read the `.env` file.
+
 ## Local Deployment (Without Docker)
 
 If you prefer to run it locally without Docker:
