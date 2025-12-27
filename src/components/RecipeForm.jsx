@@ -118,7 +118,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
         <form onSubmit={handleSubmit}>
             <VStack spacing={6} align="stretch">
                 <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
-                    <Heading size="md" mb={6}>Basic Information</Heading>
+                    <Heading size="md" mb={6}>Basics</Heading>
                     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} alignItems="start">
                         {/* Left Column: Details */}
                         <VStack spacing={4} align="stretch" maxW="md">
@@ -132,25 +132,25 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                 <Input data-testid="recipe-source" name="source" value={formData.source || ''} onChange={handleChange} placeholder="e.g. Grandma's cookbook" />
                             </Box>
 
-                            <SimpleGrid columns={2} spacing={6}>
-                                <Box>
+                            <HStack spacing={2}>
+                                <Box flex={1}>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Active Time (min)</Text>
                                     <Input data-testid="recipe-prep-time" type="number" min={0} value={formData.prep_time_minutes} onChange={(e) => handleNumberChange('prep_time_minutes', e.target.value)} />
                                 </Box>
 
-                                <Box>
+                                <Box flex={1}>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Cook Time (min)</Text>
                                     <Input data-testid="recipe-cook-time" type="number" min={0} value={formData.cook_time_minutes} onChange={(e) => handleNumberChange('cook_time_minutes', e.target.value)} />
                                 </Box>
-                            </SimpleGrid>
+                            </HStack>
 
-                            <SimpleGrid columns={2} spacing={6}>
-                                <Box>
+                            <HStack spacing={2} align="start">
+                                <Box flex={1}>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Yield (servings)</Text>
                                     <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
                                 </Box>
 
-                                <Box>
+                                <Box flex={1}>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Tags (Press Enter to add)</Text>
                                     <Input
                                         value={tagInput}
@@ -167,7 +167,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                         ))}
                                     </HStack>
                                 </Box>
-                            </SimpleGrid>
+                            </HStack>
                         </VStack>
 
                         {/* Right Column: Description */}
