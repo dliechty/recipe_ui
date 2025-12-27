@@ -6,6 +6,7 @@ import EditRecipePage from './EditRecipePage';
 import { AuthProvider } from '../context/AuthContext';
 import { ChakraProvider } from '@chakra-ui/react';
 import { system } from '../theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock useNavigate
 const mockNavigate = vi.fn();
@@ -23,19 +24,28 @@ vi.mock('react-router-dom', async () => {
 // Helper to wrap components
 const renderWithProviders = (ui, { route = '/' } = {}) => {
     window.history.pushState({}, 'Test page', route);
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+            },
+        },
+    });
     return render(
-        <ChakraProvider value={system}>
-            <AuthProvider>
-                <MemoryRouter initialEntries={[route]}>
-                    <Routes>
-                        <Route path="/recipes/new" element={<AddRecipePage />} />
-                        <Route path="/recipes/:id/edit" element={<EditRecipePage />} />
-                        <Route path="/recipes/:id" element={<div>Recipe Details</div>} />
-                        <Route path="/recipes" element={<div>Recipe List</div>} />
-                    </Routes>
-                </MemoryRouter>
-            </AuthProvider>
-        </ChakraProvider>
+        <QueryClientProvider client={queryClient}>
+            <ChakraProvider value={system}>
+                <AuthProvider>
+                    <MemoryRouter initialEntries={[route]}>
+                        <Routes>
+                            <Route path="/recipes/new" element={<AddRecipePage />} />
+                            <Route path="/recipes/:id/edit" element={<EditRecipePage />} />
+                            <Route path="/recipes/:id" element={<div>Recipe Details</div>} />
+                            <Route path="/recipes" element={<div>Recipe List</div>} />
+                        </Routes>
+                    </MemoryRouter>
+                </AuthProvider>
+            </ChakraProvider>
+        </QueryClientProvider>
     );
 };
 

@@ -2,28 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
-import { RecipesService } from '../client';
+import { useRecipes } from '../hooks/useRecipes';
 import { useAuth } from '../context/AuthContext';
 
 const RecipeList = () => {
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const { token } = useAuth();
+    const { data: recipes = [], isLoading: loading, error } = useRecipes();
 
-    useEffect(() => {
-        const fetchRecipes = async () => {
-            try {
-                const response = await RecipesService.readRecipesRecipesGet();
-                setRecipes(response);
-            } catch (error) {
-                console.error("Failed to fetch recipes:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRecipes();
-    }, [token]);
+    if (error) {
+        console.error("Failed to fetch recipes:", error);
+        // You might want to render an error state here
+    }
 
     const navigate = useNavigate();
 

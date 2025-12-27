@@ -1,31 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Heading, Box } from '@chakra-ui/react';
 import RecipeForm from './RecipeForm';
-import { RecipesService } from '../client';
+import { useCreateRecipe } from '../hooks/useRecipes';
 
 const AddRecipePage = () => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+    const createRecipeMutation = useCreateRecipe();
 
     const handleSubmit = async (formData) => {
-        setIsLoading(true);
-        try {
-            await RecipesService.createRecipeRecipesPost(formData);
-            // navigate will happen after
-            navigate('/recipes');
-        } catch (error) {
-            console.error("Failed to create recipe:", error);
-            alert("Unable to create recipe.");
-        } finally {
-            setIsLoading(false);
-        }
+        createRecipeMutation.mutate(formData, {
+            onSuccess: () => {
+                navigate('/recipes');
+            },
+            onError: (error) => {
+                console.error("Failed to create recipe:", error);
+                alert("Unable to create recipe.");
+            }
+        });
     };
 
     return (
         <Container maxW="container.lg" py={8}>
             <Heading mb={8} color="fg.default">Add New Recipe</Heading>
-            <RecipeForm onSubmit={handleSubmit} isLoading={isLoading} />
+            <RecipeForm onSubmit={handleSubmit} isLoading={createRecipeMutation.isPending} />
         </Container>
     );
 };

@@ -19,32 +19,17 @@ import {
     Spacer
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
-import { RecipesService } from '../client';
+import { useRecipe } from '../hooks/useRecipes';
 import { useAuth } from '../context/AuthContext';
 
 const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [recipe, setRecipe] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const { token } = useAuth();
+    const { data: recipe, isLoading: loading, error } = useRecipe(Number(id));
 
-    useEffect(() => {
-        const fetchRecipe = async () => {
-            try {
-                const response = await RecipesService.readRecipeRecipesRecipeIdGet(Number(id));
-                setRecipe(response);
-            } catch (error) {
-                console.error("Failed to fetch recipe:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (token && id) {
-            fetchRecipe();
-        }
-    }, [token, id]);
+    if (error) {
+        console.error("Failed to fetch recipe:", error);
+    }
 
     if (loading) {
         return (

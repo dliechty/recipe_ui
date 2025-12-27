@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import { renderWithProviders, screen, waitFor } from '../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import RecipeDetails from './RecipeDetails';
 import { describe, it, expect, vi } from 'vitest';
@@ -12,21 +11,17 @@ vi.mock('../context/AuthContext', () => ({
     useAuth: () => ({ token: 'mock-token' }),
 }));
 
-const system = createSystem(defaultConfig);
-
 describe('RecipeDetails', () => {
     it('renders recipe details from API', async () => {
         // Setup MSW handler for this specific test if needed, or rely on global handlers
         // The global handler in handlers.js returns id: 1 as Spaghetti Carbonara so we use that.
 
-        render(
-            <ChakraProvider value={system}>
-                <MemoryRouter initialEntries={['/recipes/1']}>
-                    <Routes>
-                        <Route path="/recipes/:id" element={<RecipeDetails />} />
-                    </Routes>
-                </MemoryRouter>
-            </ChakraProvider>
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/1']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
         );
 
         // Check for loading state first if possible, or straight to waiting for content
@@ -63,14 +58,12 @@ describe('RecipeDetails', () => {
             })
         );
 
-        render(
-            <ChakraProvider value={system}>
-                <MemoryRouter initialEntries={['/recipes/999']}>
-                    <Routes>
-                        <Route path="/recipes/:id" element={<RecipeDetails />} />
-                    </Routes>
-                </MemoryRouter>
-            </ChakraProvider>
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/999']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
         );
 
         await waitFor(() => {
