@@ -31,14 +31,22 @@ describe('RecipeDetails', () => {
             expect(screen.getByText('Spaghetti Carbonara')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('Authentication spaghetti.')).toBeInTheDocument();
+        // Source
+        expect(screen.getByText(/Source:/)).toBeInTheDocument();
+        const sourceLink = screen.getByRole('link', { name: /Grandma/i });
+        expect(sourceLink).toBeInTheDocument();
+        expect(sourceLink).toHaveAttribute('href', 'https://www.example.com/spaghetti-carbonara');
+        expect(sourceLink).toHaveAttribute('target', '_blank');
+
+        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
         expect(screen.getAllByText('15 min')).toHaveLength(3);
-        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
+        // Long description check if rendered, or short description if fallback
+        expect(screen.getByText('This is a longer description of the classic Italian pasta dish recipe.')).toBeInTheDocument();
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
         expect(screen.getByText('4 servings')).toBeInTheDocument();
 
-        // Tags
+        // Cuisine
         expect(screen.getByText('Italian')).toBeInTheDocument();
 
         // Ingredients
