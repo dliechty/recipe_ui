@@ -125,12 +125,12 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <VStack spacing={6} align="stretch">
+            <VStack gap={6} align="stretch">
                 <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
                     <Heading size="md" mb={6}>Basics</Heading>
-                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} alignItems="start">
+                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={10} alignItems="start">
                         {/* Left Column: Details */}
-                        <VStack spacing={4} align="stretch" maxW="md">
+                        <VStack gap={4} align="stretch" maxW="md">
                             <Box>
                                 <Text as="label" mb={2} display="block" fontWeight="bold">Recipe Name</Text>
                                 <Input data-testid="recipe-name" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Chocolate Cake" />
@@ -141,7 +141,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                                 <Input data-testid="recipe-source" name="source" value={formData.source || ''} onChange={handleChange} placeholder="e.g. Grandma's cookbook" />
                             </Box>
 
-                            <HStack spacing={2}>
+                            <HStack gap={2}>
                                 <Box flex={1}>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Active Time (min)</Text>
                                     <Input data-testid="recipe-prep-time" type="number" min={0} value={formData.prep_time_minutes} onChange={(e) => handleNumberChange('prep_time_minutes', e.target.value)} />
@@ -153,7 +153,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                                 </Box>
                             </HStack>
 
-                            <HStack spacing={2} align="start">
+                            <HStack gap={2} align="start">
                                 <Box flex={1}>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Yield (servings)</Text>
                                     <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
@@ -167,7 +167,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                                         onKeyDown={handleTagKeyDown}
                                         placeholder="Add tags..."
                                     />
-                                    <HStack mt={2} wrap="wrap" spacing={2}>
+                                    <HStack mt={2} wrap="wrap" gap={2}>
                                         {(formData.tags || []).map((tag, index) => (
                                             <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
                                                 {tag}
@@ -196,9 +196,9 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
 
                 <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
                     <Heading size="md" mb={6}>Ingredients</Heading>
-                    <VStack spacing={4} align="stretch">
+                    <VStack gap={4} align="stretch">
                         {formData.ingredients.map((ingredient, index) => (
-                            <HStack key={index} spacing={2} align="flex-start">
+                            <HStack key={index} gap={2} align="flex-start">
                                 <Box flex={2}>
                                     {index === 0 && <Text fontSize="sm" mb={1}>Name</Text>}
                                     <Input
@@ -233,31 +233,30 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                                 </Box>
                                 <Box pt={index === 0 ? 8 : 0}>
                                     <IconButton
-                                        icon={<FaTrash />}
-                                        aria-label="Remove ingredient"
                                         colorScheme="red"
                                         variant="ghost"
                                         onClick={() => removeIngredient(index)}
-                                    />
+                                    >
+                                        <FaTrash />
+                                    </IconButton>
                                 </Box>
                             </HStack>
                         ))}
                         <Button
-                            leftIcon={<FaPlus />}
                             onClick={addIngredient}
                             bg="vscode.button"
                             color="white"
                             _hover={{ bg: "vscode.buttonHover" }}
                             alignSelf="start"
                         >
-                            Add Ingredient
+                            <FaPlus /> Add Ingredient
                         </Button>
                     </VStack>
                 </Box>
 
                 <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
                     <Heading size="md" mb={6}>Instructions</Heading>
-                    <VStack spacing={4} align="stretch">
+                    <VStack gap={4} align="stretch">
                         {formData.instructions.map((instruction, index) => (
                             <HStack key={index} align="flex-start">
                                 <Box pt={2} minW="24px" fontWeight="bold" color="fg.muted">
@@ -273,24 +272,23 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                                 </Box>
                                 <Box pt={1}>
                                     <IconButton
-                                        icon={<FaTrash />}
-                                        aria-label="Remove instruction"
                                         colorScheme="red"
                                         variant="ghost"
                                         onClick={() => removeInstruction(index)}
-                                    />
+                                    >
+                                        <FaTrash />
+                                    </IconButton>
                                 </Box>
                             </HStack>
                         ))}
                         <Button
-                            leftIcon={<FaPlus />}
                             onClick={addInstruction}
                             bg="vscode.button"
                             color="white"
                             _hover={{ bg: "vscode.buttonHover" }}
                             alignSelf="start"
                         >
-                            Add Step
+                            <FaPlus /> Add Step
                         </Button>
                     </VStack>
                 </Box>
@@ -301,7 +299,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                     size="lg"
-                    isLoading={isLoading}
+                    loading={isLoading}
                     loadingText="Saving..."
                 >
                     Save Recipe

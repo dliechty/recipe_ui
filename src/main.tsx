@@ -42,7 +42,7 @@ enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={system}>
+        <ChakraProvider value={system}>
           <AuthProvider>
             <App />
           </AuthProvider>

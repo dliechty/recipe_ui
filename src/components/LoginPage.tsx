@@ -16,12 +16,14 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
         try {
             const response = await AuthenticationService.loginAuthTokenPost({
                 username: email,
@@ -29,15 +31,17 @@ const LoginPage = () => {
             });
             login(response.access_token);
             navigate('/recipes');
-        } catch (err) {
+        } catch (err: any) {
             console.error("Login failed:", err);
             setError("Login failed. Please check your credentials and try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <Container maxW="container.sm" centerContent py={10}>
-            <VStack spacing={8} w="full">
+            <VStack gap={8} w="full">
                 <Heading as="h1" size="xl" textAlign="center" color="fg.default">
                     Recipes and Meal Planning
                 </Heading>
@@ -50,7 +54,7 @@ const LoginPage = () => {
                     boxShadow="lg"
                     bg="bg.surface"
                 >
-                    <VStack spacing={4} as="form" onSubmit={handleSubmit}>
+                    <VStack gap={4} as="form" onSubmit={handleSubmit}>
                         <Heading as="h2" size="md" mb={4} color="fg.default">
                             Welcome Back
                         </Heading>
@@ -60,7 +64,8 @@ const LoginPage = () => {
                             </Box>
                         )}
                         <Box w="full">
-                            <Text as="label" htmlFor="email" mb={2} display="block" color="fg.default">Email</Text>
+                            {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
+                            <Box as="label" htmlFor="email" mb={2} display="block" color="fg.default">Email</Box>
                             <Input
                                 id="email"
                                 type="email"
@@ -76,7 +81,8 @@ const LoginPage = () => {
                             />
                         </Box>
                         <Box w="full">
-                            <Text as="label" htmlFor="password" mb={2} display="block" color="fg.default">Password</Text>
+                            {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
+                            <Box as="label" htmlFor="password" mb={2} display="block" color="fg.default">Password</Box>
                             <Input
                                 id="password"
                                 type="password"
@@ -98,6 +104,7 @@ const LoginPage = () => {
                             _hover={{ bg: 'vscode.buttonHover' }}
                             width="full"
                             mt={4}
+                            loading={isLoading}
                         >
                             Login
                         </Button>

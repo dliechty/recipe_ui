@@ -33,7 +33,7 @@ const renderWithProviders = (ui, { route = '/' } = {}) => {
     });
     return render(
         <QueryClientProvider client={queryClient}>
-            <ChakraProvider theme={system}>
+            <ChakraProvider value={system}>
                 <AuthProvider>
                     <MemoryRouter initialEntries={[route]}>
                         <Routes>

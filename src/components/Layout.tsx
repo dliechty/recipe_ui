@@ -5,8 +5,9 @@ import { useAuth } from '../context/AuthContext';
 
 
 const NavItem = ({ to, children }) => (
-    <Link
+    <Box
         as={NavLink}
+        // @ts-expect-error - 'to' is passed to NavLink but Box types don't know it
         to={to}
         px={3}
         py={2}
@@ -15,15 +16,16 @@ const NavItem = ({ to, children }) => (
             textDecoration: 'none',
             bg: 'whiteAlpha.200',
         }}
-        _activeLink={{
+        _active={{
             bg: 'vscode.button',
             color: 'white',
         }}
         color="fg.default"
         fontWeight="medium"
+        display="block"
     >
         {children}
-    </Link>
+    </Box>
 );
 
 const Layout = ({ children }) => {
@@ -34,8 +36,8 @@ const Layout = ({ children }) => {
             {isAuthenticated && (
                 <Box bg="bg.surface" px={4} py={3} borderBottomWidth={1} borderColor="border.default" className="no-print">
                     <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-                        <HStack spacing={8} alignItems={'center'}>
-                            <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+                        <HStack gap={8} alignItems={'center'}>
+                            <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
                             </HStack>
                         </HStack>

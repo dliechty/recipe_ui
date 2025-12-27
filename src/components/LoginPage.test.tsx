@@ -11,7 +11,7 @@ import { system } from '../theme';
 describe('LoginPage', () => {
     it('allows user to login', async () => {
         render(
-            <ChakraProvider theme={system}>
+            <ChakraProvider value={system}>
                 <AuthProvider>
                     <MemoryRouter>
                         <LoginPage />

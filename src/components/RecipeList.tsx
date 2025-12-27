@@ -33,16 +33,15 @@ const RecipeList = () => {
                 <Heading color="fg.default">All Recipes</Heading>
                 <Spacer />
                 <Button
-                    leftIcon={<Icon as={FaPlus} />}
                     onClick={() => navigate('/recipes/new')}
                     bg="vscode.button"
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                 >
-                    Add Recipe
+                    <Icon as={FaPlus} /> Add Recipe
                 </Button>
             </HStack>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={8}>
                 {recipes.map((recipe) => (
                     <Box
                         key={recipe.id}
@@ -58,12 +57,12 @@ const RecipeList = () => {
                     >
                         <Heading size="md" mb={2} color="fg.default">{recipe.name}</Heading>
                         <Text color="fg.muted" mb={4}>{recipe.description}</Text>
-                        <HStack spacing={2} mb={2}>
+                        <HStack gap={2} mb={2}>
                             <Badge colorScheme="green" variant="subtle">Active: {recipe.prep_time_minutes}m</Badge>
                             <Badge colorScheme="orange" variant="subtle">Cook: {recipe.cook_time_minutes}m</Badge>
                             <Badge colorScheme="blue" variant="subtle">Yield: {recipe.servings} servings</Badge>
                         </HStack>
-                        <HStack spacing={2}>
+                        <HStack gap={2}>
                             {recipe.tags.map((tag) => (
                                 <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
                             ))}

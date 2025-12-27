@@ -61,20 +61,19 @@ const RecipeDetails = () => {
             <HStack mb={6} className="no-print">
                 <Spacer />
                 <Button
-                    leftIcon={<Icon as={FaEdit} />}
                     onClick={() => navigate(`/recipes/${id}/edit`)}
                     bg="vscode.button"
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                 >
-                    Edit Recipe
+                    <Icon as={FaEdit} /> Edit Recipe
                 </Button>
             </HStack>
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.name}</Heading>
 
-                <HStack spacing={2} mb={6}>
+                <HStack gap={2} mb={6}>
                     {recipe.tags.map((tag) => (
                         <Badge key={tag.id} colorScheme="purple">{tag.name}</Badge>
                     ))}
@@ -82,7 +81,7 @@ const RecipeDetails = () => {
 
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
                     <GridItem>
-                        <VStack align="start" spacing={4} mb={8}>
+                        <VStack align="start" gap={4} mb={8}>
                             <Box>
                                 <Grid templateColumns="auto 1fr" gap={2} rowGap={1}>
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
@@ -110,21 +109,23 @@ const RecipeDetails = () => {
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
-                        <List spacing={3} mb={8} pt={4}>
+                        <List.Root gap={3} mb={8} pt={4}>
                             {recipe.ingredients.map((ingredient, index) => (
-                                <ListItem key={index} display="flex" alignItems="center">
-                                    <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                                <List.Item key={index} display="flex" alignItems="center">
+                                    <List.Indicator asChild>
+                                        <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                                    </List.Indicator>
                                     <Text>
                                         <Text as="span" fontWeight="bold">{ingredient.quantity} {ingredient.unit}</Text> {ingredient.ingredient.name}
                                     </Text>
-                                </ListItem>
+                                </List.Item>
                             ))}
-                        </List>
+                        </List.Root>
                     </GridItem>
 
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
-                        <VStack align="stretch" spacing={4}>
+                        <VStack align="stretch" gap={4}>
                             {recipe.instructions.map((step) => (
                                 <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
                                     <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>

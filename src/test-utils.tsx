@@ -17,7 +17,7 @@ export function renderWithProviders(ui) {
     const testQueryClient = createTestQueryClient();
     return render(
         <QueryClientProvider client={testQueryClient}>
-            <ChakraProvider theme={system}>
+            <ChakraProvider value={system}>
                 {ui}
             </ChakraProvider>
         </QueryClientProvider>
