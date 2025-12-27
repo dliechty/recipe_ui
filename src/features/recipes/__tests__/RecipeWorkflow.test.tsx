@@ -58,6 +58,11 @@ describe('Recipe Workflows', () => {
         fireEvent.change(screen.getByTestId('recipe-description-short'), { target: { value: 'Test Description' } });
         fireEvent.change(screen.getByTestId('recipe-prep-time'), { target: { value: '10' } });
         fireEvent.change(screen.getByTestId('recipe-cook-time'), { target: { value: '20' } });
+        fireEvent.change(screen.getByTestId('recipe-source-url'), { target: { value: 'http://example.com' } });
+        fireEvent.change(screen.getByTestId('recipe-difficulty'), { target: { value: 'Easy' } });
+        fireEvent.change(screen.getByTestId('recipe-cuisine'), { target: { value: 'Italian' } });
+        fireEvent.change(screen.getByTestId('recipe-category'), { target: { value: 'Dinner' } });
+        fireEvent.change(screen.getByTestId('recipe-total-time'), { target: { value: '30' } });
         fireEvent.change(screen.getByTestId('recipe-yield'), { target: { value: '4' } });
 
         // Add Ingredient
