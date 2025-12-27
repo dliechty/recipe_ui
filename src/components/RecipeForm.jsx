@@ -119,9 +119,9 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
             <VStack spacing={6} align="stretch">
                 <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
                     <Heading size="md" mb={6}>Basic Information</Heading>
-                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} alignItems="start">
+                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} alignItems="start">
                         {/* Left Column: Details */}
-                        <VStack spacing={4} align="stretch">
+                        <VStack spacing={4} align="stretch" maxW="md">
                             <Box>
                                 <Text as="label" mb={2} display="block" fontWeight="bold">Recipe Name</Text>
                                 <Input data-testid="recipe-name" name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Chocolate Cake" />
@@ -132,7 +132,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                 <Input data-testid="recipe-source" name="source" value={formData.source || ''} onChange={handleChange} placeholder="e.g. Grandma's cookbook" />
                             </Box>
 
-                            <SimpleGrid columns={2} spacing={4}>
+                            <SimpleGrid columns={2} spacing={6}>
                                 <Box>
                                     <Text as="label" mb={2} display="block" fontWeight="bold">Active Time (min)</Text>
                                     <Input data-testid="recipe-prep-time" type="number" min={0} value={formData.prep_time_minutes} onChange={(e) => handleNumberChange('prep_time_minutes', e.target.value)} />
@@ -144,32 +144,34 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                 </Box>
                             </SimpleGrid>
 
-                            <Box>
-                                <Text as="label" mb={2} display="block" fontWeight="bold">Yield (servings)</Text>
-                                <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
-                            </Box>
+                            <SimpleGrid columns={2} spacing={6}>
+                                <Box>
+                                    <Text as="label" mb={2} display="block" fontWeight="bold">Yield (servings)</Text>
+                                    <Input data-testid="recipe-servings" type="number" min={1} value={formData.servings} onChange={(e) => handleNumberChange('servings', e.target.value)} />
+                                </Box>
 
-                            <Box>
-                                <Text as="label" mb={2} display="block" fontWeight="bold">Tags (Press Enter to add)</Text>
-                                <Input
-                                    value={tagInput}
-                                    onChange={(e) => setTagInput(e.target.value)}
-                                    onKeyDown={handleTagKeyDown}
-                                    placeholder="Add tags..."
-                                />
-                                <HStack mt={2} wrap="wrap" spacing={2}>
-                                    {formData.tags.map((tag, index) => (
-                                        <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
-                                            {tag}
-                                            <Icon as={FaTrash} ml={2} cursor="pointer" onClick={() => removeTag(tag)} boxSize={3} />
-                                        </Box>
-                                    ))}
-                                </HStack>
-                            </Box>
+                                <Box>
+                                    <Text as="label" mb={2} display="block" fontWeight="bold">Tags (Press Enter to add)</Text>
+                                    <Input
+                                        value={tagInput}
+                                        onChange={(e) => setTagInput(e.target.value)}
+                                        onKeyDown={handleTagKeyDown}
+                                        placeholder="Add tags..."
+                                    />
+                                    <HStack mt={2} wrap="wrap" spacing={2}>
+                                        {formData.tags.map((tag, index) => (
+                                            <Box key={index} px={2} py={1} bg="vscode.button" color="white" borderRadius="md" fontSize="sm" display="flex" alignItems="center">
+                                                {tag}
+                                                <Icon as={FaTrash} ml={2} cursor="pointer" onClick={() => removeTag(tag)} boxSize={3} />
+                                            </Box>
+                                        ))}
+                                    </HStack>
+                                </Box>
+                            </SimpleGrid>
                         </VStack>
 
                         {/* Right Column: Description */}
-                        <Box h="full">
+                        <Box>
                             <Text as="label" mb={2} display="block" fontWeight="bold">Description</Text>
                             <Textarea
                                 data-testid="recipe-description"
@@ -177,8 +179,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }) => {
                                 value={formData.description || ''}
                                 onChange={handleChange}
                                 placeholder="Brief description of the recipe"
-                                h={{ md: "full" }}
-                                minH="50px"
+                                rows={8}
                             />
                         </Box>
                     </SimpleGrid>
