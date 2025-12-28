@@ -6,6 +6,7 @@ export type RecipeAudit = {
     created_at?: (string | null);
     updated_at?: (string | null);
     version?: (number | null);
+    checksum?: (string | null);
     parent_recipe_id?: (string | null);
 };
 

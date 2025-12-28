@@ -80,4 +80,30 @@ describe('RecipeDetails', () => {
 
         expect(screen.getByText('Back to Recipes')).toBeInTheDocument();
     });
+
+    it('renders "Added By" with user name', async () => {
+        // Mock user endpoint
+        server.use(
+            http.get('*/auth/users/:user_id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    email: 'test@example.com',
+                    first_name: 'John',
+                    last_name: 'Doe'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/1']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Added By: John Doe')).toBeInTheDocument();
+        });
+    });
 });

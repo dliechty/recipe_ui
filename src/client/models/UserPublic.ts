@@ -2,12 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type User = {
+export type UserPublic = {
+    id: string;
     email: string;
     first_name?: (string | null);
     last_name?: (string | null);
-    id: string;
-    is_active: boolean;
-    is_admin?: boolean;
 };
 

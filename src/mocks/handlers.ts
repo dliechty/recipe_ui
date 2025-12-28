@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { recipes as initialRecipes } from './data';
+import { recipes as initialRecipes, users } from './data';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 let recipes = [...initialRecipes];
@@ -111,5 +111,17 @@ export const handlers = [
             access_token: 'fake-jwt-token',
             token_type: 'bearer',
         });
+    }),
+
+    // Intercept "GET /auth/users/:user_id" requests...
+    http.get('*/auth/users/:user_id', ({ params }) => {
+        const { user_id } = params;
+        const user = users.find(u => u.id === user_id);
+
+        if (!user) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        return HttpResponse.json(user);
     }),
 ];

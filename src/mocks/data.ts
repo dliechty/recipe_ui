@@ -1,3 +1,23 @@
+
+export const users = [
+    {
+        id: "1",
+        email: "test@example.com",
+        first_name: "Test",
+        last_name: "User",
+        is_active: true,
+        is_admin: false
+    },
+    {
+        id: "2",
+        email: "chef@example.com",
+        first_name: "Gordon",
+        last_name: "Ramsay",
+        is_active: true,
+        is_admin: true
+    }
+];
+
 export const recipes = [
     {
         core: {

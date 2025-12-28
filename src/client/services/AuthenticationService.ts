@@ -6,6 +6,7 @@ import type { Body_login_auth_token_post } from '../models/Body_login_auth_token
 import type { Token } from '../models/Token';
 import type { User } from '../models/User';
 import type { UserCreate } from '../models/UserCreate';
+import type { UserPublic } from '../models/UserPublic';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -25,6 +26,27 @@ export class AuthenticationService {
             url: '/auth/users/',
             body: requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get User Name
+     * Get user public information (name) by ID.
+     * @param userId
+     * @returns UserPublic Successful Response
+     * @throws ApiError
+     */
+    public static getUserNameAuthUsersUserIdGet(
+        userId: string,
+    ): CancelablePromise<UserPublic> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/auth/users/{user_id}',
+            path: {
+                'user_id': userId,
+            },
             errors: {
                 422: `Validation Error`,
             },

@@ -26,6 +26,7 @@ export type { RecipeTimes } from './models/RecipeTimes';
 export type { Token } from './models/Token';
 export type { User } from './models/User';
 export type { UserCreate } from './models/UserCreate';
+export type { UserPublic } from './models/UserPublic';
 export type { ValidationError } from './models/ValidationError';
 
 export { AuthenticationService } from './services/AuthenticationService';

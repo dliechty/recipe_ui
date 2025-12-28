@@ -21,12 +21,14 @@ import {
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
+import { useUser } from '../../../hooks/useUsers';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
+    const { data: user } = useUser(recipe?.core.owner_id);
 
     if (error) {
         return (
@@ -62,6 +64,19 @@ const RecipeDetails = () => {
         );
     }
 
+    const getUserDisplayName = () => {
+        if (!user) return null;
+        if (user.first_name && user.last_name) {
+            return `${user.first_name} ${user.last_name}`;
+        }
+        if (user.first_name) {
+            return user.first_name;
+        }
+        return user.email;
+    };
+
+    const userDisplayName = getUserDisplayName();
+
     return (
         <Container maxW="container.xl" py={8}>
             <HStack mb={6} className="no-print">
@@ -81,6 +96,12 @@ const RecipeDetails = () => {
                 {recipe.core.description_short && (
                     <Text color="fg.muted" mb={4} fontStyle="italic">
                         {recipe.core.description_short}
+                    </Text>
+                )}
+
+                {userDisplayName && (
+                    <Text color="fg.muted" mb={2} fontSize="sm">
+                        Added By: {userDisplayName}
                     </Text>
                 )}
 
