@@ -118,12 +118,13 @@ const RecipeDetails = () => {
                 )}
 
                 <HStack gap={2} mb={6}>
-                    {recipe.core.cuisine && <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>}
                     {recipe.core.difficulty && (
                         <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
                             {recipe.core.difficulty}
                         </Badge>
                     )}
+                    {recipe.core.cuisine && <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>}
+                    {recipe.core.category && <Badge colorPalette="orange">{recipe.core.category}</Badge>}
                 </HStack>
 
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>

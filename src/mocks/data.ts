@@ -27,7 +27,7 @@ export const recipes = [
             description_long: 'This is a longer description of the classic Italian pasta dish recipe.',
             yield_amount: 4,
             yield_unit: 'servings',
-            difficulty: 'Medium',
+            difficulty: 'Hard',
             cuisine: 'Italian',
             category: 'Main Course',
             source: 'Grandma',
