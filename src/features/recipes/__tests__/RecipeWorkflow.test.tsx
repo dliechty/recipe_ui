@@ -55,7 +55,6 @@ describe('Recipe Workflows', () => {
 
         // Fill Form
         fireEvent.change(screen.getByTestId('recipe-name'), { target: { value: 'Test Recipe' } });
-        fireEvent.change(screen.getByTestId('recipe-description-short'), { target: { value: 'Test Description' } });
         fireEvent.change(screen.getByTestId('recipe-prep-time'), { target: { value: '10' } });
         fireEvent.change(screen.getByTestId('recipe-cook-time'), { target: { value: '20' } });
         fireEvent.change(screen.getByTestId('recipe-source-url'), { target: { value: 'http://example.com' } });

@@ -23,8 +23,7 @@ export const recipes = [
         core: {
             id: "1",
             name: 'Spaghetti Carbonara',
-            description_short: 'A classic Italian pasta dish.',
-            description_long: 'This is a longer description of the classic Italian pasta dish recipe.',
+            description: 'The classic Italian pasta dish recipe.',
             yield_amount: 4,
             yield_unit: 'servings',
             difficulty: 'Hard',
@@ -74,8 +73,7 @@ export const recipes = [
         core: {
             id: "2",
             name: 'Chicken Curry',
-            description_short: 'Spicy and delicious chicken curry.',
-            description_long: null,
+            description: 'Spicy and delicious chicken curry.',
             yield_amount: 6,
             yield_unit: 'servings',
             difficulty: 'Medium',
@@ -124,8 +122,7 @@ export const recipes = [
         core: {
             id: "3",
             name: 'Avocado Toast',
-            description_short: 'Healthy breakfast option.',
-            description_long: null,
+            description: 'Healthy breakfast option.',
             yield_amount: 1,
             yield_unit: 'serving',
             difficulty: 'Easy',

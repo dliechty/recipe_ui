@@ -6,8 +6,7 @@ import type { DifficultyLevel } from './DifficultyLevel';
 export type RecipeCore = {
     name: string;
     slug?: (string | null);
-    description_short?: (string | null);
-    description_long?: (string | null);
+    description?: (string | null);
     yield_amount?: (number | null);
     yield_unit?: (string | null);
     difficulty?: (DifficultyLevel | null);

@@ -32,7 +32,7 @@ const RecipeBasicsForm = ({
             <Heading size="md" mb={6}>Basics</Heading>
             <SimpleGrid columns={{ base: 1, md: 2 }} gap={10} alignItems="start">
                 {/* Left Column: Details */}
-                <VStack gap={4} align="stretch" maxW="md">
+                <VStack gap={4} align="stretch" maxW="lg">
                     <Box>
                         <Text as="label" mb={2} display="block" fontWeight="bold">Recipe Name</Text>
                         <Input data-testid="recipe-name" name="name" value={core.name} onChange={handleCoreChange} placeholder="e.g. Chocolate Cake" />
@@ -109,24 +109,14 @@ const RecipeBasicsForm = ({
 
                 {/* Right Column: Descriptions */}
                 <Box>
-                    <Text as="label" mb={2} display="block" fontWeight="bold">Short Description</Text>
+                    <Text as="label" mb={2} display="block" fontWeight="bold">Description</Text>
                     <Textarea
-                        data-testid="recipe-description-short"
-                        name="description_short"
-                        value={core.description_short || ''}
-                        onChange={handleCoreChange}
-                        placeholder="Brief summary"
-                        rows={2}
-                        mb={4}
-                    />
-                    <Text as="label" mb={2} display="block" fontWeight="bold">Long Description</Text>
-                    <Textarea
-                        data-testid="recipe-description-long"
-                        name="description_long"
-                        value={core.description_long || ''}
+                        data-testid="recipe-description"
+                        name="description"
+                        value={core.description || ''}
                         onChange={handleCoreChange}
                         placeholder="Detailed description"
-                        rows={6}
+                        rows={15}
                     />
                 </Box>
             </SimpleGrid>

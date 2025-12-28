@@ -38,11 +38,16 @@ describe('RecipeDetails', () => {
         expect(sourceLink).toHaveAttribute('href', 'https://www.example.com/spaghetti-carbonara');
         expect(sourceLink).toHaveAttribute('target', '_blank');
 
-        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
+        // Check for Last Updated
+        // The mock data has updated_at as new Date().toISOString()
+        // We can't match exact date easily, but we can check if "Last Updated:" text is present
+        expect(screen.getByText(/Last Updated:/)).toBeInTheDocument();
+
+        // expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument(); // Removed
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
         expect(screen.getAllByText('15 min')).toHaveLength(3);
         // Long description check if rendered, or short description if fallback
-        expect(screen.getByText('This is a longer description of the classic Italian pasta dish recipe.')).toBeInTheDocument();
+        expect(screen.getByText('The classic Italian pasta dish recipe.')).toBeInTheDocument();
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
         expect(screen.getByText('4 servings')).toBeInTheDocument();
 

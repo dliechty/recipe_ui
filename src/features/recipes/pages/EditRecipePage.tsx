@@ -53,8 +53,7 @@ const EditRecipePage = () => {
     const initialData: RecipeCreate = {
         core: {
             name: recipeData.core.name,
-            description_short: recipeData.core.description_short,
-            description_long: recipeData.core.description_long,
+            description: recipeData.core.description,
             source: recipeData.core.source,
             yield_amount: recipeData.core.yield_amount,
             yield_unit: recipeData.core.yield_unit,

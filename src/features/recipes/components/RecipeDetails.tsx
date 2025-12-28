@@ -93,15 +93,16 @@ const RecipeDetails = () => {
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>
-                {recipe.core.description_short && (
-                    <Text color="fg.muted" mb={4} fontStyle="italic">
-                        {recipe.core.description_short}
-                    </Text>
-                )}
 
                 {userDisplayName && (
                     <Text color="fg.muted" mb={2} fontSize="sm">
                         Added By: {userDisplayName}
+                    </Text>
+                )}
+
+                {recipe.audit?.updated_at && (
+                    <Text color="fg.muted" mb={2} fontSize="sm">
+                        Last Updated: {new Date(recipe.audit.updated_at).toLocaleString()}
                     </Text>
                 )}
 
@@ -151,7 +152,7 @@ const RecipeDetails = () => {
                         </VStack>
                     </GridItem>
                     <GridItem>
-                        <Text color="fg.muted" mb={6}>{recipe.core.description_long || recipe.core.description_short}</Text>
+                        <Text color="fg.muted" mb={6}>{recipe.core.description}</Text>
                     </GridItem>
                 </Grid>
 

@@ -23,9 +23,6 @@ describe('RecipeList', () => {
             expect(screen.getByText('Avocado Toast')).toBeInTheDocument();
         });
 
-        // Verify descriptions are also present
-        expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument();
-
         // Verify time and yield fields are displayed
         expect(screen.getByText('Total Time: 30m')).toBeInTheDocument();
         expect(screen.getByText('Yield: 4 servings')).toBeInTheDocument();

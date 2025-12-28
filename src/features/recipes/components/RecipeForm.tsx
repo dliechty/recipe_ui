@@ -18,8 +18,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
     const [formData, setFormData] = useState<RecipeCreate>({
         core: {
             name: '',
-            description_long: '',
-            description_short: '',
+            description: '',
             source: '',
             yield_amount: 1,
             yield_unit: 'servings',
