@@ -81,28 +81,36 @@ const AdminPendingRequests = () => {
             {requests.length === 0 ? (
                 <Text color="fg.muted">No pending requests.</Text>
             ) : (
-                <Table.Root>
-                    <Table.Header>
-                        <Table.Row bg="bg.surface" color="fg.default">
-                            <Table.ColumnHeader>Email</Table.ColumnHeader>
-                            <Table.ColumnHeader>Name</Table.ColumnHeader>
-                            <Table.ColumnHeader>Actions</Table.ColumnHeader>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {requests.map((request) => (
-                            <Table.Row key={request.id} bg="bg.surface" color="fg.default" _hover={{ bg: "bg.muted" }}>
-                                <Table.Cell>{request.email}</Table.Cell>
-                                <Table.Cell>{request.first_name} {request.last_name}</Table.Cell>
-                                <Table.Cell>
-                                    <Button size="sm" onClick={() => handleApproveClick(request)}>
-                                        Approve
-                                    </Button>
-                                </Table.Cell>
+                <Box borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor="border.default">
+                    <Table.Root>
+                        <Table.Header>
+                            <Table.Row bg="bg.surface">
+                                <Table.ColumnHeader color="fg.default">Email</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Actions</Table.ColumnHeader>
                             </Table.Row>
-                        ))}
-                    </Table.Body>
-                </Table.Root>
+                        </Table.Header>
+                        <Table.Body>
+                            {requests.map((request) => (
+                                <Table.Row key={request.id} bg="bg.surface" color="fg.default" _hover={{ bg: "bg.muted" }}>
+                                    <Table.Cell borderColor="border.default">{request.email}</Table.Cell>
+                                    <Table.Cell borderColor="border.default">{request.first_name} {request.last_name}</Table.Cell>
+                                    <Table.Cell borderColor="border.default">
+                                        <Button
+                                            size="sm"
+                                            bg="vscode.button"
+                                            color="white"
+                                            _hover={{ bg: 'vscode.buttonHover' }}
+                                            onClick={() => handleApproveClick(request)}
+                                        >
+                                            Approve
+                                        </Button>
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table.Root>
+                </Box>
             )}
 
             {/* Simple Modal Implementation using basic Box overlay if Dialog complex, but let's try standard V2 Modal first if I can't confirm V3??
