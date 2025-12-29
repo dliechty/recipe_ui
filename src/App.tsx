@@ -11,6 +11,11 @@ const RecipeDetails = React.lazy(() => import('./features/recipes/components/Rec
 const AddRecipePage = React.lazy(() => import('./features/recipes/pages/AddRecipePage'));
 const EditRecipePage = React.lazy(() => import('./features/recipes/pages/EditRecipePage'));
 const LoginPage = React.lazy(() => import('./features/auth/components/LoginPage'));
+const RequestAccountPage = React.lazy(() => import('./features/auth/components/RequestAccountPage'));
+const AdminDashboard = React.lazy(() => import('./features/admin/pages/AdminDashboard'));
+const ChangePasswordPage = React.lazy(() => import('./features/auth/components/ChangePasswordPage'));
+const AccountPage = React.lazy(() => import('./features/users/AccountPage'));
+
 
 function App() {
     const { isAuthenticated } = useAuth();
@@ -27,6 +32,31 @@ function App() {
                 <Suspense fallback={<LoadingFallback />}>
                     <Routes>
                         <Route path="/" element={isAuthenticated ? <Navigate to="/recipes" /> : <LoginPage />} />
+                        <Route path="/request-account" element={<RequestAccountPage />} />
+                        <Route
+                            path="/admin"
+                            element={
+                                <ProtectedRoute data-testid="protected-route">
+                                    <AdminDashboard />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/account"
+                            element={
+                                <ProtectedRoute>
+                                    <AccountPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/change-password"
+                            element={
+                                <ProtectedRoute>
+                                    <ChangePasswordPage />
+                                </ProtectedRoute>
+                            }
+                        />
                         <Route
                             path="/recipes"
                             element={

@@ -7,6 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { ApproveRequest } from './models/ApproveRequest';
 export type { Body_login_auth_token_post } from './models/Body_login_auth_token_post';
 export type { Component } from './models/Component';
 export type { ComponentCreate } from './models/ComponentCreate';
@@ -14,6 +15,7 @@ export { DifficultyLevel } from './models/DifficultyLevel';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { Instruction } from './models/Instruction';
 export type { InstructionCreate } from './models/InstructionCreate';
+export type { PasswordChange } from './models/PasswordChange';
 export type { Recipe } from './models/Recipe';
 export type { RecipeAudit } from './models/RecipeAudit';
 export type { RecipeCore } from './models/RecipeCore';
@@ -25,8 +27,10 @@ export type { RecipeNutrition } from './models/RecipeNutrition';
 export type { RecipeTimes } from './models/RecipeTimes';
 export type { Token } from './models/Token';
 export type { User } from './models/User';
-export type { UserCreate } from './models/UserCreate';
 export type { UserPublic } from './models/UserPublic';
+export type { UserRequest } from './models/UserRequest';
+export type { UserRequestCreate } from './models/UserRequestCreate';
+export type { UserUpdate } from './models/UserUpdate';
 export type { ValidationError } from './models/ValidationError';
 
 export { AuthenticationService } from './services/AuthenticationService';

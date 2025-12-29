@@ -9,31 +9,45 @@ import {
     Text
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
 import { AuthenticationService } from '../../../client';
+import { toaster } from '../../../toaster';
 
-const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const ChangePasswordPage = () => {
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
+        if (newPassword !== confirmPassword) {
+            setError("New passwords do not match");
+            return;
+        }
+
         setIsLoading(true);
         try {
-            const response = await AuthenticationService.loginAuthTokenPost({
-                username: email,
-                password: password
+            await AuthenticationService.changePasswordAuthChangePasswordPost({
+                old_password: currentPassword,
+                new_password: newPassword
             });
-            login(response.access_token);
+            toaster.create({
+                title: "Password Changed",
+                description: "Your password has been successfully updated.",
+                type: "success",
+            });
             navigate('/recipes');
         } catch (err: any) {
-            console.error("Login failed:", err);
-            setError("Login failed. Please check your credentials and try again.");
+            console.error("Password change failed:", err);
+            let errorMsg = "Failed to change password.";
+            if (err.body && err.body.detail) {
+                errorMsg = typeof err.body.detail === 'string' ? err.body.detail : JSON.stringify(err.body.detail);
+            }
+            setError(errorMsg);
         } finally {
             setIsLoading(false);
         }
@@ -43,7 +57,7 @@ const LoginPage = () => {
         <Container maxW="container.sm" centerContent py={10}>
             <VStack gap={8} w="full">
                 <Heading as="h1" size="xl" textAlign="center" color="fg.default">
-                    Recipes and Meal Planning
+                    Change Password
                 </Heading>
                 <Box
                     w="full"
@@ -55,9 +69,6 @@ const LoginPage = () => {
                     bg="bg.surface"
                 >
                     <VStack gap={4} as="form" onSubmit={handleSubmit}>
-                        <Heading as="h2" size="md" mb={4} color="fg.default">
-                            Welcome Back
-                        </Heading>
                         {error && (
                             <Box w="full" p={3} bg="red.900" color="white" borderRadius="md" borderColor="red.500" borderWidth={1}>
                                 <Text fontSize="sm">{error}</Text>
@@ -65,36 +76,47 @@ const LoginPage = () => {
                         )}
                         <Box w="full">
                             {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
-                            <Box as="label" htmlFor="email" mb={2} display="block" color="fg.default">Email</Box>
+                            <Box as="label" htmlFor="currentPassword" mb={2} display="block" color="fg.default">Current Password</Box>
                             <Input
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Enter your email"
+                                id="currentPassword"
+                                type="password"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                placeholder="Enter current password"
                                 required
                                 bg="vscode.inputBg"
                                 borderColor="border.default"
                                 color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                         </Box>
                         <Box w="full">
                             {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
-                            <Box as="label" htmlFor="password" mb={2} display="block" color="fg.default">Password</Box>
+                            <Box as="label" htmlFor="newPassword" mb={2} display="block" color="fg.default">New Password</Box>
                             <Input
-                                id="password"
+                                id="newPassword"
                                 type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Enter your password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                placeholder="Enter new password"
                                 required
                                 bg="vscode.inputBg"
                                 borderColor="border.default"
                                 color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                        <Box w="full">
+                            {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
+                            <Box as="label" htmlFor="confirmPassword" mb={2} display="block" color="fg.default">Confirm New Password</Box>
+                            <Input
+                                id="confirmPassword"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                placeholder="Confirm new password"
+                                required
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
                             />
                         </Box>
                         <Button
@@ -106,23 +128,13 @@ const LoginPage = () => {
                             mt={4}
                             loading={isLoading}
                         >
-                            Login
+                            Change Password
                         </Button>
                     </VStack>
-
-                    <Box mt={4} textAlign="center">
-                        <Button
-                            variant="ghost"
-                            color="vscode.accent"
-                            onClick={() => navigate('/request-account')}
-                        >
-                            Request an account
-                        </Button>
-                    </Box>
                 </Box>
-            </VStack >
-        </Container >
+            </VStack>
+        </Container>
     );
 };
 
-export default LoginPage;
+export default ChangePasswordPage;

@@ -48,6 +48,8 @@ const Layout = ({ children }: LayoutProps) => {
                         <HStack gap={8} alignItems={'center'}>
                             <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
+                                <NavItem to="/account">Account</NavItem>
+                                <NavItem to="/admin">Admin</NavItem>
                             </HStack>
                         </HStack>
                         <Flex alignItems={'center'}>

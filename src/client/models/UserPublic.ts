@@ -7,5 +7,7 @@ export type UserPublic = {
     email: string;
     first_name?: (string | null);
     last_name?: (string | null);
+    is_first_login?: boolean;
+    is_admin?: boolean;
 };
 

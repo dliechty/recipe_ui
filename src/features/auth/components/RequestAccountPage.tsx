@@ -9,15 +9,15 @@ import {
     Text
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
 import { AuthenticationService } from '../../../client';
+import { toaster } from '../../../toaster';
 
-const LoginPage = () => {
+const RequestAccountPage = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -25,15 +25,26 @@ const LoginPage = () => {
         setError('');
         setIsLoading(true);
         try {
-            const response = await AuthenticationService.loginAuthTokenPost({
-                username: email,
-                password: password
+            await AuthenticationService.requestAccountAuthRequestAccountPost({
+                email: email,
+                first_name: firstName,
+                last_name: lastName
             });
-            login(response.access_token);
-            navigate('/recipes');
+            toaster.create({
+                title: "Request Submitted",
+                description: "Your account request has been submitted for approval.",
+                type: "success",
+                duration: 5000,
+            });
+            navigate('/');
         } catch (err: any) {
-            console.error("Login failed:", err);
-            setError("Login failed. Please check your credentials and try again.");
+            console.error("Request failed:", err);
+            // Extract error message if available from ApiError
+            let errorMsg = "Request failed. Please try again.";
+            if (err.body && err.body.detail) {
+                errorMsg = typeof err.body.detail === 'string' ? err.body.detail : JSON.stringify(err.body.detail);
+            }
+            setError(errorMsg);
         } finally {
             setIsLoading(false);
         }
@@ -43,7 +54,7 @@ const LoginPage = () => {
         <Container maxW="container.sm" centerContent py={10}>
             <VStack gap={8} w="full">
                 <Heading as="h1" size="xl" textAlign="center" color="fg.default">
-                    Recipes and Meal Planning
+                    Request Account
                 </Heading>
                 <Box
                     w="full"
@@ -55,9 +66,9 @@ const LoginPage = () => {
                     bg="bg.surface"
                 >
                     <VStack gap={4} as="form" onSubmit={handleSubmit}>
-                        <Heading as="h2" size="md" mb={4} color="fg.default">
-                            Welcome Back
-                        </Heading>
+                        <Text color="fg.muted" textAlign="center" mb={4}>
+                            Enter your details below to request access. An administrator will review your request.
+                        </Text>
                         {error && (
                             <Box w="full" p={3} bg="red.900" color="white" borderRadius="md" borderColor="red.500" borderWidth={1}>
                                 <Text fontSize="sm">{error}</Text>
@@ -82,13 +93,30 @@ const LoginPage = () => {
                         </Box>
                         <Box w="full">
                             {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
-                            <Box as="label" htmlFor="password" mb={2} display="block" color="fg.default">Password</Box>
+                            <Box as="label" htmlFor="firstName" mb={2} display="block" color="fg.default">First Name</Box>
                             <Input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Enter your password"
+                                id="firstName"
+                                type="text"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                placeholder="First Name"
+                                required
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                        <Box w="full">
+                            {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
+                            <Box as="label" htmlFor="lastName" mb={2} display="block" color="fg.default">Last Name</Box>
+                            <Input
+                                id="lastName"
+                                type="text"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                placeholder="Last Name"
                                 required
                                 bg="vscode.inputBg"
                                 borderColor="border.default"
@@ -106,23 +134,22 @@ const LoginPage = () => {
                             mt={4}
                             loading={isLoading}
                         >
-                            Login
+                            Submit Request
                         </Button>
-                    </VStack>
-
-                    <Box mt={4} textAlign="center">
                         <Button
                             variant="ghost"
-                            color="vscode.accent"
-                            onClick={() => navigate('/request-account')}
+                            width="full"
+                            onClick={() => navigate('/')}
+                            _hover={{ bg: 'vscode.listHover' }}
+                            color="fg.default"
                         >
-                            Request an account
+                            Back to Login
                         </Button>
-                    </Box>
+                    </VStack>
                 </Box>
-            </VStack >
-        </Container >
+            </VStack>
+        </Container>
     );
 };
 
-export default LoginPage;
+export default RequestAccountPage;

@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserCreate = {
+export type UserRequest = {
     email: string;
     first_name?: (string | null);
     last_name?: (string | null);
-    password: string;
+    id: string;
+    created_at: string;
 };
 
