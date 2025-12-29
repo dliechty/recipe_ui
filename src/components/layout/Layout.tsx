@@ -48,22 +48,23 @@ const Layout = ({ children }: LayoutProps) => {
                         <HStack gap={8} alignItems={'center'}>
                             <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
-                                <NavItem to="/account">Account</NavItem>
-                                {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
                             </HStack>
                         </HStack>
                         <Flex alignItems={'center'}>
-                            <Button
-                                variant={'solid'}
-                                bg="vscode.button"
-                                color="white"
-                                _hover={{ bg: 'vscode.buttonHover' }}
-                                size={'sm'}
-                                mr={4}
-                                onClick={logout}
-                            >
-                                Logout
-                            </Button>
+                            <HStack gap={4} mr={4} display={{ base: 'none', md: 'flex' }}>
+                                {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
+                                <NavItem to="/account">Account</NavItem>
+                                <Button
+                                    variant={'solid'}
+                                    bg="vscode.button"
+                                    color="white"
+                                    _hover={{ bg: 'vscode.buttonHover' }}
+                                    size={'sm'}
+                                    onClick={logout}
+                                >
+                                    Logout
+                                </Button>
+                            </HStack>
                         </Flex>
                     </Flex>
                 </Box>
