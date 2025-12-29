@@ -38,7 +38,7 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, user, logout } = useAuth();
 
     return (
         <Box minH="100vh" bg="bg.canvas" color="fg.default">
@@ -49,7 +49,7 @@ const Layout = ({ children }: LayoutProps) => {
                             <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
                                 <NavItem to="/account">Account</NavItem>
-                                <NavItem to="/admin">Admin</NavItem>
+                                {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
                             </HStack>
                         </HStack>
                         <Flex alignItems={'center'}>

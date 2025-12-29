@@ -36,7 +36,7 @@ function App() {
                         <Route
                             path="/admin"
                             element={
-                                <ProtectedRoute data-testid="protected-route">
+                                <ProtectedRoute data-testid="protected-route" requireAdmin>
                                     <AdminDashboard />
                                 </ProtectedRoute>
                             }

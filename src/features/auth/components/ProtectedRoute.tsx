@@ -4,14 +4,19 @@ import { useAuth } from '../../../context/AuthContext';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
+    requireAdmin?: boolean;
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children, requireAdmin }: ProtectedRouteProps) => {
     const { isAuthenticated, user } = useAuth();
     const location = useLocation();
 
     if (!isAuthenticated) {
         return <Navigate to="/" replace />;
+    }
+
+    if (requireAdmin && !user?.is_admin) {
+        return <Navigate to="/recipes" replace />;
     }
 
     if (user?.is_first_login && location.pathname !== '/change-password') {
