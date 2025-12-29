@@ -16,9 +16,9 @@ const AdminDashboard = () => {
         <Container maxW="container.xl" py={8}>
             <Heading mb={8} color="fg.default">Admin Dashboard</Heading>
             <Tabs.Root defaultValue="users">
-                <Tabs.List>
-                    <Tabs.Trigger value="users">User Management</Tabs.Trigger>
-                    <Tabs.Trigger value="pending">Pending Requests</Tabs.Trigger>
+                <Tabs.List borderWidth="1px" borderColor="border.default" borderRadius="md" p="1" bg="bg.surface">
+                    <Tabs.Trigger value="users" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>User Management</Tabs.Trigger>
+                    <Tabs.Trigger value="pending" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>Pending Requests</Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="users">
                     <AdminUserManagement />

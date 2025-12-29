@@ -83,7 +83,7 @@ const AdminPendingRequests = () => {
             ) : (
                 <Table.Root>
                     <Table.Header>
-                        <Table.Row>
+                        <Table.Row bg="bg.surface" color="fg.default">
                             <Table.ColumnHeader>Email</Table.ColumnHeader>
                             <Table.ColumnHeader>Name</Table.ColumnHeader>
                             <Table.ColumnHeader>Actions</Table.ColumnHeader>
@@ -91,7 +91,7 @@ const AdminPendingRequests = () => {
                     </Table.Header>
                     <Table.Body>
                         {requests.map((request) => (
-                            <Table.Row key={request.id}>
+                            <Table.Row key={request.id} bg="bg.surface" color="fg.default" _hover={{ bg: "bg.muted" }}>
                                 <Table.Cell>{request.email}</Table.Cell>
                                 <Table.Cell>{request.first_name} {request.last_name}</Table.Cell>
                                 <Table.Cell>

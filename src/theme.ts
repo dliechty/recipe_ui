@@ -22,6 +22,7 @@ const config = defineConfig({
                 bg: {
                     canvas: { value: "{colors.vscode.bg}" },
                     surface: { value: "{colors.vscode.surface}" },
+                    muted: { value: "{colors.vscode.inputBg}" },
                 },
                 fg: {
                     default: { value: "{colors.vscode.text}" },
