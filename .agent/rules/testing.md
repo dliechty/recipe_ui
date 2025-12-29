@@ -2,6 +2,6 @@
 trigger: always_on
 ---
 
-When testing, use the `npm run test:once` as the base command so that the process does not continue listening for changes. This includes when running a single test file. When testing with a file, the command would be something like: `npm run test:once <file>`.
+When executing a test, use `npm run test:once` instead of `npm test` as the base command. When testing with a specific file, the command should be: `npm run test:once <file>`.
 
-Always run `npm run test:once` at the end of your changes to ensure there are no regressions.
+Also, before finalizing changes, always run `npm run test:once` to run the entire test suite.
