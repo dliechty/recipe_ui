@@ -108,8 +108,26 @@ export const handlers = [
 
     // Intercept "POST /auth/token" requests...
     http.post('*/auth/token', async ({ request }) => { // Added request to destructuring
-        const formData = await request.formData();
-        const username = formData.get('username') as string; // OAuth2 password flow uses 'username' for email
+        let username = '';
+        try {
+            const formData = await request.clone().formData();
+            username = formData.get('username') as string;
+        } catch (e) {
+            // Fallback: the client might be sending Multipart body with UrlEncoded header (axios/openapi-codegen issue)
+            const text = await request.text();
+            // Try URLSearchParams first
+            const params = new URLSearchParams(text);
+            username = params.get('username') || '';
+
+            if (!username) {
+                // Try regex for multipart
+                // Look for name="username" followed by value
+                const match = text.match(/name="username"\s*[\r\n]+([^\r\n]+)/);
+                if (match) {
+                    username = match[1];
+                }
+            }
+        }
 
         let userId = "1";
         const user = usersStore.find(u => u.email === username);

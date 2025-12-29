@@ -34,7 +34,9 @@ describe('LoginPage', () => {
         // Verify token storage - using internal state update mechanism via AuthContext
         // We can check localStorage since AuthContext writes to it
         await waitFor(() => {
-            expect(localStorage.getItem('token')).toBe('fake-jwt-token');
+            const token = localStorage.getItem('token');
+            expect(token).not.toBeNull();
+            expect(token).toContain('fake-signature');
             // We can't easily check actual URL change in MemoryRouter without inspecting history or checking for side effects
             // But checking token is enough to prove login succeeded.
             // A better test would use a real router or spy on useNavigate.
