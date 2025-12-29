@@ -4,7 +4,8 @@ import {
     Heading,
     Table,
     HStack,
-    IconButton
+    IconButton,
+    Tooltip
 } from '@chakra-ui/react';
 import { AuthenticationService, UserPublic } from '../../../client';
 import { toaster } from '../../../toaster';
@@ -60,45 +61,65 @@ const AdminUserManagement = () => {
     return (
         <Box>
             <Heading size="md" mb={4} color="fg.default">User Management</Heading>
-            <Table.Root>
-                <Table.Header>
-                    <Table.Row bg="bg.surface">
-                        <Table.ColumnHeader color="fg.default">Email</Table.ColumnHeader>
-                        <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
-                        <Table.ColumnHeader color="fg.default">ID</Table.ColumnHeader>
-                        <Table.ColumnHeader color="fg.default">Actions</Table.ColumnHeader>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {users.map((user) => (
-                        <Table.Row key={user.id} bg="bg.surface" color="fg.default" _hover={{ bg: "bg.muted" }}>
-                            <Table.Cell>{user.email}</Table.Cell>
-                            <Table.Cell>{user.first_name} {user.last_name}</Table.Cell>
-                            <Table.Cell>{user.id}</Table.Cell>
-                            <Table.Cell>
-                                <HStack>
-                                    <IconButton
-                                        aria-label="Reset Password"
-                                        size="sm"
-                                        colorPalette="yellow"
-                                        onClick={() => handleReset(user.id)}
-                                    >
-                                        <FaKey />
-                                    </IconButton>
-                                    <IconButton
-                                        aria-label="Delete User"
-                                        size="sm"
-                                        colorPalette="red"
-                                        onClick={() => handleDelete(user.id)}
-                                    >
-                                        <FaTrash />
-                                    </IconButton>
-                                </HStack>
-                            </Table.Cell>
+            <Box borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor="border.default">
+                <Table.Root>
+                    <Table.Header>
+                        <Table.Row bg="bg.surface">
+                            <Table.ColumnHeader color="fg.default">Email</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default">ID</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default">Actions</Table.ColumnHeader>
                         </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table.Root>
+                    </Table.Header>
+                    <Table.Body>
+                        {users.map((user) => (
+                            <Table.Row key={user.id} bg="bg.surface" color="fg.default" _hover={{ bg: "bg.muted" }}>
+                                <Table.Cell borderColor="border.default">{user.email}</Table.Cell>
+                                <Table.Cell borderColor="border.default">{user.first_name} {user.last_name}</Table.Cell>
+                                <Table.Cell borderColor="border.default">{user.id}</Table.Cell>
+                                <Table.Cell borderColor="border.default">
+                                    <HStack>
+                                        <Tooltip.Root>
+                                            <Tooltip.Trigger asChild>
+                                                <IconButton
+                                                    aria-label="Reset Password"
+                                                    size="sm"
+                                                    colorPalette="yellow"
+                                                    onClick={() => handleReset(user.id)}
+                                                >
+                                                    <FaKey />
+                                                </IconButton>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Positioner>
+                                                <Tooltip.Content>
+                                                    Reset Password
+                                                </Tooltip.Content>
+                                            </Tooltip.Positioner>
+                                        </Tooltip.Root>
+                                        <Tooltip.Root>
+                                            <Tooltip.Trigger asChild>
+                                                <IconButton
+                                                    aria-label="Delete User"
+                                                    size="sm"
+                                                    colorPalette="red"
+                                                    onClick={() => handleDelete(user.id)}
+                                                >
+                                                    <FaTrash />
+                                                </IconButton>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Positioner>
+                                                <Tooltip.Content>
+                                                    Delete User
+                                                </Tooltip.Content>
+                                            </Tooltip.Positioner>
+                                        </Tooltip.Root>
+                                    </HStack>
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table.Root>
+            </Box>
         </Box>
     );
 };
