@@ -107,10 +107,19 @@ export const handlers = [
     }),
 
     // Intercept "POST /auth/token" requests...
-    http.post('*/auth/token', async () => {
+    http.post('*/auth/token', async ({ request }) => { // Added request to destructuring
+        const formData = await request.formData();
+        const username = formData.get('username') as string; // OAuth2 password flow uses 'username' for email
+
+        let userId = "1";
+        const user = usersStore.find(u => u.email === username);
+        if (user) {
+            userId = user.id;
+        }
+
         // Create a JWT with a valid payload structure
         const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-        const payload = btoa(JSON.stringify({ sub: "1", name: "Test User", iat: Date.now() / 1000 }));
+        const payload = btoa(JSON.stringify({ sub: userId, name: user ? `${user.first_name} ${user.last_name}` : "Test User", iat: Date.now() / 1000 }));
         const signature = "fake-signature";
         const token = `${header}.${payload}.${signature}`;
 

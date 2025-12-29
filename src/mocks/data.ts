@@ -6,15 +6,17 @@ export const users = [
         first_name: "Test",
         last_name: "User",
         is_active: true,
-        is_admin: false
+        is_admin: false,
+        is_first_login: false
     },
     {
         id: "2",
-        email: "chef@example.com",
-        first_name: "Gordon",
-        last_name: "Ramsay",
+        email: "admin@example.com",
+        first_name: "Admin",
+        last_name: "User",
         is_active: true,
-        is_admin: true
+        is_admin: true,
+        is_first_login: false
     }
 ];
 
