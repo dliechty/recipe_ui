@@ -5,11 +5,9 @@ import {
     Heading,
     Table,
     Text,
-    useDisclosure,
     VStack,
     Input,
     HStack,
-    Dialog // Check if Dialog is correct export for Modal in v3, or use Modal
 } from '@chakra-ui/react';
 import { AuthenticationService, UserRequest } from '../../../client';
 import { toaster } from '../../../toaster';
@@ -38,7 +36,7 @@ const AdminPendingRequests = () => {
         try {
             const data = await AuthenticationService.listPendingRequestsAuthPendingRequestsGet();
             setRequests(data);
-        } catch (error) {
+        } catch {
             toaster.create({
                 title: "Failed to fetch requests",
                 type: "error",

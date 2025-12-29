@@ -6,8 +6,7 @@ import {
     VStack,
     HStack,
     IconButton,
-    Heading,
-    Text
+    Heading
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
 import { InstructionCreate } from '../../../client';

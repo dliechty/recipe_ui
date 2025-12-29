@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SimpleGrid, Box, Heading, Text, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { useRecipes } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const RecipeList = () => {
+    const navigate = useNavigate();
     const { data: recipes = [], isLoading: loading, error } = useRecipes();
 
     if (error) {
@@ -15,8 +16,6 @@ const RecipeList = () => {
             </Container>
         );
     }
-
-    const navigate = useNavigate();
 
     const handleRecipeClick = (id: string) => {
         navigate(`/recipes/${id}`);

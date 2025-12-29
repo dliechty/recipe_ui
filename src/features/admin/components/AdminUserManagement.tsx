@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
     Box,
-    Button,
     Heading,
     Table,
-    Text,
     HStack,
     IconButton
 } from '@chakra-ui/react';
 import { AuthenticationService, UserPublic } from '../../../client';
 import { toaster } from '../../../toaster';
-import { FaTrash, FaEdit, FaKey } from 'react-icons/fa';
+import { FaTrash, FaKey } from 'react-icons/fa';
 
 const AdminUserManagement = () => {
     const [users, setUsers] = useState<UserPublic[]>([]);
@@ -23,7 +21,7 @@ const AdminUserManagement = () => {
         try {
             const data = await AuthenticationService.listActiveUsersAuthUsersGet();
             setUsers(data);
-        } catch (error) {
+        } catch {
             toaster.create({
                 title: "Failed to fetch users",
                 type: "error",
@@ -37,7 +35,7 @@ const AdminUserManagement = () => {
             await AuthenticationService.deleteUserAuthUsersUserIdDelete(userId);
             toaster.create({ title: "User deleted", type: "success" });
             fetchUsers();
-        } catch (error) {
+        } catch {
             toaster.create({ title: "Failed to delete user", type: "error" });
         }
     };
@@ -49,7 +47,7 @@ const AdminUserManagement = () => {
         try {
             await AuthenticationService.resetUserAuthUsersUserIdResetPost(userId, { initial_password: password });
             toaster.create({ title: "User reset", type: "success" });
-        } catch (error) {
+        } catch {
             toaster.create({ title: "Failed to reset user", type: "error" });
         }
     };

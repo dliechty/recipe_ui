@@ -2,9 +2,9 @@ import { http, HttpResponse } from 'msw';
 import { recipes as initialRecipes, users } from './data';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
-let recipes = [...initialRecipes];
-let usersStore = [...users];
-let pendingRequests: any[] = [];
+const recipes = [...initialRecipes];
+const usersStore = [...users];
+const pendingRequests: any[] = [];
 
 export const handlers = [
     // Intercept "GET /recipes/" requests...
@@ -112,7 +112,7 @@ export const handlers = [
         try {
             const formData = await request.clone().formData();
             username = formData.get('username') as string;
-        } catch (e) {
+        } catch {
             // Fallback: the client might be sending Multipart body with UrlEncoded header (axios/openapi-codegen issue)
             const text = await request.text();
             // Try URLSearchParams first
@@ -183,7 +183,7 @@ export const handlers = [
         }
 
         const req = pendingRequests[index];
-        const body = await request.json() as any; // initial_password
+        await request.json(); // Consume body but ignore it
 
         const newUser = {
             id: crypto.randomUUID(),
@@ -238,7 +238,7 @@ export const handlers = [
 
     // Intercept "POST /auth/change-password"
     http.post('*/auth/change-password', async ({ request }) => {
-        const body = await request.json() as any;
+        await request.json();
         // Verify old password? We can't really in mock without storing passwords.
         // Let's just assume success unless a specific "fail" password is used if we wanted to test failure.
         return HttpResponse.json({ message: "Password changed" });

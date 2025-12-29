@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -12,7 +12,6 @@ import {
     Badge,
     Button,
     List,
-    ListItem,
     Icon,
     Grid,
     GridItem,
