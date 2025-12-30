@@ -7,7 +7,8 @@ import {
     HStack,
     IconButton,
     Heading,
-    Text
+    Text,
+    Tooltip
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
 import { RecipeIngredientCreate, ComponentCreate } from '../../../client';
@@ -55,15 +56,24 @@ const RecipeIngredientsForm = ({
                                 />
                             )}
                             {components.length > 1 && component.name !== 'Main' && (
-                                <IconButton
-                                    colorPalette="red"
-                                    variant="ghost"
-                                    onClick={() => removeComponent(componentIndex)}
-                                    aria-label="Remove component"
-                                    size="sm"
-                                >
-                                    <FaTrash />
-                                </IconButton>
+                                <Tooltip.Root>
+                                    <Tooltip.Trigger asChild>
+                                        <IconButton
+                                            colorPalette="red"
+                                            variant="ghost"
+                                            onClick={() => removeComponent(componentIndex)}
+                                            aria-label="Remove component"
+                                            size="sm"
+                                        >
+                                            <FaTrash />
+                                        </IconButton>
+                                    </Tooltip.Trigger>
+                                    <Tooltip.Positioner>
+                                        <Tooltip.Content>
+                                            Delete component
+                                        </Tooltip.Content>
+                                    </Tooltip.Positioner>
+                                </Tooltip.Root>
                             )}
                         </HStack>
 
@@ -123,14 +133,23 @@ const RecipeIngredientsForm = ({
                                         />
                                     </Box>
                                     <Box pt={index === 0 ? 8 : 0}>
-                                        <IconButton
-                                            colorPalette="red"
-                                            variant="ghost"
-                                            onClick={() => removeIngredient(componentIndex, index)}
-                                            aria-label="Remove ingredient"
-                                        >
-                                            <FaTrash />
-                                        </IconButton>
+                                        <Tooltip.Root>
+                                            <Tooltip.Trigger asChild>
+                                                <IconButton
+                                                    colorPalette="red"
+                                                    variant="ghost"
+                                                    onClick={() => removeIngredient(componentIndex, index)}
+                                                    aria-label="Remove ingredient"
+                                                >
+                                                    <FaTrash />
+                                                </IconButton>
+                                            </Tooltip.Trigger>
+                                            <Tooltip.Positioner>
+                                                <Tooltip.Content>
+                                                    Delete ingredient
+                                                </Tooltip.Content>
+                                            </Tooltip.Positioner>
+                                        </Tooltip.Root>
                                     </Box>
                                 </HStack>
                             ))}

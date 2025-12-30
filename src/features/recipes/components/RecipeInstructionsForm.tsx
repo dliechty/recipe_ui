@@ -6,7 +6,8 @@ import {
     VStack,
     HStack,
     IconButton,
-    Heading
+    Heading,
+    Tooltip
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
 import { InstructionCreate } from '../../../client';
@@ -47,14 +48,23 @@ const RecipeInstructionsForm = ({
                             />
                         </Box>
                         <Box pt={1}>
-                            <IconButton
-                                colorPalette="red"
-                                variant="ghost"
-                                onClick={() => removeInstruction(index)}
-                                aria-label="Remove instruction"
-                            >
-                                <FaTrash />
-                            </IconButton>
+                            <Tooltip.Root>
+                                <Tooltip.Trigger asChild>
+                                    <IconButton
+                                        colorPalette="red"
+                                        variant="ghost"
+                                        onClick={() => removeInstruction(index)}
+                                        aria-label="Remove instruction"
+                                    >
+                                        <FaTrash />
+                                    </IconButton>
+                                </Tooltip.Trigger>
+                                <Tooltip.Positioner>
+                                    <Tooltip.Content>
+                                        Delete step
+                                    </Tooltip.Content>
+                                </Tooltip.Positioner>
+                            </Tooltip.Root>
                         </Box>
                     </HStack>
                 ))}
