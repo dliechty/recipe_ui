@@ -31,7 +31,7 @@ export const handlers = [
             core: {
                 ...newRecipe.core,
                 id: crypto.randomUUID(), // Generate UUID
-                owner_id: "1",
+                owner_id: "550e8400-e29b-41d4-a716-446655440000",
                 slug: newRecipe.core.name.toLowerCase().replace(/\s+/g, '-')
             },
             times: newRecipe.times,
@@ -129,7 +129,7 @@ export const handlers = [
             }
         }
 
-        let userId = "1";
+        let userId = "550e8400-e29b-41d4-a716-446655440000";
         const user = usersStore.find(u => u.email === username);
         if (user) {
             userId = user.id;

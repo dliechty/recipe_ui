@@ -1,7 +1,7 @@
 
 export const users = [
     {
-        id: "1",
+        id: "550e8400-e29b-41d4-a716-446655440000",
         email: "test@example.com",
         first_name: "Test",
         last_name: "User",
@@ -10,7 +10,7 @@ export const users = [
         is_first_login: false
     },
     {
-        id: "2",
+        id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         email: "admin@example.com",
         first_name: "Admin",
         last_name: "User",
@@ -34,7 +34,7 @@ export const recipes = [
             source: 'Grandma',
             source_url: 'https://www.example.com/spaghetti-carbonara',
             slug: 'spaghetti-carbonara',
-            owner_id: "1"
+            owner_id: "550e8400-e29b-41d4-a716-446655440000"
         },
         times: {
             prep_time_minutes: 15,
@@ -84,7 +84,7 @@ export const recipes = [
             source: null,
             source_url: null,
             slug: 'chicken-curry',
-            owner_id: "1"
+            owner_id: "550e8400-e29b-41d4-a716-446655440000"
         },
         times: {
             prep_time_minutes: 20,
@@ -133,7 +133,7 @@ export const recipes = [
             source: null,
             source_url: null,
             slug: 'avocado-toast',
-            owner_id: "1"
+            owner_id: "550e8400-e29b-41d4-a716-446655440000"
         },
         times: {
             prep_time_minutes: 5,
