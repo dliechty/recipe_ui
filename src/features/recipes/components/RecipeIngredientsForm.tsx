@@ -121,8 +121,11 @@ const RecipeIngredientsForm = ({
 
                 <Button
                     onClick={addComponent}
-                    variant="outline"
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="start"
+                    size="sm"
                 >
                     <FaPlus /> Add Component
                 </Button>
