@@ -101,7 +101,7 @@ const RecipeDetails = () => {
 
                 {recipe.audit?.updated_at && (
                     <Text color="fg.muted" mb={2} fontSize="sm">
-                        Last Updated: {new Date(recipe.audit.updated_at).toLocaleString()}
+                        Last Updated: {new Date(recipe.audit.updated_at).toLocaleDateString()}
                     </Text>
                 )}
 
