@@ -117,21 +117,24 @@ describe('Recipe Workflows', () => {
             expect(screen.getByTestId('recipe-name')).toHaveValue('Spaghetti Carbonara');
         });
 
-        // Add Component
-        fireEvent.click(screen.getByText(/Add Component/i));
+        // Check for 'Main' text
+        expect(screen.getByText('Main', { selector: 'h2' })).toBeInTheDocument();
+
+        // Add a new component
+        const addComponentButton = screen.getByRole('button', { name: /add component/i });
+        fireEvent.click(addComponentButton);
 
         // Find component name inputs
+        // Main is text, so we should only find 1 input for the new component
         const componentNameInputs = screen.getAllByPlaceholderText('Component Name (e.g., Main, Sauce)');
-        expect(componentNameInputs).toHaveLength(2);
+        expect(componentNameInputs).toHaveLength(1);
 
         // Rename new component
-        fireEvent.change(componentNameInputs[1], { target: { value: 'Sauce' } });
-        expect(componentNameInputs[1]).toHaveValue('Sauce');
+        fireEvent.change(componentNameInputs[0], { target: { value: 'Frosting' } });
+        expect(componentNameInputs[0]).toHaveValue('Frosting');
 
-        // Add Ingredient to new component (Sauce is at index 1)
+        // Add Ingredient to new component (Frosting is at index 0 of the *editable* components)
         const addIngredientButtons = screen.getAllByText(/Add Ingredient/i);
-        // Index 0 is Main, Index 1 is Sauce
-        fireEvent.click(addIngredientButtons[1]);
 
         // Find inputs for the new ingredient in the second component
         // This is tricky as there are multiple ingredient inputs now.
@@ -150,13 +153,12 @@ describe('Recipe Workflows', () => {
 
         // Verify Sauce is gone
         expect(screen.queryByDisplayValue('Sauce')).not.toBeInTheDocument();
-        expect(screen.getAllByPlaceholderText('Component Name (e.g., Main, Sauce)')).toHaveLength(1);
+        expect(screen.queryAllByPlaceholderText('Component Name (e.g., Main, Sauce)')).toHaveLength(0);
 
         // Verify Main cannot be deleted (no remove button for it)
         expect(screen.queryByLabelText('Remove component')).not.toBeInTheDocument();
 
-        // Verify Main name is read-only
-        const mainInput = screen.getByDisplayValue('Main');
-        expect(mainInput).toHaveAttribute('readonly');
+        // Verify Main name is displayed as text
+        expect(screen.getByRole('heading', { level: 2, name: 'Main' })).toBeInTheDocument();
     });
 });

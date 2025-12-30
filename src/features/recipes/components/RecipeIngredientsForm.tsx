@@ -38,19 +38,22 @@ const RecipeIngredientsForm = ({
                 {components.map((component, componentIndex) => (
                     <Box key={componentIndex} p={4} borderRadius="md" borderWidth={1} borderColor="border.default">
                         <HStack mb={4} justify="space-between">
-                            <Input
-                                value={component.name}
-                                onChange={(e) => handleComponentNameChange(componentIndex, e.target.value)}
-                                placeholder="Component Name (e.g., Main, Sauce)"
-                                fontWeight="bold"
-                                maxW="300px"
-                                readOnly={component.name === 'Main'}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
-                            />
+                            {component.name === 'Main' ? (
+                                <Heading size="sm" mt={2} mb={2}>{component.name}</Heading>
+                            ) : (
+                                <Input
+                                    value={component.name}
+                                    onChange={(e) => handleComponentNameChange(componentIndex, e.target.value)}
+                                    placeholder="Component Name (e.g., Main, Sauce)"
+                                    fontWeight="bold"
+                                    maxW="300px"
+                                    bg="vscode.inputBg"
+                                    borderColor="border.default"
+                                    color="fg.default"
+                                    _hover={{ borderColor: 'vscode.accent' }}
+                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                />
+                            )}
                             {components.length > 1 && component.name !== 'Main' && (
                                 <IconButton
                                     colorPalette="red"
