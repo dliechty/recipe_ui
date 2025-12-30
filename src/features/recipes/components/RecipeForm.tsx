@@ -87,10 +87,10 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         }));
     };
 
-    // Ingredient Handlers (Assumes single component 'Main' for now)
-    const handleIngredientChange = (index: number, field: keyof RecipeIngredientCreate, value: string | number) => {
+    // Ingredient Handlers
+    const handleIngredientChange = (componentIndex: number, ingredientIndex: number, field: keyof RecipeIngredientCreate, value: string | number) => {
         const newComponents = [...formData.components];
-        const newIngredients = [...newComponents[0].ingredients];
+        const newIngredients = [...newComponents[componentIndex].ingredients];
 
         // Handle number conversion for quantity
         let processedValue = value;
@@ -98,41 +98,65 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
             processedValue = parseFloat(value as string) || 0;
         }
 
-        newIngredients[index] = { ...newIngredients[index], [field]: processedValue };
-        newComponents[0].ingredients = newIngredients;
+        newIngredients[ingredientIndex] = { ...newIngredients[ingredientIndex], [field]: processedValue };
+        newComponents[componentIndex].ingredients = newIngredients;
         setFormData(prev => ({ ...prev, components: newComponents }));
     };
 
-    const addIngredient = () => {
+    const addIngredient = (componentIndex: number) => {
         setFormData(prev => {
-            const currentComponents = prev.components || [];
-            if (currentComponents.length === 0) {
-                return {
-                    ...prev,
-                    components: [{
-                        name: 'Main',
-                        ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
-                    }]
-                };
-            }
+            const newComponents = [...prev.components];
+            newComponents[componentIndex] = {
+                ...newComponents[componentIndex],
+                ingredients: [...newComponents[componentIndex].ingredients, { ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+            };
             return {
                 ...prev,
-                components: prev.components.map((comp, i) => i === 0 ? {
-                    ...comp,
-                    ingredients: [...comp.ingredients, { ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
-                } : comp)
+                components: newComponents
             };
         });
     };
 
-    const removeIngredient = (index: number) => {
+    const removeIngredient = (componentIndex: number, ingredientIndex: number) => {
+        setFormData(prev => {
+            const newComponents = [...prev.components];
+            newComponents[componentIndex] = {
+                ...newComponents[componentIndex],
+                ingredients: newComponents[componentIndex].ingredients.filter((_, idx) => idx !== ingredientIndex)
+            };
+            return {
+                ...prev,
+                components: newComponents
+            };
+        });
+    };
+
+    // Component Handlers
+    const addComponent = () => {
         setFormData(prev => ({
             ...prev,
-            components: prev.components.map((comp, i) => i === 0 ? {
-                ...comp,
-                ingredients: comp.ingredients.filter((_, idx) => idx !== index)
-            } : comp)
+            components: [
+                ...prev.components,
+                {
+                    name: 'New Component',
+                    ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                }
+            ]
         }));
+    };
+
+    const removeComponent = (index: number) => {
+        if (formData.components.length <= 1) return; // Prevent removing the last component
+        setFormData(prev => ({
+            ...prev,
+            components: prev.components.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleComponentNameChange = (index: number, name: string) => {
+        const newComponents = [...formData.components];
+        newComponents[index] = { ...newComponents[index], name };
+        setFormData(prev => ({ ...prev, components: newComponents }));
     };
 
     // Instruction Handlers
@@ -173,10 +197,13 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                 />
 
                 <RecipeIngredientsForm
-                    ingredients={formData.components?.[0]?.ingredients || []}
+                    components={formData.components || []}
                     handleIngredientChange={handleIngredientChange}
                     addIngredient={addIngredient}
                     removeIngredient={removeIngredient}
+                    handleComponentNameChange={handleComponentNameChange}
+                    addComponent={addComponent}
+                    removeComponent={removeComponent}
                 />
 
                 <RecipeInstructionsForm
