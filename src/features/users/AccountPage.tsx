@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const AccountPage = () => {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     // User profile update is not fully implemented in UI as per plan focus on Password/Admin, 
@@ -46,11 +46,13 @@ const AccountPage = () => {
                     </Box>
 
                     <HStack pt={4}>
-                        <Button onClick={() => navigate('/change-password')}>
+                        <Button
+                            onClick={() => navigate('/change-password')}
+                            bg="vscode.button"
+                            color="white"
+                            _hover={{ bg: "vscode.buttonHover" }}
+                        >
                             Change Password
-                        </Button>
-                        <Button variant="outline" colorPalette="red" onClick={logout}>
-                            Logout
                         </Button>
                     </HStack>
                 </VStack>
