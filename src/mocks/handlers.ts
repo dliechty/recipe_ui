@@ -238,9 +238,23 @@ export const handlers = [
 
     // Intercept "POST /auth/change-password"
     http.post('*/auth/change-password', async ({ request }) => {
-        await request.json();
-        // Verify old password? We can't really in mock without storing passwords.
-        // Let's just assume success unless a specific "fail" password is used if we wanted to test failure.
+        const authHeader = request.headers.get('Authorization');
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    const userId = payload.sub;
+                    const user = usersStore.find(u => u.id === userId);
+                    if (user) {
+                        user.is_first_login = false;
+                    }
+                }
+            } catch (e) {
+                console.error("Error updating user status in mock", e);
+            }
+        }
         return HttpResponse.json({ message: "Password changed" });
     }),
 ];

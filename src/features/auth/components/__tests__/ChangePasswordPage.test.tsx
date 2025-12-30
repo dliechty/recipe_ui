@@ -21,6 +21,14 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
+// Mock useAuth
+const mockLogout = vi.fn();
+vi.mock('../../../../context/AuthContext', () => ({
+    useAuth: () => ({
+        logout: mockLogout
+    })
+}));
+
 describe('ChangePasswordPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -61,6 +69,7 @@ describe('ChangePasswordPage', () => {
             title: "Password Changed",
             type: "success",
         }));
-        expect(mockNavigate).toHaveBeenCalledWith('/recipes');
+        expect(mockLogout).toHaveBeenCalled();
+        expect(mockNavigate).toHaveBeenCalledWith('/login');
     });
 });

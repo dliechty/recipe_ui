@@ -11,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthenticationService } from '../../../client';
 import { toaster } from '../../../toaster';
+import { useAuth } from '../../../context/AuthContext';
 
 const ChangePasswordPage = () => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -18,6 +19,7 @@ const ChangePasswordPage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { logout } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -37,10 +39,11 @@ const ChangePasswordPage = () => {
             });
             toaster.create({
                 title: "Password Changed",
-                description: "Your password has been successfully updated.",
+                description: "Your password has been successfully updated. Please login again.",
                 type: "success",
             });
-            navigate('/recipes');
+            logout();
+            navigate('/login');
         } catch (err: any) {
             console.error("Password change failed:", err);
             let errorMsg = "Failed to change password.";
