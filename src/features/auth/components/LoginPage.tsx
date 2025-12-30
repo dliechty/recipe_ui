@@ -40,7 +40,7 @@ const LoginPage = () => {
     };
 
     return (
-        <Container maxW="container.sm" centerContent py={10}>
+        <Container maxW="500px" centerContent py={10}>
             <VStack gap={8} w="full">
                 <Heading as="h1" size="xl" textAlign="center" color="fg.default">
                     Recipes and Meal Planning
