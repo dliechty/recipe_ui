@@ -32,11 +32,11 @@ const RecipeIngredientsForm = ({
     removeComponent
 }: RecipeIngredientsFormProps) => {
     return (
-        <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
+        <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="lg">
             <Heading size="md" mb={6}>Ingredients</Heading>
             <VStack gap={8} align="stretch">
                 {components.map((component, componentIndex) => (
-                    <Box key={componentIndex} p={4} borderRadius="md" borderWidth={1} borderColor="border.subtle">
+                    <Box key={componentIndex} p={4} borderRadius="md" borderWidth={1} borderColor="border.default">
                         <HStack mb={4} justify="space-between">
                             <Input
                                 value={component.name}
@@ -45,6 +45,11 @@ const RecipeIngredientsForm = ({
                                 fontWeight="bold"
                                 maxW="300px"
                                 readOnly={component.name === 'Main'}
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                             {components.length > 1 && component.name !== 'Main' && (
                                 <IconButton
@@ -68,6 +73,11 @@ const RecipeIngredientsForm = ({
                                             placeholder="Ingredient"
                                             value={ingredient.ingredient_name}
                                             onChange={(e) => handleIngredientChange(componentIndex, index, 'ingredient_name', e.target.value)}
+                                            bg="vscode.inputBg"
+                                            borderColor="border.default"
+                                            color="fg.default"
+                                            _hover={{ borderColor: 'vscode.accent' }}
+                                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                         />
                                     </Box>
                                     <Box flex={1}>
@@ -76,6 +86,11 @@ const RecipeIngredientsForm = ({
                                             placeholder="Qty"
                                             value={ingredient.quantity}
                                             onChange={(e) => handleIngredientChange(componentIndex, index, 'quantity', e.target.value)}
+                                            bg="vscode.inputBg"
+                                            borderColor="border.default"
+                                            color="fg.default"
+                                            _hover={{ borderColor: 'vscode.accent' }}
+                                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                         />
                                     </Box>
                                     <Box flex={1}>
@@ -84,6 +99,11 @@ const RecipeIngredientsForm = ({
                                             placeholder="Unit"
                                             value={ingredient.unit}
                                             onChange={(e) => handleIngredientChange(componentIndex, index, 'unit', e.target.value)}
+                                            bg="vscode.inputBg"
+                                            borderColor="border.default"
+                                            color="fg.default"
+                                            _hover={{ borderColor: 'vscode.accent' }}
+                                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                         />
                                     </Box>
                                     <Box flex={2}>
@@ -92,6 +112,11 @@ const RecipeIngredientsForm = ({
                                             placeholder="Notes (optional)"
                                             value={ingredient.notes || ''}
                                             onChange={(e) => handleIngredientChange(componentIndex, index, 'notes', e.target.value)}
+                                            bg="vscode.inputBg"
+                                            borderColor="border.default"
+                                            color="fg.default"
+                                            _hover={{ borderColor: 'vscode.accent' }}
+                                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                         />
                                     </Box>
                                     <Box pt={index === 0 ? 8 : 0}>

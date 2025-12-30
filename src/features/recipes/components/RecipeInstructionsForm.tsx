@@ -25,7 +25,7 @@ const RecipeInstructionsForm = ({
     removeInstruction
 }: RecipeInstructionsFormProps) => {
     return (
-        <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="sm">
+        <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="lg">
             <Heading size="md" mb={6}>Instructions</Heading>
             <VStack gap={4} align="stretch">
                 {instructions.map((instruction, index) => (
@@ -39,6 +39,11 @@ const RecipeInstructionsForm = ({
                                 value={instruction.text}
                                 onChange={(e) => handleInstructionChange(index, e.target.value)}
                                 rows={2}
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                         </Box>
                         <Box pt={1}>
