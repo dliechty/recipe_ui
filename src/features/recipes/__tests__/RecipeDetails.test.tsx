@@ -111,4 +111,28 @@ describe('RecipeDetails', () => {
             expect(screen.getByText('Added By: John Doe')).toBeInTheDocument();
         });
     });
+
+    it('renders multiple components', async () => {
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/2']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Chicken Curry')).toBeInTheDocument();
+        });
+
+        // Main component (Header "Main" is hidden by default in UI)
+        expect(screen.queryByText('Main')).not.toBeInTheDocument();
+        expect(screen.getByText('Chicken Breast')).toBeInTheDocument();
+
+        // New Rice component
+        expect(screen.getByText('Rice')).toBeInTheDocument();
+        expect(screen.getByText('Basmati Rice')).toBeInTheDocument();
+        expect(screen.getByText('Water')).toBeInTheDocument();
+        expect(screen.getByText('Salt')).toBeInTheDocument();
+    });
 });

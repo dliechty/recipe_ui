@@ -105,6 +105,14 @@ export const recipes = [
                     { quantity: 3, unit: 'tbsp', item: 'Curry Powder', notes: null },
                     { quantity: 1, unit: 'large', item: 'Onion', notes: null }
                 ]
+            },
+            {
+                name: 'Rice',
+                ingredients: [
+                    { quantity: 1, unit: 'cup', item: 'Basmati Rice', notes: null },
+                    { quantity: 2, unit: 'cups', item: 'Water', notes: null },
+                    { quantity: 1, unit: 'tsp', item: 'Salt', notes: null }
+                ]
             }
         ],
         instructions: [
