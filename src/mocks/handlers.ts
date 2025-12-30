@@ -6,6 +6,14 @@ const recipes = [...initialRecipes];
 const usersStore = [...users];
 const pendingRequests: any[] = [];
 
+export const resetStore = () => {
+    recipes.length = 0;
+    recipes.push(...initialRecipes);
+    usersStore.length = 0;
+    usersStore.push(...users);
+    pendingRequests.length = 0;
+};
+
 export const handlers = [
     // Intercept "GET /recipes/" requests...
     http.get('*/recipes/', () => {

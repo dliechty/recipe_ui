@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { resetStore } from '../../../mocks/handlers';
 import AddRecipePage from '../pages/AddRecipePage';
 import EditRecipePage from '../pages/EditRecipePage';
 import { AuthProvider } from '../../../context/AuthContext';
@@ -50,6 +51,10 @@ const renderWithProviders = (ui: React.ReactElement, { route = '/' }: { route?: 
 };
 
 describe('Recipe Workflows', () => {
+    beforeEach(() => {
+        resetStore();
+    });
+
     it('creates a new recipe', async () => {
         renderWithProviders(<AddRecipePage />, { route: '/recipes/new' });
 
@@ -103,5 +108,55 @@ describe('Recipe Workflows', () => {
         await waitFor(() => {
             expect(mockNavigate).toHaveBeenCalledWith('/recipes/1');
         });
+    });
+
+    it('manages recipe components', async () => {
+        renderWithProviders(<EditRecipePage />, { route: '/recipes/1/edit' });
+
+        await waitFor(() => {
+            expect(screen.getByTestId('recipe-name')).toHaveValue('Spaghetti Carbonara');
+        });
+
+        // Add Component
+        fireEvent.click(screen.getByText(/Add Component/i));
+
+        // Find component name inputs
+        const componentNameInputs = screen.getAllByPlaceholderText('Component Name (e.g., Main, Sauce)');
+        expect(componentNameInputs).toHaveLength(2);
+
+        // Rename new component
+        fireEvent.change(componentNameInputs[1], { target: { value: 'Sauce' } });
+        expect(componentNameInputs[1]).toHaveValue('Sauce');
+
+        // Add Ingredient to new component (Sauce is at index 1)
+        const addIngredientButtons = screen.getAllByText(/Add Ingredient/i);
+        // Index 0 is Main, Index 1 is Sauce
+        fireEvent.click(addIngredientButtons[1]);
+
+        // Find inputs for the new ingredient in the second component
+        // This is tricky as there are multiple ingredient inputs now.
+        // We can scope searches within the component container if we had test ids,
+        // but sticking to global queries for now implies rely on order.
+        // Main component (mocked) likely has ingredients.
+        // Let's assume we just want to verify we can interact with it.
+        // Actually, just checking the add worked by counting inputs might be safer.
+        const ingredientNameInputs = screen.getAllByPlaceholderText('Ingredient');
+        // Initial load spaghetti has ingredients. Adding one to Sauce adds another.
+        const initialCount = ingredientNameInputs.length;
+
+        // Remove the Sauce component
+        const removeComponentButton = screen.getByLabelText('Remove component'); // There should only be one, for Sauce
+        fireEvent.click(removeComponentButton);
+
+        // Verify Sauce is gone
+        expect(screen.queryByDisplayValue('Sauce')).not.toBeInTheDocument();
+        expect(screen.getAllByPlaceholderText('Component Name (e.g., Main, Sauce)')).toHaveLength(1);
+
+        // Verify Main cannot be deleted (no remove button for it)
+        expect(screen.queryByLabelText('Remove component')).not.toBeInTheDocument();
+
+        // Verify Main name is read-only
+        const mainInput = screen.getByDisplayValue('Main');
+        expect(mainInput).toHaveAttribute('readonly');
     });
 });
