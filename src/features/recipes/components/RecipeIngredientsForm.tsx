@@ -44,8 +44,9 @@ const RecipeIngredientsForm = ({
                                 placeholder="Component Name (e.g., Main, Sauce)"
                                 fontWeight="bold"
                                 maxW="300px"
+                                readOnly={component.name === 'Main'}
                             />
-                            {components.length > 1 && (
+                            {components.length > 1 && component.name !== 'Main' && (
                                 <IconButton
                                     colorPalette="red"
                                     variant="ghost"
