@@ -126,30 +126,39 @@ const AdminPendingRequests = () => {
                     left="0"
                     right="0"
                     bottom="0"
-                    bg="rgba(0,0,0,0.5)"
+                    bg="rgba(0,0,0,0.6)"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                     zIndex={1000}
+                    backdropFilter="blur(4px)"
                 >
-                    <Box bg="bg.panel" p={6} borderRadius="md" minW="400px" boxShadow="xl">
-                        <Heading size="sm" mb={4}>Approve Request for {selectedRequest?.email}</Heading>
+                    <Box bg="bg.surface" p={6} borderRadius="xl" minW="400px" boxShadow="xl" borderWidth="1px" borderColor="border.default">
+                        <Heading size="sm" mb={4} color="fg.default">Approve Request for {selectedRequest?.email}</Heading>
                         <VStack gap={4} align="stretch">
                             <Box>
-                                <Text mb={2} fontSize="sm">Set Initial Password</Text>
+                                <Text mb={2} fontSize="sm" color="fg.default">Set Initial Password</Text>
                                 <Input
                                     value={initialPassword}
                                     onChange={(e) => setInitialPassword(e.target.value)}
                                     placeholder="Enter initial password"
                                     type="password"
+                                    bg="vscode.inputBg"
+                                    borderColor="border.default"
+                                    color="fg.default"
+                                    _hover={{ borderColor: 'vscode.accent' }}
+                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                 />
                             </Box>
-                            <HStack justify="flex-end">
-                                <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                            <HStack justify="flex-end" gap={3}>
+                                <Button variant="ghost" color="fg.muted" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                                 <Button
                                     onClick={confirmApprove}
                                     loading={isApproving}
                                     disabled={!initialPassword}
+                                    bg="vscode.button"
+                                    color="white"
+                                    _hover={{ bg: 'vscode.buttonHover' }}
                                 >
                                     Confirm
                                 </Button>
