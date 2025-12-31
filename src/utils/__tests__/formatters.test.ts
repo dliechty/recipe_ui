@@ -14,25 +14,25 @@ describe('formatQuantity', () => {
     });
 
     it('formats common fractions correctly', () => {
-        expect(formatQuantity(0.5)).toBe('1/2');
-        expect(formatQuantity(0.25)).toBe('1/4');
-        expect(formatQuantity(0.75)).toBe('3/4');
-        expect(formatQuantity(0.2)).toBe('1/5');
-        expect(formatQuantity(0.333)).toBe('1/3'); // Exact match from map
-        expect(formatQuantity(1.0 / 3.0)).toBe('1/3'); // Calculated with tolerance
+        expect(formatQuantity(0.5)).toBe('½');
+        expect(formatQuantity(0.25)).toBe('¼');
+        expect(formatQuantity(0.75)).toBe('¾');
+        expect(formatQuantity(0.2)).toBe('⅕');
+        expect(formatQuantity(0.333)).toBe('⅓'); // Exact match from map
+        expect(formatQuantity(1.0 / 3.0)).toBe('⅓'); // Calculated with tolerance
     });
 
     it('formats mixed numbers correctly', () => {
-        expect(formatQuantity(1.5)).toBe('1 1/2');
-        expect(formatQuantity(2.25)).toBe('2 1/4');
-        expect(formatQuantity(3.75)).toBe('3 3/4');
+        expect(formatQuantity(1.5)).toBe('1 ½');
+        expect(formatQuantity(2.25)).toBe('2 ¼');
+        expect(formatQuantity(3.75)).toBe('3 ¾');
     });
 
     it('formats eighths correctly', () => {
-        expect(formatQuantity(0.125)).toBe('1/8');
-        expect(formatQuantity(0.375)).toBe('3/8');
-        expect(formatQuantity(0.625)).toBe('5/8');
-        expect(formatQuantity(0.875)).toBe('7/8');
+        expect(formatQuantity(0.125)).toBe('⅛');
+        expect(formatQuantity(0.375)).toBe('⅜');
+        expect(formatQuantity(0.625)).toBe('⅝');
+        expect(formatQuantity(0.875)).toBe('⅞');
     });
 
     it('returns decimal for non-matching fractions', () => {

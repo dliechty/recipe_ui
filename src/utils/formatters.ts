@@ -12,19 +12,19 @@ export const formatQuantity = (value: number | undefined | null): string => {
 
     // Common fractions map
     const fractions: { [key: number]: string } = {
-        0.5: '1/2',
-        0.333: '1/3',
-        0.666: '2/3',
-        0.25: '1/4',
-        0.75: '3/4',
-        0.2: '1/5',
-        0.4: '2/5',
-        0.6: '3/5',
-        0.8: '4/5',
-        0.125: '1/8',
-        0.375: '3/8',
-        0.625: '5/8',
-        0.875: '7/8',
+        0.5: '½',
+        0.333: '⅓',
+        0.666: '⅔',
+        0.25: '¼',
+        0.75: '¾',
+        0.2: '⅕',
+        0.4: '⅖',
+        0.6: '⅗',
+        0.8: '⅘',
+        0.125: '⅛',
+        0.375: '⅜',
+        0.625: '⅝',
+        0.875: '⅞',
     };
 
     // Check for exact matches first (for clean decimals like 0.5)

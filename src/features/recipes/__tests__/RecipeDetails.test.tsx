@@ -223,9 +223,9 @@ describe('RecipeDetails', () => {
             expect(screen.getByText('Fraction Recipe')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('1/2 cup')).toBeInTheDocument();
-        expect(screen.getByText('1/4 tsp')).toBeInTheDocument();
-        expect(screen.getByText('1 1/2 cup')).toBeInTheDocument();
-        expect(screen.getByText('1/3 tsp')).toBeInTheDocument();
+        expect(screen.getByText('½ cup')).toBeInTheDocument();
+        expect(screen.getByText('¼ tsp')).toBeInTheDocument();
+        expect(screen.getByText('1 ½ cup')).toBeInTheDocument();
+        expect(screen.getByText('⅓ tsp')).toBeInTheDocument();
     });
 });
