@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
@@ -35,6 +35,25 @@ const RecipeList = () => {
             observer.current.observe(node);
         }
     }, [isFetchingNextPage, fetchNextPage, hasNextPage]);
+
+    // Scroll-based fallback for mobile browsers where IntersectionObserver doesn't work
+    useEffect(() => {
+        const handleScroll = () => {
+            if (isFetchingNextPage || !hasNextPage) return;
+
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = document.documentElement.clientHeight;
+
+            // Trigger when within 500px of bottom
+            if (scrollTop + clientHeight >= scrollHeight - 500) {
+                fetchNextPage();
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
 
     const handleRecipeClick = (id: string) => {
         navigate(`/recipes/${id}`);
