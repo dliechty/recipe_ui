@@ -10,7 +10,7 @@ const RecipeList = () => {
     const { data: recipes = [], isLoading: loading, error } = useRecipes();
 
     const [currentPage, setCurrentPage] = React.useState(1);
-    const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [itemsPerPage, setItemsPerPage] = React.useState(50);
 
     if (error) {
         return (
@@ -74,10 +74,10 @@ const RecipeList = () => {
                                 color: "var(--chakra-colors-fg-default)"
                             }}
                         >
-                            <option value={5}>5</option>
                             <option value={10}>10</option>
                             <option value={25}>25</option>
                             <option value={50}>50</option>
+                            <option value={100}>100</option>
                         </select>
                     </Box>
                 </HStack>

@@ -109,7 +109,11 @@ describe('RecipeList', () => {
             expect(screen.getByText('Recipe 1')).toBeInTheDocument();
         });
 
-        // Default is 10 items per page
+        // Set items per page to 10 for testing
+        const select = screen.getByRole('combobox');
+        fireEvent.change(select, { target: { value: '10' } });
+
+        // Verify pagination with 10 items
         expect(screen.getByText('Recipe 10')).toBeInTheDocument();
         expect(screen.queryByText('Recipe 11')).not.toBeInTheDocument();
 
@@ -161,12 +165,11 @@ describe('RecipeList', () => {
             expect(screen.getByText('Recipe 1')).toBeInTheDocument();
         });
 
-        // Change to 5 items per page
+        // Change to 25 items per page
         const select = screen.getByRole('combobox');
-        fireEvent.change(select, { target: { value: '5' } });
+        fireEvent.change(select, { target: { value: '25' } });
 
-        expect(screen.getByText('Recipe 5')).toBeInTheDocument();
-        expect(screen.queryByText('Recipe 6')).not.toBeInTheDocument();
-        expect(screen.getByText('Page 1 of 4')).toBeInTheDocument();
+        expect(screen.getByText('Recipe 20')).toBeInTheDocument();
+        expect(screen.getByText('Page 1 of 1')).toBeInTheDocument();
     });
 });
