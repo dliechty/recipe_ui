@@ -20,6 +20,7 @@ const RecipeList = () => {
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
+    const [debugIsIntersecting, setDebugIsIntersecting] = useState(false);
 
     useEffect(() => {
         if (!sentinel) return;
@@ -28,6 +29,7 @@ const RecipeList = () => {
         if (observer.current) observer.current.disconnect();
 
         observer.current = new IntersectionObserver((entries) => {
+            setDebugIsIntersecting(entries[0].isIntersecting);
             if (entries[0].isIntersecting && hasNextPage) {
                 fetchNextPage();
             }
@@ -62,6 +64,16 @@ const RecipeList = () => {
 
     return (
         <Container maxW="container.xl" py={8}>
+            {/* Debug Overlay */}
+            <Box position="fixed" top="20" right="4" bg="blackAlpha.800" color="white" p={2} zIndex={9999} fontSize="xs" borderRadius="md">
+                <Text fontWeight="bold">Infinite Scroll Debug</Text>
+                <Text>Sentinel: {sentinel ? 'Found' : 'Missing'}</Text>
+                <Text>Intersecting: {debugIsIntersecting ? 'Yes' : 'No'}</Text>
+                <Text>Fetching: {isFetchingNextPage ? 'Yes' : 'No'}</Text>
+                <Text>Has More: {hasNextPage ? 'Yes' : 'No'}</Text>
+                <Text>Recipes: {recipes.length}</Text>
+            </Box>
+
             <HStack mb={8}>
                 <Heading color="fg.default">All Recipes</Heading>
                 <Spacer />
