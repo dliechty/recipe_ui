@@ -19,7 +19,7 @@ const RecipeList = () => {
     } = useInfiniteRecipes(20); // Load 20 recipes per page
 
     const observer = useRef<IntersectionObserver | null>(null);
-    const lastRecipeElementRef = useCallback((node: HTMLTableRowElement | null) => {
+    const lastRecipeElementRef = useCallback((node: HTMLDivElement | null) => {
         if (isFetchingNextPage) return;
         if (observer.current) observer.current.disconnect();
         observer.current = new IntersectionObserver(entries => {
@@ -36,24 +36,7 @@ const RecipeList = () => {
         }
     }, [isFetchingNextPage, fetchNextPage, hasNextPage]);
 
-    // Scroll-based fallback for mobile browsers where IntersectionObserver doesn't work
-    useEffect(() => {
-        const handleScroll = () => {
-            if (isFetchingNextPage || !hasNextPage) return;
 
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const scrollHeight = document.documentElement.scrollHeight;
-            const clientHeight = document.documentElement.clientHeight;
-
-            // Trigger when within 500px of bottom
-            if (scrollTop + clientHeight >= scrollHeight - 500) {
-                fetchNextPage();
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
 
     const handleRecipeClick = (id: string) => {
         navigate(`/recipes/${id}`);
@@ -102,7 +85,6 @@ const RecipeList = () => {
                             return (
                                 <Table.Row
                                     key={recipe.core.id}
-                                    ref={isLastElement ? lastRecipeElementRef : null}
                                     onClick={() => handleRecipeClick(recipe.core.id)}
                                     cursor="pointer"
                                     bg="bg.surface"
@@ -129,6 +111,9 @@ const RecipeList = () => {
                     </Table.Body>
                 </Table.Root>
             </Box>
+
+            {/* Sentinel for IntersectionObserver */}
+            <Box ref={lastRecipeElementRef} height="20px" bg="transparent" />
 
             {(status === 'pending' || isFetchingNextPage) && (
                 <Center p={4}>

@@ -11,13 +11,16 @@ vi.mock('../../../context/AuthContext', () => ({
 }));
 
 describe('RecipeList', () => {
+    const observeMock = vi.fn();
+    const disconnectMock = vi.fn();
+
     beforeAll(() => {
         // Mock IntersectionObserver
         global.IntersectionObserver = class IntersectionObserver {
-            constructor() { }
-            observe() { return null; }
+            constructor(callback: any, options: any) { }
+            observe = observeMock;
             unobserve() { return null; }
-            disconnect() { return null; }
+            disconnect = disconnectMock;
             takeRecords() { return []; }
             root = null;
             rootMargin = '';
@@ -80,6 +83,18 @@ describe('RecipeList', () => {
 
         expect(screen.getByText('-')).toBeInTheDocument();
         expect(screen.getByText('1 serving')).toBeInTheDocument();
+    });
+
+    it('sets up intersection observer on sentinel', async () => {
+        renderWithProviders(
+            <MemoryRouter>
+                <RecipeList />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(observeMock).toHaveBeenCalled();
+        });
     });
 
 
