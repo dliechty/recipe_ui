@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Flex, HStack, Button } from '@chakra-ui/react';
+import { Box, Flex, HStack, Button, Menu, IconButton } from '@chakra-ui/react';
+import { FiMenu } from 'react-icons/fi';
 import { Link as NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
@@ -49,6 +50,37 @@ const Layout = ({ children }: LayoutProps) => {
                             <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
                             </HStack>
+                            {/* Mobile Menu */}
+                            <Box display={{ base: 'flex', md: 'none' }}>
+                                <Menu.Root>
+                                    <Menu.Trigger asChild>
+                                        <IconButton
+                                            aria-label='Options'
+                                            variant='outline'
+                                        >
+                                            <FiMenu />
+                                        </IconButton>
+                                    </Menu.Trigger>
+                                    <Menu.Positioner>
+                                        <Menu.Content zIndex={10}>
+                                            <Menu.Item value="recipes" asChild>
+                                                <NavLink to="/recipes">Recipes</NavLink>
+                                            </Menu.Item>
+                                            {user?.is_admin && (
+                                                <Menu.Item value="admin" asChild>
+                                                    <NavLink to="/admin">Admin</NavLink>
+                                                </Menu.Item>
+                                            )}
+                                            <Menu.Item value="account" asChild>
+                                                <NavLink to="/account">Account</NavLink>
+                                            </Menu.Item>
+                                            <Menu.Item value="logout" onClick={logout}>
+                                                Logout
+                                            </Menu.Item>
+                                        </Menu.Content>
+                                    </Menu.Positioner>
+                                </Menu.Root>
+                            </Box>
                         </HStack>
                         <Flex alignItems={'center'}>
                             <HStack gap={4} mr={4} display={{ base: 'none', md: 'flex' }}>
