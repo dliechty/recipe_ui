@@ -5,6 +5,8 @@ import { recipes as initialRecipes, users } from './data';
 const recipes = [...initialRecipes];
 const usersStore = [...users];
 const pendingRequests: any[] = [];
+const commentsStore: any[] = [];
+
 
 export const resetStore = () => {
     recipes.length = 0;
@@ -12,7 +14,9 @@ export const resetStore = () => {
     usersStore.length = 0;
     usersStore.push(...users);
     pendingRequests.length = 0;
+    commentsStore.length = 0;
 };
+
 
 export const handlers = [
     // Intercept "GET /recipes/" requests...
@@ -275,4 +279,91 @@ export const handlers = [
         }
         return HttpResponse.json({ message: "Password changed" });
     }),
+
+    // --- COMMENTS ---
+
+    // GET /recipes/:recipe_id/comments
+    http.get('*/recipes/:recipe_id/comments', ({ params }) => {
+        const { recipe_id } = params;
+        const comments = commentsStore.filter(c => c.recipe_id === recipe_id);
+        // Sort by created_at desc
+        comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        return HttpResponse.json(comments);
+    }),
+
+    // POST /recipes/:recipe_id/comments
+    http.post('*/recipes/:recipe_id/comments', async ({ request, params }) => {
+        const { recipe_id } = params;
+        const body = await request.json() as any;
+        const authHeader = request.headers.get('Authorization');
+
+        let userId = "550e8400-e29b-41d4-a716-446655440000"; // default mock user
+        let userName = "Test User";
+
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                    if (payload.name) userName = payload.name;
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        const newComment = {
+            id: crypto.randomUUID(),
+            recipe_id: recipe_id,
+            user_id: userId,
+            user_name: userName, // Assuming backend populates this or client sends it, but usually backend infers from token.
+            // Checking openapi, Comment response has 'user_id'. 
+            // We'll trust the mock to simulate backend behavior which probably joins user or stores name. 
+            // Let's assume the spec has user_id and maybe 'user' object or similar?
+            // The user prompt said "Comments can be added/updated/deleted".
+            // Let's stick to basic fields. 
+            text: body.text,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+
+        commentsStore.push(newComment);
+        return HttpResponse.json(newComment, { status: 201 });
+    }),
+
+    // PUT /recipes/:recipe_id/comments/:comment_id
+    http.put('*/recipes/:recipe_id/comments/:comment_id', async ({ request, params }) => {
+        const { comment_id } = params;
+        const body = await request.json() as any;
+
+        const index = commentsStore.findIndex(c => c.id === comment_id);
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const updatedComment = {
+            ...commentsStore[index],
+            text: body.text,
+            updated_at: new Date().toISOString()
+        };
+
+        commentsStore[index] = updatedComment;
+        return HttpResponse.json(updatedComment);
+    }),
+
+    // DELETE /recipes/:recipe_id/comments/:comment_id
+    http.delete('*/recipes/:recipe_id/comments/:comment_id', ({ params }) => {
+        const { comment_id } = params;
+        const index = commentsStore.findIndex(c => c.id === comment_id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        commentsStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
 ];
+

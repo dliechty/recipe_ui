@@ -24,6 +24,8 @@ import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatQuantity, formatDuration } from '../../../utils/formatters';
+import CommentList from './comments/CommentList';
+
 
 const RecipeDetails = () => {
     const { id } = useParams();
@@ -217,7 +219,12 @@ const RecipeDetails = () => {
                         </VStack>
                     </GridItem>
                 </Grid>
+
+                <Box as="hr" borderColor="border.default" my={8} />
+
+                <CommentList recipeId={id || ''} />
             </Box>
+
         </Container>
     );
 };

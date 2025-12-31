@@ -2,6 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Comment } from '../models/Comment';
+import type { CommentCreate } from '../models/CommentCreate';
+import type { CommentUpdate } from '../models/CommentUpdate';
 import type { Recipe } from '../models/Recipe';
 import type { RecipeCreate } from '../models/RecipeCreate';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -113,6 +116,112 @@ export class RecipesService {
             url: '/recipes/{recipe_id}',
             path: {
                 'recipe_id': recipeId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Create Comment
+     * Add a comment to a recipe.
+     * @param recipeId
+     * @param requestBody
+     * @returns Comment Successful Response
+     * @throws ApiError
+     */
+    public static createCommentRecipesRecipeIdCommentsPost(
+        recipeId: string,
+        requestBody: CommentCreate,
+    ): CancelablePromise<Comment> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/recipes/{recipe_id}/comments',
+            path: {
+                'recipe_id': recipeId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Read Comments
+     * Get comments for a recipe.
+     * @param recipeId
+     * @param skip
+     * @param limit
+     * @returns Comment Successful Response
+     * @throws ApiError
+     */
+    public static readCommentsRecipesRecipeIdCommentsGet(
+        recipeId: string,
+        skip?: number,
+        limit: number = 100,
+    ): CancelablePromise<Array<Comment>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/recipes/{recipe_id}/comments',
+            path: {
+                'recipe_id': recipeId,
+            },
+            query: {
+                'skip': skip,
+                'limit': limit,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Update Comment
+     * Update a comment. Only the author of the comment or an admin can update it.
+     * @param recipeId
+     * @param commentId
+     * @param requestBody
+     * @returns Comment Successful Response
+     * @throws ApiError
+     */
+    public static updateCommentRecipesRecipeIdCommentsCommentIdPut(
+        recipeId: string,
+        commentId: string,
+        requestBody: CommentUpdate,
+    ): CancelablePromise<Comment> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/recipes/{recipe_id}/comments/{comment_id}',
+            path: {
+                'recipe_id': recipeId,
+                'comment_id': commentId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Delete Comment
+     * Delete a comment. Only the author of the comment or an admin can delete it.
+     * @param recipeId
+     * @param commentId
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static deleteCommentRecipesRecipeIdCommentsCommentIdDelete(
+        recipeId: string,
+        commentId: string,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/recipes/{recipe_id}/comments/{comment_id}',
+            path: {
+                'recipe_id': recipeId,
+                'comment_id': commentId,
             },
             errors: {
                 422: `Validation Error`,

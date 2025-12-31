@@ -48,7 +48,14 @@ describe('RecipeDetails', () => {
         expect(screen.getByText('400 g')).toBeInTheDocument();
         expect(screen.getByText('Step 1')).toBeInTheDocument();
         expect(screen.getByText('Boil the pasta in salted water.')).toBeInTheDocument();
+
+        // Comments
+        await waitFor(() => {
+            expect(screen.getByText(/COMMENTS/)).toBeInTheDocument();
+        });
     });
+
+
 
     it('renders not found when recipe does not exist', async () => {
         server.use(

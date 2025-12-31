@@ -9,6 +9,9 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { ApproveRequest } from './models/ApproveRequest';
 export type { Body_login_auth_token_post } from './models/Body_login_auth_token_post';
+export type { Comment } from './models/Comment';
+export type { CommentCreate } from './models/CommentCreate';
+export type { CommentUpdate } from './models/CommentUpdate';
 export type { Component } from './models/Component';
 export type { ComponentCreate } from './models/ComponentCreate';
 export { DifficultyLevel } from './models/DifficultyLevel';
