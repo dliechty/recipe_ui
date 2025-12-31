@@ -57,6 +57,9 @@ const Layout = ({ children }: LayoutProps) => {
                                         <IconButton
                                             aria-label='Options'
                                             variant='outline'
+                                            color="fg.default"
+                                            _hover={{ bg: 'whiteAlpha.200' }}
+                                            _active={{ bg: 'whiteAlpha.300' }}
                                         >
                                             <FiMenu />
                                         </IconButton>

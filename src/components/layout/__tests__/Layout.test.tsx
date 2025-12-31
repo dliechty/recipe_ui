@@ -94,7 +94,7 @@ describe('Layout', () => {
             logout: vi.fn(),
         });
 
-        const { getByLabelText, getByText } = renderWithProvider(
+        const { getByLabelText } = renderWithProvider(
             <MemoryRouter>
                 <Layout>
                     <div>Child Content</div>
