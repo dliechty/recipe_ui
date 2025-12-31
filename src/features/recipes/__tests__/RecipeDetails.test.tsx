@@ -218,6 +218,56 @@ describe('RecipeDetails', () => {
         expect(screen.getByText('⅓ tsp')).toBeInTheDocument();
     });
 
+    it('displays "To Taste" ingredients correctly', async () => {
+        server.use(
+            http.get('*/recipes/:id', () => {
+                return HttpResponse.json({
+                    id: 5,
+                    core: {
+                        name: 'To Taste Recipe',
+                        description: 'Testing to taste.',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: [
+                        {
+                            name: 'Main',
+                            ingredients: [
+                                { item: 'Salt', quantity: 0, unit: 'To Taste' },
+                                { item: 'Pepper', quantity: 0, unit: 'to taste' }, // Check case insensitivity if needed, sticking to requirement "To Taste" for now but checking tolerance
+                            ]
+                        }
+                    ]
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/5']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('To Taste Recipe')).toBeInTheDocument();
+        });
+
+        // Expectation: "Salt To Taste" NOT "0 To Taste Salt"
+        // We use closest('li') and toHaveTextContent because the text is split across a span and a text node
+        const saltItem = screen.getByText('Salt').closest('li');
+        expect(saltItem).toHaveTextContent('Salt To Taste');
+        expect(saltItem).not.toHaveTextContent('0');
+
+        const pepperItem = screen.getByText('Pepper').closest('li');
+        expect(pepperItem).toHaveTextContent('Pepper to taste');
+        expect(pepperItem).not.toHaveTextContent('0');
+    });
+
     // Access Control Tests
     it('shows edit button for admin user', async () => {
         mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: true } });
