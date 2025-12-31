@@ -84,21 +84,7 @@ const RecipeDetails = () => {
     const canEdit = currentUser?.is_admin || (currentUser?.id && recipe?.core.owner_id && currentUser.id === recipe.core.owner_id);
 
     return (
-        <Container maxW="container.xl" py={8}>
-            <HStack mb={6} className="no-print">
-                <Spacer />
-                {canEdit && (
-                    <Button
-                        onClick={() => navigate(`/recipes/${id}/edit`)}
-                        bg="vscode.button"
-                        color="white"
-                        _hover={{ bg: "vscode.buttonHover" }}
-                    >
-                        <Icon as={FaEdit} /> Edit Recipe
-                    </Button>
-                )}
-            </HStack>
-
+        <Container maxW="container.xl" pt={2} pb={8}>
             <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
@@ -114,6 +100,22 @@ const RecipeDetails = () => {
                     </Breadcrumb.Item>
                 </Breadcrumb.List>
             </Breadcrumb.Root>
+
+            <HStack mb={6} className="no-print">
+                <Spacer />
+                {canEdit && (
+                    <Button
+                        onClick={() => navigate(`/recipes/${id}/edit`)}
+                        bg="vscode.button"
+                        color="white"
+                        _hover={{ bg: "vscode.buttonHover" }}
+                    >
+                        <Icon as={FaEdit} /> Edit Recipe
+                    </Button>
+                )}
+            </HStack>
+
+
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>

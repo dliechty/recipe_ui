@@ -82,7 +82,7 @@ const EditRecipePage = () => {
     };
 
     return (
-        <Container maxW="container.lg" py={8}>
+        <Container maxW="container.lg" pt={2} pb={8}>
             <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
