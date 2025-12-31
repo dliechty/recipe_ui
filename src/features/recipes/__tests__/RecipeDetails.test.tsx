@@ -45,7 +45,7 @@ describe('RecipeDetails', () => {
 
         // expect(screen.getByText('A classic Italian pasta dish.')).toBeInTheDocument(); // Removed
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
-        expect(screen.getAllByText('15 min')).toHaveLength(3);
+        expect(screen.getAllByText('15m')).toHaveLength(3);
         // Long description check if rendered, or short description if fallback
         expect(screen.getByText('The classic Italian pasta dish recipe.')).toBeInTheDocument();
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();

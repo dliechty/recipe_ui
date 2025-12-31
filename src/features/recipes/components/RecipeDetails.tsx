@@ -22,7 +22,7 @@ import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import ErrorAlert from '../../../components/common/ErrorAlert';
-import { formatQuantity } from '../../../utils/formatters';
+import { formatQuantity, formatDuration } from '../../../utils/formatters';
 
 const RecipeDetails = () => {
     const { id } = useParams();
@@ -136,28 +136,28 @@ const RecipeDetails = () => {
                                     {(recipe.times.total_time_minutes ?? 0) > 0 && (
                                         <>
                                             <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
-                                            <Text fontSize="sm">{recipe.times.total_time_minutes} min</Text>
+                                            <Text fontSize="sm">{formatDuration(recipe.times.total_time_minutes)}</Text>
                                         </>
                                     )}
 
                                     {(recipe.times.prep_time_minutes ?? 0) > 0 && (
                                         <>
                                             <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Prep Time:</Text>
-                                            <Text fontSize="sm">{recipe.times.prep_time_minutes} min</Text>
+                                            <Text fontSize="sm">{formatDuration(recipe.times.prep_time_minutes)}</Text>
                                         </>
                                     )}
 
                                     {(recipe.times.active_time_minutes ?? 0) > 0 && (
                                         <>
                                             <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Active Time:</Text>
-                                            <Text fontSize="sm">{recipe.times.active_time_minutes} min</Text>
+                                            <Text fontSize="sm">{formatDuration(recipe.times.active_time_minutes)}</Text>
                                         </>
                                     )}
 
                                     {(recipe.times.cook_time_minutes ?? 0) > 0 && (
                                         <>
                                             <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Cooking Time:</Text>
-                                            <Text fontSize="sm">{recipe.times.cook_time_minutes} min</Text>
+                                            <Text fontSize="sm">{formatDuration(recipe.times.cook_time_minutes)}</Text>
                                         </>
                                     )}
 

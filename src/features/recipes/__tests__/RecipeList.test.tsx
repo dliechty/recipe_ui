@@ -29,7 +29,7 @@ describe('RecipeList', () => {
         expect(screen.getByText('30m')).toBeInTheDocument();
         expect(screen.getByText('4 servings')).toBeInTheDocument();
 
-        expect(screen.getByText('65m')).toBeInTheDocument();
+        expect(screen.getByText('1h 5m')).toBeInTheDocument();
         expect(screen.getByText('6 servings')).toBeInTheDocument();
 
         // Verify tags are displayed

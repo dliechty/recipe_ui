@@ -4,6 +4,7 @@ import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer
 import { FaPlus, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useRecipes } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { formatDuration } from '../../../utils/formatters';
 
 const RecipeList = () => {
     const navigate = useNavigate();
@@ -155,7 +156,7 @@ const RecipeList = () => {
                                     )}
                                 </Table.Cell>
                                 <Table.Cell borderColor="border.default">
-                                    {(recipe.times.total_time_minutes ?? 0) > 0 ? `${recipe.times.total_time_minutes}m` : '-'}
+                                    {(recipe.times.total_time_minutes ?? 0) > 0 ? formatDuration(recipe.times.total_time_minutes) : '-'}
                                 </Table.Cell>
                                 <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
                             </Table.Row>

@@ -42,3 +42,21 @@ export const formatQuantity = (value: number | undefined | null): string => {
     // Return original number if no match found
     return value.toString();
 };
+
+export const formatDuration = (minutes: number | undefined | null): string => {
+    if (!minutes && minutes !== 0) return '';
+    if (minutes === 0) return '0m';
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours === 0) {
+        return `${remainingMinutes}m`;
+    }
+
+    if (remainingMinutes === 0) {
+        return `${hours}h`;
+    }
+
+    return `${hours}h ${remainingMinutes}m`;
+};

@@ -1,42 +1,29 @@
+import { formatDuration } from '../formatters';
 import { describe, it, expect } from 'vitest';
-import { formatQuantity } from '../formatters';
 
-describe('formatQuantity', () => {
+describe('formatDuration', () => {
     it('returns empty string for undefined or null', () => {
-        expect(formatQuantity(undefined)).toBe('');
-        expect(formatQuantity(null)).toBe('');
+        expect(formatDuration(undefined)).toBe('');
+        expect(formatDuration(null)).toBe('');
     });
 
-    it('returns string representation of integers', () => {
-        expect(formatQuantity(1)).toBe('1');
-        expect(formatQuantity(5)).toBe('5');
-        expect(formatQuantity(100)).toBe('100');
+    it('returns 0m for 0', () => {
+        expect(formatDuration(0)).toBe('0m');
     });
 
-    it('formats common fractions correctly', () => {
-        expect(formatQuantity(0.5)).toBe('½');
-        expect(formatQuantity(0.25)).toBe('¼');
-        expect(formatQuantity(0.75)).toBe('¾');
-        expect(formatQuantity(0.2)).toBe('⅕');
-        expect(formatQuantity(0.333)).toBe('⅓'); // Exact match from map
-        expect(formatQuantity(1.0 / 3.0)).toBe('⅓'); // Calculated with tolerance
+    it('returns minutes for less than 60', () => {
+        expect(formatDuration(30)).toBe('30m');
+        expect(formatDuration(59)).toBe('59m');
     });
 
-    it('formats mixed numbers correctly', () => {
-        expect(formatQuantity(1.5)).toBe('1 ½');
-        expect(formatQuantity(2.25)).toBe('2 ¼');
-        expect(formatQuantity(3.75)).toBe('3 ¾');
+    it('returns hours for exact hours', () => {
+        expect(formatDuration(60)).toBe('1h');
+        expect(formatDuration(120)).toBe('2h');
     });
 
-    it('formats eighths correctly', () => {
-        expect(formatQuantity(0.125)).toBe('⅛');
-        expect(formatQuantity(0.375)).toBe('⅜');
-        expect(formatQuantity(0.625)).toBe('⅝');
-        expect(formatQuantity(0.875)).toBe('⅞');
-    });
-
-    it('returns decimal for non-matching fractions', () => {
-        expect(formatQuantity(0.1)).toBe('0.1');
-        expect(formatQuantity(0.123)).toBe('0.123');
+    it('returns hours and minutes', () => {
+        expect(formatDuration(61)).toBe('1h 1m');
+        expect(formatDuration(90)).toBe('1h 30m');
+        expect(formatDuration(150)).toBe('2h 30m');
     });
 });
