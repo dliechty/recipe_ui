@@ -8,7 +8,7 @@ import {
     VStack,
     Text
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { AuthenticationService } from '../../../client';
 
@@ -19,6 +19,10 @@ const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // safe navigation target
+    const from = location.state?.from?.pathname || "/recipes";
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,7 +34,7 @@ const LoginPage = () => {
                 password: password
             });
             login(response.access_token);
-            navigate('/recipes');
+            navigate(from, { replace: true });
         } catch (err: any) {
             console.error("Login failed:", err);
             setError("Login failed. Please check your credentials and try again.");

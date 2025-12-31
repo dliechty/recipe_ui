@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children, requireAdmin }: ProtectedRouteProps) => {
     const location = useLocation();
 
     if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/" state={{ from: location }} replace />;
     }
 
     if (requireAdmin && !user?.is_admin) {
