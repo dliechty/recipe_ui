@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor, fireEvent, act } from '../../../test-utils';
+import { renderWithProviders, screen, waitFor } from '../../../test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import RecipeList from '../components/RecipeList';
 import { describe, it, expect, vi, beforeAll } from 'vitest';

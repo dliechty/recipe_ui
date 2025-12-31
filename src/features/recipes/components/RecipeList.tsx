@@ -26,6 +26,9 @@ const RecipeList = () => {
             if (entries[0].isIntersecting && hasNextPage) {
                 fetchNextPage();
             }
+        }, {
+            rootMargin: '200px',
+            threshold: 0.1
         });
         if (node) observer.current.observe(node);
     }, [isFetchingNextPage, fetchNextPage, hasNextPage]);

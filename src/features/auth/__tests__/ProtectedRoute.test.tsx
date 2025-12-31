@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 // import { useAuth } from '../../../context/AuthContext';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -47,7 +47,6 @@ describe('ProtectedRoute', () => {
         // We can't easily check the state passed to Navigate with screen.getByText
         // So we'll render a dummy login page that displays the location state
         const DummyLogin = () => {
-            const { useLocation } = require('react-router-dom');
             const location = useLocation();
             return (
                 <div>

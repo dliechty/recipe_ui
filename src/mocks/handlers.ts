@@ -328,7 +328,7 @@ export const handlers = [
                     const payload = JSON.parse(atob(parts[1]));
                     if (payload.sub) userId = payload.sub;
                 }
-            } catch (e) {
+            } catch {
                 // ignore
             }
         }
