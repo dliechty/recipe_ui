@@ -30,7 +30,7 @@ export const useInfiniteRecipes = (limit: number = 50) => {
 
             const response = await axios.get(url, { headers });
 
-            const totalCount = Number(response.headers['x-total-count'] || 0);
+            const totalCount = Number(response.headers['x-total-count'] || response.headers['X-Total-Count'] || 0);
 
             return {
                 recipes: response.data,

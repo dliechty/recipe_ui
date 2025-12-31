@@ -34,6 +34,7 @@ export const handlers = [
         return HttpResponse.json(paginatedRecipes, {
             headers: {
                 'X-Total-Count': recipes.length.toString(),
+                'Access-Control-Expose-Headers': 'X-Total-Count'
             },
         });
     }),
