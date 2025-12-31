@@ -16,7 +16,7 @@ const RecipeList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteRecipes(50); // Hardcoded limit
+    } = useInfiniteRecipes(20); // Load 20 recipes per page
 
     const observer = useRef<IntersectionObserver | null>(null);
     const lastRecipeElementRef = useCallback((node: HTMLTableRowElement | null) => {
