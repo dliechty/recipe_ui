@@ -27,8 +27,9 @@ const RecipeList = () => {
                 fetchNextPage();
             }
         }, {
-            rootMargin: '200px',
-            threshold: 0.1
+            root: null, // Explicitly observe against viewport
+            rootMargin: '400px', // Trigger 400px before reaching element (very aggressive)
+            threshold: 0 // Trigger as soon as any part is about to be visible
         });
         if (node) {
             observer.current.observe(node);
