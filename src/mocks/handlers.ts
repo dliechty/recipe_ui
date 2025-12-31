@@ -1,11 +1,12 @@
 import { http, HttpResponse } from 'msw';
-import { recipes as initialRecipes, users } from './data';
+import { recipes as initialRecipes, users, comments as initialComments } from './data';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 const recipes = [...initialRecipes];
 const usersStore = [...users];
 const pendingRequests: any[] = [];
-const commentsStore: any[] = [];
+const commentsStore: any[] = [...initialComments];
+
 
 
 export const resetStore = () => {
@@ -15,6 +16,9 @@ export const resetStore = () => {
     usersStore.push(...users);
     pendingRequests.length = 0;
     commentsStore.length = 0;
+    commentsStore.push(...initialComments);
+
+
 };
 
 
