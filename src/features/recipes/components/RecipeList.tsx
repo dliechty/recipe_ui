@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
@@ -18,23 +18,31 @@ const RecipeList = () => {
         status,
     } = useInfiniteRecipes(20); // Load 20 recipes per page
 
+    const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
-    const lastRecipeElementRef = useCallback((node: HTMLDivElement | null) => {
-        if (isFetchingNextPage) return;
+
+    useEffect(() => {
+        if (!sentinel) return;
+        if (isFetchingNextPage || !hasNextPage) return;
+
         if (observer.current) observer.current.disconnect();
-        observer.current = new IntersectionObserver(entries => {
+
+        observer.current = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting && hasNextPage) {
                 fetchNextPage();
             }
         }, {
-            root: null, // Explicitly observe against viewport
-            rootMargin: '400px', // Trigger 400px before reaching element (very aggressive)
-            threshold: 0 // Trigger as soon as any part is about to be visible
+            root: null,
+            rootMargin: '200px', // Trigger earlier
+            threshold: 0
         });
-        if (node) {
-            observer.current.observe(node);
-        }
-    }, [isFetchingNextPage, fetchNextPage, hasNextPage]);
+
+        observer.current.observe(sentinel);
+
+        return () => {
+            if (observer.current) observer.current.disconnect();
+        };
+    }, [sentinel, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
 
 
@@ -113,7 +121,7 @@ const RecipeList = () => {
             </Box>
 
             {/* Sentinel for IntersectionObserver */}
-            <Box ref={lastRecipeElementRef} height="20px" bg="transparent" />
+            <Box ref={setSentinel} height="20px" bg="transparent" />
 
             {(status === 'pending' || isFetchingNextPage) && (
                 <Center p={4}>
