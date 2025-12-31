@@ -26,19 +26,22 @@ const CommentList: React.FC<CommentListProps> = ({ recipeId }) => {
                 <HStack justify="space-between" mb={4}>
                     <Collapsible.Trigger asChild>
                         <Button
-                            variant="ghost"
+                            bg="vscode.button"
+                            color="white"
+                            _hover={{ bg: "vscode.buttonHover" }}
                             fontWeight="bold"
                             display="flex"
                             alignItems="center"
                             gap={2}
-                            p={0}
-                            _hover={{ bg: 'transparent' }}
+                            px={4}
+                            py={2}
                         >
-                            <Heading size="md" color="fg.default">
+                            <Heading size="md" color="inherit">
                                 COMMENTS ({commentCount})
                             </Heading>
                             {isOpen ? <FaChevronUp /> : <FaChevronDown />}
                         </Button>
+
                     </Collapsible.Trigger>
 
                     <HStack gap={2} className="no-print">
