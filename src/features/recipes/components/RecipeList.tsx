@@ -7,10 +7,16 @@ import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const RecipeList = () => {
     const navigate = useNavigate();
-    const { data: recipes = [], isLoading: loading, error } = useRecipes();
-
     const [currentPage, setCurrentPage] = React.useState(1);
+
     const [itemsPerPage, setItemsPerPage] = React.useState(50);
+
+    // Pass pagination params to hook
+    const { data, isLoading: loading, error } = useRecipes(currentPage, itemsPerPage);
+
+    // Extract recipes and total count safely
+    const recipes = data?.recipes || [];
+    const totalCount = data?.totalCount || 0;
 
     if (error) {
         return (
@@ -32,9 +38,11 @@ const RecipeList = () => {
         );
     }
 
-    const totalPages = Math.ceil(recipes.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentRecipes = recipes.slice(startIndex, startIndex + itemsPerPage);
+    // Calculate total pages based on server returned count
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+    // No more client-side slicing needed
+    const currentRecipes = recipes;
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -64,6 +72,7 @@ const RecipeList = () => {
                     <Box as="span" color="fg.default" fontSize="sm">Rows per page:</Box>
                     <Box position="relative">
                         <select
+                            data-testid="items-per-page-select"
                             value={itemsPerPage}
                             onChange={handleItemsPerPageChange}
                             style={{

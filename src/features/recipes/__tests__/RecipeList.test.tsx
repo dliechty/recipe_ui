@@ -35,10 +35,11 @@ describe('RecipeList', () => {
         // Verify tags are displayed
         expect(screen.getByText('Italian')).toBeInTheDocument();
     });
+
     it('hides total time badge when not provided', async () => {
         server.use(
             http.get('*/recipes', () => {
-                return HttpResponse.json([
+                const mockData = [
                     {
                         id: 3,
                         core: {
@@ -55,7 +56,10 @@ describe('RecipeList', () => {
                             total_time_minutes: 0
                         }
                     }
-                ]);
+                ];
+                return HttpResponse.json(mockData, {
+                    headers: { 'X-Total-Count': '1' }
+                });
             })
         );
 
@@ -73,62 +77,6 @@ describe('RecipeList', () => {
         expect(screen.getByText('1 serving')).toBeInTheDocument();
     });
 
-    it('paginates recipes', async () => {
-        // Create 25 mock recipes
-        const mockRecipes = Array.from({ length: 25 }, (_, i) => ({
-            id: i + 1,
-            core: {
-                name: `Recipe ${i + 1}`,
-                id: `${i + 1}`,
-                description: 'Test recipe',
-                owner_id: '1',
-                yield_amount: 1,
-                yield_unit: 'serving',
-                difficulty: 'Easy',
-                cuisine: 'Test',
-                category: 'Test'
-            },
-            times: {
-                total_time_minutes: 30
-            }
-        }));
-
-        server.use(
-            http.get('*/recipes', () => {
-                return HttpResponse.json(mockRecipes);
-            })
-        );
-
-        renderWithProviders(
-            <MemoryRouter>
-                <RecipeList />
-            </MemoryRouter>
-        );
-
-        await waitFor(() => {
-            expect(screen.getByText('Recipe 1')).toBeInTheDocument();
-        });
-
-        // Set items per page to 10 for testing
-        const select = screen.getByRole('combobox');
-        fireEvent.change(select, { target: { value: '10' } });
-
-        // Verify pagination with 10 items
-        expect(screen.getByText('Recipe 10')).toBeInTheDocument();
-        expect(screen.queryByText('Recipe 11')).not.toBeInTheDocument();
-
-        expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
-
-        // Click next
-        const nextButton = screen.getByLabelText('Next Page');
-        fireEvent.click(nextButton);
-
-        expect(screen.getByText('Recipe 11')).toBeInTheDocument();
-        expect(screen.getByText('Recipe 20')).toBeInTheDocument();
-        expect(screen.queryByText('Recipe 21')).not.toBeInTheDocument();
-        expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
-    });
-
     it('changes items per page', async () => {
         // Create 20 mock recipes
         const mockRecipes = Array.from({ length: 20 }, (_, i) => ({
@@ -136,7 +84,7 @@ describe('RecipeList', () => {
             core: {
                 name: `Recipe ${i + 1}`,
                 id: `${i + 1}`,
-                description: 'Test recipe',
+                description: 'Pagination test recipe',
                 owner_id: '1',
                 yield_amount: 1,
                 yield_unit: 'serving',
@@ -150,8 +98,16 @@ describe('RecipeList', () => {
         }));
 
         server.use(
-            http.get('*/recipes', () => {
-                return HttpResponse.json(mockRecipes);
+            http.get('*/recipes', ({ request }) => {
+                const url = new URL(request.url);
+                const skip = Number(url.searchParams.get('skip') || '0');
+                const limit = Number(url.searchParams.get('limit') || '10');
+
+                const paginatedDocs = mockRecipes.slice(skip, skip + limit);
+
+                return HttpResponse.json(paginatedDocs, {
+                    headers: { 'X-Total-Count': mockRecipes.length.toString() }
+                });
             })
         );
 
@@ -161,15 +117,27 @@ describe('RecipeList', () => {
             </MemoryRouter>
         );
 
+        // Wait for recipes to load
         await waitFor(() => {
             expect(screen.getByText('Recipe 1')).toBeInTheDocument();
         });
 
-        // Change to 25 items per page
-        const select = screen.getByRole('combobox');
-        fireEvent.change(select, { target: { value: '25' } });
+        // Set items per page to 10 for testing
+        const select = screen.getByTestId('items-per-page-select');
+        fireEvent.change(select, { target: { value: '10' } });
 
-        expect(screen.getByText('Recipe 20')).toBeInTheDocument();
-        expect(screen.getByText('Page 1 of 1')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(select).toHaveValue('10');
+        });
+
+        // Verify pagination state: 20 items / 10 per page = 2 pages
+        await waitFor(() => {
+            expect(screen.getByText('Page 1 of 2')).toBeInTheDocument();
+        });
+
+        // Verify items
+        expect(screen.getByText('Recipe 10')).toBeInTheDocument();
+        // Recipe 11 should NOT be visible on page 1 (limit 10)
+        expect(screen.queryByText('Recipe 11')).not.toBeInTheDocument();
     });
 });

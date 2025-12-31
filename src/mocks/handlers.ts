@@ -16,8 +16,18 @@ export const resetStore = () => {
 
 export const handlers = [
     // Intercept "GET /recipes/" requests...
-    http.get('*/recipes/', () => {
-        return HttpResponse.json(recipes);
+    http.get('*/recipes/', ({ request }) => {
+        const url = new URL(request.url);
+        const skip = Number(url.searchParams.get('skip') || '0');
+        const limit = Number(url.searchParams.get('limit') || '100');
+
+        const paginatedRecipes = recipes.slice(skip, skip + limit);
+
+        return HttpResponse.json(paginatedRecipes, {
+            headers: {
+                'X-Total-Count': recipes.length.toString(),
+            },
+        });
     }),
 
     // Intercept "GET /recipes/:id" requests...
