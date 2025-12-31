@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { RecipesService, Recipe, RecipeCreate, OpenAPI } from '../client';
 import axios from 'axios';
 
@@ -7,10 +7,11 @@ interface RecipesResponse {
     totalCount: number;
 }
 
-export const useRecipes = (page: number = 1, limit: number = 50) => {
-    return useQuery<RecipesResponse>({
-        queryKey: ['recipes', page, limit],
-        queryFn: async () => {
+export const useInfiniteRecipes = (limit: number = 50) => {
+    return useInfiniteQuery<RecipesResponse>({
+        queryKey: ['recipes', 'infinite', limit],
+        queryFn: async ({ pageParam = 1 }) => {
+            const page = pageParam as number;
             // Calculate skip based on page and limit
             const skip = (page - 1) * limit;
 
@@ -35,6 +36,14 @@ export const useRecipes = (page: number = 1, limit: number = 50) => {
                 recipes: response.data,
                 totalCount
             };
+        },
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            const loadedCount = allPages.flatMap(p => p.recipes).length;
+            if (loadedCount < lastPage.totalCount) {
+                return allPages.length + 1;
+            }
+            return undefined;
         },
     });
 };
