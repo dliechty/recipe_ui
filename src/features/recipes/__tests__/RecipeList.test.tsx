@@ -26,11 +26,11 @@ describe('RecipeList', () => {
         });
 
         // Verify time and yield fields are displayed
-        expect(screen.getByText('Total Time: 30m')).toBeInTheDocument();
-        expect(screen.getByText('Yield: 4 servings')).toBeInTheDocument();
+        expect(screen.getByText('30m')).toBeInTheDocument();
+        expect(screen.getByText('4 servings')).toBeInTheDocument();
 
-        expect(screen.getByText('Total Time: 65m')).toBeInTheDocument();
-        expect(screen.getByText('Yield: 6 servings')).toBeInTheDocument();
+        expect(screen.getByText('65m')).toBeInTheDocument();
+        expect(screen.getByText('6 servings')).toBeInTheDocument();
 
         // Verify tags are displayed
         expect(screen.getByText('Italian')).toBeInTheDocument();
@@ -69,7 +69,9 @@ describe('RecipeList', () => {
             expect(screen.getByText('Quick Snack')).toBeInTheDocument();
         });
 
-        expect(screen.queryByText(/Total Time:/)).not.toBeInTheDocument();
-        expect(screen.getByText('Yield: 1 serving')).toBeInTheDocument();
+        // In table layout, 0 or null time is shown as '-' or check if the cell implies empty/dash
+        // My implementation uses '-' if time <= 0
+        expect(screen.getByText('-')).toBeInTheDocument();
+        expect(screen.getByText('1 serving')).toBeInTheDocument();
     });
 });
