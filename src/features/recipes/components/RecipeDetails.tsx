@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
     Box,
     Container,
@@ -16,9 +16,10 @@ import {
     Grid,
     GridItem,
     Spacer,
-    Link
+    Link,
+    Breadcrumb
 } from '@chakra-ui/react';
-import { FaCheckCircle, FaEdit } from 'react-icons/fa';
+import { FaCheckCircle, FaEdit, FaChevronRight } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -97,6 +98,22 @@ const RecipeDetails = () => {
                     </Button>
                 )}
             </HStack>
+
+            <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                            <RouterLink to="/recipes">Recipes</RouterLink>
+                        </Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator>
+                        <Icon as={FaChevronRight} color="fg.muted" />
+                    </Breadcrumb.Separator>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink color="fg.default">{recipe.core.name}</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
                 <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>

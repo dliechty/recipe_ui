@@ -1,6 +1,7 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Heading, Spinner, Center, Text } from '@chakra-ui/react';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Container, Heading, Spinner, Center, Text, Breadcrumb, Icon } from '@chakra-ui/react';
+import { FaChevronRight } from 'react-icons/fa';
 import RecipeForm from '../components/RecipeForm';
 import { useRecipe, useUpdateRecipe } from '../../../hooks/useRecipes';
 import { RecipeCreate } from '../../../client';
@@ -82,6 +83,29 @@ const EditRecipePage = () => {
 
     return (
         <Container maxW="container.lg" py={8}>
+            <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                            <RouterLink to="/recipes">Recipes</RouterLink>
+                        </Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator>
+                        <Icon as={FaChevronRight} color="fg.muted" />
+                    </Breadcrumb.Separator>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                            <RouterLink to={`/recipes/${id}`}>{recipeData.core.name}</RouterLink>
+                        </Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator>
+                        <Icon as={FaChevronRight} color="fg.muted" />
+                    </Breadcrumb.Separator>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink color="fg.default">Edit</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
             <Heading mb={8} color="fg.default">Edit Recipe</Heading>
             <RecipeForm initialData={initialData} onSubmit={handleSubmit} isLoading={updateRecipeMutation.isPending} />
         </Container>

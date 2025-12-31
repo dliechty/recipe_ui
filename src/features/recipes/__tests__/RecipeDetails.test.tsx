@@ -27,7 +27,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Spaghetti Carbonara')).toBeInTheDocument();
+            expect(screen.getAllByText('Spaghetti Carbonara')[0]).toBeInTheDocument();
         });
 
         // Source
@@ -114,7 +114,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Chicken Curry')).toBeInTheDocument();
+            expect(screen.getAllByText('Chicken Curry')[0]).toBeInTheDocument();
         });
 
         expect(screen.queryByText('Main')).not.toBeInTheDocument();
@@ -161,7 +161,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Simple Salad')).toBeInTheDocument();
+            expect(screen.getAllByText('Simple Salad')[0]).toBeInTheDocument();
         });
 
         expect(screen.queryByText('Total Time:')).not.toBeInTheDocument();
@@ -209,7 +209,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Fraction Recipe')).toBeInTheDocument();
+            expect(screen.getAllByText('Fraction Recipe')[0]).toBeInTheDocument();
         });
 
         expect(screen.getByText('½ cup')).toBeInTheDocument();
@@ -254,7 +254,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('To Taste Recipe')).toBeInTheDocument();
+            expect(screen.getAllByText('To Taste Recipe')[0]).toBeInTheDocument();
         });
 
         // Expectation: "Salt To Taste" NOT "0 To Taste Salt"
@@ -281,7 +281,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Spaghetti Carbonara')).toBeInTheDocument();
+            expect(screen.getAllByText('Spaghetti Carbonara')[0]).toBeInTheDocument();
         });
 
         expect(screen.getByRole('button', { name: /Edit Recipe/i })).toBeInTheDocument();
@@ -325,7 +325,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('My Recipe')).toBeInTheDocument();
+            expect(screen.getAllByText('My Recipe')[0]).toBeInTheDocument();
         });
 
         expect(screen.getByRole('button', { name: /Edit Recipe/i })).toBeInTheDocument();
@@ -358,7 +358,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Imposter Recipe')).toBeInTheDocument();
+            expect(screen.getAllByText('Imposter Recipe')[0]).toBeInTheDocument();
         });
 
         expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
@@ -391,7 +391,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Public Recipe')).toBeInTheDocument();
+            expect(screen.getAllByText('Public Recipe')[0]).toBeInTheDocument();
         });
 
         expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
