@@ -181,4 +181,51 @@ describe('RecipeDetails', () => {
         expect(screen.queryByText('Cooking Time:')).not.toBeInTheDocument();
         expect(screen.getByText('Yield:')).toBeInTheDocument();
     });
+
+    it('displays ingredient quantities as fractions', async () => {
+        server.use(
+            http.get('*/recipes/:id', () => {
+                return HttpResponse.json({
+                    id: 4,
+                    core: {
+                        name: 'Fraction Recipe',
+                        description: 'Testing fractions.',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: [
+                        {
+                            name: 'Main',
+                            ingredients: [
+                                { item: 'Sugar', quantity: 0.5, unit: 'cup' },
+                                { item: 'Salt', quantity: 0.25, unit: 'tsp' },
+                                { item: 'Water', quantity: 1.5, unit: 'cup' },
+                                { item: 'Spice', quantity: 0.333, unit: 'tsp' },
+                            ]
+                        }
+                    ]
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/4']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Fraction Recipe')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('1/2 cup')).toBeInTheDocument();
+        expect(screen.getByText('1/4 tsp')).toBeInTheDocument();
+        expect(screen.getByText('1 1/2 cup')).toBeInTheDocument();
+        expect(screen.getByText('1/3 tsp')).toBeInTheDocument();
+    });
 });

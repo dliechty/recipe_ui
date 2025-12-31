@@ -22,6 +22,7 @@ import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { formatQuantity } from '../../../utils/formatters';
 
 const RecipeDetails = () => {
     const { id } = useParams();
@@ -189,7 +190,7 @@ const RecipeDetails = () => {
                                                     <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
                                                 </List.Indicator>
                                                 <Text>
-                                                    <Text as="span" fontWeight="bold">{ingredient.quantity} {ingredient.unit}</Text> {ingredient.item}
+                                                    <Text as="span" fontWeight="bold">{formatQuantity(ingredient.quantity)} {ingredient.unit}</Text> {ingredient.item}
                                                 </Text>
                                             </List.Item>
                                         ))}
