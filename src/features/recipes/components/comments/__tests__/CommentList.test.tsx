@@ -109,14 +109,8 @@ describe('CommentList', () => {
             expect(screen.getByText('My old comment')).toBeInTheDocument();
         });
 
-        // Find edit menu
-        const menuButton = screen.getByLabelText('Comment options');
-        fireEvent.click(menuButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Edit')).toBeInTheDocument();
-        });
-        const editButton = screen.getByText('Edit');
+        // Find edit button (no menu anymore)
+        const editButton = screen.getByLabelText('Edit comment');
         fireEvent.click(editButton);
 
         const textarea = screen.getByDisplayValue('My old comment');
@@ -164,19 +158,14 @@ describe('CommentList', () => {
             expect(screen.getByText('Bad comment')).toBeInTheDocument();
         });
 
-        const menuButton = screen.getByLabelText('Comment options');
-        fireEvent.click(menuButton);
-
-        await waitFor(() => {
-            expect(screen.getByText('Delete')).toBeInTheDocument();
-        });
-        const deleteButton = screen.getByText('Delete');
+        const deleteButton = screen.getByLabelText('Delete comment');
         fireEvent.click(deleteButton);
 
         await waitFor(() => {
             expect(screen.queryByText('Bad comment')).not.toBeInTheDocument();
         });
     });
+
 
 
 });

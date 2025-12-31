@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
-import { Box, HStack, Text, Button, Icon, Menu } from '@chakra-ui/react';
-import { FaEllipsisV, FaEdit, FaTrash } from 'react-icons/fa';
+import { Box, HStack, Text, Button, Icon } from '@chakra-ui/react';
+
+import { FaEdit, FaTrash } from 'react-icons/fa';
+
 import { useAuth } from '../../../../context/AuthContext';
 import { useUpdateComment, useDeleteComment } from '../../../../hooks/useComments';
 import CommentForm from './CommentForm';
@@ -75,22 +77,33 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, recipeId }) => {
 
                 {canEdit && (
                     <Box className="no-print">
-                        <Menu.Root>
-                            <Menu.Trigger asChild>
-                                <Button variant="ghost" size="xs" aria-label="Comment options">
-                                    <Icon as={FaEllipsisV} />
-                                </Button>
-                            </Menu.Trigger>
-                            <Menu.Content>
-                                <Menu.Item value="edit" onClick={() => setIsEditing(true)}>
-                                    <Icon as={FaEdit} mr={2} /> Edit
-                                </Menu.Item>
-                                <Menu.Item value="delete" color="red.500" onClick={handleDelete}>
-                                    <Icon as={FaTrash} mr={2} /> Delete
-                                </Menu.Item>
-                            </Menu.Content>
-                        </Menu.Root>
+                        <HStack gap={1}>
+                            <Button
+                                size="xs"
+                                aria-label="Edit comment"
+                                onClick={() => setIsEditing(true)}
+                                title="Edit"
+                                bg="vscode.button"
+                                color="white"
+                                _hover={{ bg: "vscode.buttonHover" }}
+                            >
+                                <Icon as={FaEdit} />
+                            </Button>
+                            <Button
+                                size="xs"
+                                aria-label="Delete comment"
+                                bg="red.600"
+                                color="white"
+                                _hover={{ bg: "red.700" }}
+                                onClick={handleDelete}
+                                title="Delete"
+                            >
+                                <Icon as={FaTrash} />
+                            </Button>
+
+                        </HStack>
                     </Box>
+
                 )}
             </HStack>
             <Text fontSize="md" whiteSpace="pre-wrap">{comment.text}</Text>

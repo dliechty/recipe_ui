@@ -47,9 +47,16 @@ const CommentForm: React.FC<CommentFormProps> = ({ recipeId, onCancel, initialVa
             />
             <Box display="flex" justifyContent="flex-end" gap={2}>
                 {onCancel && (
-                    <Button variant="ghost" onClick={onCancel} size="sm">
+                    <Button
+                        onClick={onCancel}
+                        size="sm"
+                        bg="gray.600"
+                        color="white"
+                        _hover={{ bg: "gray.700" }}
+                    >
                         Cancel
                     </Button>
+
                 )}
                 <Button
                     onClick={handleSubmit}
