@@ -290,9 +290,26 @@ export const handlers = [
     http.get('*/recipes/:recipe_id/comments', ({ params }) => {
         const { recipe_id } = params;
         const comments = commentsStore.filter(c => c.recipe_id === recipe_id);
+
+        // Enrich comments with user data
+        const enrichedComments = comments.map(c => {
+            const user = usersStore.find(u => u.id === c.user_id);
+            return {
+                ...c,
+                user: user ? {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    is_active: user.is_active,
+                    is_admin: user.is_admin
+                } : null
+            };
+        });
+
         // Sort by created_at desc
-        comments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        return HttpResponse.json(comments);
+        enrichedComments.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        return HttpResponse.json(enrichedComments);
     }),
 
     // POST /recipes/:recipe_id/comments
@@ -302,7 +319,6 @@ export const handlers = [
         const authHeader = request.headers.get('Authorization');
 
         let userId = "550e8400-e29b-41d4-a716-446655440000"; // default mock user
-        let userName = "Test User";
 
         if (authHeader) {
             try {
@@ -311,7 +327,6 @@ export const handlers = [
                 if (parts.length === 3) {
                     const payload = JSON.parse(atob(parts[1]));
                     if (payload.sub) userId = payload.sub;
-                    if (payload.name) userName = payload.name;
                 }
             } catch (e) {
                 // ignore
@@ -322,20 +337,30 @@ export const handlers = [
             id: crypto.randomUUID(),
             recipe_id: recipe_id,
             user_id: userId,
-            user_name: userName, // Assuming backend populates this or client sends it, but usually backend infers from token.
-            // Checking openapi, Comment response has 'user_id'. 
-            // We'll trust the mock to simulate backend behavior which probably joins user or stores name. 
-            // Let's assume the spec has user_id and maybe 'user' object or similar?
-            // The user prompt said "Comments can be added/updated/deleted".
-            // Let's stick to basic fields. 
             text: body.text,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
         };
 
         commentsStore.push(newComment);
-        return HttpResponse.json(newComment, { status: 201 });
+
+        // Return enriched comment
+        const user = usersStore.find(u => u.id === userId);
+        const enrichedComment = {
+            ...newComment,
+            user: user ? {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                is_active: user.is_active,
+                is_admin: user.is_admin
+            } : null
+        };
+
+        return HttpResponse.json(enrichedComment, { status: 201 });
     }),
+
 
     // PUT /recipes/:recipe_id/comments/:comment_id
     http.put('*/recipes/:recipe_id/comments/:comment_id', async ({ request, params }) => {
@@ -354,7 +379,23 @@ export const handlers = [
         };
 
         commentsStore[index] = updatedComment;
-        return HttpResponse.json(updatedComment);
+
+        // Enrich
+        const user = usersStore.find(u => u.id === updatedComment.user_id);
+        const enrichedComment = {
+            ...updatedComment,
+            user: user ? {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                is_active: user.is_active,
+                is_admin: user.is_admin
+            } : null
+        };
+
+        return HttpResponse.json(enrichedComment);
+
     }),
 
     // DELETE /recipes/:recipe_id/comments/:comment_id

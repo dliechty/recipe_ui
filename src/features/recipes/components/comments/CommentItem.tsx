@@ -13,7 +13,11 @@ interface Comment {
     id: string;
     text: string;
     user_id: string;
-    user_name?: string;
+    user?: {
+        first_name?: string;
+        last_name?: string;
+        email?: string;
+    };
     created_at: string;
     updated_at: string;
 }
@@ -56,6 +60,15 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, recipeId }) => {
         );
     }
 
+    const getUserName = () => {
+        if (!comment.user) return 'Unknown User';
+        if (comment.user.first_name && comment.user.last_name) {
+            return `${comment.user.first_name} ${comment.user.last_name}`;
+        }
+        if (comment.user.first_name) return comment.user.first_name;
+        return comment.user.email || 'Unknown User';
+    };
+
     return (
         <Box
             p={3}
@@ -66,7 +79,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, recipeId }) => {
         >
             <HStack justify="space-between" mb={1} align="start">
                 <HStack gap={2}>
-                    <Text fontWeight="bold" fontSize="sm">{comment.user_name || 'Unknown User'}</Text>
+                    <Text fontWeight="bold" fontSize="sm">{getUserName()}</Text>
                     <Text color="fg.muted" fontSize="xs">
                         {new Date(comment.created_at).toLocaleDateString()}
                     </Text>

@@ -183,7 +183,6 @@ export const comments = [
         id: "c1",
         recipe_id: "1",
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-        user_name: "Admin User",
         text: "This authentic Carbonara recipe is spot on! No cream, just eggs and cheese. Perfect.",
         created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
         updated_at: new Date(Date.now() - 86400000).toISOString()
@@ -192,7 +191,6 @@ export const comments = [
         id: "c2",
         recipe_id: "1",
         user_id: "550e8400-e29b-41d4-a716-446655440000",
-        user_name: "Test User",
         text: "I tried this last night. It was delicious but a bit salty. Maybe less Pecorino next time.",
         created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
         updated_at: new Date(Date.now() - 3600000).toISOString()
@@ -201,10 +199,10 @@ export const comments = [
         id: "c3",
         recipe_id: "2",
         user_id: "550e8400-e29b-41d4-a716-446655440000",
-        user_name: "Test User",
         text: "Love the spices in this curry. I added some extra chili for heat.",
         created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
         updated_at: new Date(Date.now() - 172800000).toISOString()
     }
+
 ];
 

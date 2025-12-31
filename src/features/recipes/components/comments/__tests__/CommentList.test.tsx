@@ -32,7 +32,7 @@ describe('CommentList', () => {
                         id: 'c1',
                         recipe_id: 'r1',
                         user_id: 'user-2',
-                        user_name: 'Other User',
+                        user: { first_name: 'Other', last_name: 'User' },
                         text: 'Existing comment',
                         created_at: new Date().toISOString(),
                         updated_at: new Date().toISOString(),
@@ -45,7 +45,7 @@ describe('CommentList', () => {
                     id: 'c2',
                     recipe_id: 'r1',
                     user_id: 'user-1',
-                    user_name: 'Test User',
+                    user: { first_name: 'Test', last_name: 'User' },
                     text: body.text,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString(),
@@ -57,7 +57,9 @@ describe('CommentList', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Existing comment')).toBeInTheDocument();
+            expect(screen.getByText('Other User')).toBeInTheDocument();
         });
+
 
         // Check header count
         expect(screen.getByText(/COMMENTS \(1\)/)).toBeInTheDocument();
@@ -80,7 +82,7 @@ describe('CommentList', () => {
                 id: 'c1',
                 recipe_id: 'r1',
                 user_id: 'user-1',
-                user_name: 'Test User',
+                user: { first_name: 'Test', last_name: 'User' },
                 text: 'My old comment',
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
@@ -102,6 +104,7 @@ describe('CommentList', () => {
                 return HttpResponse.json(updated);
             })
         );
+
 
         renderWithProviders(<CommentList recipeId="r1" />);
 
@@ -132,12 +135,13 @@ describe('CommentList', () => {
                 id: 'c1',
                 recipe_id: 'r1',
                 user_id: 'user-2',
-                user_name: 'Other User',
+                user: { first_name: 'Other', last_name: 'User' },
                 text: 'Bad comment',
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
             }
         ];
+
 
         server.use(
             http.get('*/recipes/:recipe_id/comments', () => {
