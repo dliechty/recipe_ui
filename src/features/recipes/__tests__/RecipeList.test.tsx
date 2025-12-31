@@ -3,6 +3,8 @@ import { renderWithProviders, screen, waitFor } from '../../../test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import RecipeList from '../components/RecipeList';
 import { describe, it, expect, vi } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { server } from '../../../mocks/server';
 
 vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => ({ token: 'mock-token' }),
@@ -32,5 +34,42 @@ describe('RecipeList', () => {
 
         // Verify tags are displayed
         expect(screen.getByText('Italian')).toBeInTheDocument();
+    });
+    it('hides total time badge when not provided', async () => {
+        server.use(
+            http.get('*/recipes', () => {
+                return HttpResponse.json([
+                    {
+                        id: 3,
+                        core: {
+                            name: 'Quick Snack',
+                            description: 'No time needed.',
+                            owner_id: '1',
+                            yield_amount: 1,
+                            yield_unit: 'serving',
+                            difficulty: 'Easy',
+                            cuisine: 'American',
+                            category: 'Snack'
+                        },
+                        times: {
+                            total_time_minutes: 0
+                        }
+                    }
+                ]);
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter>
+                <RecipeList />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Quick Snack')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByText(/Total Time:/)).not.toBeInTheDocument();
+        expect(screen.getByText('Yield: 1 serving')).toBeInTheDocument();
     });
 });

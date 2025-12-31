@@ -135,4 +135,50 @@ describe('RecipeDetails', () => {
         expect(screen.getByText('Water')).toBeInTheDocument();
         expect(screen.getByText('Salt')).toBeInTheDocument();
     });
+
+    it('hides time categories when not provided', async () => {
+        server.use(
+            http.get('*/recipes/:id', () => {
+                return HttpResponse.json({
+                    id: 3,
+                    core: {
+                        name: 'Simple Salad',
+                        description: 'A quick salad.',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                        difficulty: 'Easy',
+                        cuisine: 'American',
+                        category: 'Salad'
+                    },
+                    times: {
+                        total_time_minutes: 0,
+                        prep_time_minutes: 0,
+                        active_time_minutes: 0,
+                        cook_time_minutes: 0
+                    },
+                    instructions: [],
+                    components: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/3']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Simple Salad')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByText('Total Time:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Prep Time:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Active Time:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Cooking Time:')).not.toBeInTheDocument();
+        expect(screen.getByText('Yield:')).toBeInTheDocument();
+    });
 });

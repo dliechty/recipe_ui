@@ -134,7 +134,7 @@ describe('Recipe Workflows', () => {
         expect(componentNameInputs[0]).toHaveValue('Frosting');
 
         // Add Ingredient to new component (Frosting is at index 0 of the *editable* components)
-        const addIngredientButtons = screen.getAllByText(/Add Ingredient/i);
+        // const addIngredientButtons = screen.getAllByText(/Add Ingredient/i);
 
         // Find inputs for the new ingredient in the second component
         // This is tricky as there are multiple ingredient inputs now.
@@ -143,9 +143,9 @@ describe('Recipe Workflows', () => {
         // Main component (mocked) likely has ingredients.
         // Let's assume we just want to verify we can interact with it.
         // Actually, just checking the add worked by counting inputs might be safer.
-        const ingredientNameInputs = screen.getAllByPlaceholderText('Ingredient');
+        // const ingredientNameInputs = screen.getAllByPlaceholderText('Ingredient');
         // Initial load spaghetti has ingredients. Adding one to Sauce adds another.
-        const initialCount = ingredientNameInputs.length;
+        // const initialCount = ingredientNameInputs.length;
 
         // Remove the Sauce component
         const removeComponentButton = screen.getByLabelText('Remove component'); // There should only be one, for Sauce

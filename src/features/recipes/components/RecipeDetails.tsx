@@ -132,17 +132,33 @@ const RecipeDetails = () => {
                         <VStack align="start" gap={4} mb={8}>
                             <Box>
                                 <Grid templateColumns="auto 1fr" gap={2} rowGap={1}>
-                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
-                                    <Text fontSize="sm">{recipe.times.total_time_minutes} min</Text>
+                                    {(recipe.times.total_time_minutes ?? 0) > 0 && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
+                                            <Text fontSize="sm">{recipe.times.total_time_minutes} min</Text>
+                                        </>
+                                    )}
 
-                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Prep Time:</Text>
-                                    <Text fontSize="sm">{recipe.times.prep_time_minutes} min</Text>
+                                    {(recipe.times.prep_time_minutes ?? 0) > 0 && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Prep Time:</Text>
+                                            <Text fontSize="sm">{recipe.times.prep_time_minutes} min</Text>
+                                        </>
+                                    )}
 
-                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Active Time:</Text>
-                                    <Text fontSize="sm">{recipe.times.active_time_minutes} min</Text>
+                                    {(recipe.times.active_time_minutes ?? 0) > 0 && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Active Time:</Text>
+                                            <Text fontSize="sm">{recipe.times.active_time_minutes} min</Text>
+                                        </>
+                                    )}
 
-                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Cooking Time:</Text>
-                                    <Text fontSize="sm">{recipe.times.cook_time_minutes} min</Text>
+                                    {(recipe.times.cook_time_minutes ?? 0) > 0 && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Cooking Time:</Text>
+                                            <Text fontSize="sm">{recipe.times.cook_time_minutes} min</Text>
+                                        </>
+                                    )}
 
                                     <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Yield:</Text>
                                     <Text fontSize="sm" mt={4}>{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
