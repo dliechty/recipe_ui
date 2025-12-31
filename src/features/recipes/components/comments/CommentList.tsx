@@ -35,12 +35,14 @@ const CommentList: React.FC<CommentListProps> = ({ recipeId }) => {
                             gap={2}
                             px={4}
                             py={2}
+                            className="no-print"
                         >
                             <Heading size="md" color="inherit">
                                 COMMENTS ({commentCount})
                             </Heading>
                             {isOpen ? <FaChevronUp /> : <FaChevronDown />}
                         </Button>
+
 
                     </Collapsible.Trigger>
 
