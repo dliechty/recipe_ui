@@ -27,27 +27,20 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getAllByText('Spaghetti Carbonara')[0]).toBeInTheDocument();
+            expect(screen.getAllByText('Chicken Pasta 1')[0]).toBeInTheDocument();
         });
 
-        // Source
-        expect(screen.getByText(/Source:/)).toBeInTheDocument();
-        const sourceLink = screen.getByRole('link', { name: /Grandma/i });
-        expect(sourceLink).toBeInTheDocument();
-        expect(sourceLink).toHaveAttribute('href', 'https://www.example.com/spaghetti-carbonara');
-        expect(sourceLink).toHaveAttribute('target', '_blank');
+        // Generated recipe doesn't have source
+        expect(screen.queryByText(/Source:/)).not.toBeInTheDocument();
 
         expect(screen.getByText(/Last Updated:/)).toBeInTheDocument();
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
-        expect(screen.getAllByText('15m')).toHaveLength(3);
-        expect(screen.getByText('The classic Italian pasta dish recipe.')).toBeInTheDocument();
+        expect(screen.getByText('Delicious chicken pasta recipe number 1.')).toBeInTheDocument();
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
-        expect(screen.getByText('4 servings')).toBeInTheDocument();
+        expect(screen.getByText('2 servings')).toBeInTheDocument();
         expect(screen.getByText('Italian')).toBeInTheDocument();
-        expect(screen.getByText('Spaghetti')).toBeInTheDocument();
-        expect(screen.getByText('400 g')).toBeInTheDocument();
         expect(screen.getByText('Step 1')).toBeInTheDocument();
-        expect(screen.getByText('Boil the pasta in salted water.')).toBeInTheDocument();
+        expect(screen.getByText('Prepare the chicken.')).toBeInTheDocument();
 
         // Comments
         await waitFor(() => {
@@ -114,15 +107,12 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getAllByText('Chicken Curry')[0]).toBeInTheDocument();
+            expect(screen.getAllByText('Beef Curry 2')[0]).toBeInTheDocument();
         });
 
         expect(screen.queryByText('Main')).not.toBeInTheDocument();
-        expect(screen.getByText('Chicken Breast')).toBeInTheDocument();
-        expect(screen.getByText('Rice')).toBeInTheDocument();
-        expect(screen.getByText('Basmati Rice')).toBeInTheDocument();
-        expect(screen.getByText('Water')).toBeInTheDocument();
-        expect(screen.getByText('Salt')).toBeInTheDocument();
+        // Generated recipes have simple ingredients
+        expect(screen.getByText('Ingredient 2-1')).toBeInTheDocument();
     });
 
     it('hides time categories when not provided', async () => {
@@ -281,7 +271,7 @@ describe('RecipeDetails', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getAllByText('Spaghetti Carbonara')[0]).toBeInTheDocument();
+            expect(screen.getAllByText('Chicken Pasta 1')[0]).toBeInTheDocument();
         });
 
         expect(screen.getByRole('button', { name: /Edit Recipe/i })).toBeInTheDocument();

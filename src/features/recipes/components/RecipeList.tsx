@@ -30,7 +30,9 @@ const RecipeList = () => {
             rootMargin: '200px',
             threshold: 0.1
         });
-        if (node) observer.current.observe(node);
+        if (node) {
+            observer.current.observe(node);
+        }
     }, [isFetchingNextPage, fetchNextPage, hasNextPage]);
 
     const handleRecipeClick = (id: string) => {

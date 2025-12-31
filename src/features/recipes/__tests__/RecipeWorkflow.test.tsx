@@ -96,7 +96,7 @@ describe('Recipe Workflows', () => {
         renderWithProviders(<EditRecipePage />, { route: '/recipes/1/edit' });
 
         await waitFor(() => {
-            expect(screen.getByTestId('recipe-name')).toHaveValue('Spaghetti Carbonara');
+            expect(screen.getByTestId('recipe-name')).toHaveValue('Chicken Pasta 1');
         });
 
         // Change Name
@@ -114,7 +114,7 @@ describe('Recipe Workflows', () => {
         renderWithProviders(<EditRecipePage />, { route: '/recipes/1/edit' });
 
         await waitFor(() => {
-            expect(screen.getByTestId('recipe-name')).toHaveValue('Spaghetti Carbonara');
+            expect(screen.getByTestId('recipe-name')).toHaveValue('Chicken Pasta 1');
         });
 
         // Check for 'Main' text

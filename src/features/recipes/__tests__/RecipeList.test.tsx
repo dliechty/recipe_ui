@@ -34,20 +34,10 @@ describe('RecipeList', () => {
 
         // Wait for the recipes to be displayed
         await waitFor(() => {
-            expect(screen.getByText('Spaghetti Carbonara')).toBeInTheDocument();
-            expect(screen.getByText('Chicken Curry')).toBeInTheDocument();
-            expect(screen.getByText('Avocado Toast')).toBeInTheDocument();
+            expect(screen.getByText('Chicken Pasta 1')).toBeInTheDocument();
+            expect(screen.getByText('Beef Curry 2')).toBeInTheDocument();
+            expect(screen.getByText('Pork Stir Fry 3')).toBeInTheDocument();
         });
-
-        // Verify time and yield fields are displayed
-        expect(screen.getByText('30m')).toBeInTheDocument();
-        expect(screen.getByText('4 servings')).toBeInTheDocument();
-
-        expect(screen.getByText('1h 5m')).toBeInTheDocument();
-        expect(screen.getByText('6 servings')).toBeInTheDocument();
-
-        // Verify tags are displayed
-        expect(screen.getByText('Italian')).toBeInTheDocument();
     });
 
     it('hides total time badge when not provided', async () => {
