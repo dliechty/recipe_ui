@@ -5,7 +5,7 @@ export const formatQuantity = (value: number | undefined | null): string => {
     if (Number.isInteger(value)) return value.toString();
 
     // Tolerance for floating point comparisons
-    const tolerance = 0.01;
+    const tolerance = 0.001;
     const decimalPart = value % 1;
     const integerPart = Math.floor(value);
     const integerString = integerPart > 0 ? `${integerPart} ` : '';

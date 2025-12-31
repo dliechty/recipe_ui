@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor } from '../../../test-utils';
+import { renderWithProviders, screen, waitFor, fireEvent } from '../../../test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import RecipeList from '../components/RecipeList';
 import { describe, it, expect, vi } from 'vitest';
@@ -69,9 +69,104 @@ describe('RecipeList', () => {
             expect(screen.getByText('Quick Snack')).toBeInTheDocument();
         });
 
-        // In table layout, 0 or null time is shown as '-' or check if the cell implies empty/dash
-        // My implementation uses '-' if time <= 0
         expect(screen.getByText('-')).toBeInTheDocument();
         expect(screen.getByText('1 serving')).toBeInTheDocument();
+    });
+
+    it('paginates recipes', async () => {
+        // Create 25 mock recipes
+        const mockRecipes = Array.from({ length: 25 }, (_, i) => ({
+            id: i + 1,
+            core: {
+                name: `Recipe ${i + 1}`,
+                id: `${i + 1}`,
+                description: 'Test recipe',
+                owner_id: '1',
+                yield_amount: 1,
+                yield_unit: 'serving',
+                difficulty: 'Easy',
+                cuisine: 'Test',
+                category: 'Test'
+            },
+            times: {
+                total_time_minutes: 30
+            }
+        }));
+
+        server.use(
+            http.get('*/recipes', () => {
+                return HttpResponse.json(mockRecipes);
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter>
+                <RecipeList />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Recipe 1')).toBeInTheDocument();
+        });
+
+        // Default is 10 items per page
+        expect(screen.getByText('Recipe 10')).toBeInTheDocument();
+        expect(screen.queryByText('Recipe 11')).not.toBeInTheDocument();
+
+        expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
+
+        // Click next
+        const nextButton = screen.getByLabelText('Next Page');
+        fireEvent.click(nextButton);
+
+        expect(screen.getByText('Recipe 11')).toBeInTheDocument();
+        expect(screen.getByText('Recipe 20')).toBeInTheDocument();
+        expect(screen.queryByText('Recipe 21')).not.toBeInTheDocument();
+        expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
+    });
+
+    it('changes items per page', async () => {
+        // Create 20 mock recipes
+        const mockRecipes = Array.from({ length: 20 }, (_, i) => ({
+            id: i + 1,
+            core: {
+                name: `Recipe ${i + 1}`,
+                id: `${i + 1}`,
+                description: 'Test recipe',
+                owner_id: '1',
+                yield_amount: 1,
+                yield_unit: 'serving',
+                difficulty: 'Easy',
+                cuisine: 'Test',
+                category: 'Test'
+            },
+            times: {
+                total_time_minutes: 30
+            }
+        }));
+
+        server.use(
+            http.get('*/recipes', () => {
+                return HttpResponse.json(mockRecipes);
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter>
+                <RecipeList />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Recipe 1')).toBeInTheDocument();
+        });
+
+        // Change to 5 items per page
+        const select = screen.getByRole('combobox');
+        fireEvent.change(select, { target: { value: '5' } });
+
+        expect(screen.getByText('Recipe 5')).toBeInTheDocument();
+        expect(screen.queryByText('Recipe 6')).not.toBeInTheDocument();
+        expect(screen.getByText('Page 1 of 4')).toBeInTheDocument();
     });
 });
