@@ -92,8 +92,8 @@ const AdminUserManagement = () => {
     return (
         <Box>
             <Heading size="md" mb={4} color="fg.default">User Management</Heading>
-            <Box borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor="border.default">
-                <Table.Root>
+            <Box borderRadius="xl" overflowX="auto" borderWidth="1px" borderColor="border.default">
+                <Table.Root minW="800px">
                     <Table.Header>
                         <Table.Row bg="bg.surface">
                             <Table.ColumnHeader color="fg.default">Email</Table.ColumnHeader>
