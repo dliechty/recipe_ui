@@ -21,6 +21,7 @@ import {
 import { FaCheckCircle, FaEdit } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
+import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatQuantity, formatDuration } from '../../../utils/formatters';
 
@@ -29,6 +30,7 @@ const RecipeDetails = () => {
     const navigate = useNavigate();
     const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
     const { data: user } = useUser(recipe?.core.owner_id);
+    const { user: currentUser } = useAuth();
 
     if (error) {
         return (
@@ -76,19 +78,22 @@ const RecipeDetails = () => {
     };
 
     const userDisplayName = getUserDisplayName();
+    const canEdit = currentUser?.is_admin || (currentUser?.id && recipe?.core.owner_id && currentUser.id === recipe.core.owner_id);
 
     return (
         <Container maxW="container.xl" py={8}>
             <HStack mb={6} className="no-print">
                 <Spacer />
-                <Button
-                    onClick={() => navigate(`/recipes/${id}/edit`)}
-                    bg="vscode.button"
-                    color="white"
-                    _hover={{ bg: "vscode.buttonHover" }}
-                >
-                    <Icon as={FaEdit} /> Edit Recipe
-                </Button>
+                {canEdit && (
+                    <Button
+                        onClick={() => navigate(`/recipes/${id}/edit`)}
+                        bg="vscode.button"
+                        color="white"
+                        _hover={{ bg: "vscode.buttonHover" }}
+                    >
+                        <Icon as={FaEdit} /> Edit Recipe
+                    </Button>
+                )}
             </HStack>
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
