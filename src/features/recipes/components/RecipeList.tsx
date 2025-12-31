@@ -72,6 +72,7 @@ const RecipeList = () => {
                 <Text>Fetching: {isFetchingNextPage ? 'Yes' : 'No'}</Text>
                 <Text>Has More: {hasNextPage ? 'Yes' : 'No'}</Text>
                 <Text>Recipes: {recipes.length}</Text>
+                <Text>Total Count: {data?.pages[0]?.totalCount}</Text>
             </Box>
 
             <HStack mb={8}>
