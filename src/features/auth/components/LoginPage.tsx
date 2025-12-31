@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
@@ -17,12 +17,18 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     // safe navigation target
     const from = location.state?.from?.pathname || "/recipes";
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(from, { replace: true });
+        }
+    }, [isAuthenticated, navigate, from]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +40,6 @@ const LoginPage = () => {
                 password: password
             });
             login(response.access_token);
-            navigate(from, { replace: true });
         } catch (err: any) {
             console.error("Login failed:", err);
             setError("Login failed. Please check your credentials and try again.");

@@ -41,6 +41,42 @@ describe('ProtectedRoute', () => {
         expect(screen.queryByText('Protected Content')).not.toBeInTheDocument();
     });
 
+    it('passes location state when redirecting to login', () => {
+        mockUseAuth.mockReturnValue({ isAuthenticated: false, user: null });
+
+        // We can't easily check the state passed to Navigate with screen.getByText
+        // So we'll render a dummy login page that displays the location state
+        const DummyLogin = () => {
+            const { useLocation } = require('react-router-dom');
+            const location = useLocation();
+            return (
+                <div>
+                    <h1>Login Page</h1>
+                    <span data-testid="redirect-from">{location.state?.from?.pathname}</span>
+                </div>
+            );
+        };
+
+        render(
+            <MemoryRouter initialEntries={['/protected/resource']}>
+                <Routes>
+                    <Route path="/" element={<DummyLogin />} />
+                    <Route
+                        path="/protected/resource"
+                        element={
+                            <ProtectedRoute>
+                                <div>Protected Content</div>
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        expect(screen.getByText('Login Page')).toBeInTheDocument();
+        expect(screen.getByTestId('redirect-from')).toHaveTextContent('/protected/resource');
+    });
+
     it('renders children if token exists', () => {
         mockUseAuth.mockReturnValue({
             isAuthenticated: true,
