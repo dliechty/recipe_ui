@@ -14,8 +14,48 @@ interface RecipeFormProps {
     isLoading: boolean;
 }
 
+// Internal types with stable IDs for UI state
+interface RecipeIngredientWithId extends RecipeIngredientCreate {
+    id: string;
+}
+
+interface InstructionWithId extends InstructionCreate {
+    id: string;
+}
+
+interface ComponentWithId {
+    name: string;
+    ingredients: RecipeIngredientWithId[];
+}
+
+// Extended RecipeCreate for form state
+interface RecipeFormState extends Omit<RecipeCreate, 'components' | 'instructions'> {
+    components: ComponentWithId[];
+    instructions: InstructionWithId[];
+}
+
+// New Props for child components (updated interfaces)
+export interface RecipeIngredientsFormProps {
+    components: ComponentWithId[];
+    handleIngredientChange: (componentIndex: number, ingredientIndex: number, field: keyof RecipeIngredientCreate, value: string | number) => void;
+    addIngredient: (componentIndex: number) => void;
+    removeIngredient: (componentIndex: number, ingredientIndex: number) => void;
+    handleComponentNameChange: (index: number, name: string) => void;
+    addComponent: () => void;
+    removeComponent: (index: number) => void;
+    reorderIngredients: (componentIndex: number, fromIndex: number, toIndex: number) => void;
+}
+
+export interface RecipeInstructionsFormProps {
+    instructions: InstructionWithId[];
+    handleInstructionChange: (index: number, value: string) => void;
+    addInstruction: () => void;
+    removeInstruction: (index: number) => void;
+    reorderInstructions: (fromIndex: number, toIndex: number) => void;
+}
+
 const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
-    const [formData, setFormData] = useState<RecipeCreate>({
+    const [formData, setFormData] = useState<RecipeFormState>({
         core: {
             name: '',
             description: '',
@@ -49,21 +89,29 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
 
     useEffect(() => {
         if (initialData) {
-            setFormData(initialData);
+            // Inject stable IDs
+            setFormData({
+                ...initialData,
+                components: initialData.components.map(c => ({
+                    ...c,
+                    ingredients: c.ingredients.map(i => ({ ...i, id: crypto.randomUUID() }))
+                })),
+                instructions: initialData.instructions.map(i => ({ ...i, id: crypto.randomUUID() }))
+            });
         } else {
-            // Initialize with one empty ingredient and instruction for better UX
+            // Initialize with one empty ingredient and instruction using stable IDs
             setFormData(prev => ({
                 ...prev,
                 components: [{
                     name: 'Main',
-                    ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                    ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '', id: crypto.randomUUID() }]
                 }],
-                instructions: [{ step_number: 1, text: '' } as InstructionCreate]
+                instructions: [{ step_number: 1, text: '', id: crypto.randomUUID() }]
             }));
         }
     }, [initialData]);
 
-    // Core Handlers
+    // Core Handlers (unchanged logic, type compatible)
     const handleCoreChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -99,7 +147,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         }
 
         newIngredients[ingredientIndex] = { ...newIngredients[ingredientIndex], [field]: processedValue };
-        newComponents[componentIndex].ingredients = newIngredients;
+        newComponents[componentIndex] = { ...newComponents[componentIndex], ingredients: newIngredients };
         setFormData(prev => ({ ...prev, components: newComponents }));
     };
 
@@ -108,7 +156,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
             const newComponents = [...prev.components];
             newComponents[componentIndex] = {
                 ...newComponents[componentIndex],
-                ingredients: [...newComponents[componentIndex].ingredients, { ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                ingredients: [...newComponents[componentIndex].ingredients, { ingredient_name: '', quantity: 0, unit: '', notes: '', id: crypto.randomUUID() }]
             };
             return {
                 ...prev,
@@ -154,7 +202,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                 ...prev.components,
                 {
                     name: 'New Component',
-                    ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '' } as RecipeIngredientCreate]
+                    ingredients: [{ ingredient_name: '', quantity: 0, unit: '', notes: '', id: crypto.randomUUID() }]
                 }
             ]
         }));
@@ -184,7 +232,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
     const addInstruction = () => {
         setFormData(prev => ({
             ...prev,
-            instructions: [...prev.instructions, { step_number: prev.instructions.length + 1, text: '' } as InstructionCreate]
+            instructions: [...prev.instructions, { step_number: prev.instructions.length + 1, text: '', id: crypto.randomUUID() }]
         }));
     };
 
@@ -213,7 +261,18 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.core.name) return;
-        onSubmit(formData);
+
+        // Clean up internal IDs before submitting
+        const cleanData: RecipeCreate = {
+            ...formData,
+            components: formData.components.map(c => ({
+                name: c.name,
+                ingredients: c.ingredients.map(({ id, ...rest }) => rest)
+            })),
+            instructions: formData.instructions.map(({ id, ...rest }) => rest)
+        };
+
+        onSubmit(cleanData);
     };
 
     return (

@@ -29,8 +29,17 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+interface RecipeIngredientWithId extends RecipeIngredientCreate {
+    id: string;
+}
+
+interface ComponentWithId {
+    name: string;
+    ingredients: RecipeIngredientWithId[];
+}
+
 interface RecipeIngredientsFormProps {
-    components: ComponentCreate[];
+    components: ComponentWithId[];
     handleIngredientChange: (componentIndex: number, ingredientIndex: number, field: keyof RecipeIngredientCreate, value: string | number) => void;
     addIngredient: (componentIndex: number) => void;
     removeIngredient: (componentIndex: number, ingredientIndex: number) => void;
@@ -41,7 +50,7 @@ interface RecipeIngredientsFormProps {
 }
 
 interface SortableIngredientRowProps {
-    ingredient: RecipeIngredientCreate;
+    ingredient: RecipeIngredientWithId;
     index: number;
     componentIndex: number;
     handleIngredientChange: (componentIndex: number, ingredientIndex: number, field: keyof RecipeIngredientCreate, value: string | number) => void;
@@ -188,31 +197,8 @@ const RecipeIngredientsForm = ({
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
-            // IDs are formatted as `comp-${componentIndex}-ing-${index}`
-            // or just use index if we can get it from active.id/over.id, but simple index is risky if items change.
-            // Actually, we can pass index data or parse IDs.
-            // Let's use simple IDs: `c${componentIndex}-i${index}`
-            // But if we reorder, the index in ID changes? No, ID should be unique to the content if possible?
-            // But here ingredients don't have IDs yet (creating new recipe).
-            // So we MUST use index, but we have to be careful.
-            // If we use index as ID, dnd-kit might get confused during the move.
-            // Better to assign a unique ID to each item in the form state?
-            // User didn't ask for that complex refactor.
-            // Standard approach for simple lists: use index as ID *if* items are not keyed by database ID.
-            // But wait, `useSortable({ id })` needs a stable ID.
-            // If I use index "0", "1", "2"... and I move "0" to "2", the item at "0" becomes the old "1".
-            // If key={index}, React re-renders everything.
-            // If I use a random ID on creation, I need to persist it in the form state.
-            // Let's try to simulate stable IDs by index for now, but `dnd-kit` really wants stable IDs.
-            // However, `ingredients` array is what we have.
-            // Let's assume we can generate a temporary ID based on something... or just use the index but expect re-renders.
-            // Actually `dnd-kit` examples often use `id` property.
-            // Since we are editing, maybe we can assume the list order IS the identity for now.
-            // But `active.id` will be the index.
-
-            // Parsing IDs: `c${componentIndex}-i${index}`
-            const oldIndex = parseInt((active.id as string).split('-i')[1]);
-            const newIndex = parseInt((over.id as string).split('-i')[1]);
+            const oldIndex = components[componentIndex].ingredients.findIndex(i => i.id === active.id);
+            const newIndex = components[componentIndex].ingredients.findIndex(i => i.id === over.id);
 
             reorderIngredients(componentIndex, oldIndex, newIndex);
         }
@@ -269,14 +255,14 @@ const RecipeIngredientsForm = ({
                             onDragEnd={(e) => handleDragEnd(e, componentIndex)}
                         >
                             <SortableContext
-                                items={component.ingredients.map((_, i) => `c${componentIndex}-i${i}`)}
+                                items={component.ingredients.map(i => i.id)}
                                 strategy={verticalListSortingStrategy}
                             >
                                 <VStack gap={4} align="stretch">
                                     {component.ingredients.map((ingredient, index) => (
                                         <SortableIngredientRow
-                                            key={`c${componentIndex}-i${index}`}
-                                            id={`c${componentIndex}-i${index}`}
+                                            key={ingredient.id}
+                                            id={ingredient.id}
                                             ingredient={ingredient}
                                             index={index}
                                             componentIndex={componentIndex}

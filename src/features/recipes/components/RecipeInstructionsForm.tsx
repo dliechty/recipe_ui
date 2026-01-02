@@ -28,8 +28,12 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+interface InstructionWithId extends InstructionCreate {
+    id: string;
+}
+
 interface RecipeInstructionsFormProps {
-    instructions: InstructionCreate[];
+    instructions: InstructionWithId[];
     handleInstructionChange: (index: number, value: string) => void;
     addInstruction: () => void;
     removeInstruction: (index: number) => void;
@@ -37,7 +41,7 @@ interface RecipeInstructionsFormProps {
 }
 
 interface SortableInstructionRowProps {
-    instruction: InstructionCreate;
+    instruction: InstructionWithId;
     index: number;
     handleInstructionChange: (index: number, value: string) => void;
     removeInstruction: (index: number) => void;
@@ -144,9 +148,8 @@ const RecipeInstructionsForm = ({
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
-            // IDs are `inst-${index}`
-            const oldIndex = parseInt((active.id as string).split('inst-')[1]);
-            const newIndex = parseInt((over.id as string).split('inst-')[1]);
+            const oldIndex = instructions.findIndex(i => i.id === active.id);
+            const newIndex = instructions.findIndex(i => i.id === over.id);
 
             reorderInstructions(oldIndex, newIndex);
         }
@@ -161,14 +164,14 @@ const RecipeInstructionsForm = ({
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
-                    items={instructions.map((_, i) => `inst-${i}`)}
+                    items={instructions.map(i => i.id)}
                     strategy={verticalListSortingStrategy}
                 >
                     <VStack gap={4} align="stretch">
                         {instructions.map((instruction, index) => (
                             <SortableInstructionRow
-                                key={`inst-${index}`}
-                                id={`inst-${index}`}
+                                key={instruction.id}
+                                id={instruction.id}
                                 instruction={instruction}
                                 index={index}
                                 handleInstructionChange={handleInstructionChange}
