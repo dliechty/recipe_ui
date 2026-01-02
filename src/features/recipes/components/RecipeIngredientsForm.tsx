@@ -81,7 +81,7 @@ const RecipeIngredientsForm = ({
 
                         <VStack gap={4} align="stretch">
                             {component.ingredients.map((ingredient, index) => (
-                                <HStack key={index} gap={2} align="flex-start">
+                                <HStack key={index} gap={2} align="end">
                                     <Box flex={2}>
                                         {index === 0 && <Text fontSize="sm" mb={1}>Name</Text>}
                                         <Input
@@ -134,28 +134,32 @@ const RecipeIngredientsForm = ({
                                             _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                         />
                                     </Box>
-                                    <Box pt={index === 0 ? 8 : 0}>
+                                    <Box>
                                         <HStack gap={1}>
                                             <VStack gap={0}>
                                                 <IconButton
                                                     aria-label="Move up"
-                                                    size="xs"
+                                                    h="20px"
+                                                    minH="20px"
                                                     variant="ghost"
                                                     disabled={index === 0}
                                                     onClick={() => moveIngredient(componentIndex, index, 'up')}
-                                                    colorPalette="gray"
+                                                    color="fg.muted"
+                                                    _hover={{ color: "fg.default", bg: "bg.muted" }}
                                                 >
-                                                    <FaArrowUp />
+                                                    <FaArrowUp size={10} />
                                                 </IconButton>
                                                 <IconButton
                                                     aria-label="Move down"
-                                                    size="xs"
+                                                    h="20px"
+                                                    minH="20px"
                                                     variant="ghost"
                                                     disabled={index === component.ingredients.length - 1}
                                                     onClick={() => moveIngredient(componentIndex, index, 'down')}
-                                                    colorPalette="gray"
+                                                    color="fg.muted"
+                                                    _hover={{ color: "fg.default", bg: "bg.muted" }}
                                                 >
-                                                    <FaArrowDown />
+                                                    <FaArrowDown size={10} />
                                                 </IconButton>
                                             </VStack>
                                             <Tooltip.Root>
