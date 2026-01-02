@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Container, Heading, Spinner, Center, Text, Breadcrumb, Icon } from '@chakra-ui/react';
 import { FaChevronRight } from 'react-icons/fa';
@@ -33,6 +33,40 @@ const EditRecipePage = () => {
         });
     };
 
+    // Transform data for the form
+    const initialData = useMemo<RecipeCreate | undefined>(() => {
+        if (!recipeData) return undefined;
+        return {
+            core: {
+                name: recipeData.core.name,
+                description: recipeData.core.description,
+                source: recipeData.core.source,
+                yield_amount: recipeData.core.yield_amount,
+                yield_unit: recipeData.core.yield_unit,
+                difficulty: recipeData.core.difficulty,
+                cuisine: recipeData.core.cuisine,
+                category: recipeData.core.category,
+                source_url: recipeData.core.source_url,
+                slug: recipeData.core.slug
+            },
+            times: recipeData.times,
+            nutrition: recipeData.nutrition,
+            components: recipeData.components.map(comp => ({
+                name: comp.name,
+                ingredients: comp.ingredients.map(i => ({
+                    ingredient_name: i.item,
+                    quantity: i.quantity,
+                    unit: i.unit,
+                    notes: i.notes
+                }))
+            })),
+            instructions: recipeData.instructions.map(i => ({
+                step_number: i.step_number,
+                text: i.text
+            }))
+        };
+    }, [recipeData]);
+
     if (isFetching) {
         return (
             <Center h="50vh">
@@ -48,38 +82,6 @@ const EditRecipePage = () => {
             </Container>
         );
     }
-
-    // Transform data for the form
-    // Transform data for the form
-    const initialData: RecipeCreate = {
-        core: {
-            name: recipeData.core.name,
-            description: recipeData.core.description,
-            source: recipeData.core.source,
-            yield_amount: recipeData.core.yield_amount,
-            yield_unit: recipeData.core.yield_unit,
-            difficulty: recipeData.core.difficulty,
-            cuisine: recipeData.core.cuisine,
-            category: recipeData.core.category,
-            source_url: recipeData.core.source_url,
-            slug: recipeData.core.slug
-        },
-        times: recipeData.times,
-        nutrition: recipeData.nutrition,
-        components: recipeData.components.map(comp => ({
-            name: comp.name,
-            ingredients: comp.ingredients.map(i => ({
-                ingredient_name: i.item,
-                quantity: i.quantity,
-                unit: i.unit,
-                notes: i.notes
-            }))
-        })),
-        instructions: recipeData.instructions.map(i => ({
-            step_number: i.step_number,
-            text: i.text
-        }))
-    };
 
     return (
         <Container maxW="container.lg" pt={2} pb={8}>
