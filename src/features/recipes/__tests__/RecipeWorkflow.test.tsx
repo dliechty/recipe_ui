@@ -80,7 +80,7 @@ describe('Recipe Workflows', () => {
         fireEvent.change(unitInputs[0], { target: { value: 'cup' } });
 
         // Add Instruction
-        const instructionInputs = screen.getAllByPlaceholderText(/Step 1 description/i);
+        const instructionInputs = screen.getAllByPlaceholderText(/Step 1/i);
         fireEvent.change(instructionInputs[0], { target: { value: 'Do something' } });
 
         // Submit
@@ -205,7 +205,7 @@ describe('RecipeForm Component Unit Tests', () => {
         instructions: []
     };
 
-    it('reorders ingredients correctly', async () => {
+    it('renders reordering controls', async () => {
         const queryClient = new QueryClient({
             defaultOptions: {
                 queries: {
@@ -227,30 +227,13 @@ describe('RecipeForm Component Unit Tests', () => {
         );
 
         // Check initial order
-        let inputs = await screen.findAllByPlaceholderText('Ingredient');
+        const inputs = await screen.findAllByPlaceholderText('Ingredient');
         expect(inputs[0]).toHaveValue('Ing 1');
         expect(inputs[1]).toHaveValue('Ing 2');
         expect(inputs[2]).toHaveValue('Ing 3');
 
-        // Move Ing 1 down
-        const moveDownButtons = screen.getAllByLabelText('Move down');
-        fireEvent.click(moveDownButtons[0]);
-
-        // Check order
-        inputs = screen.getAllByPlaceholderText('Ingredient');
-        expect(inputs[0]).toHaveValue('Ing 2');
-        expect(inputs[1]).toHaveValue('Ing 1');
-        expect(inputs[2]).toHaveValue('Ing 3');
-
-        // Move Ing 1 (now at index 1) back up
-        const moveUpButtons = screen.getAllByLabelText('Move up');
-        fireEvent.click(moveUpButtons[1]);
-
-        inputs = screen.getAllByPlaceholderText('Ingredient');
-        expect(inputs[0]).toHaveValue('Ing 1');
-
-        // Check disabled states
-        expect(moveUpButtons[0]).toBeDisabled();
-        expect(moveDownButtons[moveDownButtons.length - 1]).toBeDisabled();
+        // Check for drag handles
+        const dragHandles = screen.getAllByLabelText('Drag to reorder');
+        expect(dragHandles).toHaveLength(3);
     });
 });

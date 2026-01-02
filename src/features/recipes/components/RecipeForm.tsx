@@ -131,20 +131,16 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         });
     };
 
-    const moveIngredient = (componentIndex: number, ingredientIndex: number, direction: 'up' | 'down') => {
+    const reorderIngredients = (componentIndex: number, fromIndex: number, toIndex: number) => {
         setFormData(prev => {
             const newComponents = [...prev.components];
-            const ingredients = [...newComponents[componentIndex].ingredients];
-
-            if (direction === 'up' && ingredientIndex > 0) {
-                [ingredients[ingredientIndex], ingredients[ingredientIndex - 1]] = [ingredients[ingredientIndex - 1], ingredients[ingredientIndex]];
-            } else if (direction === 'down' && ingredientIndex < ingredients.length - 1) {
-                [ingredients[ingredientIndex], ingredients[ingredientIndex + 1]] = [ingredients[ingredientIndex + 1], ingredients[ingredientIndex]];
-            }
+            const newIngredients = [...newComponents[componentIndex].ingredients];
+            const [movedIngredient] = newIngredients.splice(fromIndex, 1);
+            newIngredients.splice(toIndex, 0, movedIngredient);
 
             newComponents[componentIndex] = {
                 ...newComponents[componentIndex],
-                ingredients
+                ingredients: newIngredients
             };
             return { ...prev, components: newComponents };
         });
@@ -198,6 +194,22 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         setFormData(prev => ({ ...prev, instructions: newInstructions }));
     };
 
+    const reorderInstructions = (fromIndex: number, toIndex: number) => {
+        setFormData(prev => {
+            const newInstructions = [...prev.instructions];
+            const [movedInstruction] = newInstructions.splice(fromIndex, 1);
+            newInstructions.splice(toIndex, 0, movedInstruction);
+
+            // Re-index steps
+            const reindexedInstructions = newInstructions.map((inst, i) => ({
+                ...inst,
+                step_number: i + 1
+            }));
+
+            return { ...prev, instructions: reindexedInstructions };
+        });
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.core.name) return;
@@ -220,7 +232,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                     handleIngredientChange={handleIngredientChange}
                     addIngredient={addIngredient}
                     removeIngredient={removeIngredient}
-                    moveIngredient={moveIngredient}
+                    reorderIngredients={reorderIngredients}
                     handleComponentNameChange={handleComponentNameChange}
                     addComponent={addComponent}
                     removeComponent={removeComponent}
@@ -231,6 +243,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                     handleInstructionChange={handleInstructionChange}
                     addInstruction={addInstruction}
                     removeInstruction={removeInstruction}
+                    reorderInstructions={reorderInstructions}
                 />
 
                 <Button
