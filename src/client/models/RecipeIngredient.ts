@@ -7,5 +7,6 @@ export type RecipeIngredient = {
     unit: string;
     item: string;
     notes?: (string | null);
+    order?: number;
 };
 
