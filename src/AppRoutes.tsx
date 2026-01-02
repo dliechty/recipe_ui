@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Spinner, Center } from '@chakra-ui/react';
 import ProtectedRoute from './features/auth/components/ProtectedRoute';
 import Layout from './components/layout/Layout';
-import { useAuth } from './context/AuthContext';
+
 
 // Lazy load components
 const RecipeList = React.lazy(() => import('./features/recipes/components/RecipeList'));
@@ -18,7 +18,6 @@ const AccountPage = React.lazy(() => import('./features/users/AccountPage'));
 
 
 const AppRoutes = () => {
-    const { isAuthenticated } = useAuth();
 
     const LoadingFallback = () => (
         <Center h="50vh">

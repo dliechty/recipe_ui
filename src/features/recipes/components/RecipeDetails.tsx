@@ -210,27 +210,30 @@ const RecipeDetails = () => {
                                         <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
                                     )}
                                     <List.Root gap={3} mb={component.name ? 4 : 0}>
-                                        {component.ingredients.map((ingredient, index) => {
-                                            const isToTaste = ingredient.quantity === 0 && ingredient.unit.toLowerCase() === 'to taste';
-                                            return (
-                                                <List.Item key={index} display="flex" alignItems="center">
-                                                    <List.Indicator asChild>
-                                                        <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
-                                                    </List.Indicator>
-                                                    <Text>
-                                                        {isToTaste ? (
-                                                            <>
-                                                                <Text as="span" fontWeight="bold">{ingredient.item}</Text> {ingredient.unit}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <Text as="span" fontWeight="bold">{formatQuantity(ingredient.quantity)} {ingredient.unit}</Text> {ingredient.item}
-                                                            </>
-                                                        )}
-                                                    </Text>
-                                                </List.Item>
-                                            );
-                                        })}
+                                        {component.ingredients
+                                            .slice()
+                                            .sort((a, b) => (a.order || 0) - (b.order || 0))
+                                            .map((ingredient, index) => {
+                                                const isToTaste = ingredient.quantity === 0 && ingredient.unit.toLowerCase() === 'to taste';
+                                                return (
+                                                    <List.Item key={index} display="flex" alignItems="center">
+                                                        <List.Indicator asChild>
+                                                            <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                                                        </List.Indicator>
+                                                        <Text>
+                                                            {isToTaste ? (
+                                                                <>
+                                                                    <Text as="span" fontWeight="bold">{ingredient.item}</Text> {ingredient.unit}
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Text as="span" fontWeight="bold">{formatQuantity(ingredient.quantity)} {ingredient.unit}</Text> {ingredient.item}
+                                                                </>
+                                                            )}
+                                                        </Text>
+                                                    </List.Item>
+                                                );
+                                            })}
                                     </List.Root>
                                 </Box>
                             ))}

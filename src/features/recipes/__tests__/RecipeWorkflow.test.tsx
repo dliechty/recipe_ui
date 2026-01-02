@@ -4,6 +4,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { resetStore } from '../../../mocks/handlers';
 import AddRecipePage from '../pages/AddRecipePage';
 import EditRecipePage from '../pages/EditRecipePage';
+import RecipeForm from '../components/RecipeForm';
+import { RecipeCreate, RecipeIngredientCreate } from '../../../client';
 import { AuthProvider } from '../../../context/AuthContext';
 import { ChakraProvider } from '@chakra-ui/react';
 import { system } from '../../../theme';
@@ -160,5 +162,95 @@ describe('Recipe Workflows', () => {
 
         // Verify Main name is displayed as text
         expect(screen.getByRole('heading', { level: 2, name: 'Main' })).toBeInTheDocument();
+    });
+});
+
+
+describe('RecipeForm Component Unit Tests', () => {
+    const mockSubmit = vi.fn();
+    const initialData: RecipeCreate = {
+        core: {
+            name: 'Test Recipe',
+            yield_amount: 1,
+            yield_unit: 'servings',
+            description: null,
+            source: null,
+            difficulty: null,
+            cuisine: null,
+            category: null,
+            source_url: null,
+            slug: null
+        },
+        times: {
+            prep_time_minutes: 0,
+            cook_time_minutes: 0,
+            active_time_minutes: 0,
+            total_time_minutes: 0
+        },
+        nutrition: {
+            calories: null,
+            serving_size: null
+        },
+        audit: {},
+        components: [
+            {
+                name: 'Main',
+                ingredients: [
+                    { ingredient_name: 'Ing 1', quantity: 1, unit: 'cup', notes: null } as RecipeIngredientCreate,
+                    { ingredient_name: 'Ing 2', quantity: 2, unit: 'tbsp', notes: null } as RecipeIngredientCreate,
+                    { ingredient_name: 'Ing 3', quantity: 3, unit: 'tsp', notes: null } as RecipeIngredientCreate
+                ]
+            }
+        ],
+        instructions: []
+    };
+
+    it('reorders ingredients correctly', async () => {
+        const queryClient = new QueryClient({
+            defaultOptions: {
+                queries: {
+                    retry: false,
+                },
+            },
+        });
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <ChakraProvider value={system}>
+                    <AuthProvider>
+                        <MemoryRouter>
+                            <RecipeForm initialData={initialData} onSubmit={mockSubmit} isLoading={false} />
+                        </MemoryRouter>
+                    </AuthProvider>
+                </ChakraProvider>
+            </QueryClientProvider>
+        );
+
+        // Check initial order
+        let inputs = await screen.findAllByPlaceholderText('Ingredient');
+        expect(inputs[0]).toHaveValue('Ing 1');
+        expect(inputs[1]).toHaveValue('Ing 2');
+        expect(inputs[2]).toHaveValue('Ing 3');
+
+        // Move Ing 1 down
+        const moveDownButtons = screen.getAllByLabelText('Move down');
+        fireEvent.click(moveDownButtons[0]);
+
+        // Check order
+        inputs = screen.getAllByPlaceholderText('Ingredient');
+        expect(inputs[0]).toHaveValue('Ing 2');
+        expect(inputs[1]).toHaveValue('Ing 1');
+        expect(inputs[2]).toHaveValue('Ing 3');
+
+        // Move Ing 1 (now at index 1) back up
+        const moveUpButtons = screen.getAllByLabelText('Move up');
+        fireEvent.click(moveUpButtons[1]);
+
+        inputs = screen.getAllByPlaceholderText('Ingredient');
+        expect(inputs[0]).toHaveValue('Ing 1');
+
+        // Check disabled states
+        expect(moveUpButtons[0]).toBeDisabled();
+        expect(moveDownButtons[moveDownButtons.length - 1]).toBeDisabled();
     });
 });

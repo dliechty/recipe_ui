@@ -88,8 +88,8 @@ const RecipeList = () => {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {recipes.map((recipe, index) => {
-                            const isLastElement = recipes.length === index + 1;
+                        {recipes.map((recipe) => {
+
                             return (
                                 <Table.Row
                                     key={recipe.core.id}

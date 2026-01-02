@@ -10,7 +10,7 @@ import {
     Text,
     Tooltip
 } from '@chakra-ui/react';
-import { FaTrash, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaPlus, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { RecipeIngredientCreate, ComponentCreate } from '../../../client';
 
 interface RecipeIngredientsFormProps {
@@ -21,6 +21,7 @@ interface RecipeIngredientsFormProps {
     handleComponentNameChange: (index: number, name: string) => void;
     addComponent: () => void;
     removeComponent: (index: number) => void;
+    moveIngredient: (componentIndex: number, ingredientIndex: number, direction: 'up' | 'down') => void;
 }
 
 const RecipeIngredientsForm = ({
@@ -30,7 +31,8 @@ const RecipeIngredientsForm = ({
     removeIngredient,
     handleComponentNameChange,
     addComponent,
-    removeComponent
+    removeComponent,
+    moveIngredient
 }: RecipeIngredientsFormProps) => {
     return (
         <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="lg">
@@ -133,23 +135,47 @@ const RecipeIngredientsForm = ({
                                         />
                                     </Box>
                                     <Box pt={index === 0 ? 8 : 0}>
-                                        <Tooltip.Root>
-                                            <Tooltip.Trigger asChild>
+                                        <HStack gap={1}>
+                                            <VStack gap={0}>
                                                 <IconButton
-                                                    colorPalette="red"
+                                                    aria-label="Move up"
+                                                    size="xs"
                                                     variant="ghost"
-                                                    onClick={() => removeIngredient(componentIndex, index)}
-                                                    aria-label="Remove ingredient"
+                                                    disabled={index === 0}
+                                                    onClick={() => moveIngredient(componentIndex, index, 'up')}
+                                                    colorPalette="gray"
                                                 >
-                                                    <FaTrash />
+                                                    <FaArrowUp />
                                                 </IconButton>
-                                            </Tooltip.Trigger>
-                                            <Tooltip.Positioner>
-                                                <Tooltip.Content>
-                                                    Delete ingredient
-                                                </Tooltip.Content>
-                                            </Tooltip.Positioner>
-                                        </Tooltip.Root>
+                                                <IconButton
+                                                    aria-label="Move down"
+                                                    size="xs"
+                                                    variant="ghost"
+                                                    disabled={index === component.ingredients.length - 1}
+                                                    onClick={() => moveIngredient(componentIndex, index, 'down')}
+                                                    colorPalette="gray"
+                                                >
+                                                    <FaArrowDown />
+                                                </IconButton>
+                                            </VStack>
+                                            <Tooltip.Root>
+                                                <Tooltip.Trigger asChild>
+                                                    <IconButton
+                                                        colorPalette="red"
+                                                        variant="ghost"
+                                                        onClick={() => removeIngredient(componentIndex, index)}
+                                                        aria-label="Remove ingredient"
+                                                    >
+                                                        <FaTrash />
+                                                    </IconButton>
+                                                </Tooltip.Trigger>
+                                                <Tooltip.Positioner>
+                                                    <Tooltip.Content>
+                                                        Delete ingredient
+                                                    </Tooltip.Content>
+                                                </Tooltip.Positioner>
+                                            </Tooltip.Root>
+                                        </HStack>
                                     </Box>
                                 </HStack>
                             ))}

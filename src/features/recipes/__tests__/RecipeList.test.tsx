@@ -17,7 +17,7 @@ describe('RecipeList', () => {
     beforeAll(() => {
         // Mock IntersectionObserver
         global.IntersectionObserver = class IntersectionObserver {
-            constructor(callback: any, options: any) { }
+            constructor() { }
             observe = observeMock;
             unobserve() { return null; }
             disconnect = disconnectMock;

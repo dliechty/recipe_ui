@@ -131,6 +131,25 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         });
     };
 
+    const moveIngredient = (componentIndex: number, ingredientIndex: number, direction: 'up' | 'down') => {
+        setFormData(prev => {
+            const newComponents = [...prev.components];
+            const ingredients = [...newComponents[componentIndex].ingredients];
+
+            if (direction === 'up' && ingredientIndex > 0) {
+                [ingredients[ingredientIndex], ingredients[ingredientIndex - 1]] = [ingredients[ingredientIndex - 1], ingredients[ingredientIndex]];
+            } else if (direction === 'down' && ingredientIndex < ingredients.length - 1) {
+                [ingredients[ingredientIndex], ingredients[ingredientIndex + 1]] = [ingredients[ingredientIndex + 1], ingredients[ingredientIndex]];
+            }
+
+            newComponents[componentIndex] = {
+                ...newComponents[componentIndex],
+                ingredients
+            };
+            return { ...prev, components: newComponents };
+        });
+    };
+
     // Component Handlers
     const addComponent = () => {
         setFormData(prev => ({
@@ -201,6 +220,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                     handleIngredientChange={handleIngredientChange}
                     addIngredient={addIngredient}
                     removeIngredient={removeIngredient}
+                    moveIngredient={moveIngredient}
                     handleComponentNameChange={handleComponentNameChange}
                     addComponent={addComponent}
                     removeComponent={removeComponent}
