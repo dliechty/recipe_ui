@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Component } from './Component';
+import type { DietType } from './DietType';
 import type { Instruction } from './Instruction';
 import type { RecipeAudit } from './RecipeAudit';
 import type { RecipeCore } from './RecipeCore';
@@ -14,6 +15,7 @@ export type Recipe = {
     components: Array<Component>;
     instructions: Array<Instruction>;
     nutrition: RecipeNutrition;
+    suitable_for_diet: Array<DietType>;
     audit: RecipeAudit;
 };
 

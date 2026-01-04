@@ -152,6 +152,10 @@ const RecipeDetails = () => {
                     )}
                     {recipe.core.cuisine && <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>}
                     {recipe.core.category && <Badge colorPalette="orange">{recipe.core.category}</Badge>}
+                    {recipe.core.protein && <Badge colorPalette="blue">{recipe.core.protein}</Badge>}
+                    {(recipe.suitable_for_diet || []).map(diet => (
+                        <Badge key={diet} variant="outline" colorPalette="teal">{diet}</Badge>
+                    ))}
                 </HStack>
 
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
@@ -184,6 +188,20 @@ const RecipeDetails = () => {
                                         <>
                                             <Text fontWeight="bold" color="fg.muted" fontSize="sm" pl={2}>Cooking Time:</Text>
                                             <Text fontSize="sm">{formatDuration(recipe.times.cook_time_minutes)}</Text>
+                                        </>
+                                    )}
+
+                                    {(recipe.nutrition?.calories ?? 0) > 0 && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Calories:</Text>
+                                            <Text fontSize="sm" mt={4}>{recipe.nutrition?.calories} kcal</Text>
+                                        </>
+                                    )}
+
+                                    {recipe.nutrition?.serving_size && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4} pl={2}>Serving Size:</Text>
+                                            <Text fontSize="sm" mt={4}>{recipe.nutrition.serving_size}</Text>
                                         </>
                                     )}
 

@@ -14,6 +14,7 @@ export type { CommentCreate } from './models/CommentCreate';
 export type { CommentUpdate } from './models/CommentUpdate';
 export type { Component } from './models/Component';
 export type { ComponentCreate } from './models/ComponentCreate';
+export { DietType } from './models/DietType';
 export { DifficultyLevel } from './models/DifficultyLevel';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { Instruction } from './models/Instruction';

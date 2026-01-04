@@ -14,6 +14,7 @@ export type RecipeCore = {
     category?: (string | null);
     source?: (string | null);
     source_url?: (string | null);
+    protein?: (string | null);
     id: string;
     owner_id: string;
 };

@@ -3,7 +3,7 @@ import {
     Button,
     VStack,
 } from '@chakra-ui/react';
-import { RecipeCreate, RecipeIngredientCreate, InstructionCreate } from '../../../client';
+import { RecipeCreate, RecipeIngredientCreate, InstructionCreate, DietType } from '../../../client';
 import RecipeBasicsForm from './RecipeBasicsForm';
 import RecipeIngredientsForm from './RecipeIngredientsForm';
 import RecipeInstructionsForm from './RecipeInstructionsForm';
@@ -66,7 +66,8 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
             cuisine: null,
             category: null,
             source_url: null,
-            slug: null
+            slug: null,
+            protein: null
         },
         times: {
             prep_time_minutes: 0,
@@ -84,7 +85,8 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                 ingredients: []
             }
         ],
-        instructions: []
+        instructions: [],
+        suitable_for_diet: []
     });
 
     useEffect(() => {
@@ -132,6 +134,20 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         setFormData(prev => ({
             ...prev,
             times: { ...prev.times, [name]: parseInt(valueString) || 0 }
+        }));
+    };
+
+    const handleNutritionChange = (name: string, valueString: string) => {
+        setFormData(prev => ({
+            ...prev,
+            nutrition: { ...prev.nutrition, [name]: name === 'calories' ? (parseInt(valueString) || 0) : valueString }
+        }));
+    };
+
+    const handleDietChange = (selectedDiets: DietType[]) => {
+        setFormData(prev => ({
+            ...prev,
+            suitable_for_diet: selectedDiets
         }));
     };
 
@@ -281,9 +297,13 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                 <RecipeBasicsForm
                     core={formData.core}
                     times={formData.times}
+                    nutrition={formData.nutrition}
+                    diet={formData.suitable_for_diet || []}
                     handleCoreChange={handleCoreChange}
                     handleCoreNumberChange={handleCoreNumberChange}
                     handleTimesChange={handleTimesChange}
+                    handleNutritionChange={handleNutritionChange}
+                    handleDietChange={handleDietChange}
                 />
 
                 <RecipeIngredientsForm

@@ -206,6 +206,51 @@ describe('RecipeDetails', () => {
         expect(screen.getByText('¼ tsp')).toBeInTheDocument();
         expect(screen.getByText('1 ½ cup')).toBeInTheDocument();
         expect(screen.getByText('⅓ tsp')).toBeInTheDocument();
+        expect(screen.getByText('1 ½ cup')).toBeInTheDocument();
+        expect(screen.getByText('⅓ tsp')).toBeInTheDocument();
+    });
+
+    it('renders nutrition and diet info', async () => {
+        server.use(
+            http.get('*/recipes/:id', () => {
+                return HttpResponse.json({
+                    id: 99,
+                    core: {
+                        name: 'Healthy Recipe',
+                        owner_id: '1',
+                        protein: 'Tofu',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    nutrition: {
+                        calories: 350,
+                        serving_size: '1 bowl'
+                    },
+                    suitable_for_diet: ['vegan', 'gluten-free'],
+                    instructions: [],
+                    components: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/99']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Healthy Recipe')[0]).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Tofu')).toBeInTheDocument();
+        expect(screen.getByText('350 kcal')).toBeInTheDocument();
+        expect(screen.getByText('1 bowl')).toBeInTheDocument();
+        expect(screen.getByText('vegan')).toBeInTheDocument();
+        expect(screen.getByText('gluten-free')).toBeInTheDocument();
     });
 
     it('displays "To Taste" ingredients correctly', async () => {

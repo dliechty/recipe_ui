@@ -14,5 +14,6 @@ export type RecipeCoreCreate = {
     category?: (string | null);
     source?: (string | null);
     source_url?: (string | null);
+    protein?: (string | null);
 };
 

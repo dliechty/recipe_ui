@@ -10,22 +10,30 @@ import {
     Text,
     NativeSelect
 } from '@chakra-ui/react';
-import { RecipeCoreCreate, RecipeTimes, DifficultyLevel } from '../../../client';
+import { RecipeCoreCreate, RecipeTimes, DifficultyLevel, RecipeNutrition, DietType } from '../../../client';
 
 interface RecipeBasicsFormProps {
     core: RecipeCoreCreate;
     times: RecipeTimes;
+    nutrition: RecipeNutrition;
+    diet: DietType[];
     handleCoreChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
     handleCoreNumberChange: (name: string, valueString: string) => void;
     handleTimesChange: (name: string, valueString: string) => void;
+    handleNutritionChange: (name: string, valueString: string) => void;
+    handleDietChange: (selectedDiets: DietType[]) => void;
 }
 
 const RecipeBasicsForm = ({
     core,
     times,
+    nutrition,
+    diet,
     handleCoreChange,
     handleCoreNumberChange,
-    handleTimesChange
+    handleTimesChange,
+    handleNutritionChange,
+    handleDietChange
 }: RecipeBasicsFormProps) => {
     return (
         <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="lg">
@@ -106,6 +114,24 @@ const RecipeBasicsForm = ({
                             </NativeSelect.Root>
                         </Box>
                         <Box flex={1}>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Protein (Main)</Text>
+                            <Input
+                                data-testid="recipe-protein"
+                                name="protein"
+                                value={core.protein || ''}
+                                onChange={handleCoreChange}
+                                placeholder="e.g. Chicken"
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                    </HStack>
+
+                    <HStack gap={2}>
+                        <Box flex={1}>
                             <Text as="label" mb={2} display="block" fontWeight="bold">Cuisine</Text>
                             <Input
                                 data-testid="recipe-cuisine"
@@ -136,6 +162,63 @@ const RecipeBasicsForm = ({
                             />
                         </Box>
                     </HStack>
+
+                    <HStack gap={2}>
+                        <Box flex={1}>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Calories</Text>
+                            <Input
+                                data-testid="recipe-calories"
+                                type="number"
+                                min={0}
+                                value={nutrition.calories || 0}
+                                onChange={(e) => handleNutritionChange('calories', e.target.value)}
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                        <Box flex={1}>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Serving Size</Text>
+                            <Input
+                                data-testid="recipe-serving-size"
+                                name="serving_size"
+                                value={nutrition.serving_size || ''}
+                                onChange={(e) => handleNutritionChange('serving_size', e.target.value)}
+                                placeholder="e.g. 1 slice"
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                    </HStack>
+
+                    <Box>
+                        <Text as="label" mb={2} display="block" fontWeight="bold">Dietary Suitability</Text>
+                        <NativeSelect.Root>
+                            <NativeSelect.Field
+                                data-testid="recipe-diet"
+                                multiple
+                                value={diet}
+                                onChange={(e) => handleDietChange(Array.from(e.target.selectedOptions, option => option.value as DietType))}
+                                h="150px"
+                                p={2}
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            >
+                                {Object.values(DietType).map((type) => (
+                                    <option key={type} value={type}>{type}</option>
+                                ))}
+                            </NativeSelect.Field>
+                        </NativeSelect.Root>
+                        <Text fontSize="xs" color="fg.muted" mt={1}>Hold Ctrl/Cmd to select multiple</Text>
+                    </Box>
 
                     <HStack gap={2}>
                         <Box flex={1}>
