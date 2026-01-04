@@ -283,9 +283,17 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
             ...formData,
             components: formData.components.map(c => ({
                 name: c.name,
-                ingredients: c.ingredients.map(({ id, ...rest }) => rest)
+                ingredients: c.ingredients.map((ingredient) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { id, ...rest } = ingredient;
+                    return rest;
+                })
             })),
-            instructions: formData.instructions.map(({ id, ...rest }) => rest)
+            instructions: formData.instructions.map((instruction) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { id, ...rest } = instruction;
+                return rest;
+            })
         };
 
         onSubmit(cleanData);

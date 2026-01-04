@@ -11,7 +11,7 @@ import {
     Tooltip
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus, FaGripVertical } from 'react-icons/fa';
-import { RecipeIngredientCreate, ComponentCreate } from '../../../client';
+import { RecipeIngredientCreate } from '../../../client';
 import {
     DndContext,
     closestCenter,
