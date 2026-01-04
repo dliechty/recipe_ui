@@ -60,6 +60,10 @@ const Layout = ({ children }: LayoutProps) => {
                                             color="fg.default"
                                             _hover={{ bg: 'whiteAlpha.200' }}
                                             _active={{ bg: 'whiteAlpha.300' }}
+                                            _expanded={{
+                                                bg: 'vscode.button',
+                                                color: 'white',
+                                            }}
                                         >
                                             <FiMenu />
                                         </IconButton>
