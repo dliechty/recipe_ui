@@ -60,3 +60,10 @@ export const formatDuration = (minutes: number | undefined | null): string => {
 
     return `${hours}h ${remainingMinutes}m`;
 };
+
+export const formatDietName = (diet: string): string => {
+    return diet
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};

@@ -249,8 +249,8 @@ describe('RecipeDetails', () => {
         expect(screen.getByText('Tofu')).toBeInTheDocument();
         expect(screen.getByText('350 kcal')).toBeInTheDocument();
         expect(screen.getByText('1 bowl')).toBeInTheDocument();
-        expect(screen.getByText('vegan')).toBeInTheDocument();
-        expect(screen.getByText('gluten-free')).toBeInTheDocument();
+        expect(screen.getByText('Vegan')).toBeInTheDocument();
+        expect(screen.getByText('Gluten Free')).toBeInTheDocument();
     });
 
     it('displays "To Taste" ingredients correctly', async () => {

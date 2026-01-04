@@ -1,4 +1,4 @@
-import { formatDuration } from '../formatters';
+import { formatDuration, formatDietName } from '../formatters';
 import { describe, it, expect } from 'vitest';
 
 describe('formatDuration', () => {
@@ -25,5 +25,20 @@ describe('formatDuration', () => {
         expect(formatDuration(61)).toBe('1h 1m');
         expect(formatDuration(90)).toBe('1h 30m');
         expect(formatDuration(150)).toBe('2h 30m');
+    });
+});
+
+describe('formatDietName', () => {
+    it('capitalizes single word', () => {
+        expect(formatDietName('vegan')).toBe('Vegan');
+    });
+
+    it('replaces dashes with spaces and capitalizes each word', () => {
+        expect(formatDietName('gluten-free')).toBe('Gluten Free');
+        expect(formatDietName('low-carb')).toBe('Low Carb');
+    });
+
+    it('handles multiple dashes correctly', () => {
+        expect(formatDietName('very-restricted-diet')).toBe('Very Restricted Diet');
     });
 });

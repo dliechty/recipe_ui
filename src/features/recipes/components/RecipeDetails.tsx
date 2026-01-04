@@ -24,7 +24,7 @@ import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
-import { formatQuantity, formatDuration } from '../../../utils/formatters';
+import { formatQuantity, formatDuration, formatDietName } from '../../../utils/formatters';
 import CommentList from './comments/CommentList';
 
 
@@ -154,7 +154,7 @@ const RecipeDetails = () => {
                     {recipe.core.category && <Badge colorPalette="orange">{recipe.core.category}</Badge>}
                     {recipe.core.protein && <Badge colorPalette="blue">{recipe.core.protein}</Badge>}
                     {(recipe.suitable_for_diet || []).map(diet => (
-                        <Badge key={diet} colorPalette="teal">{diet}</Badge>
+                        <Badge key={diet} colorPalette="teal">{formatDietName(diet)}</Badge>
                     ))}
                 </HStack>
 
