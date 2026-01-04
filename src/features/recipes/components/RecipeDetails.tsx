@@ -191,22 +191,22 @@ const RecipeDetails = () => {
                                         </>
                                     )}
 
-                                    {(recipe.nutrition?.calories ?? 0) > 0 && (
-                                        <>
-                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Calories:</Text>
-                                            <Text fontSize="sm" mt={4}>{recipe.nutrition?.calories} kcal</Text>
-                                        </>
-                                    )}
+                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Yield:</Text>
+                                    <Text fontSize="sm" mt={4}>{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
 
                                     {recipe.nutrition?.serving_size && (
                                         <>
-                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4} pl={2}>Serving Size:</Text>
-                                            <Text fontSize="sm" mt={4}>{recipe.nutrition.serving_size}</Text>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm">Serving Size:</Text>
+                                            <Text fontSize="sm">{recipe.nutrition.serving_size}</Text>
                                         </>
                                     )}
 
-                                    <Text fontWeight="bold" color="fg.muted" fontSize="sm" mt={4}>Yield:</Text>
-                                    <Text fontSize="sm" mt={4}>{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
+                                    {(recipe.nutrition?.calories ?? 0) > 0 && (
+                                        <>
+                                            <Text fontWeight="bold" color="fg.muted" fontSize="sm">Calories:</Text>
+                                            <Text fontSize="sm">{recipe.nutrition?.calories} kcal</Text>
+                                        </>
+                                    )}
                                 </Grid>
                             </Box>
                         </VStack>
