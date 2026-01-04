@@ -22,7 +22,7 @@ export const users = [
 
 import { generateMockRecipes } from './data-generator';
 
-// Generate 120 mock recipes for testing infinite scroll
+// Generate 120 mock recipes for testing infinite scroll (updated)
 export const recipes = generateMockRecipes(120);
 
 export const comments = [

@@ -63,6 +63,7 @@ export const handlers = [
             },
             times: newRecipe.times,
             nutrition: newRecipe.nutrition,
+            suitable_for_diet: newRecipe.suitable_for_diet || [],
             components: newRecipe.components.map((comp: any) => ({
                 name: comp.name,
                 ingredients: comp.ingredients.map((ing: any) => ({
@@ -108,6 +109,7 @@ export const handlers = [
             },
             times: updatedData.times,
             nutrition: updatedData.nutrition,
+            suitable_for_diet: updatedData.suitable_for_diet || [],
             components: updatedData.components.map((comp: any) => ({
                 name: comp.name,
                 ingredients: comp.ingredients.map((ing: any) => ({

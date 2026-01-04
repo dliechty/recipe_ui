@@ -8,6 +8,7 @@ export function generateMockRecipes(count: number) {
         'Noodles', 'Rice Bowl', 'Casserole', 'Roast', 'Grilled', 'Baked', 'Fried', 'Steamed', 'Braised', 'Sautéed'
     ];
     const proteins = ['Chicken', 'Beef', 'Pork', 'Fish', 'Tofu', 'Shrimp', 'Lamb', 'Turkey', 'Vegetable', 'Mushroom'];
+    const diets = ['vegan', 'vegetarian', 'gluten-free', 'low-carb', 'halal', 'kosher'];
 
     const recipes = [];
 
@@ -32,6 +33,7 @@ export function generateMockRecipes(count: number) {
                 source: i % 3 === 0 ? 'Family Recipe' : null,
                 source_url: i % 5 === 0 ? `https://example.com/recipe-${i}` : null,
                 slug: `${protein.toLowerCase()}-${recipeName.toLowerCase()}-${i}`,
+                protein: protein,
                 owner_id: "550e8400-e29b-41d4-a716-446655440000"
             },
             times: {
@@ -59,6 +61,7 @@ export function generateMockRecipes(count: number) {
                 { step_number: 2, text: `Cook according to recipe ${i}.` },
                 { step_number: 3, text: 'Season and serve.' }
             ],
+            suitable_for_diet: (i === 1 || i % 4 !== 0) ? [diets[i % diets.length]] : [],
             audit: {
                 created_at: new Date(Date.now() - (i * 86400000)).toISOString(),
                 updated_at: new Date(Date.now() - (i * 86400000)).toISOString(),

@@ -154,7 +154,7 @@ const RecipeDetails = () => {
                     {recipe.core.category && <Badge colorPalette="orange">{recipe.core.category}</Badge>}
                     {recipe.core.protein && <Badge colorPalette="blue">{recipe.core.protein}</Badge>}
                     {(recipe.suitable_for_diet || []).map(diet => (
-                        <Badge key={diet} variant="outline" colorPalette="teal">{diet}</Badge>
+                        <Badge key={diet} colorPalette="teal">{diet}</Badge>
                     ))}
                 </HStack>
 
