@@ -163,38 +163,7 @@ const RecipeBasicsForm = ({
                         </Box>
                     </HStack>
 
-                    <HStack gap={2}>
-                        <Box flex={1}>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Calories</Text>
-                            <Input
-                                data-testid="recipe-calories"
-                                type="number"
-                                min={0}
-                                value={nutrition.calories || 0}
-                                onChange={(e) => handleNutritionChange('calories', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
-                            />
-                        </Box>
-                        <Box flex={1}>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Serving Size</Text>
-                            <Input
-                                data-testid="recipe-serving-size"
-                                name="serving_size"
-                                value={nutrition.serving_size || ''}
-                                onChange={(e) => handleNutritionChange('serving_size', e.target.value)}
-                                placeholder="e.g. 1 slice"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
-                            />
-                        </Box>
-                    </HStack>
+
 
                     <Box>
                         <Text as="label" mb={2} display="block" fontWeight="bold">Dietary Suitability</Text>
@@ -312,6 +281,39 @@ const RecipeBasicsForm = ({
                                 value={core.yield_unit || ''}
                                 onChange={handleCoreChange}
                                 placeholder="servings"
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                    </HStack>
+
+                    <HStack gap={2}>
+                        <Box flex={1}>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Calories</Text>
+                            <Input
+                                data-testid="recipe-calories"
+                                type="number"
+                                min={0}
+                                value={nutrition.calories || 0}
+                                onChange={(e) => handleNutritionChange('calories', e.target.value)}
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                        <Box flex={1}>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Serving Size</Text>
+                            <Input
+                                data-testid="recipe-serving-size"
+                                name="serving_size"
+                                value={nutrition.serving_size || ''}
+                                onChange={(e) => handleNutritionChange('serving_size', e.target.value)}
+                                placeholder="e.g. 1 slice"
                                 bg="vscode.inputBg"
                                 borderColor="border.default"
                                 color="fg.default"
