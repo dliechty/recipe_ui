@@ -63,7 +63,8 @@ const EditRecipePage = () => {
             instructions: recipeData.instructions.map(i => ({
                 step_number: i.step_number,
                 text: i.text
-            }))
+            })),
+            suitable_for_diet: recipeData.suitable_for_diet
         };
     }, [recipeData]);
 
