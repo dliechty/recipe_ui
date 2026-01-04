@@ -11,6 +11,7 @@ import {
     NativeSelect
 } from '@chakra-ui/react';
 import { RecipeCoreCreate, RecipeTimes, DifficultyLevel, RecipeNutrition, DietType } from '../../../client';
+import DietSelect from './DietSelect';
 
 interface RecipeBasicsFormProps {
     core: RecipeCoreCreate;
@@ -165,29 +166,10 @@ const RecipeBasicsForm = ({
 
 
 
-                    <Box>
-                        <Text as="label" mb={2} display="block" fontWeight="bold">Dietary Suitability</Text>
-                        <NativeSelect.Root>
-                            <NativeSelect.Field
-                                data-testid="recipe-diet"
-                                multiple
-                                value={diet}
-                                onChange={(e) => handleDietChange(Array.from(e.target.selectedOptions, option => option.value as DietType))}
-                                h="150px"
-                                p={2}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
-                            >
-                                {Object.values(DietType).map((type) => (
-                                    <option key={type} value={type}>{type}</option>
-                                ))}
-                            </NativeSelect.Field>
-                        </NativeSelect.Root>
-                        <Text fontSize="xs" color="fg.muted" mt={1}>Hold Ctrl/Cmd to select multiple</Text>
-                    </Box>
+                    <DietSelect
+                        selectedDiets={diet}
+                        onChange={handleDietChange}
+                    />
 
                     <HStack gap={2}>
                         <Box flex={1}>
