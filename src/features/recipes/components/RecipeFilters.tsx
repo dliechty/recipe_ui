@@ -93,11 +93,35 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                     </Box>
 
                     <HStack ml="auto">
-                        {Object.keys(filters).length > 0 && (
-                            <Button size="xs" variant="ghost" colorScheme="red" onClick={handleReset}>
-                                <Icon as={FaTimes} mr={1} /> Reset
-                            </Button>
-                        )}
+                        {/* Check for any active filters (non-empty strings, arrays, or objects) */}
+                        {(() => {
+                            const hasActiveFilters = Object.values(filters).some(value => {
+                                if (Array.isArray(value)) return value.length > 0;
+                                if (typeof value === 'object' && value !== null) {
+                                    // Check for range objects (gt/lt) or has_all arrays in objects
+                                    return Object.values(value).some(v => {
+                                        if (Array.isArray(v)) return v.length > 0;
+                                        return v !== undefined && v !== '' && v !== null;
+                                    });
+                                }
+                                return value !== undefined && value !== '';
+                            });
+
+                            return (
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    colorPalette="red"
+                                    onClick={handleReset}
+                                    disabled={!hasActiveFilters}
+                                    opacity={!hasActiveFilters ? 0.4 : 1}
+                                    _hover={!hasActiveFilters ? { bg: 'transparent' } : undefined}
+                                    cursor={!hasActiveFilters ? 'not-allowed' : 'pointer'}
+                                >
+                                    <Icon as={FaTimes} mr={1} /> Reset
+                                </Button>
+                            );
+                        })()}
                         <Button
                             size="sm"
                             variant="ghost"

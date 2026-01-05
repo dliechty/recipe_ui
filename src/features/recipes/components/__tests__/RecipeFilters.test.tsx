@@ -71,4 +71,27 @@ describe('RecipeFiltersDisplay', () => {
 
         expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({ category: ['Dinner'] }));
     });
+
+    it('enables reset button when filters are active', () => {
+        const onFilterChange = vi.fn();
+        // Render with an active filter
+        renderWithProviders(<RecipeFiltersDisplay filters={{ category: ['Dinner'] }} onFilterChange={onFilterChange} />);
+
+        const resetButton = screen.getByRole('button', { name: /reset/i });
+        expect(resetButton).toBeInTheDocument();
+        expect(resetButton).not.toBeDisabled();
+
+        fireEvent.click(resetButton);
+        expect(onFilterChange).toHaveBeenCalledWith({});
+    });
+
+    it('disables reset button when no filters are active', () => {
+        renderWithProviders(<RecipeFiltersDisplay filters={{}} onFilterChange={() => { }} />);
+        const resetButton = screen.getByRole('button', { name: /reset/i });
+        expect(resetButton).toBeInTheDocument();
+        // Chakra v3 disabled might implementation detail, but typically sets disabled attribute
+        // Check disabled via attribute or style if custom
+        // Since we passed `disabled={true}`, standard matcher should work
+        expect(resetButton).toBeDisabled();
+    });
 });
