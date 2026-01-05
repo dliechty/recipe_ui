@@ -142,7 +142,7 @@ describe('RecipeList', () => {
         // Verify order: Parent, then Variant
         const parentIndex = rows.findIndex(row => within(row).queryByText('Parent Recipe'));
         const variantIndex = rows.findIndex(row => within(row).queryByText('Variant A'));
-        const unrelatedIndex = rows.findIndex(row => within(row).queryByText('Unrelated Recipe'));
+
 
         expect(parentIndex).toBeGreaterThan(0); // 0 is header
         expect(variantIndex).toEqual(parentIndex + 1); // Variant immediately follows parent

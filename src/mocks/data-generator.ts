@@ -72,33 +72,35 @@ export function generateMockRecipes(count: number) {
                 version: 1,
             },
             parent_recipe_id: null,
-            variant_recipe_ids: [variantRecipeId]
+            variant_recipe_ids: i % 2 !== 0 ? [variantRecipeId] : []
         };
 
         recipes.push(mainRecipe);
 
         // Variant Recipe
-        recipes.push({
-            ...mainRecipe, // Copy main fields
-            core: {
-                ...mainRecipe.core,
-                id: variantRecipeId,
-                name: `${protein} ${recipeName} ${i} (Spicy Variant)`,
-                description: `A spicy variation of the ${protein.toLowerCase()} ${recipeName.toLowerCase()}.`,
-                slug: `${protein.toLowerCase()}-${recipeName.toLowerCase()}-${i}-variant`
-            },
-            parent_recipe_id: mainRecipeId,
-            variant_recipe_ids: [],
-            components: [
-                {
-                    name: 'Main',
-                    ingredients: [
-                        ...mainRecipe.components[0].ingredients,
-                        { quantity: 1, unit: 'pinch', item: 'Chili Flakes', notes: 'For extra heat' }
-                    ]
-                }
-            ]
-        });
+        if (i % 2 !== 0) {
+            recipes.push({
+                ...mainRecipe, // Copy main fields
+                core: {
+                    ...mainRecipe.core,
+                    id: variantRecipeId,
+                    name: `${protein} ${recipeName} ${i} (Spicy Variant)`,
+                    description: `A spicy variation of the ${protein.toLowerCase()} ${recipeName.toLowerCase()}.`,
+                    slug: `${protein.toLowerCase()}-${recipeName.toLowerCase()}-${i}-variant`
+                },
+                parent_recipe_id: mainRecipeId,
+                variant_recipe_ids: [],
+                components: [
+                    {
+                        name: 'Main',
+                        ingredients: [
+                            ...mainRecipe.components[0].ingredients,
+                            { quantity: 1, unit: 'pinch', item: 'Chili Flakes', notes: 'For extra heat' }
+                        ]
+                    }
+                ]
+            });
+        }
     }
 
     return recipes;
