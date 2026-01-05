@@ -66,7 +66,7 @@ const RecipeList = () => {
     return (
         <Container maxW="container.xl" py={8}>
             <HStack mb={8}>
-                <Heading color="fg.default">All Recipes</Heading>
+                <Heading color="fg.default">Recipes</Heading>
                 <Spacer />
                 <Button
                     onClick={() => navigate('/recipes/new')}
