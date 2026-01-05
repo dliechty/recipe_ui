@@ -193,10 +193,8 @@ export const handlers = [
         } else if (field === 'difficulty') {
             values = [...new Set(recipes.map(r => r.core.difficulty).filter(Boolean))];
         } else if (field === 'owner') {
-            // Return list of objects { label: Name, value: ID } ideally, but spec says array of strings or simple values?
-            // The previous schema I defined was generic array.
-            // Let's look at `usersStore`.
-            values = usersStore.map(u => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }));
+            // Return list of objects { id: ID, name: Name } as per spec
+            values = usersStore.map(u => ({ id: u.id, name: `${u.first_name} ${u.last_name}` }));
         } else if (field === 'suitable_for_diet') {
             values = [...new Set(recipes.flatMap(r => r.suitable_for_diet || []))];
         } else if (field === 'protein') {

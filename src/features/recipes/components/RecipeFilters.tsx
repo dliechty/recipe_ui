@@ -234,10 +234,14 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             {/* --- Row 3 --- */}
 
                             {/* 3.1 Owner */}
+                            {/* 3.1 Owner */}
                             <RecipeMultiSelect
                                 label="Owner / Author"
                                 placeholder="Any Owner"
-                                options={owners || []} // owners is already {label, value}
+                                options={(owners || []).map((o: any) => ({
+                                    label: o.name || o,
+                                    value: o.id || o
+                                }))}
                                 value={localFilters.owner || []}
                                 onChange={(val) => handleChange('owner', val.length ? val : undefined)}
                             />
