@@ -17,5 +17,6 @@ export type RecipeCreate = {
     components: Array<ComponentCreate>;
     instructions: Array<InstructionCreate>;
     suitable_for_diet?: Array<DietType>;
+    parent_recipe_id?: (string | null);
 };
 
