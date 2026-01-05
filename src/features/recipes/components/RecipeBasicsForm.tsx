@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Input,
@@ -8,7 +8,9 @@ import {
     Heading,
     SimpleGrid,
     Text,
-    NativeSelect
+    NativeSelect,
+    Link,
+    Button
 } from '@chakra-ui/react';
 import { RecipeCoreCreate, RecipeTimes, DifficultyLevel, RecipeNutrition, DietType } from '../../../client';
 import DietSelect from './DietSelect';
@@ -23,6 +25,8 @@ interface RecipeBasicsFormProps {
     handleTimesChange: (name: string, valueString: string) => void;
     handleNutritionChange: (name: string, valueString: string) => void;
     handleDietChange: (selectedDiets: DietType[]) => void;
+    parentRecipeId?: string | null;
+    handleParentIdChange: (id: string | null) => void;
 }
 
 const RecipeBasicsForm = ({
@@ -34,11 +38,101 @@ const RecipeBasicsForm = ({
     handleCoreNumberChange,
     handleTimesChange,
     handleNutritionChange,
-    handleDietChange
+    handleDietChange,
+    parentRecipeId,
+    handleParentIdChange
 }: RecipeBasicsFormProps) => {
+    const [isParentModalOpen, setIsParentModalOpen] = useState(false);
+    const [tempParentId, setTempParentId] = useState('');
+
+    const openParentModal = () => {
+        setTempParentId(parentRecipeId || '');
+        setIsParentModalOpen(true);
+    };
+
+    const saveParentId = () => {
+        handleParentIdChange(tempParentId || null);
+        setIsParentModalOpen(false);
+    };
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isParentModalOpen) {
+                setIsParentModalOpen(false);
+            }
+        };
+
+        if (isParentModalOpen) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isParentModalOpen]);
+
     return (
         <Box bg="bg.surface" p={6} borderRadius="lg" borderWidth={1} borderColor="border.default" boxShadow="lg">
-            <Heading size="md" mb={6}>Basics</Heading>
+            <HStack justify="space-between" mb={6}>
+                <Heading size="md">Basics</Heading>
+                <Button variant="plain" size="sm" color="vscode.accent" onClick={openParentModal}>
+                    {parentRecipeId ? `Edit Parent: ${parentRecipeId}` : 'Add Parent'}
+                </Button>
+            </HStack>
+
+            {isParentModalOpen && (
+                <Box
+                    position="fixed"
+                    top="0"
+                    left="0"
+                    right="0"
+                    bottom="0"
+                    bg="rgba(0,0,0,0.6)"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    zIndex={1400}
+                    backdropFilter="blur(2px)"
+                    onClick={() => setIsParentModalOpen(false)}
+                >
+                    <Box
+                        bg="bg.surface"
+                        p={6}
+                        borderRadius="md"
+                        boxShadow="xl"
+                        borderWidth="1px"
+                        borderColor="border.default"
+                        onClick={(e) => e.stopPropagation()}
+                        minW="300px"
+                    >
+                        <Heading size="sm" mb={4} color="fg.default">
+                            {parentRecipeId ? 'Edit Parent Recipe ID' : 'Add Parent Recipe ID'}
+                        </Heading>
+                        <Input
+                            placeholder="Parent Recipe ID"
+                            value={tempParentId}
+                            onChange={(e) => setTempParentId(e.target.value)}
+                            mb={4}
+                            bg="vscode.inputBg"
+                            borderColor="border.default"
+                            color="fg.default"
+                        />
+                        <HStack justify="flex-end" gap={2}>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ bg: "vscode.inputBg" }}
+                                onClick={() => setIsParentModalOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button size="sm" bg="vscode.button" color="white" _hover={{ bg: "vscode.buttonHover" }} onClick={saveParentId}>Save</Button>
+                        </HStack>
+                    </Box>
+                </Box>
+            )}
             <SimpleGrid columns={{ base: 1, md: 2 }} gap={10} alignItems="start">
                 {/* Left Column: Details */}
                 <VStack gap={4} align="stretch" maxW="lg">

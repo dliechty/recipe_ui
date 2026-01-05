@@ -86,6 +86,13 @@ describe('Recipe Workflows', () => {
         // Submit
         fireEvent.click(screen.getByText(/Save Recipe/i));
 
+        // Add Parent
+        fireEvent.click(screen.getByText('Add Parent'));
+        const parentInput = screen.getByPlaceholderText('Parent Recipe ID');
+        fireEvent.change(parentInput, { target: { value: '123' } });
+        fireEvent.click(screen.getByText('Save'));
+        expect(screen.getByText('Edit Parent: 123')).toBeInTheDocument();
+
         // Expect Navigation
         await waitFor(() => {
             expect(mockNavigate).toHaveBeenCalledWith('/recipes');

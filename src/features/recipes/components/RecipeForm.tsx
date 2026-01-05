@@ -32,6 +32,7 @@ interface ComponentWithId {
 interface RecipeFormState extends Omit<RecipeCreate, 'components' | 'instructions'> {
     components: ComponentWithId[];
     instructions: InstructionWithId[];
+    parent_recipe_id?: string | null;
 }
 
 // New Props for child components (updated interfaces)
@@ -86,7 +87,8 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
             }
         ],
         instructions: [],
-        suitable_for_diet: []
+        suitable_for_diet: [],
+        parent_recipe_id: null
     });
 
     useEffect(() => {
@@ -148,6 +150,13 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         setFormData(prev => ({
             ...prev,
             suitable_for_diet: selectedDiets
+        }));
+    };
+
+    const handleParentIdChange = (id: string | null) => {
+        setFormData(prev => ({
+            ...prev,
+            parent_recipe_id: id
         }));
     };
 
@@ -281,6 +290,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
         // Clean up internal IDs before submitting
         const cleanData: RecipeCreate = {
             ...formData,
+            parent_recipe_id: formData.parent_recipe_id,
             components: formData.components.map(c => ({
                 name: c.name,
                 ingredients: c.ingredients.map((ingredient) => {
@@ -312,6 +322,8 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                     handleTimesChange={handleTimesChange}
                     handleNutritionChange={handleNutritionChange}
                     handleDietChange={handleDietChange}
+                    parentRecipeId={formData.parent_recipe_id}
+                    handleParentIdChange={handleParentIdChange}
                 />
 
                 <RecipeIngredientsForm
