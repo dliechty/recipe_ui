@@ -178,7 +178,7 @@ const RecipeDetails = () => {
                         )}
                         {recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
                             <>
-                                Variants: <RouterLink to={`/recipes?ids=${[recipe.core.id, ...recipe.variant_recipe_ids].join(',')}`}><Link as="span" color="vscode.accent" textDecoration="underline">({recipe.variant_recipe_ids.length})</Link></RouterLink>
+                                Variants: <RouterLink to={recipe.variant_recipe_ids.length === 1 ? `/recipes/${recipe.variant_recipe_ids[0]}` : `/recipes?ids=${[recipe.core.id, ...recipe.variant_recipe_ids].join(',')}`}><Link as="span" color="vscode.accent" textDecoration="underline">({recipe.variant_recipe_ids.length})</Link></RouterLink>
                             </>
                         )}
                     </Text>

@@ -526,6 +526,45 @@ describe('RecipeDetails', () => {
         expect(link.closest('a')).toHaveAttribute('href', '/recipes?ids=20,21,22');
     });
 
+    it('links to variant details when single variant present', async () => {
+        server.use(
+            http.get('*/recipes/30', () => {
+                return HttpResponse.json({
+                    id: 30,
+                    core: {
+                        id: '30',
+                        name: 'Single Variant Parent',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: [],
+                    variant_recipe_ids: ['31']
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/30']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Single Variant Parent')[0]).toBeInTheDocument();
+        });
+
+        // Check for Variant Link
+        expect(screen.getByText('Variants:')).toBeInTheDocument();
+        const link = screen.getByText('(1)');
+        expect(link).toBeInTheDocument();
+        expect(link.closest('a')).toHaveAttribute('href', '/recipes/31');
+    });
+
     it('displays recipe ID', async () => {
         renderWithProviders(
             <MemoryRouter initialEntries={['/recipes/1']}>
