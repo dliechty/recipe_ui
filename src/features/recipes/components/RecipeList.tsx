@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text, VStack } from '@chakra-ui/react';
+import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text, VStack, chakra } from '@chakra-ui/react';
 import { FaPlus, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
@@ -110,18 +110,19 @@ const RecipeList = () => {
                     <HStack gap={2}>
                         <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
                         <Box minW="130px">
-                            <select
+                            <chakra.select
                                 value={sortField}
-                                onChange={(e) => handleSortFieldChange(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '6px',
-                                    borderRadius: '4px',
-                                    backgroundColor: 'var(--chakra-colors-bg-surface)',
-                                    borderColor: 'var(--chakra-colors-border-default)',
-                                    borderWidth: '1px',
-                                    fontSize: '0.875rem',
-                                }}
+                                onChange={(e) => handleSortFieldChange((e.target as HTMLSelectElement).value)}
+                                width="100%"
+                                padding="6px"
+                                borderRadius="4px"
+                                bg="#3c3c3c"
+                                borderColor="#454545"
+                                borderWidth="1px"
+                                fontSize="0.875rem"
+                                color="#d4d4d4"
+                                _hover={{ borderColor: '#007acc' }}
+                                _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
                             >
                                 <option value="name">Name</option>
                                 <option value="category">Category</option>
@@ -129,27 +130,28 @@ const RecipeList = () => {
                                 <option value="difficulty">Difficulty</option>
                                 <option value="total_time_minutes">Total Time</option>
                                 <option value="yield_amount">Yield</option>
-                            </select>
+                            </chakra.select>
                         </Box>
                     </HStack>
                     <HStack gap={2}>
                         <Box minW="110px">
-                            <select
+                            <chakra.select
                                 value={sortDirection}
-                                onChange={(e) => handleSortDirectionChange(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: '6px',
-                                    borderRadius: '4px',
-                                    backgroundColor: 'var(--chakra-colors-bg-surface)',
-                                    borderColor: 'var(--chakra-colors-border-default)',
-                                    borderWidth: '1px',
-                                    fontSize: '0.875rem',
-                                }}
+                                onChange={(e) => handleSortDirectionChange((e.target as HTMLSelectElement).value)}
+                                width="100%"
+                                padding="6px"
+                                borderRadius="4px"
+                                bg="#3c3c3c"
+                                borderColor="#454545"
+                                borderWidth="1px"
+                                fontSize="0.875rem"
+                                color="#d4d4d4"
+                                _hover={{ borderColor: '#007acc' }}
+                                _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
                             >
                                 <option value="asc">Ascending</option>
                                 <option value="desc">Descending</option>
-                            </select>
+                            </chakra.select>
                         </Box>
                     </HStack>
                 </HStack>
@@ -161,7 +163,7 @@ const RecipeList = () => {
                 >
                     <Icon as={FaPlus} /> Add Recipe
                 </Button>
-            </HStack>
+            </HStack >
 
             <VStack align="stretch" gap={6}>
                 <Box w="full">
