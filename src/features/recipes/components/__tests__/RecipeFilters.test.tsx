@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import RecipeFiltersDisplay from '../RecipeFilters';
-import { RecipeFilters } from '../../../../hooks/useRecipes';
+
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

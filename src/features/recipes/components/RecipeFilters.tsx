@@ -3,21 +3,14 @@ import {
     Box,
     VStack,
     Input,
-    NativeSelect,
-    Heading,
     Button,
     HStack,
     Text,
     Icon,
-    Badge,
     Flex,
-    Wrap,
-    WrapItem,
-    Spacer,
-    SimpleGrid,
-    IconButton
+    SimpleGrid
 } from '@chakra-ui/react';
-import { FaFilter, FaTimes, FaSearch, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { RecipeFilters as RecipeFiltersType } from '../../../hooks/useRecipes';
 import { useRecipeMeta } from '../hooks/useRecipeMeta';
 import RecipeMultiSelect from './RecipeMultiSelect';
