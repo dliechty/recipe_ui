@@ -19,7 +19,7 @@ import {
     Link,
     Breadcrumb
 } from '@chakra-ui/react';
-import { FaCheckCircle, FaEdit, FaChevronRight } from 'react-icons/fa';
+import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -118,7 +118,26 @@ const RecipeDetails = () => {
 
 
 
-            <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border">
+            <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border" position="relative">
+                <HStack position="absolute" top={4} right={4} gap={2}>
+                    <Text color="fg.muted" fontSize="xs">
+                        Recipe Id: {recipe.core.id}
+                    </Text>
+                    <Button
+                        size="xs"
+                        variant="ghost"
+                        color="fg.muted"
+                        minW="auto"
+                        px={1}
+                        height="auto"
+                        _hover={{ color: "vscode.accent", bg: "vscode.inputBg" }}
+                        onClick={() => navigator.clipboard.writeText(recipe.core.id)}
+                        aria-label="Copy Recipe ID"
+                        title="Copy Recipe ID"
+                    >
+                        <Icon as={FaRegCopy} boxSize={3} />
+                    </Button>
+                </HStack>
                 <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>
 
                 {userDisplayName && (
@@ -143,7 +162,9 @@ const RecipeDetails = () => {
                             recipe.core.source
                         )}
                     </Text>
+
                 )}
+
 
                 {(recipe.parent_recipe_id && parentRecipe) || (recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0) ? (
                     <Text color="fg.muted" mb={4} fontSize="sm">
@@ -295,7 +316,11 @@ const RecipeDetails = () => {
                 <CommentList recipeId={id || ''} />
             </Box>
 
-        </Container>
+
+
+
+
+        </Container >
     );
 };
 

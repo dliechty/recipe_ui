@@ -525,4 +525,24 @@ describe('RecipeDetails', () => {
         expect(link).toBeInTheDocument();
         expect(link.closest('a')).toHaveAttribute('href', '/recipes?ids=20,21,22');
     });
+
+    it('displays recipe ID', async () => {
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/1']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Chicken Pasta 1')[0]).toBeInTheDocument();
+        });
+
+        // Verify ID is displayed
+        expect(screen.getByText('Recipe Id: 1')).toBeInTheDocument();
+
+        // Verify Copy Button
+        expect(screen.getByRole('button', { name: /copy recipe id/i })).toBeInTheDocument();
+    });
 });
