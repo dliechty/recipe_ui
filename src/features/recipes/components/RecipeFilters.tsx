@@ -14,6 +14,7 @@ import { FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { RecipeFilters as RecipeFiltersType } from '../../../hooks/useRecipes';
 import { useRecipeMeta } from '../hooks/useRecipeMeta';
 import RecipeMultiSelect from './RecipeMultiSelect';
+import DebouncedInput from '../../../components/common/DebouncedInput';
 
 interface RecipeFiltersProps {
     filters: RecipeFiltersType;
@@ -32,16 +33,11 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
     const handleChange = (key: keyof RecipeFiltersType, value: any) => {
         const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);
-        // Debounce actual update to parent could be handled here or in parent
-        // For now, simpler inputs update on Blur or Enter, specific ones immediately
-        if (key !== 'name' && key !== 'calories' && key !== 'total_time') {
-            onFilterChange(newFilters);
-        }
+        // Since inputs are now debounced, we can trigger update immediately
+        onFilterChange(newFilters);
     };
 
-    const handleApply = () => {
-        onFilterChange(localFilters);
-    };
+
 
     const handleReset = () => {
         const empty: RecipeFiltersType = {};
@@ -71,13 +67,11 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                 <Flex gap={4} align="end" wrap="wrap">
                     <Box flex={1} minW="200px">
                         <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Name</Text>
-                        <Input
+                        <DebouncedInput
                             placeholder="Search recipes..."
                             size="sm"
                             value={localFilters.name || ''}
-                            onChange={(e) => setLocalFilters({ ...localFilters, name: e.target.value })}
-                            onBlur={handleApply}
-                            onKeyDown={(e) => e.key === 'Enter' && handleApply()}
+                            onChange={(value) => handleChange('name', value)}
                             {...inputStyles}
                         />
                     </Box>
@@ -164,29 +158,21 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Total Time (min)</Text>
                                 <HStack>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Min"
                                         size="xs"
                                         type="number"
                                         value={localFilters.total_time?.gt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            total_time: { ...localFilters.total_time, gt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('total_time', { ...localFilters.total_time, gt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Max"
                                         size="xs"
                                         type="number"
                                         value={localFilters.total_time?.lt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            total_time: { ...localFilters.total_time, lt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('total_time', { ...localFilters.total_time, lt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
@@ -207,22 +193,17 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             {/* 2.2 Ingredients */}
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Ingredients</Text>
-                                <Input
+                                <DebouncedInput
                                     placeholder="e.g. egg, cheese"
                                     size="sm"
                                     value={localFilters.ingredients?.has_all?.join(', ') || ''}
-                                    onChange={(e) => {
-                                        const val = e.target.value;
-                                        setLocalFilters({
-                                            ...localFilters,
-                                            ingredients: {
-                                                ...localFilters.ingredients,
-                                                has_all: val ? val.split(',').map(s => s.trim()).filter(Boolean) : undefined
-                                            }
+                                    onChange={(val) => {
+                                        const strVal = String(val);
+                                        handleChange('ingredients', {
+                                            ...localFilters.ingredients,
+                                            has_all: strVal ? strVal.split(',').map(s => s.trim()).filter(Boolean) : undefined
                                         });
                                     }}
-                                    onBlur={handleApply}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleApply()}
                                     {...inputStyles}
                                 />
                             </Box>
@@ -231,29 +212,21 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Prep Time (min)</Text>
                                 <HStack>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Min"
                                         size="xs"
                                         type="number"
                                         value={localFilters.prep_time?.gt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            prep_time: { ...localFilters.prep_time, gt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('prep_time', { ...localFilters.prep_time, gt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Max"
                                         size="xs"
                                         type="number"
                                         value={localFilters.prep_time?.lt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            prep_time: { ...localFilters.prep_time, lt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('prep_time', { ...localFilters.prep_time, lt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
@@ -275,29 +248,21 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Yield (Typically Servings)</Text>
                                 <HStack>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Min"
                                         size="xs"
                                         type="number"
                                         value={localFilters.yield?.gt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            yield: { ...localFilters.yield, gt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('yield', { ...localFilters.yield, gt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Max"
                                         size="xs"
                                         type="number"
                                         value={localFilters.yield?.lt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            yield: { ...localFilters.yield, lt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('yield', { ...localFilters.yield, lt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
@@ -307,29 +272,21 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Cook Time (min)</Text>
                                 <HStack>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Min"
                                         size="xs"
                                         type="number"
                                         value={localFilters.cook_time?.gt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            cook_time: { ...localFilters.cook_time, gt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('cook_time', { ...localFilters.cook_time, gt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Max"
                                         size="xs"
                                         type="number"
                                         value={localFilters.cook_time?.lt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            cook_time: { ...localFilters.cook_time, lt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('cook_time', { ...localFilters.cook_time, lt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
@@ -351,29 +308,21 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Calories</Text>
                                 <HStack>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Min"
                                         size="xs"
                                         type="number"
                                         value={localFilters.calories?.gt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            calories: { ...localFilters.calories, gt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('calories', { ...localFilters.calories, gt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Max"
                                         size="xs"
                                         type="number"
                                         value={localFilters.calories?.lt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            calories: { ...localFilters.calories, lt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('calories', { ...localFilters.calories, lt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
@@ -383,46 +332,28 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <Box>
                                 <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Active Time (min)</Text>
                                 <HStack>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Min"
                                         size="xs"
                                         type="number"
                                         value={localFilters.active_time?.gt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            active_time: { ...localFilters.active_time, gt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('active_time', { ...localFilters.active_time, gt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
-                                    <Input
+                                    <DebouncedInput
                                         placeholder="Max"
                                         size="xs"
                                         type="number"
                                         value={localFilters.active_time?.lt || ''}
-                                        onChange={(e) => setLocalFilters({
-                                            ...localFilters,
-                                            active_time: { ...localFilters.active_time, lt: e.target.value ? Number(e.target.value) : undefined }
-                                        })}
-                                        onBlur={handleApply}
+                                        onChange={(val) => handleChange('active_time', { ...localFilters.active_time, lt: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
                             </Box>
                         </SimpleGrid>
 
-                        <Button
-                            size="sm"
-                            bg="vscode.button"
-                            color="white"
-                            _hover={{ bg: "vscode.buttonHover" }}
-                            onClick={handleApply}
-                            mt={4}
-                            width={{ base: 'full', md: 'auto' }}
-                        >
-                            Apply Filters
-                        </Button>
+
                     </Box>
                 )}
             </VStack>

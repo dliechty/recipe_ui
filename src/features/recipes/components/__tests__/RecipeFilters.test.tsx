@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import RecipeFiltersDisplay from '../RecipeFilters';
 
@@ -45,15 +45,24 @@ describe('RecipeFiltersDisplay', () => {
         expect(screen.getByText('Yield (Typically Servings)')).toBeInTheDocument();
     });
 
-    it('text input calls onFilterChange on blur', () => {
+    it('text input calls onFilterChange after debounce', async () => {
+        vi.useFakeTimers();
         const onFilterChange = vi.fn();
         renderWithProviders(<RecipeFiltersDisplay filters={{}} onFilterChange={onFilterChange} />);
 
         const input = screen.getByPlaceholderText('Search recipes...');
         fireEvent.change(input, { target: { value: 'Test' } });
-        fireEvent.blur(input);
+
+        // Should not be called immediately
+        expect(onFilterChange).not.toHaveBeenCalled();
+
+        // Advance time
+        await act(async () => {
+            vi.advanceTimersByTime(350);
+        });
 
         expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({ name: 'Test' }));
+        vi.useRealTimers();
     });
 
     it('select input calls onFilterChange immediately', () => {
