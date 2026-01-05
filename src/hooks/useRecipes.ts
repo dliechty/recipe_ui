@@ -40,38 +40,40 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
 
-            if (filters.name) params.append('name', filters.name);
-            filters.category?.forEach(c => params.append('category', c));
-            filters.cuisine?.forEach(c => params.append('cuisine', c));
-            filters.difficulty?.forEach(d => params.append('difficulty', d));
-            filters.owner?.forEach(o => params.append('owner', o));
+            if (filters.name) params.append('name[like]', filters.name);
+
+            if (filters.category?.length) params.append('category[in]', filters.category.join(','));
+            if (filters.cuisine?.length) params.append('cuisine[in]', filters.cuisine.join(','));
+            if (filters.difficulty?.length) params.append('difficulty[in]', filters.difficulty.join(','));
+            if (filters.owner?.length) params.append('owner[in]', filters.owner.join(','));
 
             if (filters.calories?.gt) params.append('calories[gt]', filters.calories.gt.toString());
             if (filters.calories?.lt) params.append('calories[lt]', filters.calories.lt.toString());
 
-            if (filters.total_time?.gt) params.append('total_time[gt]', filters.total_time.gt.toString());
-            if (filters.total_time?.lt) params.append('total_time[lt]', filters.total_time.lt.toString());
+            if (filters.total_time?.gt) params.append('total_time_minutes[gt]', filters.total_time.gt.toString());
+            if (filters.total_time?.lt) params.append('total_time_minutes[lt]', filters.total_time.lt.toString());
 
-            if (filters.prep_time?.gt) params.append('prep_time[gt]', filters.prep_time.gt.toString());
-            if (filters.prep_time?.lt) params.append('prep_time[lt]', filters.prep_time.lt.toString());
+            if (filters.prep_time?.gt) params.append('prep_time_minutes[gt]', filters.prep_time.gt.toString());
+            if (filters.prep_time?.lt) params.append('prep_time_minutes[lt]', filters.prep_time.lt.toString());
 
-            if (filters.active_time?.gt) params.append('active_time[gt]', filters.active_time.gt.toString());
-            if (filters.active_time?.lt) params.append('active_time[lt]', filters.active_time.lt.toString());
+            if (filters.active_time?.gt) params.append('active_time_minutes[gt]', filters.active_time.gt.toString());
+            if (filters.active_time?.lt) params.append('active_time_minutes[lt]', filters.active_time.lt.toString());
 
-            if (filters.cook_time?.gt) params.append('cook_time[gt]', filters.cook_time.gt.toString());
-            if (filters.cook_time?.lt) params.append('cook_time[lt]', filters.cook_time.lt.toString());
+            if (filters.cook_time?.gt) params.append('cook_time_minutes[gt]', filters.cook_time.gt.toString());
+            if (filters.cook_time?.lt) params.append('cook_time_minutes[lt]', filters.cook_time.lt.toString());
 
-            filters.ingredients?.has_all?.forEach(i => params.append('ingredients[has_all]', i));
-            filters.ingredients?.has_any?.forEach(i => params.append('ingredients[has_any]', i));
-            filters.ingredients?.has_any?.forEach(i => params.append('ingredients[has_any]', i));
-            filters.ingredients?.exclude?.forEach(i => params.append('ingredients[exclude]', i));
+            if (filters.ingredients?.has_all?.length) {
+                params.append('ingredients[all]', filters.ingredients.has_all.join(','));
+            }
+            // Temporarily ignore has_any/exclude as they are not standard LHS for now or specified as such
+            // Or handle exclude if needed later.
 
-            filters.protein?.forEach(p => params.append('protein', p));
+            if (filters.protein?.length) params.append('protein[in]', filters.protein.join(','));
 
-            if (filters.yield?.gt) params.append('yield[gt]', filters.yield.gt.toString());
-            if (filters.yield?.lt) params.append('yield[lt]', filters.yield.lt.toString());
+            if (filters.yield?.gt) params.append('yield_amount[gt]', filters.yield.gt.toString());
+            if (filters.yield?.lt) params.append('yield_amount[lt]', filters.yield.lt.toString());
 
-            filters.suitable_for_diet?.forEach(d => params.append('suitable_for_diet', d));
+            if (filters.suitable_for_diet?.length) params.append('suitable_for_diet[in]', filters.suitable_for_diet.join(','));
 
             if (filters.sort) params.append('sort', filters.sort);
 

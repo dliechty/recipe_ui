@@ -6,7 +6,7 @@ describe('Recipe Filtering Integration', () => {
     const baseURL = OpenAPI.BASE;
 
     it('should filter recipes by name (LIKE)', async () => {
-        const response = await axios.get(`${baseURL}/recipes/?name=Chicken`);
+        const response = await axios.get(`${baseURL}/recipes/?name[like]=Chicken`);
         expect(response.status).toBe(200);
         expect(response.data.length).toBeGreaterThan(0);
         response.data.forEach((r: any) => {
@@ -15,7 +15,7 @@ describe('Recipe Filtering Integration', () => {
     });
 
     it('should filter recipes by category (Exact)', async () => {
-        const response = await axios.get(`${baseURL}/recipes/?category=Dinner`);
+        const response = await axios.get(`${baseURL}/recipes/?category[in]=Dinner`);
         expect(response.status).toBe(200);
         response.data.forEach((r: any) => {
             expect(r.core.category).toBe('Dinner');
@@ -32,7 +32,7 @@ describe('Recipe Filtering Integration', () => {
 
     it('should filter recipes by ingredients (Has All)', async () => {
         // Find a recipe with specific ingredients first, or assume mock data has something common like "Salt"
-        const response = await axios.get(`${baseURL}/recipes/?ingredients[has_all]=Salt&ingredients[has_all]=Pepper`);
+        const response = await axios.get(`${baseURL}/recipes/?ingredients[all]=Salt,Pepper`);
         expect(response.status).toBe(200);
         response.data.forEach((r: any) => {
             const ingredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));

@@ -31,41 +31,41 @@ export const handlers = [
         const sort = url.searchParams.get('sort');
 
         // Extract filters
-        const name = url.searchParams.get('name');
-        const categories = url.searchParams.getAll('category');
-        const cuisines = url.searchParams.getAll('cuisine');
-        const difficulties = url.searchParams.getAll('difficulty');
-        const owners = url.searchParams.getAll('owner');
-        const proteins = url.searchParams.getAll('protein');
+        // Extract filters (LHS Syntax)
+        const nameLike = url.searchParams.get('name[like]');
 
-        const yieldGt = url.searchParams.get('yield[gt]');
-        const yieldLt = url.searchParams.get('yield[lt]');
+        const categories = url.searchParams.get('category[in]')?.split(',').filter(Boolean) || [];
+        const cuisines = url.searchParams.get('cuisine[in]')?.split(',').filter(Boolean) || [];
+        const difficulties = url.searchParams.get('difficulty[in]')?.split(',').filter(Boolean) || [];
+        const owners = url.searchParams.get('owner[in]')?.split(',').filter(Boolean) || [];
+        const proteins = url.searchParams.get('protein[in]')?.split(',').filter(Boolean) || [];
+        const diets = url.searchParams.get('suitable_for_diet[in]')?.split(',').filter(Boolean) || [];
+
+        const yieldGt = url.searchParams.get('yield_amount[gt]');
+        const yieldLt = url.searchParams.get('yield_amount[lt]');
 
         const caloriesGt = url.searchParams.get('calories[gt]');
         const caloriesLt = url.searchParams.get('calories[lt]');
 
-        const totalTimeGt = url.searchParams.get('total_time[gt]');
-        const totalTimeLt = url.searchParams.get('total_time[lt]');
-        const prepTimeGt = url.searchParams.get('prep_time[gt]');
-        const prepTimeLt = url.searchParams.get('prep_time[lt]');
-        const cookTimeGt = url.searchParams.get('cook_time[gt]');
-        const cookTimeLt = url.searchParams.get('cook_time[lt]');
-        // Active time might not be in the DB directly, but let's support it if we can compute it or if it becomes available.
-        // For now, if active_time is requested, we can try to filter by (prep + cook)
-        const activeTimeGt = url.searchParams.get('active_time[gt]');
-        const activeTimeLt = url.searchParams.get('active_time[lt]');
+        const totalTimeGt = url.searchParams.get('total_time_minutes[gt]');
+        const totalTimeLt = url.searchParams.get('total_time_minutes[lt]');
 
-        const hasAllIngredients = url.searchParams.getAll('ingredients[has_all]');
-        const hasAnyIngredients = url.searchParams.getAll('ingredients[has_any]');
-        const excludeIngredients = url.searchParams.getAll('ingredients[exclude]');
+        const prepTimeGt = url.searchParams.get('prep_time_minutes[gt]');
+        const prepTimeLt = url.searchParams.get('prep_time_minutes[lt]');
 
-        const diets = url.searchParams.getAll('suitable_for_diet');
+        const cookTimeGt = url.searchParams.get('cook_time_minutes[gt]');
+        const cookTimeLt = url.searchParams.get('cook_time_minutes[lt]');
+
+        const activeTimeGt = url.searchParams.get('active_time_minutes[gt]');
+        const activeTimeLt = url.searchParams.get('active_time_minutes[lt]');
+
+        const ingredientsAll = url.searchParams.get('ingredients[all]')?.split(',').filter(Boolean) || [];
 
         let filteredRecipes = [...recipes];
 
         // Apply filters
-        if (name) {
-            const lowerName = name.toLowerCase();
+        if (nameLike) {
+            const lowerName = nameLike.toLowerCase();
             filteredRecipes = filteredRecipes.filter(r => r.core.name.toLowerCase().includes(lowerName));
         }
         if (categories.length > 0) {
@@ -123,23 +123,10 @@ export const handlers = [
             filteredRecipes = filteredRecipes.filter(r => ((r.times?.prep_time_minutes || 0) + (r.times?.cook_time_minutes || 0)) < Number(activeTimeLt));
         }
 
-        if (hasAllIngredients.length > 0) {
+        if (ingredientsAll.length > 0) {
             filteredRecipes = filteredRecipes.filter(r => {
                 const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
-                return hasAllIngredients.every(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
-            });
-        }
-        if (hasAnyIngredients.length > 0) {
-            filteredRecipes = filteredRecipes.filter(r => {
-                const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
-                return hasAnyIngredients.some(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
-            });
-        }
-        if (excludeIngredients.length > 0) {
-            filteredRecipes = filteredRecipes.filter(r => {
-                const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
-                // If ANY excluded ingredient is present, remove recipe
-                return !excludeIngredients.some(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
+                return ingredientsAll.every(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
             });
         }
 
