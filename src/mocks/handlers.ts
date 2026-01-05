@@ -59,7 +59,7 @@ export const handlers = [
         const activeTimeGt = url.searchParams.get('active_time_minutes[gt]');
         const activeTimeLt = url.searchParams.get('active_time_minutes[lt]');
 
-        const ingredientsAll = url.searchParams.get('ingredients[all]')?.split(',').filter(Boolean) || [];
+        const ingredientsLike = url.searchParams.get('ingredients[like]');
 
         let filteredRecipes = [...recipes];
 
@@ -123,10 +123,11 @@ export const handlers = [
             filteredRecipes = filteredRecipes.filter(r => ((r.times?.prep_time_minutes || 0) + (r.times?.cook_time_minutes || 0)) < Number(activeTimeLt));
         }
 
-        if (ingredientsAll.length > 0) {
+        if (ingredientsLike) {
+            const query = ingredientsLike.toLowerCase();
             filteredRecipes = filteredRecipes.filter(r => {
                 const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
-                return ingredientsAll.every(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
+                return recipeIngredients.some(ri => ri.includes(query));
             });
         }
 

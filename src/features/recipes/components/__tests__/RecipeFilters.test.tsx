@@ -65,6 +65,28 @@ describe('RecipeFiltersDisplay', () => {
         vi.useRealTimers();
     });
 
+    it('ingredients input calls onFilterChange with like property after debounce', async () => {
+        vi.useFakeTimers();
+        const onFilterChange = vi.fn();
+        renderWithProviders(<RecipeFiltersDisplay filters={{}} onFilterChange={onFilterChange} />);
+
+        // Expand filters
+        fireEvent.click(screen.getByText('More Filters'));
+
+        const input = screen.getByPlaceholderText('e.g. egg');
+        fireEvent.change(input, { target: { value: 'Cheese' } });
+
+        // Advance time
+        await act(async () => {
+            vi.advanceTimersByTime(350);
+        });
+
+        expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({
+            ingredients: { like: 'Cheese' }
+        }));
+        vi.useRealTimers();
+    });
+
     it('select input calls onFilterChange immediately', () => {
         const onFilterChange = vi.fn();
         renderWithProviders(<RecipeFiltersDisplay filters={{}} onFilterChange={onFilterChange} />);

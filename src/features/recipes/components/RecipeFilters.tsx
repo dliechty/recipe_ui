@@ -192,16 +192,14 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
 
                             {/* 2.2 Ingredients */}
                             <Box>
-                                <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Ingredients</Text>
+                                <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Ingredient</Text>
                                 <DebouncedInput
-                                    placeholder="e.g. egg, cheese"
+                                    placeholder="e.g. egg"
                                     size="sm"
-                                    value={localFilters.ingredients?.has_all?.join(', ') || ''}
+                                    value={localFilters.ingredients?.like || ''}
                                     onChange={(val) => {
-                                        const strVal = String(val);
                                         handleChange('ingredients', {
-                                            ...localFilters.ingredients,
-                                            has_all: strVal ? strVal.split(',').map(s => s.trim()).filter(Boolean) : undefined
+                                            like: String(val) || undefined
                                         });
                                     }}
                                     {...inputStyles}

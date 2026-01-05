@@ -30,14 +30,12 @@ describe('Recipe Filtering Integration', () => {
         });
     });
 
-    it('should filter recipes by ingredients (Has All)', async () => {
-        // Find a recipe with specific ingredients first, or assume mock data has something common like "Salt"
-        const response = await axios.get(`${baseURL}/recipes/?ingredients[all]=Salt,Pepper`);
+    it('should filter recipes by ingredients (LIKE)', async () => {
+        const response = await axios.get(`${baseURL}/recipes/?ingredients[like]=Salt`);
         expect(response.status).toBe(200);
         response.data.forEach((r: any) => {
             const ingredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
             expect(ingredients.some((i: string) => i.includes('salt'))).toBe(true);
-            expect(ingredients.some((i: string) => i.includes('pepper'))).toBe(true);
         });
     });
 

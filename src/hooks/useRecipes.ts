@@ -19,7 +19,7 @@ export interface RecipeFilters {
     prep_time?: { gt?: number; lt?: number };
     active_time?: { gt?: number; lt?: number };
     cook_time?: { gt?: number; lt?: number };
-    ingredients?: { has_all?: string[]; has_any?: string[]; exclude?: string[] };
+    ingredients?: { like?: string };
     protein?: string[];
     yield?: { gt?: number; lt?: number };
     suitable_for_diet?: string[];
@@ -62,11 +62,9 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
             if (filters.cook_time?.gt) params.append('cook_time_minutes[gt]', filters.cook_time.gt.toString());
             if (filters.cook_time?.lt) params.append('cook_time_minutes[lt]', filters.cook_time.lt.toString());
 
-            if (filters.ingredients?.has_all?.length) {
-                params.append('ingredients[all]', filters.ingredients.has_all.join(','));
+            if (filters.ingredients?.like) {
+                params.append('ingredients[like]', filters.ingredients.like);
             }
-            // Temporarily ignore has_any/exclude as they are not standard LHS for now or specified as such
-            // Or handle exclude if needed later.
 
             if (filters.protein?.length) params.append('protein[in]', filters.protein.join(','));
 
