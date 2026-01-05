@@ -10,7 +10,14 @@ import RecipeFiltersDisplay from './RecipeFilters';
 const RecipeList = () => {
     const navigate = useNavigate();
 
-    const [filters, setFilters] = useState<RecipeFilters>({});
+    const [filters, setFilters] = useState<RecipeFilters>(() => {
+        const params = new URLSearchParams(window.location.search);
+        const ids = params.get('ids');
+        if (ids) {
+            return { ids: ids.split(',') };
+        }
+        return {};
+    });
 
     const {
         data,

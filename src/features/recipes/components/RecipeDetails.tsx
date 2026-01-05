@@ -145,11 +145,23 @@ const RecipeDetails = () => {
                     </Text>
                 )}
 
-                {recipe.parent_recipe_id && parentRecipe && (
+                {(recipe.parent_recipe_id && parentRecipe) || (recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0) ? (
                     <Text color="fg.muted" mb={4} fontSize="sm">
-                        Parent Recipe: <RouterLink to={`/recipes/${recipe.parent_recipe_id}`}><Link as="span" color="vscode.accent" textDecoration="underline">{parentRecipe.core.name}</Link></RouterLink>
+                        {recipe.parent_recipe_id && parentRecipe && (
+                            <>
+                                Parent: <RouterLink to={`/recipes/${recipe.parent_recipe_id}`}><Link as="span" color="vscode.accent" textDecoration="underline">{parentRecipe.core.name}</Link></RouterLink>
+                            </>
+                        )}
+                        {recipe.parent_recipe_id && parentRecipe && recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
+                            <Text as="span" mx={2}>|</Text>
+                        )}
+                        {recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
+                            <>
+                                Variants: <RouterLink to={`/recipes?ids=${[recipe.core.id, ...recipe.variant_recipe_ids].join(',')}`}><Link as="span" color="vscode.accent" textDecoration="underline">({recipe.variant_recipe_ids.length})</Link></RouterLink>
+                            </>
+                        )}
                     </Text>
-                )}
+                ) : null}
 
                 <HStack gap={2} mb={6}>
                     {recipe.core.difficulty && (

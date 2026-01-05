@@ -40,6 +40,7 @@ export const handlers = [
         const owners = url.searchParams.get('owner[in]')?.split(',').filter(Boolean) || [];
         const proteins = url.searchParams.get('protein[in]')?.split(',').filter(Boolean) || [];
         const diets = url.searchParams.get('suitable_for_diet[in]')?.split(',').filter(Boolean) || [];
+        const ids = url.searchParams.get('id[in]')?.split(',').filter(Boolean) || [];
 
         const yieldGt = url.searchParams.get('yield_amount[gt]');
         const yieldLt = url.searchParams.get('yield_amount[lt]');
@@ -82,6 +83,9 @@ export const handlers = [
         }
         if (proteins.length > 0) {
             filteredRecipes = filteredRecipes.filter(r => r.core.protein && proteins.includes(r.core.protein));
+        }
+        if (ids.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => ids.includes(r.core.id));
         }
 
         if (yieldGt) {
@@ -245,9 +249,10 @@ export const handlers = [
             audit: {
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-                version: 1,
-                parent_recipe_id: null
-            }
+                version: 1
+            },
+            parent_recipe_id: null,
+            variant_recipe_ids: []
         };
 
         recipes.push(createdRecipe);

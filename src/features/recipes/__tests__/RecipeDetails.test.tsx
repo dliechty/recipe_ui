@@ -480,10 +480,49 @@ describe('RecipeDetails', () => {
 
         // Check for Parent Recipe Link
         await waitFor(() => {
-            expect(screen.getByText('Parent Recipe:')).toBeInTheDocument();
+            expect(screen.getByText('Parent:')).toBeInTheDocument();
         });
         const link = screen.getByText('Parent Recipe Name');
         expect(link).toBeInTheDocument();
         expect(link.closest('a')).toHaveAttribute('href', '/recipes/11');
+    });
+
+    it('renders variants link when present', async () => {
+        server.use(
+            http.get('*/recipes/20', () => {
+                return HttpResponse.json({
+                    id: 20,
+                    core: {
+                        id: '20',
+                        name: 'Main Recipe',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: [],
+                    variant_recipe_ids: ['21', '22']
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/20']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Main Recipe')[0]).toBeInTheDocument();
+        });
+
+        // Check for Variants Link
+        expect(screen.getByText('Variants:')).toBeInTheDocument();
+        const link = screen.getByText('(2)');
+        expect(link).toBeInTheDocument();
+        expect(link.closest('a')).toHaveAttribute('href', '/recipes?ids=20,21,22');
     });
 });

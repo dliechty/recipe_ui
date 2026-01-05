@@ -23,6 +23,7 @@ export interface RecipeFilters {
     protein?: string[];
     yield?: { gt?: number; lt?: number };
     suitable_for_diet?: string[];
+    ids?: string[];
     sort?: string;
 }
 
@@ -72,6 +73,8 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
             if (filters.yield?.lt) params.append('yield_amount[lt]', filters.yield.lt.toString());
 
             if (filters.suitable_for_diet?.length) params.append('suitable_for_diet[in]', filters.suitable_for_diet.join(','));
+
+            if (filters.ids?.length) params.append('id[in]', filters.ids.join(','));
 
             if (filters.sort) params.append('sort', filters.sort);
 
