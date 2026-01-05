@@ -76,7 +76,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                         />
                     </Box>
 
-                    <Box w={{ base: "100%", md: "200px" }}>
+                    <Box w={{ base: "100%", md: "350px" }}>
                         <RecipeMultiSelect
                             label="Category"
                             placeholder="All Categories"
