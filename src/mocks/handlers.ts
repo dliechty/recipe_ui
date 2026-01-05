@@ -59,7 +59,7 @@ export const handlers = [
         const hasAnyIngredients = url.searchParams.getAll('ingredients[has_any]');
         const excludeIngredients = url.searchParams.getAll('ingredients[exclude]');
 
-        const hasAllDiets = url.searchParams.getAll('suitable_for_diet[has_all]');
+        const diets = url.searchParams.getAll('suitable_for_diet');
 
         let filteredRecipes = [...recipes];
 
@@ -143,9 +143,10 @@ export const handlers = [
             });
         }
 
-        if (hasAllDiets.length > 0) {
+        if (diets.length > 0) {
             filteredRecipes = filteredRecipes.filter(r => {
-                return hasAllDiets.every(d => r.suitable_for_diet?.includes(d));
+                // OR Logic: Recipe must contain AT LEAST ONE of the selected diets
+                return r.suitable_for_diet?.some(d => diets.includes(d));
             });
         }
 

@@ -343,13 +343,8 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                 label="Dietary Suitability"
                                 placeholder="Any Diet"
                                 options={(diets || []).map(d => ({ label: d, value: d }))}
-                                value={localFilters.suitable_for_diet?.has_all || []}
-                                onChange={(val) => {
-                                    setLocalFilters({
-                                        ...localFilters,
-                                        suitable_for_diet: val.length ? { has_all: val } : undefined
-                                    });
-                                }}
+                                value={localFilters.suitable_for_diet || []}
+                                onChange={(val) => handleChange('suitable_for_diet', val.length ? val : undefined)}
                             />
 
                             {/* 4.2 Calories */}

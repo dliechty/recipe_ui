@@ -12,6 +12,7 @@ vi.mock('../../hooks/useRecipeMeta', () => ({
         if (field === 'category') return { data: ['Breakfast', 'Dinner'] };
         if (field === 'cuisine') return { data: ['Italian', 'Mexican'] };
         if (field === 'protein') return { data: ['Chicken', 'Beef'] };
+        if (field === 'suitable_for_diet') return { data: ['Vegan', 'Gluten-Free'] };
         return { data: [] };
     }
 }));
@@ -93,5 +94,21 @@ describe('RecipeFiltersDisplay', () => {
         // Check disabled via attribute or style if custom
         // Since we passed `disabled={true}`, standard matcher should work
         expect(resetButton).toBeDisabled();
+    });
+
+    it('dietary suitability filter updates as string array', () => { // Verify OR logic structure
+        const onFilterChange = vi.fn();
+        renderWithProviders(<RecipeFiltersDisplay filters={{}} onFilterChange={onFilterChange} />);
+
+        // Expand filters
+        fireEvent.click(screen.getByText('More Filters'));
+
+        const control = screen.getByText('Any Diet');
+        fireEvent.mouseDown(control);
+
+        const option = screen.getByText('Vegan');
+        fireEvent.click(option);
+
+        expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({ suitable_for_diet: ['Vegan'] }));
     });
 });
