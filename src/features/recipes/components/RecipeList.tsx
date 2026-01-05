@@ -185,6 +185,8 @@ const RecipeList = () => {
                                                         <Icon as={isExpanded ? FaChevronDown : FaChevronRight} boxSize={3} />
                                                     </Box>
                                                 )}
+                                                {/* Align text for root recipes without variants to match those with the chevron */}
+                                                {!hasVariants && !isVariant && <Box w="20px" />}
                                                 {!hasVariants && isVariant && <Box w="5px" />} {/* Spacer for alignment */}
                                                 <Text>{recipe.core.name}</Text>
                                             </HStack>
