@@ -431,4 +431,59 @@ describe('RecipeDetails', () => {
 
         expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
     });
+
+    it('renders parent recipe link when present', async () => {
+        server.use(
+            http.get('*/recipes/10', () => {
+                return HttpResponse.json({
+                    id: 10,
+                    core: {
+                        name: 'Child Recipe',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                        source: 'Family Cookbook'
+                    },
+                    times: {},
+                    instructions: [],
+                    components: [],
+                    parent_recipe_id: '11'
+                });
+            }),
+            http.get('*/recipes/11', () => {
+                return HttpResponse.json({
+                    id: 11,
+                    core: {
+                        name: 'Parent Recipe Name',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/10']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Child Recipe')[0]).toBeInTheDocument();
+        });
+
+        // Check for Parent Recipe Link
+        await waitFor(() => {
+            expect(screen.getByText('Parent Recipe:')).toBeInTheDocument();
+        });
+        const link = screen.getByText('Parent Recipe Name');
+        expect(link).toBeInTheDocument();
+        expect(link.closest('a')).toHaveAttribute('href', '/recipes/11');
+    });
 });

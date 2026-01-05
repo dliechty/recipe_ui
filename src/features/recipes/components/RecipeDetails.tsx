@@ -32,6 +32,7 @@ const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
+    const { data: parentRecipe } = useRecipe(recipe?.parent_recipe_id || '');
     const { data: user } = useUser(recipe?.core.owner_id);
     const { user: currentUser } = useAuth();
 
@@ -141,6 +142,12 @@ const RecipeDetails = () => {
                         ) : (
                             recipe.core.source
                         )}
+                    </Text>
+                )}
+
+                {recipe.parent_recipe_id && parentRecipe && (
+                    <Text color="fg.muted" mb={4} fontSize="sm">
+                        Parent Recipe: <RouterLink to={`/recipes/${recipe.parent_recipe_id}`}><Link as="span" color="vscode.accent" textDecoration="underline">{parentRecipe.core.name}</Link></RouterLink>
                     </Text>
                 )}
 

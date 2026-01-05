@@ -20,9 +20,13 @@ export function generateMockRecipes(count: number) {
         const category = categories[idx % categories.length];
         const difficulty = difficulties[idx % difficulties.length];
 
-        recipes.push({
+        // Main Recipe
+        const mainRecipeId = `${i}`;
+        const variantRecipeId = `${i}-v`;
+
+        const mainRecipe = {
             core: {
-                id: `${i}`,
+                id: mainRecipeId,
                 name: `${protein} ${recipeName} ${i}`,
                 description: `Delicious ${protein.toLowerCase()} ${recipeName.toLowerCase()} recipe number ${i}.`,
                 yield_amount: (i % 6) + 1,
@@ -66,8 +70,34 @@ export function generateMockRecipes(count: number) {
                 created_at: new Date(Date.now() - (i * 86400000)).toISOString(),
                 updated_at: new Date(Date.now() - (i * 86400000)).toISOString(),
                 version: 1,
-                parent_recipe_id: null
-            }
+            },
+            parent_recipe_id: null,
+            variant_recipe_ids: [variantRecipeId]
+        };
+
+        recipes.push(mainRecipe);
+
+        // Variant Recipe
+        recipes.push({
+            ...mainRecipe, // Copy main fields
+            core: {
+                ...mainRecipe.core,
+                id: variantRecipeId,
+                name: `${protein} ${recipeName} ${i} (Spicy Variant)`,
+                description: `A spicy variation of the ${protein.toLowerCase()} ${recipeName.toLowerCase()}.`,
+                slug: `${protein.toLowerCase()}-${recipeName.toLowerCase()}-${i}-variant`
+            },
+            parent_recipe_id: mainRecipeId,
+            variant_recipe_ids: [],
+            components: [
+                {
+                    name: 'Main',
+                    ingredients: [
+                        ...mainRecipe.components[0].ingredients,
+                        { quantity: 1, unit: 'pinch', item: 'Chili Flakes', notes: 'For extra heat' }
+                    ]
+                }
+            ]
         });
     }
 
