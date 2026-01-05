@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text, VStack } from '@chakra-ui/react';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatDuration } from '../../../utils/formatters';
@@ -18,6 +18,21 @@ const RecipeList = () => {
         }
         return {};
     });
+
+    const [collapsedParents, setCollapsedParents] = useState<Set<string>>(new Set());
+
+    const toggleParent = (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setCollapsedParents(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
+    };
 
     const {
         data,
@@ -103,9 +118,47 @@ const RecipeList = () => {
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
-                            {recipes.map((recipe) => {
+                            {(() => {
+                                // Group recipes logic
+                                const recipesMap = new Map(recipes.map(r => [r.core.id, r]));
+                                const visited = new Set<string>();
+                                const grouped: Array<{ recipe: typeof recipes[0], isVariant: boolean, hasVariants: boolean, isExpanded: boolean }> = [];
 
-                                return (
+                                // Roots are recipes that either have no parent OR their parent is not in the current list
+                                const roots = recipes.filter(r => !r.parent_recipe_id || !recipesMap.has(r.parent_recipe_id));
+
+                                roots.forEach(root => {
+                                    if (visited.has(root.core.id)) return;
+                                    visited.add(root.core.id);
+
+                                    // Find variants for this root that are in the current list
+                                    const variants = recipes.filter(r => r.parent_recipe_id === root.core.id);
+
+                                    // Mark variants as visited so we don't process them again if logic fails
+                                    variants.forEach(v => visited.add(v.core.id));
+
+                                    const isExpanded = !collapsedParents.has(root.core.id);
+
+                                    grouped.push({
+                                        recipe: root,
+                                        isVariant: false,
+                                        hasVariants: variants.length > 0,
+                                        isExpanded
+                                    });
+
+                                    if (isExpanded) {
+                                        variants.forEach(variant => {
+                                            grouped.push({
+                                                recipe: variant,
+                                                isVariant: true,
+                                                hasVariants: false, // Variants shouldn't have variants displayed in this flat model usually, or simplified for now
+                                                isExpanded: true
+                                            });
+                                        });
+                                    }
+                                });
+
+                                return grouped.map(({ recipe, isVariant, hasVariants, isExpanded }) => (
                                     <Table.Row
                                         key={recipe.core.id}
                                         onClick={() => handleRecipeClick(recipe.core.id)}
@@ -114,7 +167,28 @@ const RecipeList = () => {
                                         color="fg.default"
                                         _hover={{ bg: "bg.muted" }}
                                     >
-                                        <Table.Cell borderColor="border.default" fontWeight="medium">{recipe.core.name}</Table.Cell>
+                                        <Table.Cell borderColor="border.default" fontWeight="medium" style={{ paddingLeft: isVariant ? '2rem' : 0 }}>
+                                            <HStack gap={2}>
+                                                {hasVariants && (
+                                                    <Box
+                                                        as="span"
+                                                        onClick={(e) => toggleParent(recipe.core.id, e)}
+                                                        cursor="pointer"
+                                                        display="inline-flex"
+                                                        alignItems="center"
+                                                        justifyContent="center"
+                                                        w="20px"
+                                                        h="20px"
+                                                        aria-label={isExpanded ? "Collapse" : "Expand"}
+                                                        role="button"
+                                                    >
+                                                        <Icon as={isExpanded ? FaChevronDown : FaChevronRight} boxSize={3} />
+                                                    </Box>
+                                                )}
+                                                {!hasVariants && isVariant && <Box w="5px" />} {/* Spacer for alignment */}
+                                                <Text>{recipe.core.name}</Text>
+                                            </HStack>
+                                        </Table.Cell>
                                         <Table.Cell borderColor="border.default">{recipe.core.category || '-'}</Table.Cell>
                                         <Table.Cell borderColor="border.default">{recipe.core.cuisine || '-'}</Table.Cell>
                                         <Table.Cell borderColor="border.default">
@@ -129,8 +203,8 @@ const RecipeList = () => {
                                         </Table.Cell>
                                         <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
                                     </Table.Row>
-                                );
-                            })}
+                                ));
+                            })()}
                         </Table.Body>
                     </Table.Root>
                 </Box>
