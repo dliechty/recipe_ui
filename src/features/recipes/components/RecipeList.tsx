@@ -1,13 +1,16 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text } from '@chakra-ui/react';
+import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Spacer, Icon, Table, Text, VStack } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
-import { useInfiniteRecipes } from '../../../hooks/useRecipes';
+import { useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatDuration } from '../../../utils/formatters';
+import RecipeFiltersDisplay from './RecipeFilters';
 
 const RecipeList = () => {
     const navigate = useNavigate();
+
+    const [filters, setFilters] = useState<RecipeFilters>({});
 
     const {
         data,
@@ -16,7 +19,7 @@ const RecipeList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteRecipes(20); // Load 20 recipes per page
+    } = useInfiniteRecipes(20, filters); // Load 20 recipes per page
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -75,65 +78,71 @@ const RecipeList = () => {
                 </Button>
             </HStack>
 
-            <Box overflowX="auto" borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" mb={4}>
-                <Table.Root interactive minW="800px">
-                    <Table.Header>
-                        <Table.Row bg="bg.surface">
-                            <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Category</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Cuisine</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Difficulty</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Total Time</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Yield</Table.ColumnHeader>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {recipes.map((recipe) => {
+            <VStack align="stretch" gap={6}>
+                <Box w="full">
+                    <RecipeFiltersDisplay filters={filters} onFilterChange={setFilters} />
+                </Box>
 
-                            return (
-                                <Table.Row
-                                    key={recipe.core.id}
-                                    onClick={() => handleRecipeClick(recipe.core.id)}
-                                    cursor="pointer"
-                                    bg="bg.surface"
-                                    color="fg.default"
-                                    _hover={{ bg: "bg.muted" }}
-                                >
-                                    <Table.Cell borderColor="border.default" fontWeight="medium">{recipe.core.name}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">{recipe.core.category || '-'}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">{recipe.core.cuisine || '-'}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">
-                                        {recipe.core.difficulty && (
-                                            <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
-                                                {recipe.core.difficulty}
-                                            </Badge>
-                                        )}
-                                    </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
-                                        {(recipe.times.total_time_minutes ?? 0) > 0 ? formatDuration(recipe.times.total_time_minutes) : '-'}
-                                    </Table.Cell>
-                                    <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
-                                </Table.Row>
-                            );
-                        })}
-                    </Table.Body>
-                </Table.Root>
-            </Box>
+                <Box flex={1} overflowX="auto" borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" mb={4}>
+                    <Table.Root interactive minW="800px">
+                        <Table.Header>
+                            <Table.Row bg="bg.surface">
+                                <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Category</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Cuisine</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Difficulty</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Total Time</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Yield</Table.ColumnHeader>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            {recipes.map((recipe) => {
 
-            {/* Sentinel for IntersectionObserver */}
-            <Box ref={setSentinel} height="20px" bg="transparent" />
+                                return (
+                                    <Table.Row
+                                        key={recipe.core.id}
+                                        onClick={() => handleRecipeClick(recipe.core.id)}
+                                        cursor="pointer"
+                                        bg="bg.surface"
+                                        color="fg.default"
+                                        _hover={{ bg: "bg.muted" }}
+                                    >
+                                        <Table.Cell borderColor="border.default" fontWeight="medium">{recipe.core.name}</Table.Cell>
+                                        <Table.Cell borderColor="border.default">{recipe.core.category || '-'}</Table.Cell>
+                                        <Table.Cell borderColor="border.default">{recipe.core.cuisine || '-'}</Table.Cell>
+                                        <Table.Cell borderColor="border.default">
+                                            {recipe.core.difficulty && (
+                                                <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
+                                                    {recipe.core.difficulty}
+                                                </Badge>
+                                            )}
+                                        </Table.Cell>
+                                        <Table.Cell borderColor="border.default">
+                                            {(recipe.times.total_time_minutes ?? 0) > 0 ? formatDuration(recipe.times.total_time_minutes) : '-'}
+                                        </Table.Cell>
+                                        <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
+                                    </Table.Row>
+                                );
+                            })}
+                        </Table.Body>
+                    </Table.Root>
+                </Box>
 
-            {(status === 'pending' || isFetchingNextPage) && (
-                <Center p={4}>
-                    <Spinner size="lg" color="vscode.accent" />
-                </Center>
-            )}
+                {/* Sentinel for IntersectionObserver */}
+                <Box ref={setSentinel} height="20px" bg="transparent" />
 
-            {!hasNextPage && status === 'success' && recipes.length > 0 && (
-                <Center p={4}>
-                    <Text color="fg.muted" fontSize="sm">No more recipes to load</Text>
-                </Center>
-            )}
+                {(status === 'pending' || isFetchingNextPage) && (
+                    <Center p={4}>
+                        <Spinner size="lg" color="vscode.accent" />
+                    </Center>
+                )}
+
+                {!hasNextPage && status === 'success' && recipes.length > 0 && (
+                    <Center p={4}>
+                        <Text color="fg.muted" fontSize="sm">No more recipes to load</Text>
+                    </Center>
+                )}
+            </VStack>
         </Container>
     );
 };

@@ -7,16 +7,75 @@ interface RecipesResponse {
     totalCount: number;
 }
 
-export const useInfiniteRecipes = (limit: number = 50) => {
+// Define Filter Interface
+export interface RecipeFilters {
+    name?: string;
+    category?: string[];
+    cuisine?: string[];
+    difficulty?: string[];
+    owner?: string[];
+    calories?: { gt?: number; lt?: number };
+    total_time?: { gt?: number; lt?: number };
+    prep_time?: { gt?: number; lt?: number };
+    active_time?: { gt?: number; lt?: number };
+    cook_time?: { gt?: number; lt?: number };
+    ingredients?: { has_all?: string[]; has_any?: string[]; exclude?: string[] };
+    protein?: string[];
+    yield?: { gt?: number; lt?: number };
+    suitable_for_diet?: { has_all?: string[] };
+    sort?: string;
+}
+
+export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = {}) => {
     return useInfiniteQuery<RecipesResponse>({
-        queryKey: ['recipes', 'infinite', limit],
+        queryKey: ['recipes', 'infinite', limit, filters],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             // Calculate skip based on page and limit
             const skip = (page - 1) * limit;
 
             // Construct URL manually to bypass service wrapper and get headers
-            const url = `${OpenAPI.BASE}/recipes/?skip=${skip}&limit=${limit}`;
+            // Construct URL manually to bypass service wrapper and get headers
+            const params = new URLSearchParams();
+            params.append('skip', skip.toString());
+            params.append('limit', limit.toString());
+
+            if (filters.name) params.append('name', filters.name);
+            filters.category?.forEach(c => params.append('category', c));
+            filters.cuisine?.forEach(c => params.append('cuisine', c));
+            filters.difficulty?.forEach(d => params.append('difficulty', d));
+            filters.owner?.forEach(o => params.append('owner', o));
+
+            if (filters.calories?.gt) params.append('calories[gt]', filters.calories.gt.toString());
+            if (filters.calories?.lt) params.append('calories[lt]', filters.calories.lt.toString());
+
+            if (filters.total_time?.gt) params.append('total_time[gt]', filters.total_time.gt.toString());
+            if (filters.total_time?.lt) params.append('total_time[lt]', filters.total_time.lt.toString());
+
+            if (filters.prep_time?.gt) params.append('prep_time[gt]', filters.prep_time.gt.toString());
+            if (filters.prep_time?.lt) params.append('prep_time[lt]', filters.prep_time.lt.toString());
+
+            if (filters.active_time?.gt) params.append('active_time[gt]', filters.active_time.gt.toString());
+            if (filters.active_time?.lt) params.append('active_time[lt]', filters.active_time.lt.toString());
+
+            if (filters.cook_time?.gt) params.append('cook_time[gt]', filters.cook_time.gt.toString());
+            if (filters.cook_time?.lt) params.append('cook_time[lt]', filters.cook_time.lt.toString());
+
+            filters.ingredients?.has_all?.forEach(i => params.append('ingredients[has_all]', i));
+            filters.ingredients?.has_any?.forEach(i => params.append('ingredients[has_any]', i));
+            filters.ingredients?.has_any?.forEach(i => params.append('ingredients[has_any]', i));
+            filters.ingredients?.exclude?.forEach(i => params.append('ingredients[exclude]', i));
+
+            filters.protein?.forEach(p => params.append('protein', p));
+
+            if (filters.yield?.gt) params.append('yield[gt]', filters.yield.gt.toString());
+            if (filters.yield?.lt) params.append('yield[lt]', filters.yield.lt.toString());
+
+            filters.suitable_for_diet?.has_all?.forEach(d => params.append('suitable_for_diet[has_all]', d));
+
+            if (filters.sort) params.append('sort', filters.sort);
+
+            const url = `${OpenAPI.BASE}/recipes/?${params.toString()}`;
 
             // Get token if available (similar to core/request.ts logic but simplified for hook)
             const token = typeof OpenAPI.TOKEN === 'function'

@@ -28,15 +28,193 @@ export const handlers = [
         const url = new URL(request.url);
         const skip = Number(url.searchParams.get('skip') || '0');
         const limit = Number(url.searchParams.get('limit') || '100');
+        const sort = url.searchParams.get('sort');
 
-        const paginatedRecipes = recipes.slice(skip, skip + limit);
+        // Extract filters
+        const name = url.searchParams.get('name');
+        const categories = url.searchParams.getAll('category');
+        const cuisines = url.searchParams.getAll('cuisine');
+        const difficulties = url.searchParams.getAll('difficulty');
+        const owners = url.searchParams.getAll('owner');
+        const proteins = url.searchParams.getAll('protein');
+
+        const yieldGt = url.searchParams.get('yield[gt]');
+        const yieldLt = url.searchParams.get('yield[lt]');
+
+        const caloriesGt = url.searchParams.get('calories[gt]');
+        const caloriesLt = url.searchParams.get('calories[lt]');
+
+        const totalTimeGt = url.searchParams.get('total_time[gt]');
+        const totalTimeLt = url.searchParams.get('total_time[lt]');
+        const prepTimeGt = url.searchParams.get('prep_time[gt]');
+        const prepTimeLt = url.searchParams.get('prep_time[lt]');
+        const cookTimeGt = url.searchParams.get('cook_time[gt]');
+        const cookTimeLt = url.searchParams.get('cook_time[lt]');
+        // Active time might not be in the DB directly, but let's support it if we can compute it or if it becomes available.
+        // For now, if active_time is requested, we can try to filter by (prep + cook)
+        const activeTimeGt = url.searchParams.get('active_time[gt]');
+        const activeTimeLt = url.searchParams.get('active_time[lt]');
+
+        const hasAllIngredients = url.searchParams.getAll('ingredients[has_all]');
+        const hasAnyIngredients = url.searchParams.getAll('ingredients[has_any]');
+        const excludeIngredients = url.searchParams.getAll('ingredients[exclude]');
+
+        const hasAllDiets = url.searchParams.getAll('suitable_for_diet[has_all]');
+
+        let filteredRecipes = [...recipes];
+
+        // Apply filters
+        if (name) {
+            const lowerName = name.toLowerCase();
+            filteredRecipes = filteredRecipes.filter(r => r.core.name.toLowerCase().includes(lowerName));
+        }
+        if (categories.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => r.core.category && categories.includes(r.core.category));
+        }
+        if (cuisines.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => r.core.cuisine && cuisines.includes(r.core.cuisine));
+        }
+        if (difficulties.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => r.core.difficulty && difficulties.includes(r.core.difficulty));
+        }
+        if (owners.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => r.core.owner_id && owners.includes(r.core.owner_id));
+        }
+        if (proteins.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => r.core.protein && proteins.includes(r.core.protein));
+        }
+
+        if (yieldGt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.core.yield_amount || 0) > Number(yieldGt));
+        }
+        if (yieldLt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.core.yield_amount || 0) < Number(yieldLt));
+        }
+
+        if (caloriesGt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.nutrition?.calories || 0) > Number(caloriesGt));
+        }
+        if (caloriesLt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.nutrition?.calories || 0) < Number(caloriesLt));
+        }
+
+        if (totalTimeGt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.times?.total_time_minutes || 0) > Number(totalTimeGt));
+        }
+        if (totalTimeLt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.times?.total_time_minutes || 0) < Number(totalTimeLt));
+        }
+        if (prepTimeGt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.times?.prep_time_minutes || 0) > Number(prepTimeGt));
+        }
+        if (prepTimeLt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.times?.prep_time_minutes || 0) < Number(prepTimeLt));
+        }
+        if (cookTimeGt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.times?.cook_time_minutes || 0) > Number(cookTimeGt));
+        }
+        if (cookTimeLt) {
+            filteredRecipes = filteredRecipes.filter(r => (r.times?.cook_time_minutes || 0) < Number(cookTimeLt));
+        }
+        if (activeTimeGt) {
+            filteredRecipes = filteredRecipes.filter(r => ((r.times?.prep_time_minutes || 0) + (r.times?.cook_time_minutes || 0)) > Number(activeTimeGt));
+        }
+        if (activeTimeLt) {
+            filteredRecipes = filteredRecipes.filter(r => ((r.times?.prep_time_minutes || 0) + (r.times?.cook_time_minutes || 0)) < Number(activeTimeLt));
+        }
+
+        if (hasAllIngredients.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => {
+                const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
+                return hasAllIngredients.every(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
+            });
+        }
+        if (hasAnyIngredients.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => {
+                const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
+                return hasAnyIngredients.some(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
+            });
+        }
+        if (excludeIngredients.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => {
+                const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
+                // If ANY excluded ingredient is present, remove recipe
+                return !excludeIngredients.some(i => recipeIngredients.some((ri: string) => ri.includes(i.toLowerCase())));
+            });
+        }
+
+        if (hasAllDiets.length > 0) {
+            filteredRecipes = filteredRecipes.filter(r => {
+                return hasAllDiets.every(d => r.suitable_for_diet?.includes(d));
+            });
+        }
+
+        // Apply Sorting
+        if (sort) {
+            const fields = sort.split(',');
+            filteredRecipes.sort((a, b) => {
+                for (const field of fields) {
+                    const desc = field.startsWith('-');
+                    const key = desc ? field.substring(1) : field;
+
+                    let valA, valB;
+
+                    if (key === 'name') {
+                        valA = a.core.name.toLowerCase();
+                        valB = b.core.name.toLowerCase();
+                    } else if (key === 'created_at') {
+                        valA = new Date(a.audit.created_at).getTime();
+                        valB = new Date(b.audit.created_at).getTime();
+                    } else if (key === 'total_time_minutes') {
+                        valA = a.times.total_time_minutes || 0;
+                        valB = b.times.total_time_minutes || 0;
+                    } else if (key === 'calories') {
+                        valA = a.nutrition.calories || 0;
+                        valB = b.nutrition.calories || 0;
+                    } else {
+                        continue;
+                    }
+
+                    if (valA < valB) return desc ? 1 : -1;
+                    if (valA > valB) return desc ? -1 : 1;
+                }
+                return 0;
+            });
+        }
+
+        const paginatedRecipes = filteredRecipes.slice(skip, skip + limit);
 
         return HttpResponse.json(paginatedRecipes, {
             headers: {
-                'X-Total-Count': recipes.length.toString(),
+                'X-Total-Count': filteredRecipes.length.toString(),
                 'Access-Control-Expose-Headers': 'X-Total-Count'
             },
         });
+    }),
+
+    // Intercept "GET /recipes/meta/:field" requests...
+    http.get('*/recipes/meta/:field', ({ params }) => {
+        const { field } = params;
+        let values: any[] = [];
+
+        if (field === 'category') {
+            values = [...new Set(recipes.map(r => r.core.category).filter(Boolean))];
+        } else if (field === 'cuisine') {
+            values = [...new Set(recipes.map(r => r.core.cuisine).filter(Boolean))];
+        } else if (field === 'difficulty') {
+            values = [...new Set(recipes.map(r => r.core.difficulty).filter(Boolean))];
+        } else if (field === 'owner') {
+            // Return list of objects { label: Name, value: ID } ideally, but spec says array of strings or simple values?
+            // The previous schema I defined was generic array.
+            // Let's look at `usersStore`.
+            values = usersStore.map(u => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }));
+        } else if (field === 'suitable_for_diet') {
+            values = [...new Set(recipes.flatMap(r => r.suitable_for_diet || []))];
+        } else if (field === 'protein') {
+            values = [...new Set(recipes.map(r => r.core.protein).filter(Boolean))];
+        }
+
+        return HttpResponse.json(values);
     }),
 
     // Intercept "GET /recipes/:id" requests...

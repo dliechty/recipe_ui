@@ -33,15 +33,19 @@ export class RecipesService {
     }
     /**
      * Read Recipes
-     * Retrieve a list of all recipes.
+     * Retrieve a list of all recipes with optional filtering and sorting.
+     * Filters: field[eq]=value, field[gt]=value, etc.
+     * Sort: sort=field1,-field2
      * @param skip
      * @param limit
+     * @param sort
      * @returns Recipe Successful Response
      * @throws ApiError
      */
     public static readRecipesRecipesGet(
         skip?: number,
         limit: number = 100,
+        sort?: string,
     ): CancelablePromise<Array<Recipe>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -49,6 +53,28 @@ export class RecipesService {
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort': sort,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Meta Values
+     * Retrieve unique values for a specific field for metadata usage.
+     * @param field
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static getMetaValuesRecipesMetaFieldGet(
+        field: string,
+    ): CancelablePromise<Array<any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/recipes/meta/{field}',
+            path: {
+                'field': field,
             },
             errors: {
                 422: `Validation Error`,

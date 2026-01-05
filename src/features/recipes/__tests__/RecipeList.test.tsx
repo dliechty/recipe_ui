@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor } from '../../../test-utils';
+import { renderWithProviders, screen, waitFor, within } from '../../../test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import RecipeList from '../components/RecipeList';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
@@ -81,8 +81,10 @@ describe('RecipeList', () => {
             expect(screen.getByText('Quick Snack')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('-')).toBeInTheDocument();
-        expect(screen.getByText('1 serving')).toBeInTheDocument();
+        const row = screen.getByRole('row', { name: /Quick Snack/i });
+        const utils = within(row);
+        expect(utils.getByText('-')).toBeInTheDocument();
+        expect(utils.getByText('1 serving')).toBeInTheDocument();
     });
 
     it('sets up intersection observer on sentinel', async () => {
