@@ -16,6 +16,8 @@ export type Recipe = {
     instructions: Array<Instruction>;
     nutrition: RecipeNutrition;
     suitable_for_diet: Array<DietType>;
+    variant_recipe_ids: Array<string>;
+    parent_recipe_id?: (string | null);
     audit: RecipeAudit;
 };
 

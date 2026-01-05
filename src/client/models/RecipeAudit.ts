@@ -7,6 +7,5 @@ export type RecipeAudit = {
     updated_at?: (string | null);
     version?: (number | null);
     checksum?: (string | null);
-    parent_recipe_id?: (string | null);
 };
 
