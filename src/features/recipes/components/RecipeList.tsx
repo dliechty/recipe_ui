@@ -16,7 +16,7 @@ const RecipeList = () => {
         if (ids) {
             return { ids: ids.split(',') };
         }
-        return {};
+        return { sort: 'name' };
     });
 
     const [collapsedParents, setCollapsedParents] = useState<Set<string>>(new Set());

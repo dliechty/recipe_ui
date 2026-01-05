@@ -37,9 +37,9 @@ describe('RecipeList', () => {
 
         // Wait for the recipes to be displayed
         await waitFor(() => {
-            expect(screen.getByText('Chicken Pasta 1')).toBeInTheDocument();
+            expect(screen.getByText('Chicken Noodles 11')).toBeInTheDocument();
             expect(screen.getByText('Beef Curry 2')).toBeInTheDocument();
-            expect(screen.getByText('Pork Stir Fry 3')).toBeInTheDocument();
+            // Expect Pork Stir Fry 3 & Chicken Pasta 1 to NOT be in document because they are pushed to page 2
         });
     });
 

@@ -114,11 +114,11 @@ describe('RecipeFiltersDisplay', () => {
         expect(resetButton).not.toBeDisabled();
 
         fireEvent.click(resetButton);
-        expect(onFilterChange).toHaveBeenCalledWith({});
+        expect(onFilterChange).toHaveBeenCalledWith({ sort: 'name' });
     });
 
-    it('disables reset button when no filters are active', () => {
-        renderWithProviders(<RecipeFiltersDisplay filters={{}} onFilterChange={() => { }} />);
+    it('disables reset button when no filters are active (default sort only)', () => {
+        renderWithProviders(<RecipeFiltersDisplay filters={{ sort: 'name' }} onFilterChange={() => { }} />);
         const resetButton = screen.getByRole('button', { name: /reset/i });
         expect(resetButton).toBeInTheDocument();
         // Chakra v3 disabled might implementation detail, but typically sets disabled attribute

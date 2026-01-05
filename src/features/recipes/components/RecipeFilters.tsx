@@ -39,9 +39,9 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
 
 
     const handleReset = () => {
-        const empty: RecipeFiltersType = {};
-        setLocalFilters(empty);
-        onFilterChange(empty);
+        const defaults: RecipeFiltersType = { sort: 'name' };
+        setLocalFilters(defaults);
+        onFilterChange(defaults);
     };
 
     const { data: categories } = useRecipeMeta('category');
@@ -88,7 +88,10 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                     <HStack ml="auto">
                         {/* Check for any active filters (non-empty strings, arrays, or objects) */}
                         {(() => {
-                            const hasActiveFilters = Object.values(filters).some(value => {
+                            const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
+                                // Ignore default sort
+                                if (key === 'sort' && value === 'name') return false;
+
                                 if (Array.isArray(value)) return value.length > 0;
                                 if (typeof value === 'object' && value !== null) {
                                     // Check for range objects (gt/lt) or has_all arrays in objects
