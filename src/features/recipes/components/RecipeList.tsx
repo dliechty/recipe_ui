@@ -34,6 +34,22 @@ const RecipeList = () => {
         });
     };
 
+    const currentSort = filters.sort || 'name';
+    const isDesc = currentSort.startsWith('-');
+    const sortField = isDesc ? currentSort.slice(1) : currentSort;
+    const sortDirection = isDesc ? 'desc' : 'asc';
+
+    const handleSortFieldChange = (newField: string) => {
+        const newSort = sortDirection === 'desc' ? `-${newField}` : newField;
+        setFilters(prev => ({ ...prev, sort: newSort }));
+    };
+
+    const handleSortDirectionChange = (newDirection: string) => {
+        const prefix = newDirection === 'desc' ? '-' : '';
+        const newSort = `${prefix}${sortField}`;
+        setFilters(prev => ({ ...prev, sort: newSort }));
+    };
+
     const {
         data,
         error,
@@ -90,6 +106,53 @@ const RecipeList = () => {
             <HStack mb={8}>
                 <Heading color="fg.default">Recipes</Heading>
                 <Spacer />
+                <HStack gap={4} mr={4}>
+                    <HStack gap={2}>
+                        <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
+                        <Box minW="130px">
+                            <select
+                                value={sortField}
+                                onChange={(e) => handleSortFieldChange(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '6px',
+                                    borderRadius: '4px',
+                                    backgroundColor: 'var(--chakra-colors-bg-surface)',
+                                    borderColor: 'var(--chakra-colors-border-default)',
+                                    borderWidth: '1px',
+                                    fontSize: '0.875rem',
+                                }}
+                            >
+                                <option value="name">Name</option>
+                                <option value="category">Category</option>
+                                <option value="cuisine">Cuisine</option>
+                                <option value="difficulty">Difficulty</option>
+                                <option value="total_time_minutes">Total Time</option>
+                                <option value="yield_amount">Yield</option>
+                            </select>
+                        </Box>
+                    </HStack>
+                    <HStack gap={2}>
+                        <Box minW="110px">
+                            <select
+                                value={sortDirection}
+                                onChange={(e) => handleSortDirectionChange(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '6px',
+                                    borderRadius: '4px',
+                                    backgroundColor: 'var(--chakra-colors-bg-surface)',
+                                    borderColor: 'var(--chakra-colors-border-default)',
+                                    borderWidth: '1px',
+                                    fontSize: '0.875rem',
+                                }}
+                            >
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </Box>
+                    </HStack>
+                </HStack>
                 <Button
                     onClick={() => navigate('/recipes/new')}
                     bg="vscode.button"
@@ -104,6 +167,8 @@ const RecipeList = () => {
                 <Box w="full">
                     <RecipeFiltersDisplay filters={filters} onFilterChange={setFilters} />
                 </Box>
+
+
 
                 <Box flex={1} overflowX="auto" borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" mb={4}>
                     <Table.Root interactive minW="800px">
@@ -226,7 +291,7 @@ const RecipeList = () => {
                     </Center>
                 )}
             </VStack>
-        </Container>
+        </Container >
     );
 };
 
