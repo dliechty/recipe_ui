@@ -164,70 +164,72 @@ const RecipeDetails = () => {
                         <Icon as={FaRegCopy} boxSize={3} />
                     </Button>
                 </HStack>
-                <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>
-
-                {userDisplayName && (
-                    <Text color="fg.muted" mb={2} fontSize="sm">
-                        Added By: {userDisplayName}
-                    </Text>
-                )}
-
-                {recipe.audit?.updated_at && (
-                    <Text color="fg.muted" mb={2} fontSize="sm">
-                        Last Updated: {new Date(recipe.audit.updated_at).toLocaleDateString()}
-                    </Text>
-                )}
-
-                {recipe.core.source && (
-                    <Text color="fg.muted" mb={4} fontSize="sm">
-                        Source: {recipe.core.source_url ? (
-                            <Link href={recipe.core.source_url} target="_blank" rel="noopener noreferrer" color="blue.500" textDecoration="underline">
-                                {recipe.core.source}
-                            </Link>
-                        ) : (
-                            recipe.core.source
-                        )}
-                    </Text>
-
-                )}
-
-
-                {(recipe.parent_recipe_id && parentRecipe) || (recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0) ? (
-                    <Text color="fg.muted" mb={4} fontSize="sm">
-                        {recipe.parent_recipe_id && parentRecipe && (
-                            <>
-                                Parent: <RouterLink to={`/recipes/${recipe.parent_recipe_id}`}><Link as="span" color="vscode.accent" textDecoration="underline">{parentRecipe.core.name}</Link></RouterLink>
-                            </>
-                        )}
-                        {recipe.parent_recipe_id && parentRecipe && recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
-                            <Text as="span" mx={2}>|</Text>
-                        )}
-                        {recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
-                            <>
-                                Variants: <RouterLink to={recipe.variant_recipe_ids.length === 1 ? `/recipes/${recipe.variant_recipe_ids[0]}` : `/recipes?ids=${[recipe.core.id, ...recipe.variant_recipe_ids].join(',')}`}><Link as="span" color="vscode.accent" textDecoration="underline">({recipe.variant_recipe_ids.length})</Link></RouterLink>
-                            </>
-                        )}
-                    </Text>
-                ) : null}
-
-                <HStack gap={2} mb={6}>
-                    {recipe.core.difficulty && (
-                        <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
-                            {recipe.core.difficulty}
-                        </Badge>
-                    )}
-                    {recipe.core.cuisine && <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>}
-                    {recipe.core.category && <Badge colorPalette="orange">{recipe.core.category}</Badge>}
-                    {recipe.core.protein && <Badge colorPalette="blue">{recipe.core.protein}</Badge>}
-                    {(recipe.suitable_for_diet || []).map(diet => (
-                        <Badge key={diet} colorPalette="teal">{formatDietName(diet)}</Badge>
-                    ))}
-                </HStack>
-
                 <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
+                    {/* Left Column: Basic Info + Ingredients */}
                     <GridItem>
-                        <VStack align="start" gap={4} mb={8}>
-                            <Box>
+                        <VStack align="start" gap={8}>
+                            {/* Basic Info Section (Moved from top) */}
+                            <Box w="full">
+                                <Heading mb={2} color="fg.default">{recipe.core.name}</Heading>
+
+                                {userDisplayName && (
+                                    <Text color="fg.muted" mb={2} fontSize="sm">
+                                        Added By: {userDisplayName}
+                                    </Text>
+                                )}
+
+                                {recipe.audit?.updated_at && (
+                                    <Text color="fg.muted" mb={2} fontSize="sm">
+                                        Last Updated: {new Date(recipe.audit.updated_at).toLocaleDateString()}
+                                    </Text>
+                                )}
+
+                                {recipe.core.source && (
+                                    <Text color="fg.muted" mb={4} fontSize="sm">
+                                        Source: {recipe.core.source_url ? (
+                                            <Link href={recipe.core.source_url} target="_blank" rel="noopener noreferrer" color="blue.500" textDecoration="underline">
+                                                {recipe.core.source}
+                                            </Link>
+                                        ) : (
+                                            recipe.core.source
+                                        )}
+                                    </Text>
+
+                                )}
+
+
+                                {(recipe.parent_recipe_id && parentRecipe) || (recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0) ? (
+                                    <Text color="fg.muted" mb={4} fontSize="sm">
+                                        {recipe.parent_recipe_id && parentRecipe && (
+                                            <>
+                                                Parent: <RouterLink to={`/recipes/${recipe.parent_recipe_id}`}><Link as="span" color="vscode.accent" textDecoration="underline">{parentRecipe.core.name}</Link></RouterLink>
+                                            </>
+                                        )}
+                                        {recipe.parent_recipe_id && parentRecipe && recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
+                                            <Text as="span" mx={2}>|</Text>
+                                        )}
+                                        {recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 && (
+                                            <>
+                                                Variants: <RouterLink to={recipe.variant_recipe_ids.length === 1 ? `/recipes/${recipe.variant_recipe_ids[0]}` : `/recipes?ids=${[recipe.core.id, ...recipe.variant_recipe_ids].join(',')}`}><Link as="span" color="vscode.accent" textDecoration="underline">({recipe.variant_recipe_ids.length})</Link></RouterLink>
+                                            </>
+                                        )}
+                                    </Text>
+                                ) : null}
+
+                                <HStack gap={2} mb={6}>
+                                    {recipe.core.difficulty && (
+                                        <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
+                                            {recipe.core.difficulty}
+                                        </Badge>
+                                    )}
+                                    {recipe.core.cuisine && <Badge colorPalette="purple">{recipe.core.cuisine}</Badge>}
+                                    {recipe.core.category && <Badge colorPalette="orange">{recipe.core.category}</Badge>}
+                                    {recipe.core.protein && <Badge colorPalette="blue">{recipe.core.protein}</Badge>}
+                                    {(recipe.suitable_for_diet || []).map(diet => (
+                                        <Badge key={diet} colorPalette="teal">{formatDietName(diet)}</Badge>
+                                    ))}
+                                </HStack>
+
                                 <Grid templateColumns="auto 1fr" gap={2} rowGap={1}>
                                     {(recipe.times.total_time_minutes ?? 0) > 0 && (
                                         <>
@@ -275,67 +277,68 @@ const RecipeDetails = () => {
                                     )}
                                 </Grid>
                             </Box>
-                        </VStack>
-                    </GridItem>
-                    <GridItem>
-                        <Text color="fg.muted" mb={6}>{recipe.core.description}</Text>
-                    </GridItem>
-                </Grid>
 
-                <Box as="hr" borderColor="border.default" mb={6} />
-
-                <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
-                    <GridItem>
-                        <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
-                        <VStack align="stretch" gap={4}>
-                            {recipe.components.map((component, cIndex) => (
-                                <Box key={cIndex}>
-                                    {component.name && component.name !== 'Main' && (
-                                        <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
-                                    )}
-                                    <List.Root gap={2} mb={component.name ? 4 : 0}>
-                                        {component.ingredients
-                                            .slice()
-                                            .sort((a, b) => (a.order || 0) - (b.order || 0))
-                                            .map((ingredient, index) => {
-                                                const isToTaste = ingredient.quantity === 0 && ingredient.unit.toLowerCase() === 'to taste';
-                                                return (
-                                                    <List.Item key={index} display="flex" alignItems="center">
-                                                        <List.Indicator asChild>
-                                                            <Box as="span" mr={3}>
-                                                                <Icon as={FaCheckCircle} color="vscode.accent" className="no-print" />
-                                                                <Icon as={FaRegSquare} color="fg.default" className="print-only" />
-                                                            </Box>
-                                                        </List.Indicator>
-                                                        <Text>
-                                                            {isToTaste ? (
-                                                                <>
-                                                                    <Text as="span" fontWeight="bold">{ingredient.item}</Text> {ingredient.unit}
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <Text as="span" fontWeight="bold">{formatQuantity(ingredient.quantity)} {ingredient.unit}</Text> {ingredient.item}
-                                                                </>
-                                                            )}
-                                                        </Text>
-                                                    </List.Item>
-                                                );
-                                            })}
-                                    </List.Root>
-                                </Box>
-                            ))}
+                            {/* Ingredients Section */}
+                            <Box w="full">
+                                <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
+                                <VStack align="stretch" gap={4}>
+                                    {recipe.components.map((component, cIndex) => (
+                                        <Box key={cIndex}>
+                                            {component.name && component.name !== 'Main' && (
+                                                <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
+                                            )}
+                                            <List.Root gap={2} mb={component.name ? 4 : 0}>
+                                                {component.ingredients
+                                                    .slice()
+                                                    .sort((a, b) => (a.order || 0) - (b.order || 0))
+                                                    .map((ingredient, index) => {
+                                                        const isToTaste = ingredient.quantity === 0 && ingredient.unit.toLowerCase() === 'to taste';
+                                                        return (
+                                                            <List.Item key={index} display="flex" alignItems="center">
+                                                                <List.Indicator asChild>
+                                                                    <Box as="span" mr={3}>
+                                                                        <Icon as={FaCheckCircle} color="vscode.accent" className="no-print" />
+                                                                        <Icon as={FaRegSquare} color="fg.default" className="print-only" />
+                                                                    </Box>
+                                                                </List.Indicator>
+                                                                <Text>
+                                                                    {isToTaste ? (
+                                                                        <>
+                                                                            <Text as="span" fontWeight="bold">{ingredient.item}</Text> {ingredient.unit}
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <Text as="span" fontWeight="bold">{formatQuantity(ingredient.quantity)} {ingredient.unit}</Text> {ingredient.item}
+                                                                        </>
+                                                                    )}
+                                                                </Text>
+                                                            </List.Item>
+                                                        );
+                                                    })}
+                                            </List.Root>
+                                        </Box>
+                                    ))}
+                                </VStack>
+                            </Box>
                         </VStack>
                     </GridItem>
 
+                    {/* Right Column: Description + Instructions */}
                     <GridItem>
-                        <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
-                        <VStack align="stretch" gap={2}>
-                            {(recipe.instructions || []).map((step) => (
-                                <Box key={step.step_number} p={1} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
-                                    <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
-                                    <Text>{step.text}</Text>
-                                </Box>
-                            ))}
+                        <VStack align="start" gap={6} h="full" justifyContent="space-between">
+                            <Text color="fg.muted">{recipe.core.description}</Text>
+
+                            <Box w="full">
+                                <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
+                                <VStack align="stretch" gap={2}>
+                                    {(recipe.instructions || []).map((step) => (
+                                        <Box key={step.step_number} p={1} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
+                                            <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
+                                            <Text>{step.text}</Text>
+                                        </Box>
+                                    ))}
+                                </VStack>
+                            </Box>
                         </VStack>
                     </GridItem>
                 </Grid>
