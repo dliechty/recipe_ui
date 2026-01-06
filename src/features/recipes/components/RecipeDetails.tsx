@@ -86,7 +86,7 @@ const RecipeDetails = () => {
 
     return (
         <Container maxW="container.xl" pt={2} pb={8}>
-            <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
+            <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm" className="no-print">
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
                         <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
@@ -145,7 +145,7 @@ const RecipeDetails = () => {
 
 
             <Box bg="bg.surface" p={8} borderRadius="lg" boxShadow="md" borderWidth={1} borderColor="border.default" className="no-print-border" position="relative">
-                <HStack position="absolute" top={4} right={4} gap={2}>
+                <HStack position="absolute" top={4} right={4} gap={2} className="no-print">
                     <Text color="fg.muted" fontSize="xs">
                         Recipe Id: {recipe.core.id}
                     </Text>
