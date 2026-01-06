@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
 import { Container, Heading, Breadcrumb, Icon } from '@chakra-ui/react';
 import { FaChevronRight } from 'react-icons/fa';
 import RecipeForm from '../components/RecipeForm';
@@ -9,6 +9,8 @@ import { toaster } from '../../../toaster';
 
 const AddRecipePage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const initialData = location.state?.initialData;
     const createRecipeMutation = useCreateRecipe();
 
     const handleSubmit = async (formData: RecipeCreate) => {
@@ -49,7 +51,7 @@ const AddRecipePage = () => {
                 </Breadcrumb.List>
             </Breadcrumb.Root>
             <Heading mb={8} color="fg.default">Add New Recipe</Heading>
-            <RecipeForm onSubmit={handleSubmit} isLoading={createRecipeMutation.isPending} />
+            <RecipeForm onSubmit={handleSubmit} isLoading={createRecipeMutation.isPending} initialData={initialData} />
         </Container>
     );
 };
