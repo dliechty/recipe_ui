@@ -42,7 +42,7 @@ describe('RecipeFiltersDisplay', () => {
         fireEvent.click(screen.getByText('More Filters'));
         expect(screen.getByText('Cuisine')).toBeInTheDocument();
         expect(screen.getByText('Protein')).toBeInTheDocument();
-        expect(screen.getByText('Yield (Typically Servings)')).toBeInTheDocument();
+        expect(screen.getByText('Yield (Typically in Servings)')).toBeInTheDocument();
     });
 
     it('text input calls onFilterChange after debounce', async () => {

@@ -250,7 +250,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
 
                             {/* 3.2 Yield */}
                             <Box>
-                                <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Yield (Typically Servings)</Text>
+                                <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Yield (Typically in Servings)</Text>
                                 <HStack>
                                     <DebouncedInput
                                         placeholder="Min"
