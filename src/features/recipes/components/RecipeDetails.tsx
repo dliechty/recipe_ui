@@ -104,36 +104,40 @@ const RecipeDetails = () => {
 
             <HStack mb={6} className="no-print">
                 <Spacer />
-                {canEdit && (
+                {(canEdit || currentUser) && (
                     <HStack gap={2}>
-                        <Button
-                            onClick={() => {
-                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                const { audit, ...rest } = recipe;
-                                const id = recipe.core.id;
-                                navigate('/recipes/new', {
-                                    state: {
-                                        initialData: {
-                                            ...rest,
-                                            parent_recipe_id: id
+                        {canEdit && (
+                            <Button
+                                onClick={() => navigate(`/recipes/${id}/edit`)}
+                                bg="vscode.button"
+                                color="white"
+                                _hover={{ bg: "vscode.buttonHover" }}
+                            >
+                                <Icon as={FaEdit} /> Edit Recipe
+                            </Button>
+                        )}
+                        {currentUser && (
+                            <Button
+                                onClick={() => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                    const { audit, ...rest } = recipe;
+                                    const id = recipe.core.id;
+                                    navigate('/recipes/new', {
+                                        state: {
+                                            initialData: {
+                                                ...rest,
+                                                parent_recipe_id: id
+                                            }
                                         }
-                                    }
-                                });
-                            }}
-                            bg="vscode.button"
-                            color="white"
-                            _hover={{ bg: "vscode.buttonHover" }}
-                        >
-                            <Icon as={FaRegCopy} /> Create Variant
-                        </Button>
-                        <Button
-                            onClick={() => navigate(`/recipes/${id}/edit`)}
-                            bg="vscode.button"
-                            color="white"
-                            _hover={{ bg: "vscode.buttonHover" }}
-                        >
-                            <Icon as={FaEdit} /> Edit Recipe
-                        </Button>
+                                    });
+                                }}
+                                bg="vscode.button"
+                                color="white"
+                                _hover={{ bg: "vscode.buttonHover" }}
+                            >
+                                <Icon as={FaRegCopy} /> Create Variant
+                            </Button>
+                        )}
                     </HStack>
                 )}
             </HStack>

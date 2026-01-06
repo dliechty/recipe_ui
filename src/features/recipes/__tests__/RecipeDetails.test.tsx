@@ -304,7 +304,7 @@ describe('RecipeDetails', () => {
     });
 
     // Access Control Tests
-    it('shows edit button for admin user', async () => {
+    it('shows edit and create variant buttons for admin user', async () => {
         mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: true } });
 
         renderWithProviders(
@@ -319,21 +319,16 @@ describe('RecipeDetails', () => {
             expect(screen.getAllByText('Chicken Pasta 1')[0]).toBeInTheDocument();
         });
 
-        expect(screen.getByRole('button', { name: /Edit Recipe/i })).toBeInTheDocument();
+        const editButton = screen.getByRole('button', { name: /Edit Recipe/i });
+        const createVariantButton = screen.getByRole('button', { name: /Create Variant/i });
+        expect(editButton).toBeInTheDocument();
+        expect(createVariantButton).toBeInTheDocument();
+
+        // Verify order: Edit first
+        expect(editButton.compareDocumentPosition(createVariantButton)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
-    it('shows edit button for recipe owner', async () => {
-        // Recipe 1 owner_id is '1' (from global mocks or assumed)
-        // Let's ensure the component gets the user id correctly.
-        // We need to match the mock logic. In previous tests user was fetched separately.
-        // The RecipeDetails component uses useUser(recipe.owner_id) to display name,
-        // but uses useAuth() to check permissions.
-
-        // Let's verify Recipe 1 owner in our mock logic.
-        // Looking at handlers.ts (implied), Recipe 1 usually has owner_id '1' or similar.
-        // We'll trust the component logic: currentUser.id === recipe.core.owner_id
-
-        // Let's force a recipe return so we know the owner_id
+    it('shows edit and create variant buttons for recipe owner', async () => {
         server.use(
             http.get('*/recipes/:id', () => {
                 return HttpResponse.json({
@@ -364,9 +359,10 @@ describe('RecipeDetails', () => {
         });
 
         expect(screen.getByRole('button', { name: /Edit Recipe/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Create Variant/i })).toBeInTheDocument();
     });
 
-    it('hides edit button for non-owner non-admin', async () => {
+    it('shows create variant button but hides edit button for non-owner authenticated user', async () => {
         server.use(
             http.get('*/recipes/:id', () => {
                 return HttpResponse.json({
@@ -397,9 +393,10 @@ describe('RecipeDetails', () => {
         });
 
         expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Create Variant/i })).toBeInTheDocument();
     });
 
-    it('hides edit button for logged out user', async () => {
+    it('hides both buttons for logged out user', async () => {
         server.use(
             http.get('*/recipes/:id', () => {
                 return HttpResponse.json({
@@ -430,6 +427,7 @@ describe('RecipeDetails', () => {
         });
 
         expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /Create Variant/i })).not.toBeInTheDocument();
     });
 
     it('renders parent recipe link when present', async () => {
