@@ -221,7 +221,8 @@ const RecipeDetails = () => {
                                             initialData: {
                                                 ...rest,
                                                 parent_recipe_id: id
-                                            }
+                                            },
+                                            parentName: recipe.core.name
                                         }
                                     });
                                 }}

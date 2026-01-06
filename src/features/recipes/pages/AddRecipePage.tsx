@@ -45,6 +45,18 @@ const AddRecipePage = () => {
                     <Breadcrumb.Separator>
                         <Icon as={FaChevronRight} color="fg.muted" />
                     </Breadcrumb.Separator>
+                    {location.state?.parentName && initialData?.parent_recipe_id && (
+                        <>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                    <RouterLink to={`/recipes/${initialData.parent_recipe_id}`}>{location.state.parentName}</RouterLink>
+                                </Breadcrumb.Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Separator>
+                                <Icon as={FaChevronRight} color="fg.muted" />
+                            </Breadcrumb.Separator>
+                        </>
+                    )}
                     <Breadcrumb.Item>
                         <Breadcrumb.CurrentLink color="fg.default">New</Breadcrumb.CurrentLink>
                     </Breadcrumb.Item>

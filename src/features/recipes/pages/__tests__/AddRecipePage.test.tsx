@@ -98,8 +98,34 @@ describe('AddRecipePage', () => {
             expect(screen.getByTestId('recipe-prep-time')).toHaveValue(15);
         });
 
-        // Verify parent recipe ID is somehow handled - maybe check for hidden field or if it's passed to submission?
-        // Since it's internal state in RecipeForm, it might be harder to test directly without submitting.
-        // But checking visible fields is a good proxy.
+    });
+
+    it('renders breadcrumb with parent link when creating a variant', async () => {
+        const initialData = {
+            core: { name: 'New Variant' },
+            times: {},
+            nutrition: {},
+            suitable_for_diet: [],
+            parent_recipe_id: '123',
+            components: [],
+            instructions: []
+        };
+        const parentName = 'Parent Recipe Name';
+
+        mockLocation.state = { initialData, parentName };
+
+        renderWithProviders();
+
+        await waitFor(() => {
+            expect(screen.getByText('Add New Recipe')).toBeInTheDocument();
+        });
+
+        // Check if parent breadcrumb is rendered
+        const parentLink = screen.getByText('Parent Recipe Name');
+        expect(parentLink).toBeInTheDocument();
+        expect(parentLink.closest('a')).toHaveAttribute('href', '/recipes/123');
+
+        // Check for "New" breadcrumb
+        expect(screen.getByText('New')).toBeInTheDocument();
     });
 });
