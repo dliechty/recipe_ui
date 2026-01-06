@@ -94,11 +94,20 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
     useEffect(() => {
         if (initialData) {
             // Inject stable IDs
+            // Inject stable IDs and map fields if necessary (handle API vs Form mismatch)
             setFormData({
                 ...initialData,
                 components: initialData.components.map(c => ({
                     ...c,
-                    ingredients: c.ingredients.map(i => ({ ...i, id: crypto.randomUUID() }))
+                    ingredients: c.ingredients
+                        .slice()
+                        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+                        .map(i => ({
+                            ...i,
+                            // Map 'item' from API to 'ingredient_name' for Form if needed
+                            ingredient_name: i.ingredient_name || (i as any).item || '',
+                            id: crypto.randomUUID()
+                        }))
                 })),
                 instructions: initialData.instructions.map(i => ({ ...i, id: crypto.randomUUID() }))
             });
