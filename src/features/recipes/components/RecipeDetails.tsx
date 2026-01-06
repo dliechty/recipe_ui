@@ -19,8 +19,8 @@ import {
     Link,
     Breadcrumb
 } from '@chakra-ui/react';
-import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy, FaRegSquare } from 'react-icons/fa';
-import { useRecipe } from '../../../hooks/useRecipes';
+import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy, FaRegSquare, FaTrash } from 'react-icons/fa';
+import { useRecipe, useDeleteRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
@@ -32,6 +32,21 @@ const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
+    const deleteRecipe = useDeleteRecipe();
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isDeleteDialogOpen) {
+                setIsDeleteDialogOpen(false);
+            }
+        };
+        if (isDeleteDialogOpen) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isDeleteDialogOpen]);
+
     const { data: parentRecipe } = useRecipe(recipe?.parent_recipe_id || '');
     const { data: user } = useUser(recipe?.core.owner_id);
     const { user: currentUser } = useAuth();
@@ -137,6 +152,85 @@ const RecipeDetails = () => {
                             >
                                 <Icon as={FaRegCopy} /> Create Variant
                             </Button>
+                        )}
+                        {canEdit && (
+                            <>
+                                <Button
+                                    bg="red.600"
+                                    color="white"
+                                    _hover={{ bg: "red.700" }}
+                                    disabled={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0}
+                                    title={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 ? "Cannot delete recipe with variants" : "Delete Recipe"}
+                                    onClick={() => !(recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0) && setIsDeleteDialogOpen(true)}
+                                    opacity={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 ? 0.5 : 1}
+                                    cursor={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 ? "not-allowed" : "pointer"}
+                                >
+                                    <Icon as={FaTrash} /> Delete
+                                </Button>
+
+                                {isDeleteDialogOpen && (
+                                    <Box
+                                        position="fixed"
+                                        top="0"
+                                        left="0"
+                                        right="0"
+                                        bottom="0"
+                                        bg="rgba(0,0,0,0.6)"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        zIndex={1400}
+                                        backdropFilter="blur(2px)"
+                                        onClick={() => setIsDeleteDialogOpen(false)}
+                                    >
+                                        <Box
+                                            bg="bg.surface"
+                                            p={6}
+                                            borderRadius="md"
+                                            boxShadow="xl"
+                                            borderWidth="1px"
+                                            borderColor="border.default"
+                                            onClick={(e) => e.stopPropagation()}
+                                            minW="300px"
+                                            maxW="500px"
+                                        >
+                                            <Heading size="md" mb={4} color="fg.default">Delete Recipe</Heading>
+                                            <Text mb={6} color="fg.muted">
+                                                Are you sure you want to delete this recipe? This action cannot be undone.
+                                            </Text>
+                                            <HStack justify="flex-end" gap={3}>
+                                                <Button
+                                                    onClick={() => setIsDeleteDialogOpen(false)}
+                                                    bg="gray.600"
+                                                    color="white"
+                                                    _hover={{ bg: "gray.700" }}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                                <Button
+                                                    data-testid="confirm-delete-btn"
+                                                    bg="red.600"
+                                                    color="white"
+                                                    _hover={{ bg: "red.700" }}
+                                                    onClick={() => {
+                                                        if (id) {
+                                                            deleteRecipe.mutate(id, {
+                                                                onSuccess: () => {
+                                                                    setIsDeleteDialogOpen(false);
+                                                                    navigate('/recipes');
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                    loading={deleteRecipe.isPending}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </HStack>
+                                        </Box>
+                                    </Box>
+                                )}
+                            </>
                         )}
                     </HStack>
                 )}

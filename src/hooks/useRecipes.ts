@@ -138,3 +138,12 @@ export const useUpdateRecipe = () => {
         },
     });
 };
+export const useDeleteRecipe = () => {
+    const queryClient = useQueryClient();
+    return useMutation<Recipe, Error, string>({
+        mutationFn: (id) => RecipesService.deleteRecipeRecipesRecipeIdDelete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['recipes'] });
+        },
+    });
+};
