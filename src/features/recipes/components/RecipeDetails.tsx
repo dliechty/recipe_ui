@@ -281,13 +281,13 @@ const RecipeDetails = () => {
                             {/* Ingredients Section */}
                             <Box w="full">
                                 <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
-                                <VStack align="stretch" gap={4}>
+                                <VStack align="stretch" gap={3}>
                                     {recipe.components.map((component, cIndex) => (
                                         <Box key={cIndex}>
                                             {component.name && component.name !== 'Main' && (
                                                 <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
                                             )}
-                                            <List.Root gap={2} mb={component.name ? 4 : 0}>
+                                            <List.Root gap={1} mb={component.name ? 4 : 0}>
                                                 {component.ingredients
                                                     .slice()
                                                     .sort((a, b) => (a.order || 0) - (b.order || 0))
