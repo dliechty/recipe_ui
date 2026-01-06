@@ -24,7 +24,7 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
-const renderWithProviders = (ui: React.ReactElement) => {
+const renderWithProviders = () => {
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
@@ -54,7 +54,7 @@ describe('AddRecipePage', () => {
     });
 
     it('renders empty form by default', async () => {
-        renderWithProviders(<AddRecipePage />);
+        renderWithProviders();
 
         await waitFor(() => {
             expect(screen.getByText('Add New Recipe')).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe('AddRecipePage', () => {
 
         mockLocation.state = { initialData };
 
-        renderWithProviders(<AddRecipePage />);
+        renderWithProviders();
 
         // Check if form is populated
         await waitFor(() => {

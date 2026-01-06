@@ -22,4 +22,12 @@ code {
     border: none !important;
     box-shadow: none !important;
   }
+
+  .print-only {
+    display: inline-block !important;
+  }
+}
+
+.print-only {
+  display: none;
 }

@@ -19,7 +19,7 @@ import {
     Link,
     Breadcrumb
 } from '@chakra-ui/react';
-import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy } from 'react-icons/fa';
+import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy, FaRegSquare } from 'react-icons/fa';
 import { useRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -293,7 +293,7 @@ const RecipeDetails = () => {
                                     {component.name && component.name !== 'Main' && (
                                         <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
                                     )}
-                                    <List.Root gap={3} mb={component.name ? 4 : 0}>
+                                    <List.Root gap={2} mb={component.name ? 4 : 0}>
                                         {component.ingredients
                                             .slice()
                                             .sort((a, b) => (a.order || 0) - (b.order || 0))
@@ -302,7 +302,10 @@ const RecipeDetails = () => {
                                                 return (
                                                     <List.Item key={index} display="flex" alignItems="center">
                                                         <List.Indicator asChild>
-                                                            <Icon as={FaCheckCircle} color="vscode.accent" mr={3} />
+                                                            <Box as="span" mr={3}>
+                                                                <Icon as={FaCheckCircle} color="vscode.accent" className="no-print" />
+                                                                <Icon as={FaRegSquare} color="fg.default" className="print-only" />
+                                                            </Box>
                                                         </List.Indicator>
                                                         <Text>
                                                             {isToTaste ? (
@@ -326,9 +329,9 @@ const RecipeDetails = () => {
 
                     <GridItem>
                         <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
-                        <VStack align="stretch" gap={4}>
+                        <VStack align="stretch" gap={2}>
                             {(recipe.instructions || []).map((step) => (
-                                <Box key={step.step_number} p={4} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
+                                <Box key={step.step_number} p={1} _light={{ bg: "gray.50" }} _dark={{ bg: 'vscode.inputBg', borderWidth: 1, borderColor: 'vscode.border' }} borderRadius="md">
                                     <Text fontWeight="bold" mb={1} color="vscode.accent">Step {step.step_number}</Text>
                                     <Text>{step.text}</Text>
                                 </Box>
