@@ -26,6 +26,11 @@ code {
   .print-only {
     display: inline-block !important;
   }
+
+  .print-two-columns {
+    display: grid !important;
+    grid-template-columns: 1fr 2fr !important;
+  }
 }
 
 .print-only {

@@ -164,7 +164,7 @@ const RecipeDetails = () => {
                         <Icon as={FaRegCopy} boxSize={3} />
                     </Button>
                 </HStack>
-                <Grid templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
+                <Grid className="print-two-columns" templateColumns={{ base: "1fr", md: "1fr 2fr" }} gap={8}>
                     {/* Left Column: Basic Info + Ingredients */}
                     <GridItem>
                         <VStack align="start" gap={8}>
