@@ -6,7 +6,8 @@ import {
     HStack,
     IconButton,
     Tooltip,
-    Input
+    Input,
+    Checkbox
 } from '@chakra-ui/react';
 import { AuthenticationService, UserPublic, UserUpdate } from '../../../client';
 import { toaster } from '../../../toaster';
@@ -61,7 +62,8 @@ const AdminUserManagement = () => {
         setEditFormData({
             first_name: user.first_name,
             last_name: user.last_name,
-            email: user.email
+            email: user.email,
+            is_admin: user.is_admin
         });
     };
 
@@ -82,10 +84,10 @@ const AdminUserManagement = () => {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setEditFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
@@ -99,6 +101,7 @@ const AdminUserManagement = () => {
                             <Table.ColumnHeader color="fg.default">Email</Table.ColumnHeader>
                             <Table.ColumnHeader color="fg.default">First Name</Table.ColumnHeader>
                             <Table.ColumnHeader color="fg.default">Last Name</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default">Admin</Table.ColumnHeader>
                             <Table.ColumnHeader color="fg.default">ID</Table.ColumnHeader>
                             <Table.ColumnHeader color="fg.default">Actions</Table.ColumnHeader>
                         </Table.Row>
@@ -142,6 +145,21 @@ const AdminUserManagement = () => {
                                             />
                                         ) : (
                                             user.last_name
+                                        )}
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">
+                                        {isEditing ? (
+                                            <Checkbox.Root
+                                                checked={!!editFormData.is_admin}
+                                                onCheckedChange={(e) => setEditFormData(prev => ({ ...prev, is_admin: !!e.checked }))}
+                                            >
+                                                <Checkbox.HiddenInput />
+                                                <Checkbox.Control>
+                                                    <Checkbox.Indicator />
+                                                </Checkbox.Control>
+                                            </Checkbox.Root>
+                                        ) : (
+                                            user.is_admin ? "Yes" : "No"
                                         )}
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">{user.id}</Table.Cell>

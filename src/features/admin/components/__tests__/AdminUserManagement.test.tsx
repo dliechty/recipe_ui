@@ -57,6 +57,10 @@ describe('AdminUserManagement', () => {
         await waitFor(() => {
             expect(screen.getByText('user1@example.com')).toBeInTheDocument();
             expect(screen.getByText('user2@example.com')).toBeInTheDocument();
+            // Check for Admin column headers and content
+            expect(screen.getByText('Admin')).toBeInTheDocument();
+            expect(screen.getAllByText('No')).toHaveLength(1); // user1 is not admin
+            expect(screen.getAllByText('Yes')).toHaveLength(1); // user2 is admin
         });
 
 
@@ -78,7 +82,10 @@ describe('AdminUserManagement', () => {
         // Inputs should appear
         expect(screen.getByDisplayValue('user1@example.com')).toBeInTheDocument();
         expect(screen.getByDisplayValue('User')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('User')).toBeInTheDocument();
         expect(screen.getByDisplayValue('One')).toBeInTheDocument();
+        // Check for checkbox
+        expect(screen.getByRole('checkbox', { hidden: true })).toBeInTheDocument();
 
         // Save and Cancel buttons should appear
         expect(screen.getByLabelText('Save')).toBeInTheDocument();
@@ -96,6 +103,11 @@ describe('AdminUserManagement', () => {
         fireEvent.change(firstNameInput, { target: { value: 'Updated' } });
 
         expect(firstNameInput).toHaveValue('Updated');
+
+        // Test checkbox toggle
+        const adminCheckbox = screen.getByRole('checkbox', { hidden: true });
+        fireEvent.click(adminCheckbox);
+        expect(adminCheckbox).toBeChecked();
     });
 
     test('calls update API on save', async () => {
@@ -115,6 +127,7 @@ describe('AdminUserManagement', () => {
         await waitFor(() => {
             expect(AuthenticationService.updateUserAuthUsersUserIdPut).toHaveBeenCalledWith('1', expect.objectContaining({
                 first_name: 'Updated',
+                is_admin: false // Default/current value should be preserved/sent
             }));
             expect(toaster.create).toHaveBeenCalledWith(expect.objectContaining({ title: 'User updated', type: 'success' }));
         });
