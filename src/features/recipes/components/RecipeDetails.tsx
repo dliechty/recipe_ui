@@ -138,6 +138,7 @@ const RecipeDetails = () => {
                                 bg="vscode.button"
                                 color="white"
                                 _hover={{ bg: "vscode.buttonHover" }}
+                                size="xs"
                             >
                                 <Icon as={FaRegCopy} /> Create Variant
                             </Button>
@@ -148,6 +149,7 @@ const RecipeDetails = () => {
                                 bg="vscode.button"
                                 color="white"
                                 _hover={{ bg: "vscode.buttonHover" }}
+                                size="xs"
                             >
                                 <Icon as={FaEdit} /> Edit Recipe
                             </Button>
@@ -163,6 +165,7 @@ const RecipeDetails = () => {
                                     onClick={() => !(recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0) && setIsDeleteDialogOpen(true)}
                                     opacity={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 ? 0.5 : 1}
                                     cursor={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 ? "not-allowed" : "pointer"}
+                                    size="xs"
                                 >
                                     <Icon as={FaTrash} /> Delete
                                 </Button>

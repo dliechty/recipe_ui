@@ -110,6 +110,7 @@ const RecipeList = () => {
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="flex-start"
+                    size="xs"
                 >
                     <Icon as={FaPlus} /> Add Recipe
                 </Button>
