@@ -35,7 +35,7 @@ describe('RecipeDetails', () => {
 
         expect(screen.getByText(/Last Updated:/)).toBeInTheDocument();
         expect(screen.getByText('Active Time:')).toBeInTheDocument();
-        expect(screen.getByText('Delicious chicken pasta recipe number 1.')).toBeInTheDocument();
+        expect(screen.getAllByText('Delicious chicken pasta recipe number 1.')[0]).toBeInTheDocument();
         expect(screen.getByText('Cooking Time:')).toBeInTheDocument();
         expect(screen.getByText('2 servings')).toBeInTheDocument();
         expect(screen.getByText('Italian')).toBeInTheDocument();

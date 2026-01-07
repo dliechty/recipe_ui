@@ -374,6 +374,11 @@ const RecipeDetails = () => {
                                 </Grid>
                             </Box>
 
+                            {/* Description Section (Mobile & Print) - Above Ingredients */}
+                            <Text className="no-print" display={{ base: 'block', md: 'none' }} mb={4} color="fg.muted">
+                                {recipe.core.description}
+                            </Text>
+
                             {/* Ingredients Section */}
                             <Box w="full">
                                 <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
@@ -422,7 +427,7 @@ const RecipeDetails = () => {
                     {/* Right Column: Description + Instructions */}
                     <GridItem>
                         <VStack align="start" gap={6} h="full" justifyContent="space-between">
-                            <Text color="fg.muted">{recipe.core.description}</Text>
+                            <Text color="fg.muted" className="print-only" display={{ base: 'none', md: 'block' }}>{recipe.core.description}</Text>
 
                             <Box w="full">
                                 <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INSTRUCTIONS</Heading>
@@ -443,7 +448,7 @@ const RecipeDetails = () => {
 
                 <CommentList recipeId={id || ''} />
             </Box>
-        </Container >
+        </Container>
     );
 };
 
