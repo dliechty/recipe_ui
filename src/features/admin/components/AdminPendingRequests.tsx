@@ -77,7 +77,6 @@ const AdminPendingRequests = () => {
 
     return (
         <Box>
-            <Heading size="md" mb={4} color="fg.default">Pending Account Requests</Heading>
             {requests.length === 0 ? (
                 <Text color="fg.muted">No pending requests.</Text>
             ) : (

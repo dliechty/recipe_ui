@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
     Box,
-    Heading,
     Table,
     HStack,
     IconButton,
@@ -93,7 +92,6 @@ const AdminUserManagement = () => {
 
     return (
         <Box>
-            <Heading size="md" mb={4} color="fg.default">User Management</Heading>
             <Box borderRadius="xl" overflowX="auto" borderWidth="1px" borderColor="border.default">
                 <Table.Root minW="800px">
                     <Table.Header>
