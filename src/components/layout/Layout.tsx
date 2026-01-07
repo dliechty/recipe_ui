@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Flex, HStack, Button, Menu, IconButton } from '@chakra-ui/react';
 import { FiMenu } from 'react-icons/fi';
-import { Link as NavLink } from 'react-router-dom';
+import { Link as NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 
@@ -10,29 +10,39 @@ interface NavItemProps {
     children: React.ReactNode;
 }
 
-const NavItem = ({ to, children }: NavItemProps) => (
-    <Box
-        as={NavLink}
-        // @ts-expect-error - 'to' is passed to NavLink but Box types don't know it
-        to={to}
-        px={3}
-        py={2}
-        rounded={'md'}
-        _hover={{
-            textDecoration: 'none',
-            bg: 'whiteAlpha.200',
-        }}
-        _active={{
-            bg: 'vscode.button',
-            color: 'white',
-        }}
-        color="fg.default"
-        fontWeight="medium"
-        display="block"
-    >
-        {children}
-    </Box>
-);
+const NavItem = ({ to, children }: NavItemProps) => {
+    const location = useLocation();
+    const isActive = location.pathname.startsWith(to);
+
+    return (
+        <Box
+            as={NavLink}
+            // @ts-expect-error - 'to' is passed to NavLink but Box types don't know it
+            to={to}
+            px={3}
+            py={2}
+            rounded={'md'}
+            bg={isActive ? 'whiteAlpha.200' : undefined}
+            _hover={{
+                textDecoration: 'none',
+                bg: 'whiteAlpha.200',
+            }}
+            _active={{
+                bg: 'vscode.button',
+                color: 'white',
+            }}
+            color={isActive ? 'white' : 'fg.default'}
+            fontWeight={isActive ? 'bold' : 'medium'}
+            display="block"
+            borderBottomWidth={isActive ? '2px' : '0px'}
+            borderColor="vscode.accent"
+            borderBottomLeftRadius={isActive ? 0 : 'md'}
+            borderBottomRightRadius={isActive ? 0 : 'md'}
+        >
+            {children}
+        </Box>
+    );
+};
 
 interface LayoutProps {
     children: React.ReactNode;

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Heading, Spinner, Center, Container, HStack, Badge, Button, Icon, Table, Text, VStack, chakra, Stack } from '@chakra-ui/react';
+import { Box, Spinner, Center, Container, HStack, Badge, Button, Icon, Table, Text, VStack, chakra, Stack } from '@chakra-ui/react';
 import { FaPlus, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
@@ -104,67 +104,71 @@ const RecipeList = () => {
     return (
         <Container maxW="container.xl" py={8}>
             <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'start', md: 'center' }} mb={8} gap={4}>
-                <Heading color="fg.default">Recipes</Heading>
-                <Stack direction={{ base: 'column', sm: 'row' }} align={{ base: 'start', sm: 'center' }} gap={4} width={{ base: 'full', md: 'auto' }}>
-                    <HStack gap={4} width={{ base: 'full', sm: 'auto' }} justify={{ base: 'space-between', sm: 'flex-start' }}>
-                        <HStack gap={2} flex={1}>
-                            <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
-                            <Box minW="130px" flex={1}>
-                                <chakra.select
-                                    value={sortField}
-                                    onChange={(e) => handleSortFieldChange((e.target as HTMLSelectElement).value)}
-                                    width="100%"
-                                    padding="6px"
-                                    borderRadius="4px"
-                                    bg="#3c3c3c"
-                                    borderColor="#454545"
-                                    borderWidth="1px"
-                                    fontSize="0.875rem"
-                                    color="#d4d4d4"
-                                    _hover={{ borderColor: '#007acc' }}
-                                    _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
-                                >
-                                    <option value="name">Name</option>
-                                    <option value="category">Category</option>
-                                    <option value="cuisine">Cuisine</option>
-                                    <option value="difficulty">Difficulty</option>
-                                    <option value="total_time_minutes">Total Time</option>
-                                    <option value="yield_amount">Yield</option>
-                                </chakra.select>
-                            </Box>
-                        </HStack>
-                        <HStack gap={2} flex={1}>
-                            <Box minW="110px" flex={1}>
-                                <chakra.select
-                                    value={sortDirection}
-                                    onChange={(e) => handleSortDirectionChange((e.target as HTMLSelectElement).value)}
-                                    width="100%"
-                                    padding="6px"
-                                    borderRadius="4px"
-                                    bg="#3c3c3c"
-                                    borderColor="#454545"
-                                    borderWidth="1px"
-                                    fontSize="0.875rem"
-                                    color="#d4d4d4"
-                                    _hover={{ borderColor: '#007acc' }}
-                                    _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
-                                >
-                                    <option value="asc">Ascending</option>
-                                    <option value="desc">Descending</option>
-                                </chakra.select>
-                            </Box>
-                        </HStack>
+                <Stack
+                    direction={{ base: 'column', sm: 'row' }}
+                    gap={4}
+                    width={{ base: 'full', sm: 'auto' }}
+                    justify={{ base: 'space-between', sm: 'flex-start' }}
+                    order={2}
+                >
+                    <HStack gap={2} flex={1}>
+                        <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
+                        <Box minW="130px" flex={1}>
+                            <chakra.select
+                                value={sortField}
+                                onChange={(e) => handleSortFieldChange((e.target as HTMLSelectElement).value)}
+                                width="100%"
+                                padding="6px"
+                                borderRadius="4px"
+                                bg="#3c3c3c"
+                                borderColor="#454545"
+                                borderWidth="1px"
+                                fontSize="0.875rem"
+                                color="#d4d4d4"
+                                _hover={{ borderColor: '#007acc' }}
+                                _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
+                            >
+                                <option value="name">Name</option>
+                                <option value="category">Category</option>
+                                <option value="cuisine">Cuisine</option>
+                                <option value="difficulty">Difficulty</option>
+                                <option value="total_time_minutes">Total Time</option>
+                                <option value="yield_amount">Yield</option>
+                            </chakra.select>
+                        </Box>
                     </HStack>
-                    <Button
-                        onClick={() => navigate('/recipes/new')}
-                        bg="vscode.button"
-                        color="white"
-                        _hover={{ bg: "vscode.buttonHover" }}
-                        width={{ base: 'full', sm: 'auto' }}
-                    >
-                        <Icon as={FaPlus} /> Add Recipe
-                    </Button>
+                    <HStack gap={2} flex={1}>
+                        <Box minW="110px" flex={1}>
+                            <chakra.select
+                                value={sortDirection}
+                                onChange={(e) => handleSortDirectionChange((e.target as HTMLSelectElement).value)}
+                                width="100%"
+                                padding="6px"
+                                borderRadius="4px"
+                                bg="#3c3c3c"
+                                borderColor="#454545"
+                                borderWidth="1px"
+                                fontSize="0.875rem"
+                                color="#d4d4d4"
+                                _hover={{ borderColor: '#007acc' }}
+                                _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
+                            >
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </chakra.select>
+                        </Box>
+                    </HStack>
                 </Stack>
+                <Button
+                    onClick={() => navigate('/recipes/new')}
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                    width={{ base: 'full', sm: 'auto' }}
+                    order={1}
+                >
+                    <Icon as={FaPlus} /> Add Recipe
+                </Button>
             </Stack >
 
             <VStack align="stretch" gap={6}>
