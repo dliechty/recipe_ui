@@ -280,7 +280,7 @@ const RecipeIngredientsForm = ({
                             color="white"
                             _hover={{ bg: "vscode.buttonHover" }}
                             alignSelf="start"
-                            size="sm"
+                            size="xs"
                             mt={4}
                             ml={10}
                         >
@@ -295,7 +295,7 @@ const RecipeIngredientsForm = ({
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="start"
-                    size="sm"
+                    size="xs"
                 >
                     <FaPlus /> Add Component
                 </Button>
