@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Heading, Tabs } from '@chakra-ui/react'; // Adjust tabs import if needed for Chakra v3
+import { Container, Tabs } from '@chakra-ui/react'; // Adjust tabs import if needed for Chakra v3
 import AdminPendingRequests from '../components/AdminPendingRequests';
 import AdminUserManagement from '../components/AdminUserManagement.tsx';
 
@@ -14,7 +14,6 @@ import AdminUserManagement from '../components/AdminUserManagement.tsx';
 const AdminDashboard = () => {
     return (
         <Container maxW="container.xl" py={8}>
-            <Heading mb={8} color="fg.default">Admin Dashboard</Heading>
             <Tabs.Root defaultValue="users">
                 <Tabs.List borderWidth="1px" borderColor="border.default" borderRadius="md" p="1" bg="bg.surface">
                     <Tabs.Trigger value="users" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>User Management</Tabs.Trigger>

@@ -65,7 +65,6 @@ const AccountPage = () => {
 
     return (
         <Container maxW="container.md" py={10}>
-            <Heading mb={8} color="fg.default">My Account</Heading>
             <Box
                 p={8}
                 borderWidth={1}
