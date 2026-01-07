@@ -127,9 +127,10 @@ const ChangePasswordPage = () => {
                             bg="vscode.button"
                             color="white"
                             _hover={{ bg: 'vscode.buttonHover' }}
-                            width="full"
+                            width="auto"
                             mt={4}
                             loading={isLoading}
+                            size="sm"
                         >
                             Change Password
                         </Button>
