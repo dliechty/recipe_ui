@@ -324,8 +324,8 @@ describe('RecipeDetails', () => {
         expect(editButton).toBeInTheDocument();
         expect(createVariantButton).toBeInTheDocument();
 
-        // Verify order: Edit first
-        expect(editButton.compareDocumentPosition(createVariantButton)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        // Verify order: create variant first
+        expect(createVariantButton.compareDocumentPosition(editButton)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('shows edit and create variant buttons for recipe owner', async () => {
