@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
-import { Container, Heading, Breadcrumb, Icon } from '@chakra-ui/react';
+import { Container, Breadcrumb, Icon } from '@chakra-ui/react';
 import { FaChevronRight } from 'react-icons/fa';
 import RecipeForm from '../components/RecipeForm';
 import { useCreateRecipe } from '../../../hooks/useRecipes';

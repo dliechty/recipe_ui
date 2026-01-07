@@ -109,19 +109,18 @@ const RecipeList = () => {
                     bg="vscode.button"
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
-                    width={{ base: 'full', sm: 'auto' }}
+                    alignSelf="flex-start"
                 >
                     <Icon as={FaPlus} /> Add Recipe
                 </Button>
                 <Stack
-                    direction={{ base: 'column', sm: 'row' }}
+                    direction="row"
                     gap={4}
-                    width={{ base: 'full', sm: 'auto' }}
-                    justify={{ base: 'space-between', sm: 'flex-start' }}
+                    align="center"
                 >
-                    <HStack gap={2} flex={1}>
+                    <HStack gap={2}>
                         <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
-                        <Box minW="130px" flex={1}>
+                        <Box minW="130px">
                             <chakra.select
                                 value={sortField}
                                 onChange={(e) => handleSortFieldChange((e.target as HTMLSelectElement).value)}
@@ -145,8 +144,8 @@ const RecipeList = () => {
                             </chakra.select>
                         </Box>
                     </HStack>
-                    <HStack gap={2} flex={1}>
-                        <Box minW="110px" flex={1}>
+                    <HStack gap={2}>
+                        <Box minW="110px">
                             <chakra.select
                                 value={sortDirection}
                                 onChange={(e) => handleSortDirectionChange((e.target as HTMLSelectElement).value)}

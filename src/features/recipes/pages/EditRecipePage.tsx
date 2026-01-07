@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Container, Heading, Spinner, Center, Text, Breadcrumb, Icon } from '@chakra-ui/react';
+import { Container, Spinner, Center, Text, Breadcrumb, Icon } from '@chakra-ui/react';
 import { FaChevronRight } from 'react-icons/fa';
 import RecipeForm from '../components/RecipeForm';
 import { useRecipe, useUpdateRecipe } from '../../../hooks/useRecipes';
