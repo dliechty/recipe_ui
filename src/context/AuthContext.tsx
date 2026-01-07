@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import axios from 'axios';
 import { OpenAPI, AuthenticationService, UserPublic } from '../client';
 
 interface AuthContextType {
@@ -50,13 +51,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [token, fetchUser]);
 
-    const login = (newToken: string) => {
+    const login = useCallback((newToken: string) => {
         setToken(newToken);
-    };
+    }, []);
 
-    const logout = () => {
+    const logout = useCallback(() => {
         setToken(null);
-    };
+    }, []);
+
+    useEffect(() => {
+        const interceptor = axios.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                if (error.response && error.response.status === 401) {
+                    logout();
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            axios.interceptors.response.eject(interceptor);
+        };
+    }, [logout]);
 
     const refreshUser = async () => {
         if (token) {
