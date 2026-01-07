@@ -36,8 +36,9 @@ const CommentList: React.FC<CommentListProps> = ({ recipeId }) => {
                             px={4}
                             py={2}
                             className="no-print"
+                            size="xs"
                         >
-                            <Heading size="md" color="inherit">
+                            <Heading size="xs" color="inherit">
                                 COMMENTS ({commentCount})
                             </Heading>
                             {isOpen ? <FaChevronUp /> : <FaChevronDown />}

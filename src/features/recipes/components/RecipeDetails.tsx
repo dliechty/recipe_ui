@@ -443,11 +443,6 @@ const RecipeDetails = () => {
 
                 <CommentList recipeId={id || ''} />
             </Box>
-
-
-
-
-
         </Container >
     );
 };
