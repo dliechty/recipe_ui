@@ -62,7 +62,6 @@ const AddRecipePage = () => {
                     </Breadcrumb.Item>
                 </Breadcrumb.List>
             </Breadcrumb.Root>
-            <Heading mb={8} color="fg.default">Add New Recipe</Heading>
             <RecipeForm onSubmit={handleSubmit} isLoading={createRecipeMutation.isPending} initialData={initialData} />
         </Container>
     );

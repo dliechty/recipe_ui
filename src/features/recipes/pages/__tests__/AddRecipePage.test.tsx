@@ -56,10 +56,6 @@ describe('AddRecipePage', () => {
     it('renders empty form by default', async () => {
         renderWithProviders();
 
-        await waitFor(() => {
-            expect(screen.getByText('Add New Recipe')).toBeInTheDocument();
-        });
-
         // Check for empty fields (or default values)
         // Adjust selectors based on your actual form implementation
         // e.g., name field should be empty
@@ -115,10 +111,6 @@ describe('AddRecipePage', () => {
         mockLocation.state = { initialData, parentName };
 
         renderWithProviders();
-
-        await waitFor(() => {
-            expect(screen.getByText('Add New Recipe')).toBeInTheDocument();
-        });
 
         // Check if parent breadcrumb is rendered
         const parentLink = screen.getByText('Parent Recipe Name');

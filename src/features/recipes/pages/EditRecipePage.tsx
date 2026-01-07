@@ -110,7 +110,6 @@ const EditRecipePage = () => {
                     </Breadcrumb.Item>
                 </Breadcrumb.List>
             </Breadcrumb.Root>
-            <Heading mb={8} color="fg.default">Edit Recipe</Heading>
             <RecipeForm initialData={initialData} onSubmit={handleSubmit} isLoading={updateRecipeMutation.isPending} />
         </Container>
     );
