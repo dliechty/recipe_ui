@@ -149,6 +149,11 @@ const AccountPage = () => {
                         <Text fontSize="sm" color="fg.subtle">{user?.id}</Text>
                     </Box>
 
+                    <Box>
+                        <Heading size="sm" mb={2} color="fg.muted">Account Type</Heading>
+                        <Text fontSize="lg" color="fg.default">{user?.is_admin ? 'Administrator' : 'User'}</Text>
+                    </Box>
+
                     <HStack pt={4}>
                         {isEditing ? (
                             <>
@@ -187,8 +192,8 @@ const AccountPage = () => {
                         )}
                     </HStack>
                 </VStack>
-            </Box>
-        </Container>
+            </Box >
+        </Container >
     );
 };
 
