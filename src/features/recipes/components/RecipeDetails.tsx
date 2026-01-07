@@ -15,7 +15,6 @@ import {
     Icon,
     Grid,
     GridItem,
-    Spacer,
     Link,
     Breadcrumb
 } from '@chakra-ui/react';
@@ -118,9 +117,41 @@ const RecipeDetails = () => {
             </Breadcrumb.Root>
 
             <HStack mb={6} className="no-print">
-                <Spacer />
                 {(canEdit || currentUser) && (
                     <HStack gap={2}>
+                        {currentUser && (
+                            <Button
+                                onClick={() => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                    const { audit, ...rest } = recipe;
+                                    const id = recipe.core.id;
+                                    navigate('/recipes/new', {
+                                        state: {
+                                            initialData: {
+                                                ...rest,
+                                                parent_recipe_id: id
+                                            },
+                                            parentName: recipe.core.name
+                                        }
+                                    });
+                                }}
+                                bg="vscode.button"
+                                color="white"
+                                _hover={{ bg: "vscode.buttonHover" }}
+                            >
+                                <Icon as={FaRegCopy} /> Create Variant
+                            </Button>
+                        )}
+                        {canEdit && (
+                            <Button
+                                onClick={() => navigate(`/recipes/${id}/edit`)}
+                                bg="vscode.button"
+                                color="white"
+                                _hover={{ bg: "vscode.buttonHover" }}
+                            >
+                                <Icon as={FaEdit} /> Edit Recipe
+                            </Button>
+                        )}
                         {canEdit && (
                             <>
                                 <Button
@@ -199,39 +230,6 @@ const RecipeDetails = () => {
                                     </Box>
                                 )}
                             </>
-                        )}
-                        {canEdit && (
-                            <Button
-                                onClick={() => navigate(`/recipes/${id}/edit`)}
-                                bg="vscode.button"
-                                color="white"
-                                _hover={{ bg: "vscode.buttonHover" }}
-                            >
-                                <Icon as={FaEdit} /> Edit Recipe
-                            </Button>
-                        )}
-                        {currentUser && (
-                            <Button
-                                onClick={() => {
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                    const { audit, ...rest } = recipe;
-                                    const id = recipe.core.id;
-                                    navigate('/recipes/new', {
-                                        state: {
-                                            initialData: {
-                                                ...rest,
-                                                parent_recipe_id: id
-                                            },
-                                            parentName: recipe.core.name
-                                        }
-                                    });
-                                }}
-                                bg="vscode.button"
-                                color="white"
-                                _hover={{ bg: "vscode.buttonHover" }}
-                            >
-                                <Icon as={FaRegCopy} /> Create Variant
-                            </Button>
                         )}
                     </HStack>
                 )}

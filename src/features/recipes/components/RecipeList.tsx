@@ -104,12 +104,20 @@ const RecipeList = () => {
     return (
         <Container maxW="container.xl" py={8}>
             <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'start', md: 'center' }} mb={8} gap={4}>
+                <Button
+                    onClick={() => navigate('/recipes/new')}
+                    bg="vscode.button"
+                    color="white"
+                    _hover={{ bg: "vscode.buttonHover" }}
+                    width={{ base: 'full', sm: 'auto' }}
+                >
+                    <Icon as={FaPlus} /> Add Recipe
+                </Button>
                 <Stack
                     direction={{ base: 'column', sm: 'row' }}
                     gap={4}
                     width={{ base: 'full', sm: 'auto' }}
                     justify={{ base: 'space-between', sm: 'flex-start' }}
-                    order={2}
                 >
                     <HStack gap={2} flex={1}>
                         <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
@@ -159,16 +167,6 @@ const RecipeList = () => {
                         </Box>
                     </HStack>
                 </Stack>
-                <Button
-                    onClick={() => navigate('/recipes/new')}
-                    bg="vscode.button"
-                    color="white"
-                    _hover={{ bg: "vscode.buttonHover" }}
-                    width={{ base: 'full', sm: 'auto' }}
-                    order={1}
-                >
-                    <Icon as={FaPlus} /> Add Recipe
-                </Button>
             </Stack >
 
             <VStack align="stretch" gap={6}>
