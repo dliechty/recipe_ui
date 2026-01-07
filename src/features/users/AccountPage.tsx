@@ -134,7 +134,7 @@ const AccountPage = () => {
 
                         {!isEditing && (
                             <Button
-                                size="sm"
+                                size="xs"
                                 variant="ghost"
                                 color="vscode.accent"
                                 onClick={handleEdit}
@@ -158,6 +158,7 @@ const AccountPage = () => {
                                     color="white"
                                     _hover={{ bg: "vscode.buttonHover" }}
                                     loading={isLoading}
+                                    size="xs"
                                 >
                                     Save Changes
                                 </Button>
@@ -166,6 +167,7 @@ const AccountPage = () => {
                                     bg="vscode.button"
                                     color="white"
                                     _hover={{ bg: "vscode.buttonHover" }}
+                                    size="xs"
                                 >
                                     Cancel
                                 </Button>
@@ -177,6 +179,7 @@ const AccountPage = () => {
                                     bg="vscode.button"
                                     color="white"
                                     _hover={{ bg: "vscode.buttonHover" }}
+                                    size="xs"
                                 >
                                     Change Password
                                 </Button>
