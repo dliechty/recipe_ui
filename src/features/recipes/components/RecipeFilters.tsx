@@ -29,6 +29,28 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
         setLocalFilters(filters);
     }, [filters]);
 
+    // Auto-expand if advanced filters are present on mount
+    useEffect(() => {
+        const hasAdvancedFilters = Object.entries(filters).some(([key, value]) => {
+            if (['sort', 'name', 'category'].includes(key)) return false;
+
+            if (Array.isArray(value)) return value.length > 0;
+            if (typeof value === 'object' && value !== null) {
+                return Object.values(value).some(v => {
+                    if (Array.isArray(v)) return v.length > 0;
+                    return v !== undefined && v !== '' && v !== null;
+                });
+            }
+            return value !== undefined && value !== '';
+        });
+
+        if (hasAdvancedFilters) {
+            setIsExpanded(true);
+        }
+        // We only want to run this check on mount to respect user's manual toggling afterwards
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const handleChange = (key: keyof RecipeFiltersType, value: any) => {
         const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);

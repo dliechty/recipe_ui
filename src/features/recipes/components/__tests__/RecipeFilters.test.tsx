@@ -142,4 +142,14 @@ describe('RecipeFiltersDisplay', () => {
 
         expect(onFilterChange).toHaveBeenCalledWith(expect.objectContaining({ suitable_for_diet: ['Vegan'] }));
     });
+
+    it('auto-expands "More Filters" when an advanced filter is present', () => {
+        const onFilterChange = vi.fn();
+        // Render with an advanced filter (e.g. cuisine)
+        renderWithProviders(<RecipeFiltersDisplay filters={{ cuisine: ['Italian'] }} onFilterChange={onFilterChange} />);
+
+        // Should be visible without clicking "More Filters"
+        expect(screen.getByText('Cuisine')).toBeInTheDocument();
+        expect(screen.getByText('Less Filters')).toBeInTheDocument();
+    });
 });
