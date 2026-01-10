@@ -1,4 +1,3 @@
-import React from 'react';
 import Select, { MultiValue, StylesConfig } from 'react-select';
 import { Box, Text } from '@chakra-ui/react';
 

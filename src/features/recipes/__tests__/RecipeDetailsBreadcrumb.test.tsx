@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderWithProviders, screen, waitFor } from '../../../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import RecipeDetails from '../components/RecipeDetails';

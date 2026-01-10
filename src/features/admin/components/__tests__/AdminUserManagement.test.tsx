@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderWithProviders, screen, fireEvent, waitFor } from '../../../../test-utils';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 import AdminUserManagement from '../AdminUserManagement';

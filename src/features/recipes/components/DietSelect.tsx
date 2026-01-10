@@ -1,4 +1,3 @@
-import React from 'react';
 import Select, { MultiValue, StylesConfig } from 'react-select';
 import { DietType } from '../../../client';
 import { formatDietName } from '../../../utils/formatters';

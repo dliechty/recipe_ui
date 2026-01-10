@@ -1,11 +1,12 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { AuthProvider } from './context/AuthContext'
 import { OpenAPI } from './client'
-import React from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { system } from './theme'
+import ErrorBoundary from './components/common/ErrorBoundary'
 
 async function enableMocking() {
   if (process.env.NODE_ENV !== 'development') {
@@ -42,24 +43,25 @@ const queryClient = new QueryClient({
 
 enableMocking().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
+    <StrictMode>
       <QueryClientProvider client={queryClient}>
-
         <ChakraProvider value={system}>
-          <AuthProvider>
-            <App />
-            <Toaster toaster={toaster}>
-              {(toast) => (
-                <Box p={3} bg={toast.type === 'error' ? 'red.100' : 'green.100'} color="black" borderRadius="md" boxShadow="lg" m={2}>
-                  <Text fontWeight="bold">{toast.title}</Text>
-                  {toast.description && <Text>{toast.description}</Text>}
-                </Box>
-              )}
-            </Toaster>
-          </AuthProvider>
+          <ErrorBoundary>
+            <AuthProvider>
+              <App />
+              <Toaster toaster={toaster}>
+                {(toast) => (
+                  <Box p={3} bg={toast.type === 'error' ? 'red.100' : 'green.100'} color="black" borderRadius="md" boxShadow="lg" m={2}>
+                    <Text fontWeight="bold">{toast.title}</Text>
+                    {toast.description && <Text>{toast.description}</Text>}
+                  </Box>
+                )}
+              </Toaster>
+            </AuthProvider>
+          </ErrorBoundary>
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </React.StrictMode>,
+    </StrictMode>,
   )
 })

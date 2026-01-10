@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Tabs } from '@chakra-ui/react'; // Adjust tabs import if needed for Chakra v3
 import AdminPendingRequests from '../components/AdminPendingRequests';
 import AdminUserManagement from '../components/AdminUserManagement.tsx';

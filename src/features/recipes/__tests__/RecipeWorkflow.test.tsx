@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -25,7 +26,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 // Helper to wrap components
-const renderWithProviders = (ui: React.ReactElement, { route = '/' }: { route?: string } = {}) => {
+const renderWithProviders = (_ui: ReactElement, { route = '/' }: { route?: string } = {}) => {
     window.history.pushState({}, 'Test page', route);
     const queryClient = new QueryClient({
         defaultOptions: {

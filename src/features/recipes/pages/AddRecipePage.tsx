@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
 import { Container, Breadcrumb, Icon } from '@chakra-ui/react';
 import { FaChevronRight } from 'react-icons/fa';

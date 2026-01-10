@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { renderWithProviders, screen, waitFor, fireEvent } from '../../../../../test-utils';
 import CommentList from '../CommentList';
 import { describe, it, expect, vi, beforeEach } from 'vitest';

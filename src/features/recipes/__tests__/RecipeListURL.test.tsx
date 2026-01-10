@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderWithProviders, screen, waitFor, fireEvent } from '../../../test-utils';
 import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import RecipeList from '../components/RecipeList';

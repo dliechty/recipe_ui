@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import axios from 'axios';
 import { OpenAPI, AuthenticationService, UserPublic } from '../client';
 
@@ -18,25 +18,61 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<UserPublic | null>(null);
     const isAuthenticated = !!token;
 
-    // Define fetchUser outside to be used by refreshUser
-    const fetchUser = React.useCallback(async () => {
+    // Parse JWT payload safely - returns null if invalid
+    const parseJwtPayload = useCallback((jwtToken: string): { sub?: string } | null => {
         try {
-            if (!token) return;
-
-            const parts = token.split('.');
+            const parts = jwtToken.split('.');
             if (parts.length !== 3) {
-                // Not a valid JWT, maybe a mock or opaque token
-                return;
+                // Not a valid JWT structure
+                return null;
             }
-            const payload = JSON.parse(atob(parts[1]));
-            const userId = payload.sub; // verify if sub is used
-            const userData = await AuthenticationService.getUserNameAuthUsersUserIdGet(userId);
+
+            // Validate base64 format before decoding
+            const base64Payload = parts[1];
+            if (!/^[A-Za-z0-9_-]*$/.test(base64Payload)) {
+                return null;
+            }
+
+            // Handle base64url encoding (replace URL-safe chars)
+            const normalizedPayload = base64Payload
+                .replace(/-/g, '+')
+                .replace(/_/g, '/');
+
+            const decoded = atob(normalizedPayload);
+            const payload = JSON.parse(decoded);
+
+            // Validate expected payload structure
+            if (typeof payload !== 'object' || payload === null) {
+                return null;
+            }
+
+            return payload;
+        } catch {
+            // Invalid base64, invalid JSON, or other parsing error
+            return null;
+        }
+    }, []);
+
+    // Define fetchUser outside to be used by refreshUser
+    const fetchUser = useCallback(async () => {
+        if (!token) return;
+
+        const payload = parseJwtPayload(token);
+        if (!payload?.sub) {
+            // Invalid token structure - clear auth state
+            console.error("Invalid token format - missing user ID");
+            setToken(null);
+            return;
+        }
+
+        try {
+            const userData = await AuthenticationService.getUserNameAuthUsersUserIdGet(payload.sub);
             setUser(userData);
         } catch (error) {
             console.error("Failed to fetch user", error);
-            // Optional: logout if token invalid?
+            // Token might be expired or invalid - let the 401 interceptor handle logout
         }
-    }, [token]);
+    }, [token, parseJwtPayload]);
 
     useEffect(() => {
         if (token) {
