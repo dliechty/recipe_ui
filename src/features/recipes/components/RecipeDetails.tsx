@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useParams, useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import {
     Box,
     Container,
@@ -30,6 +30,8 @@ import CommentList from './comments/CommentList';
 const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const backUrl = location.state?.fromSearch ? `/recipes?${location.state.fromSearch}` : '/recipes';
     const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
     const deleteRecipe = useDeleteRecipe();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -54,7 +56,7 @@ const RecipeDetails = () => {
         return (
             <Container maxW="container.xl" py={8}>
                 <ErrorAlert title="Failed to load recipe" description={error.message || "An unexpected error occurred."} />
-                <Button mt={4} onClick={() => navigate('/recipes')}>Back to Recipes</Button>
+                <Button mt={4} onClick={() => navigate(backUrl)}>Back to Recipes</Button>
             </Container>
         );
     }
@@ -73,7 +75,7 @@ const RecipeDetails = () => {
                 <Text>Recipe not found.</Text>
                 <Button
                     mt={4}
-                    onClick={() => navigate('/recipes')}
+                    onClick={() => navigate(backUrl)}
                     bg="vscode.button"
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
@@ -104,7 +106,7 @@ const RecipeDetails = () => {
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
                         <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
-                            <RouterLink to="/recipes">Recipes</RouterLink>
+                            <RouterLink to={backUrl}>Recipes</RouterLink>
                         </Breadcrumb.Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Separator>

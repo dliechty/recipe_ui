@@ -1,23 +1,49 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Box, Spinner, Center, Container, HStack, Badge, Button, Icon, Table, Text, VStack, chakra, Stack } from '@chakra-ui/react';
 import { FaPlus, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatDuration } from '../../../utils/formatters';
 import RecipeFiltersDisplay from './RecipeFilters';
+import { filtersToSearchParams, searchParamsToFilters } from '../../../utils/recipeParams';
 
 const RecipeList = () => {
     const navigate = useNavigate();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [filters, setFilters] = useState<RecipeFilters>(() => {
-        const params = new URLSearchParams(window.location.search);
-        const ids = params.get('ids');
-        if (ids) {
-            return { ids: ids.split(',') };
+        const fromUrl = searchParamsToFilters(searchParams);
+        // If URL is empty (no params), apply default sort
+        if (Array.from(searchParams.keys()).length === 0) {
+            return { sort: 'name' };
         }
-        return { sort: 'name' };
+        // If we have params but no sort, we might want to default sort? 
+        // Logic before was: if ids, just ids. If no ids, sort=name.
+        // Let's preserve that logic: if no sort specified in URL, and we are not filtering by IDs (which usually implies specific order is irrelevant or handled by API?), default to name.
+        // Actually, let's just trust the URL. If it's empty, default to name.
+        if (!fromUrl.sort) {
+            // If we just have filters but no sort, existing behavior was implied default sort by API? 
+            // Previous code: if (ids) return { ids }; return { sort: 'name' };
+            // So if I have ?category=Dessert, previous code would have ignored it? 
+            // Wait, previous code ONLY looked at ids. It completely IGNORED other URL params!
+            // So this new feature is enabling deep linking for ALL filters.
+
+            // Ensure 'sort' is set if not present, to match UI state expectations (toggle needs a value)
+            // But if we are filtering by IDs, maybe we don't want to enforce sort?
+            if (!fromUrl.ids) {
+                fromUrl.sort = 'name';
+            }
+        }
+        return fromUrl;
     });
+
+    // Update URL when filters change
+    useEffect(() => {
+        const params = filtersToSearchParams(filters);
+        setSearchParams(params, { replace: true });
+    }, [filters, setSearchParams]);
 
     const [collapsedParents, setCollapsedParents] = useState<Set<string>>(new Set());
 
@@ -88,7 +114,9 @@ const RecipeList = () => {
 
 
     const handleRecipeClick = (id: string) => {
-        navigate(`/recipes/${id}`);
+        navigate(`/recipes/${id}`, {
+            state: { fromSearch: searchParams.toString() }
+        });
     };
 
     if (status === 'error') {
