@@ -92,33 +92,38 @@ const AppRoutes = () => {
                             </ProtectedRoute>
                         }
                     />
-                    <Route
-                        path="/meals"
-                        element={
-                            <ProtectedRoute>
-                                <MealsPage />
-                            </ProtectedRoute>
-                        }
-                    >
-                        <Route index element={<MealList />} />
-                        <Route path="templates" element={<TemplateList />} />
-                    </Route>
-                    <Route
-                        path="/meals/:id"
-                        element={
-                            <ProtectedRoute>
-                                <MealDetails />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/meals/templates/:id"
-                        element={
-                            <ProtectedRoute>
-                                <TemplateDetails />
-                            </ProtectedRoute>
-                        }
-                    />
+                    {/* Feature guarded Meals functionality */}
+                    {import.meta.env.VITE_ENABLE_MEALS_FEATURE === 'true' && (
+                        <>
+                            <Route
+                                path="/meals"
+                                element={
+                                    <ProtectedRoute>
+                                        <MealsPage />
+                                    </ProtectedRoute>
+                                }
+                            >
+                                <Route index element={<MealList />} />
+                                <Route path="templates" element={<TemplateList />} />
+                            </Route>
+                            <Route
+                                path="/meals/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <MealDetails />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/meals/templates/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <TemplateDetails />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </>
+                    )}
                 </Routes>
             </Suspense>
         </Layout>

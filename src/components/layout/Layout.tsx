@@ -59,7 +59,10 @@ const Layout = ({ children }: LayoutProps) => {
                         <HStack gap={8} alignItems={'center'}>
                             <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
-                                <NavItem to="/meals">Meals</NavItem>
+                                {/* Feature Flag: Check if meals feature is enabled */}
+                                {import.meta.env.VITE_ENABLE_MEALS_FEATURE === 'true' && (
+                                    <NavItem to="/meals">Meals</NavItem>
+                                )}
                             </HStack>
                             {/* Mobile Menu */}
                             <Box display={{ base: 'flex', md: 'none' }}>
@@ -84,9 +87,11 @@ const Layout = ({ children }: LayoutProps) => {
                                             <Menu.Item value="recipes" asChild>
                                                 <NavLink to="/recipes">Recipes</NavLink>
                                             </Menu.Item>
-                                            <Menu.Item value="meals" asChild>
-                                                <NavLink to="/meals">Meals</NavLink>
-                                            </Menu.Item>
+                                            {import.meta.env.VITE_ENABLE_MEALS_FEATURE === 'true' && (
+                                                <Menu.Item value="meals" asChild>
+                                                    <NavLink to="/meals">Meals</NavLink>
+                                                </Menu.Item>
+                                            )}
                                             {user?.is_admin && (
                                                 <Menu.Item value="admin" asChild>
                                                     <NavLink to="/admin">Admin</NavLink>
@@ -106,6 +111,9 @@ const Layout = ({ children }: LayoutProps) => {
                         <Flex alignItems={'center'}>
                             <HStack gap={4} mr={4} display={{ base: 'none', md: 'flex' }}>
                                 {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
+                                {import.meta.env.VITE_ENABLE_MEALS_FEATURE === 'true' && (
+                                    <NavItem to="/meals">Meals</NavItem>
+                                )}
                                 <NavItem to="/account">Account</NavItem>
                                 <Button
                                     variant={'solid'}
