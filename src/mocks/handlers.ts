@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { recipes as initialRecipes, users, comments as initialComments } from './data';
-import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate } from '../client';
+import { recipes as initialRecipes, users, comments as initialComments, meals as initialMeals, mealTemplates as initialMealTemplates } from './data';
+import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate } from '../client';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 const recipes: Recipe[] = [...initialRecipes] as unknown as Recipe[];
@@ -9,6 +9,8 @@ const pendingRequests: { id: string; email: string; first_name: string; last_nam
 // Store comments without user object, enrich on retrieval
 type StoredComment = Omit<Comment, 'user'>;
 const commentsStore: StoredComment[] = [...initialComments] as unknown as StoredComment[];
+const mealsStore: Meal[] = [...initialMeals] as unknown as Meal[];
+const mealTemplateStore: MealTemplate[] = [...initialMealTemplates] as unknown as MealTemplate[];
 
 
 
@@ -20,6 +22,10 @@ export const resetStore = () => {
     pendingRequests.length = 0;
     commentsStore.length = 0;
     commentsStore.push(...initialComments);
+    mealsStore.length = 0;
+    mealsStore.push(...initialMeals as unknown as Meal[]);
+    mealTemplateStore.length = 0;
+    mealTemplateStore.push(...initialMealTemplates as unknown as MealTemplate[]);
 
 
 };
@@ -584,6 +590,187 @@ export const handlers = [
         }
 
         commentsStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // --- MEALS ---
+
+    // GET /meals/
+    http.get('*/meals/', ({ request }) => {
+        const url = new URL(request.url);
+        const skip = Number(url.searchParams.get('skip') || '0');
+        const limit = Number(url.searchParams.get('limit') || '100');
+
+        // TODO: Add filtering logic if needed (classification, status, etc.)
+
+        const paginatedMeals = mealsStore.slice(skip, skip + limit);
+
+        return HttpResponse.json(paginatedMeals, {
+            headers: {
+                'X-Total-Count': mealsStore.length.toString(),
+                'Access-Control-Expose-Headers': 'X-Total-Count'
+            },
+        });
+    }),
+
+    // GET /meals/:id
+    http.get('*/meals/:id', ({ params }) => {
+        const { id } = params;
+        const meal = mealsStore.find(m => m.id === id);
+
+        if (!meal) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        return HttpResponse.json(meal);
+    }),
+
+    // POST /meals/
+    http.post('*/meals/', async ({ request }) => {
+        const body = await request.json() as MealCreate;
+        const newMeal: Meal = {
+            id: crypto.randomUUID(),
+            user_id: "550e8400-e29b-41d4-a716-446655440000", // Default user
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            name: body.name || null,
+            status: body.status === null ? undefined : body.status || MealStatus.PROPOSED,
+            classification: body.classification || null,
+            date: body.date || null,
+            template_id: body.template_id || null, // Assuming template_id is used but not in Create body usually? Check MealCreate.
+            items: (body.items || []).map(item => ({
+                id: crypto.randomUUID(),
+                meal_id: "temp", // assigned below
+                recipe_id: item.recipe_id,
+                // TODO: fetch recipe details if we want to enrich them like we did in data.ts for mock visuals
+            }))
+        };
+        // Fix meal_id and ensure items are fully structured if needed
+        newMeal.items.forEach(i => i.meal_id = newMeal.id);
+
+        mealsStore.push(newMeal);
+        return HttpResponse.json(newMeal, { status: 201 });
+    }),
+
+    // PUT /meals/:id
+    http.put('*/meals/:id', async ({ request, params }) => {
+        const { id } = params;
+        const body = await request.json() as MealUpdate;
+
+        const index = mealsStore.findIndex(m => m.id === id);
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const updatedMeal = {
+            ...mealsStore[index],
+            ...body, // simple merge for top level fields
+            status: body.status || mealsStore[index].status || MealStatus.PROPOSED,
+            updated_at: new Date().toISOString(),
+        };
+
+        // items update removed as it's not in MealUpdate type
+
+        mealsStore[index] = updatedMeal;
+        return HttpResponse.json(updatedMeal);
+    }),
+
+    // DELETE /meals/:id
+    http.delete('*/meals/:id', ({ params }) => {
+        const { id } = params;
+        const index = mealsStore.findIndex(m => m.id === id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        mealsStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // --- MEAL TEMPLATES ---
+
+    // GET /meals/templates
+    http.get('*/meals/templates', ({ request }) => {
+        const url = new URL(request.url);
+        const skip = Number(url.searchParams.get('skip') || '0');
+        const limit = Number(url.searchParams.get('limit') || '100');
+
+        const paginated = mealTemplateStore.slice(skip, skip + limit);
+
+        return HttpResponse.json(paginated, {
+            headers: {
+                'X-Total-Count': mealTemplateStore.length.toString(),
+                'Access-Control-Expose-Headers': 'X-Total-Count'
+            },
+        });
+    }),
+
+    // GET /meals/templates/:id
+    http.get('*/meals/templates/:id', ({ params }) => {
+        const { id } = params;
+        const template = mealTemplateStore.find(t => t.id === id);
+
+        if (!template) {
+            return new HttpResponse(null, { status: 404 });
+        }
+        return HttpResponse.json(template);
+    }),
+
+    // POST /meals/templates
+    http.post('*/meals/templates', async ({ request }) => {
+        const body = await request.json() as MealTemplateCreate;
+        const newTemplate: MealTemplate = {
+            id: crypto.randomUUID(),
+            name: body.name,
+            classification: body.classification || null,
+            user_id: "550e8400-e29b-41d4-a716-446655440000",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            slots: body.slots ? body.slots.map(s => ({
+                id: crypto.randomUUID(),
+                template_id: "temp",
+                strategy: s.strategy,
+                recipe_id: s.recipe_id, // Map other fields if needed
+            })) : []
+        };
+        newTemplate.slots.forEach(s => s.template_id = newTemplate.id);
+
+        mealTemplateStore.push(newTemplate);
+        return HttpResponse.json(newTemplate, { status: 201 });
+    }),
+
+    // PUT /meals/templates/:id
+    http.put('*/meals/templates/:id', async ({ request, params }) => {
+        const { id } = params;
+        const body = await request.json() as MealTemplateUpdate;
+
+        const index = mealTemplateStore.findIndex(t => t.id === id);
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const updatedTemplate = {
+            ...mealTemplateStore[index],
+            ...body,
+            name: body.name || mealTemplateStore[index].name,
+            updated_at: new Date().toISOString()
+        };
+        // TODO: Handle slot updates properly if needed, similar to Meal items
+
+        mealTemplateStore[index] = updatedTemplate;
+        return HttpResponse.json(updatedTemplate);
+    }),
+
+    // DELETE /meals/templates/:id
+    http.delete('*/meals/templates/:id', ({ params }) => {
+        const { id } = params;
+        const index = mealTemplateStore.findIndex(t => t.id === id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+        mealTemplateStore.splice(index, 1);
         return new HttpResponse(null, { status: 204 });
     }),
 ];

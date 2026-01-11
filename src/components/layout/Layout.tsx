@@ -59,6 +59,7 @@ const Layout = ({ children }: LayoutProps) => {
                         <HStack gap={8} alignItems={'center'}>
                             <HStack as={'nav'} gap={4} display={{ base: 'none', md: 'flex' }}>
                                 <NavItem to="/recipes">Recipes</NavItem>
+                                <NavItem to="/meals">Meals</NavItem>
                             </HStack>
                             {/* Mobile Menu */}
                             <Box display={{ base: 'flex', md: 'none' }}>
@@ -82,6 +83,9 @@ const Layout = ({ children }: LayoutProps) => {
                                         <Menu.Content zIndex={10}>
                                             <Menu.Item value="recipes" asChild>
                                                 <NavLink to="/recipes">Recipes</NavLink>
+                                            </Menu.Item>
+                                            <Menu.Item value="meals" asChild>
+                                                <NavLink to="/meals">Meals</NavLink>
                                             </Menu.Item>
                                             {user?.is_admin && (
                                                 <Menu.Item value="admin" asChild>

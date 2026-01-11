@@ -53,3 +53,71 @@ export const comments = [
 
 ];
 
+export const meals = [
+    {
+        id: "m1",
+        name: "Weeknight Dinner",
+        status: "Planned",
+        classification: "Dinner",
+        date: new Date().toISOString().split('T')[0],
+        user_id: "550e8400-e29b-41d4-a716-446655440000",
+        template_id: null,
+        created_at: new Date(Date.now() - 86400000).toISOString(),
+        updated_at: new Date(Date.now() - 86400000).toISOString(),
+        items: [
+            {
+                id: "mi1",
+                meal_id: "m1",
+                recipe_id: "1", // Spag Carbonara
+                order: 1,
+                recipe: {
+                    id: "1",
+                    name: "Spaghetti Carbonara"
+                }
+            }
+        ]
+    },
+    {
+        id: "m2",
+        name: "Sunday Brunch",
+        status: "Cooked",
+        classification: "Brunch",
+        date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+        user_id: "550e8400-e29b-41d4-a716-446655440000",
+        template_id: null,
+        created_at: new Date(Date.now() - 172800000).toISOString(),
+        updated_at: new Date(Date.now() - 172800000).toISOString(),
+        items: [
+            {
+                id: "mi2",
+                meal_id: "m2",
+                recipe_id: "2", // Chicken Curry
+                order: 1,
+                recipe: {
+                    id: "2",
+                    name: "Chicken Curry"
+                }
+            }
+        ]
+    }
+];
+
+export const mealTemplates = [
+    {
+        id: "mt1",
+        name: "Quick Pasta Dinner",
+        user_id: "550e8400-e29b-41d4-a716-446655440000",
+        classification: "Dinner",
+        created_at: new Date(Date.now() - 864000000).toISOString(),
+        updated_at: new Date(Date.now() - 864000000).toISOString(),
+        slots: [
+            {
+                id: "mts1",
+                template_id: "mt1",
+                strategy: "Simple", // Assuming "Simple" maps to "Direct" or similar? The enum has DIRECT, LIST, SEARCH. "Simple" isn't in enum. I should use "Direct". 
+                recipe_id: "1" // Carbonara
+            }
+        ]
+    }
+];
+

@@ -15,6 +15,11 @@ const RequestAccountPage = React.lazy(() => import('./features/auth/components/R
 const AdminDashboard = React.lazy(() => import('./features/admin/pages/AdminDashboard'));
 const ChangePasswordPage = React.lazy(() => import('./features/auth/components/ChangePasswordPage'));
 const AccountPage = React.lazy(() => import('./features/users/AccountPage'));
+const MealsPage = React.lazy(() => import('./features/meals/pages/MealsPage'));
+const MealList = React.lazy(() => import('./features/meals/components/MealList'));
+const TemplateList = React.lazy(() => import('./features/meals/components/TemplateList'));
+const MealDetails = React.lazy(() => import('./features/meals/components/MealDetails'));
+const TemplateDetails = React.lazy(() => import('./features/meals/components/TemplateDetails'));
 
 
 const AppRoutes = () => {
@@ -84,6 +89,33 @@ const AppRoutes = () => {
                         element={
                             <ProtectedRoute>
                                 <EditRecipePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/meals"
+                        element={
+                            <ProtectedRoute>
+                                <MealsPage />
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route index element={<MealList />} />
+                        <Route path="templates" element={<TemplateList />} />
+                    </Route>
+                    <Route
+                        path="/meals/:id"
+                        element={
+                            <ProtectedRoute>
+                                <MealDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/meals/templates/:id"
+                        element={
+                            <ProtectedRoute>
+                                <TemplateDetails />
                             </ProtectedRoute>
                         }
                     />
