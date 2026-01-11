@@ -109,6 +109,8 @@ export class AuthenticationService {
     /**
      * Login
      * Endpoint to log in a user and get an access token.
+     * Rate limited to 5 attempts per minute per IP address.
+     * Account is locked for 15 minutes after 5 failed attempts.
      * @param formData
      * @returns Token Successful Response
      * @throws ApiError
@@ -129,6 +131,10 @@ export class AuthenticationService {
     /**
      * Request Account
      * Submit a request for a new user account.
+     * Rate limited to 3 requests per minute per IP address.
+     *
+     * Note: Always returns 202 Accepted to prevent user enumeration attacks.
+     * The same response is returned whether or not the email is already registered.
      * @param requestBody
      * @returns any Successful Response
      * @throws ApiError

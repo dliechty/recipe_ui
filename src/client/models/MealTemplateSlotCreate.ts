@@ -3,10 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { MealTemplateSlotStrategy } from './MealTemplateSlotStrategy';
+import type { SearchCriterion } from './SearchCriterion';
 export type MealTemplateSlotCreate = {
     strategy: MealTemplateSlotStrategy;
     recipe_id?: (string | null);
     recipe_ids?: (Array<string> | null);
-    search_criteria?: null;
+    search_criteria?: (Array<SearchCriterion> | null);
 };
 

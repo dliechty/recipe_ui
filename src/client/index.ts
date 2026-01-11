@@ -42,6 +42,7 @@ export type { RecipeIngredient } from './models/RecipeIngredient';
 export type { RecipeIngredientCreate } from './models/RecipeIngredientCreate';
 export type { RecipeNutrition } from './models/RecipeNutrition';
 export type { RecipeTimes } from './models/RecipeTimes';
+export type { SearchCriterion } from './models/SearchCriterion';
 export type { Token } from './models/Token';
 export type { User } from './models/User';
 export type { UserPublic } from './models/UserPublic';
