@@ -22,9 +22,27 @@ const MealsPage = () => {
         <Container maxW="container.xl" py={8}>
 
             <Tabs.Root value={currentTab} onValueChange={(e) => handleTabChange(e.value)}>
-                <Tabs.List borderWidth="1px" borderColor="border.default" borderRadius="md" p="1" bg="bg.surface" mb={6}>
-                    <Tabs.Trigger value="meals" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>Meals</Tabs.Trigger>
-                    <Tabs.Trigger value="templates" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>Templates</Tabs.Trigger>
+                <Tabs.List borderBottomWidth="1px" borderColor="border.default" mb={6}>
+                    <Tabs.Trigger
+                        value="meals"
+                        px={4}
+                        py={2}
+                        borderBottomWidth="2px"
+                        borderBottomColor="transparent"
+                        _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
+                    >
+                        Meals
+                    </Tabs.Trigger>
+                    <Tabs.Trigger
+                        value="templates"
+                        px={4}
+                        py={2}
+                        borderBottomWidth="2px"
+                        borderBottomColor="transparent"
+                        _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
+                    >
+                        Templates
+                    </Tabs.Trigger>
                 </Tabs.List>
 
                 {/* 
