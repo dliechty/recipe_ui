@@ -3,6 +3,7 @@ import CommentList from '../CommentList';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { server } from '../../../../../mocks/server';
 import { http, HttpResponse } from 'msw';
+import { CommentCreate, CommentUpdate } from '../../../../../client';
 
 // Mock AuthContext
 const mockUseAuth = vi.fn();
@@ -38,7 +39,7 @@ describe('CommentList', () => {
                 ]);
             }),
             http.post('*/recipes/:recipe_id/comments', async ({ request }) => {
-                const body = await request.json() as any;
+                const body = await request.json() as CommentCreate;
                 return HttpResponse.json({
                     id: 'c2',
                     recipe_id: 'r1',
@@ -92,7 +93,7 @@ describe('CommentList', () => {
                 return HttpResponse.json(comments);
             }),
             http.put('*/recipes/:recipe_id/comments/:comment_id', async ({ request }) => {
-                const body = await request.json() as any;
+                const body = await request.json() as CommentUpdate;
                 const updated = {
                     ...comments[0],
                     text: body.text,

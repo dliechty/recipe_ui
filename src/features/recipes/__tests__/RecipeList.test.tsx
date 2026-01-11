@@ -24,7 +24,7 @@ describe('RecipeList', () => {
             root = null;
             rootMargin = '';
             thresholds = [];
-        } as any;
+        } as unknown as typeof IntersectionObserver;
     });
 
     it('renders recipes from API', async () => {

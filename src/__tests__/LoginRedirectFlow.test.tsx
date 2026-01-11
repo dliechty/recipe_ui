@@ -37,12 +37,18 @@ describe('Login Redirect Flow', () => {
 
     it('redirects to original protected route after login', async () => {
         // Setup mocks
-        (AuthenticationService.loginAuthTokenPost as any).mockResolvedValue({
-            access_token: 'header.eyJzdWIiOiAiMSJ9.signature'
+        // Setup mocks
+        vi.mocked(AuthenticationService.loginAuthTokenPost).mockResolvedValue({
+            access_token: 'header.eyJzdWIiOiAiMSJ9.signature',
+            token_type: 'bearer'
         });
-        (AuthenticationService.getUserNameAuthUsersUserIdGet as any).mockResolvedValue({
-            id: 1,
-            email: 'test@example.com'
+        vi.mocked(AuthenticationService.getUserNameAuthUsersUserIdGet).mockResolvedValue({
+            id: '1',
+            email: 'test@example.com',
+            first_name: 'Test',
+            last_name: 'User',
+            is_admin: false,
+            is_first_login: false
         });
 
         render(
@@ -79,12 +85,18 @@ describe('Login Redirect Flow', () => {
 
     it('redirects to recipes by default if no prior location', async () => {
         // Setup mocks
-        (AuthenticationService.loginAuthTokenPost as any).mockResolvedValue({
-            access_token: 'header.eyJzdWIiOiAiMSJ9.signature'
+        // Setup mocks
+        vi.mocked(AuthenticationService.loginAuthTokenPost).mockResolvedValue({
+            access_token: 'header.eyJzdWIiOiAiMSJ9.signature',
+            token_type: 'bearer'
         });
-        (AuthenticationService.getUserNameAuthUsersUserIdGet as any).mockResolvedValue({
-            id: 1,
-            email: 'test@example.com'
+        vi.mocked(AuthenticationService.getUserNameAuthUsersUserIdGet).mockResolvedValue({
+            id: '1',
+            email: 'test@example.com',
+            first_name: 'Test',
+            last_name: 'User',
+            is_admin: false,
+            is_first_login: false
         });
 
         render(

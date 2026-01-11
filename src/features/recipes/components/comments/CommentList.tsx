@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Heading, VStack, Button, Collapsible, Text, HStack, Switch, Spinner } from '@chakra-ui/react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useComments } from '../../../../hooks/useComments';
+import { Comment } from '../../../../client';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
 
@@ -69,7 +70,7 @@ const CommentList: React.FC<CommentListProps> = ({ recipeId }) => {
                         </Box>
 
                         {comments && comments.length > 0 ? (
-                            comments.map((comment: any) => (
+                            comments.map((comment: Comment) => (
                                 <CommentItem
                                     key={comment.id}
                                     comment={comment}

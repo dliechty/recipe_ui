@@ -47,7 +47,7 @@ const mockUsers = [
 describe('AdminUserManagement', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        (AuthenticationService.listActiveUsersAuthUsersGet as any).mockResolvedValue(mockUsers);
+        vi.mocked(AuthenticationService.listActiveUsersAuthUsersGet).mockResolvedValue(mockUsers);
     });
 
     test('renders user list correctly', async () => {
@@ -110,7 +110,14 @@ describe('AdminUserManagement', () => {
     });
 
     test('calls update API on save', async () => {
-        (AuthenticationService.updateUserAuthUsersUserIdPut as any).mockResolvedValue({});
+        vi.mocked(AuthenticationService.updateUserAuthUsersUserIdPut).mockResolvedValue({
+            id: '1',
+            email: 'user1@example.com',
+            first_name: 'Updated',
+            last_name: 'One',
+            is_admin: false,
+            is_first_login: false
+        });
 
         renderWithProviders(<AdminUserManagement />);
 
@@ -153,7 +160,7 @@ describe('AdminUserManagement', () => {
     });
 
     test('handles delete user', async () => {
-        (AuthenticationService.deleteUserAuthUsersUserIdDelete as any).mockResolvedValue({});
+        vi.mocked(AuthenticationService.deleteUserAuthUsersUserIdDelete).mockResolvedValue(undefined);
         mockConfirm.mockReturnValue(true);
 
         renderWithProviders(<AdminUserManagement />);
@@ -170,7 +177,7 @@ describe('AdminUserManagement', () => {
     });
 
     test('handles reset password', async () => {
-        (AuthenticationService.resetUserAuthUsersUserIdResetPost as any).mockResolvedValue({});
+        vi.mocked(AuthenticationService.resetUserAuthUsersUserIdResetPost).mockResolvedValue({ message: "Reset" });
         mockPrompt.mockReturnValue('newpass');
 
         renderWithProviders(<AdminUserManagement />);

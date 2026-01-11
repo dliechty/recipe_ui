@@ -1,17 +1,20 @@
 import { http, HttpResponse } from 'msw';
 import { recipes as initialRecipes, users, comments as initialComments } from './data';
+import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate } from '../client';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
-const recipes = [...initialRecipes];
+const recipes: Recipe[] = [...initialRecipes] as unknown as Recipe[];
 const usersStore = [...users];
-const pendingRequests: any[] = [];
-const commentsStore: any[] = [...initialComments];
+const pendingRequests: { id: string; email: string; first_name: string; last_name: string; status: string; created_at: string }[] = [];
+// Store comments without user object, enrich on retrieval
+type StoredComment = Omit<Comment, 'user'>;
+const commentsStore: StoredComment[] = [...initialComments] as unknown as StoredComment[];
 
 
 
 export const resetStore = () => {
     recipes.length = 0;
-    recipes.push(...initialRecipes);
+    recipes.push(...initialRecipes as unknown as Recipe[]);
     usersStore.length = 0;
     usersStore.push(...users);
     pendingRequests.length = 0;
@@ -130,7 +133,7 @@ export const handlers = [
         if (ingredientsLike) {
             const query = ingredientsLike.toLowerCase();
             filteredRecipes = filteredRecipes.filter(r => {
-                const recipeIngredients = r.components.flatMap((c: any) => c.ingredients.map((i: any) => i.item.toLowerCase()));
+                const recipeIngredients = r.components.flatMap((c) => c.ingredients.map((i) => i.item.toLowerCase()));
                 return recipeIngredients.some(ri => ri.includes(query));
             });
         }
@@ -150,14 +153,15 @@ export const handlers = [
                     const desc = field.startsWith('-');
                     const key = desc ? field.substring(1) : field;
 
-                    let valA, valB;
+                    let valA: string | number = 0;
+                    let valB: string | number = 0;
 
                     if (key === 'name') {
                         valA = a.core.name.toLowerCase();
                         valB = b.core.name.toLowerCase();
                     } else if (key === 'created_at') {
-                        valA = new Date(a.audit.created_at).getTime();
-                        valB = new Date(b.audit.created_at).getTime();
+                        valA = a.audit.created_at ? new Date(a.audit.created_at).getTime() : 0;
+                        valB = b.audit.created_at ? new Date(b.audit.created_at).getTime() : 0;
                     } else if (key === 'total_time_minutes') {
                         valA = a.times.total_time_minutes || 0;
                         valB = b.times.total_time_minutes || 0;
@@ -188,21 +192,21 @@ export const handlers = [
     // Intercept "GET /recipes/meta/:field" requests...
     http.get('*/recipes/meta/:field', ({ params }) => {
         const { field } = params;
-        let values: any[] = [];
+        let values: (string | { id: string; name: string })[] = [];
 
         if (field === 'category') {
-            values = [...new Set(recipes.map(r => r.core.category).filter(Boolean))];
+            values = [...new Set(recipes.map(r => r.core.category).filter(Boolean) as string[])];
         } else if (field === 'cuisine') {
-            values = [...new Set(recipes.map(r => r.core.cuisine).filter(Boolean))];
+            values = [...new Set(recipes.map(r => r.core.cuisine).filter(Boolean) as string[])];
         } else if (field === 'difficulty') {
-            values = [...new Set(recipes.map(r => r.core.difficulty).filter(Boolean))];
+            values = [...new Set(recipes.map(r => r.core.difficulty).filter(Boolean) as string[])];
         } else if (field === 'owner') {
             // Return list of objects { id: ID, name: Name } as per spec
             values = usersStore.map(u => ({ id: u.id, name: `${u.first_name} ${u.last_name}` }));
         } else if (field === 'suitable_for_diet') {
             values = [...new Set(recipes.flatMap(r => r.suitable_for_diet || []))];
         } else if (field === 'protein') {
-            values = [...new Set(recipes.map(r => r.core.protein).filter(Boolean))];
+            values = [...new Set(recipes.map(r => r.core.protein).filter(Boolean) as string[])];
         }
 
         return HttpResponse.json(values);
@@ -222,8 +226,8 @@ export const handlers = [
 
     // Intercept "POST /recipes/" requests...
     http.post('*/recipes/', async ({ request }) => {
-        const newRecipe = await request.json() as any;
-        const createdRecipe = {
+        const newRecipe = await request.json() as RecipeCreate;
+        const createdRecipe: Recipe = {
             core: {
                 ...newRecipe.core,
                 id: crypto.randomUUID(), // Generate UUID
@@ -233,18 +237,18 @@ export const handlers = [
             times: newRecipe.times,
             nutrition: newRecipe.nutrition,
             suitable_for_diet: newRecipe.suitable_for_diet || [],
-            components: newRecipe.components.map((comp: any) => ({
+            components: newRecipe.components.map((comp) => ({
                 name: comp.name,
-                ingredients: comp.ingredients.map((ing: any) => ({
+                ingredients: comp.ingredients.map((ing) => ({
                     quantity: ing.quantity,
                     unit: ing.unit,
-                    item: ing.ingredient_name || ing.item, // Handle potential client request diff
+                    item: ing.ingredient_name || (ing as unknown as { item: string }).item, // Handle potential client request diff
                     notes: ing.notes
                 }))
             })),
-            instructions: newRecipe.instructions.map((inst: any) => ({
+            instructions: newRecipe.instructions.map((inst) => ({
                 step_number: inst.step_number,
-                text: inst.text || inst.description // Handle potential client request diff
+                text: inst.text || (inst as unknown as { description: string }).description // Handle potential client request diff
             })),
             audit: {
                 created_at: new Date().toISOString(),
@@ -263,7 +267,7 @@ export const handlers = [
     // Intercept "PUT /recipes/:id" requests...
     http.put('*/recipes/:id', async ({ request, params }) => {
         const { id } = params;
-        const updatedData = await request.json() as any;
+        const updatedData = await request.json() as RecipeCreate;
 
         const index = recipes.findIndex(r => r.core.id === id);
         if (index === -1) {
@@ -280,18 +284,18 @@ export const handlers = [
             times: updatedData.times,
             nutrition: updatedData.nutrition,
             suitable_for_diet: updatedData.suitable_for_diet || [],
-            components: updatedData.components.map((comp: any) => ({
+            components: updatedData.components.map((comp) => ({
                 name: comp.name,
-                ingredients: comp.ingredients.map((ing: any) => ({
+                ingredients: comp.ingredients.map((ing) => ({
                     quantity: ing.quantity,
                     unit: ing.unit,
-                    item: ing.ingredient_name || ing.item,
+                    item: ing.ingredient_name || (ing as unknown as { item: string }).item,
                     notes: ing.notes
                 }))
             })),
-            instructions: updatedData.instructions.map((inst: any) => ({
+            instructions: updatedData.instructions.map((inst) => ({
                 step_number: inst.step_number,
-                text: inst.text || inst.description
+                text: inst.text || (inst as unknown as { description: string }).description
             })),
             audit: {
                 ...recipes[index].audit,
@@ -348,7 +352,7 @@ export const handlers = [
 
     // Intercept "POST /auth/request-account"
     http.post('*/auth/request-account', async ({ request }) => {
-        const body = await request.json() as any;
+        const body = await request.json() as { email: string; first_name: string; last_name: string };
         const { email } = body;
 
         if (usersStore.some(u => u.email === email)) {
@@ -488,7 +492,7 @@ export const handlers = [
     // POST /recipes/:recipe_id/comments
     http.post('*/recipes/:recipe_id/comments', async ({ request, params }) => {
         const { recipe_id } = params;
-        const body = await request.json() as any;
+        const body = await request.json() as CommentCreate;
         const authHeader = request.headers.get('Authorization');
 
         let userId = "550e8400-e29b-41d4-a716-446655440000"; // default mock user
@@ -506,15 +510,14 @@ export const handlers = [
             }
         }
 
-        const newComment = {
+        const newComment: StoredComment = {
             id: crypto.randomUUID(),
-            recipe_id: recipe_id,
+            recipe_id: String(recipe_id),
             user_id: userId,
             text: body.text,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
         };
-
         commentsStore.push(newComment);
 
         // Return enriched comment
@@ -538,7 +541,7 @@ export const handlers = [
     // PUT /recipes/:recipe_id/comments/:comment_id
     http.put('*/recipes/:recipe_id/comments/:comment_id', async ({ request, params }) => {
         const { comment_id } = params;
-        const body = await request.json() as any;
+        const body = await request.json() as CommentUpdate;
 
         const index = commentsStore.findIndex(c => c.id === comment_id);
         if (index === -1) {

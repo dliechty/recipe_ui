@@ -40,7 +40,7 @@ const LoginPage = () => {
                 password: password
             });
             login(response.access_token);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Login failed:", err);
             setError("Login failed. Please check your credentials and try again.");
         } finally {

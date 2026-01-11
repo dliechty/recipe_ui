@@ -8,19 +8,8 @@ import { useAuth } from '../../../../context/AuthContext';
 import { useUpdateComment, useDeleteComment } from '../../../../hooks/useComments';
 import CommentForm from './CommentForm';
 
-// Define a local interface for the Comment object based on what we expect from API
-interface Comment {
-    id: string;
-    text: string;
-    user_id: string;
-    user?: {
-        first_name?: string;
-        last_name?: string;
-        email?: string;
-    };
-    created_at: string;
-    updated_at: string;
-}
+import { Comment } from '../../../../client';
+
 
 interface CommentItemProps {
     comment: Comment;

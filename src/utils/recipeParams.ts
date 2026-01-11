@@ -7,7 +7,8 @@ export const filtersToSearchParams = (filters: RecipeFilters): URLSearchParams =
     if (filters.sort) params.set('sort', filters.sort);
 
     // Arrays - join with commas
-    const arrayFields: (keyof RecipeFilters)[] = [
+    // Arrays - join with commas
+    const arrayFields: (keyof Pick<RecipeFilters, 'category' | 'cuisine' | 'difficulty' | 'owner' | 'protein' | 'suitable_for_diet' | 'ids'>)[] = [
         'category', 'cuisine', 'difficulty', 'owner',
         'protein', 'suitable_for_diet', 'ids'
     ];
@@ -20,7 +21,8 @@ export const filtersToSearchParams = (filters: RecipeFilters): URLSearchParams =
     });
 
     // Nested Ranges
-    const rangeFields: (keyof RecipeFilters)[] = [
+    // Nested Ranges
+    const rangeFields: (keyof Pick<RecipeFilters, 'calories' | 'total_time' | 'prep_time' | 'active_time' | 'cook_time' | 'yield'>)[] = [
         'calories', 'total_time', 'prep_time',
         'active_time', 'cook_time', 'yield'
     ];
@@ -51,7 +53,8 @@ export const searchParamsToFilters = (params: URLSearchParams): RecipeFilters =>
     if (sort) filters.sort = sort;
 
     // Arrays
-    const arrayFields: (keyof RecipeFilters)[] = [
+    // Arrays
+    const arrayFields: (keyof Pick<RecipeFilters, 'category' | 'cuisine' | 'difficulty' | 'owner' | 'protein' | 'suitable_for_diet' | 'ids'>)[] = [
         'category', 'cuisine', 'difficulty', 'owner',
         'protein', 'suitable_for_diet', 'ids'
     ];
@@ -59,12 +62,14 @@ export const searchParamsToFilters = (params: URLSearchParams): RecipeFilters =>
     arrayFields.forEach(field => {
         const val = params.get(field);
         if (val) {
-            (filters[field] as any) = val.split(',');
+            // Safe cast: we checked field is a valid array key, and we assign string[]
+            (filters as Record<string, string[]>)[field] = val.split(',');
         }
     });
 
     // Nested Ranges
-    const rangeFields: (keyof RecipeFilters)[] = [
+    // Nested Ranges
+    const rangeFields: (keyof Pick<RecipeFilters, 'calories' | 'total_time' | 'prep_time' | 'active_time' | 'cook_time' | 'yield'>)[] = [
         'calories', 'total_time', 'prep_time',
         'active_time', 'cook_time', 'yield'
     ];
@@ -74,10 +79,10 @@ export const searchParamsToFilters = (params: URLSearchParams): RecipeFilters =>
         const lt = params.get(`${field}_lt`);
 
         if (gt || lt) {
-            (filters[field] as any) = {};
-            // we know field points to a range object in filters
-            if (gt) (filters[field] as any).gt = Number(gt);
-            if (lt) (filters[field] as any).lt = Number(lt);
+            const range: { gt?: number; lt?: number } = {};
+            if (gt) range.gt = Number(gt);
+            if (lt) range.lt = Number(lt);
+            (filters as Record<string, unknown>)[field] = range;
         }
     });
 

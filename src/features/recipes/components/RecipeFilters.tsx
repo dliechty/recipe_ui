@@ -51,7 +51,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleChange = (key: keyof RecipeFiltersType, value: any) => {
+    const handleChange = (key: keyof RecipeFiltersType, value: unknown) => {
         const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);
         // Since inputs are now debounced, we can trigger update immediately
@@ -262,9 +262,9 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             <RecipeMultiSelect
                                 label="Owner / Author"
                                 placeholder="Any Owner"
-                                options={(owners || []).map((o: any) => ({
-                                    label: o.name || o,
-                                    value: o.id || o
+                                options={(owners || []).map((o: { id: string; name: string } | string) => ({
+                                    label: (typeof o === 'string' ? o : o.name) || String(o),
+                                    value: (typeof o === 'string' ? o : o.id) || String(o)
                                 }))}
                                 value={localFilters.owner || []}
                                 onChange={(val) => handleChange('owner', val.length ? val : undefined)}

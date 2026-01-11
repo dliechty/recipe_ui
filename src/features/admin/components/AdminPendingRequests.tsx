@@ -9,7 +9,7 @@ import {
     Input,
     HStack,
 } from '@chakra-ui/react';
-import { AuthenticationService, UserRequest } from '../../../client';
+import { AuthenticationService, UserRequest, ApiError } from '../../../client';
 import { toaster } from '../../../toaster';
 
 // Assuming Modal components if Dialog is not correct or if standard names changed. 
@@ -64,10 +64,11 @@ const AdminPendingRequests = () => {
             });
             setIsDialogOpen(false);
             fetchRequests();
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const apiError = error as ApiError; // or directly use (error as ApiError).body
             toaster.create({
                 title: "Failed to approve request",
-                description: error.body?.detail || "Unknown error",
+                description: apiError.body?.detail || "Unknown error",
                 type: "error",
             });
         } finally {

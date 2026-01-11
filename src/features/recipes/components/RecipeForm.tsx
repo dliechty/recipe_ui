@@ -101,11 +101,11 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                     ...c,
                     ingredients: c.ingredients
                         .slice()
-                        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+                        .sort((a: RecipeIngredientCreate & { order?: number }, b: RecipeIngredientCreate & { order?: number }) => (a.order || 0) - (b.order || 0))
                         .map(i => ({
                             ...i,
                             // Map 'item' from API to 'ingredient_name' for Form if needed
-                            ingredient_name: i.ingredient_name || (i as any).item || '',
+                            ingredient_name: i.ingredient_name || (i as unknown as { item: string }).item || '',
                             id: crypto.randomUUID()
                         }))
                 })),

@@ -9,7 +9,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { AuthenticationService } from '../../../client';
+import { AuthenticationService, ApiError } from '../../../client';
 import { toaster } from '../../../toaster';
 
 const RequestAccountPage = () => {
@@ -37,12 +37,13 @@ const RequestAccountPage = () => {
                 duration: 5000,
             });
             navigate('/');
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Request failed:", err);
             // Extract error message if available from ApiError
             let errorMsg = "Request failed. Please try again.";
-            if (err.body && err.body.detail) {
-                errorMsg = typeof err.body.detail === 'string' ? err.body.detail : JSON.stringify(err.body.detail);
+            const apiError = err as ApiError;
+            if (apiError.body && apiError.body.detail) {
+                errorMsg = typeof apiError.body.detail === 'string' ? apiError.body.detail : JSON.stringify(apiError.body.detail);
             }
             setError(errorMsg);
         } finally {

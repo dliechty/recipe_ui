@@ -48,7 +48,7 @@ describe('ChangePasswordPage', () => {
     });
 
     it('submits change password successfully', async () => {
-        (AuthenticationService.changePasswordAuthChangePasswordPost as any).mockResolvedValue({});
+        vi.mocked(AuthenticationService.changePasswordAuthChangePasswordPost).mockResolvedValue({ message: "Changed" });
 
         renderWithProviders(<ChangePasswordPage />);
 

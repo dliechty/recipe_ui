@@ -44,7 +44,14 @@ describe('RequestAccountPage', () => {
     });
 
     it('submits the form successfully', async () => {
-        (AuthenticationService.requestAccountAuthRequestAccountPost as any).mockResolvedValue({});
+        vi.mocked(AuthenticationService.requestAccountAuthRequestAccountPost).mockResolvedValue({
+            id: '1',
+            email: 'test@example.com',
+            first_name: 'John',
+            last_name: 'Doe',
+            created_at: '2023-01-01T00:00:00Z',
+            status: 'pending'
+        });
 
         renderWithProviders(
             <MemoryRouter>
@@ -79,7 +86,7 @@ describe('RequestAccountPage', () => {
                 detail: 'Email already registered'
             }
         };
-        (AuthenticationService.requestAccountAuthRequestAccountPost as any).mockRejectedValue(error);
+        vi.mocked(AuthenticationService.requestAccountAuthRequestAccountPost).mockRejectedValue(error);
 
         renderWithProviders(
             <MemoryRouter>

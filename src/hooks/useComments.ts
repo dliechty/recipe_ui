@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RecipesService } from '../client';
+import { RecipesService, ApiError } from '../client';
 import { toaster } from '../toaster';
 
 export const useComments = (recipeId: string) => {
@@ -23,7 +23,7 @@ export const useAddComment = (recipeId: string) => {
                 type: 'success',
             });
         },
-        onError: (error: any) => {
+        onError: (error: ApiError) => {
             toaster.create({
                 title: 'Failed to add comment',
                 description: error.body?.detail || error.message || 'Unknown error',
@@ -46,7 +46,7 @@ export const useUpdateComment = (recipeId: string) => {
                 type: 'success',
             });
         },
-        onError: (error: any) => {
+        onError: (error: ApiError) => {
             toaster.create({
                 title: 'Failed to update comment',
                 description: error.body?.detail || error.message || 'Unknown error',
@@ -69,7 +69,7 @@ export const useDeleteComment = (recipeId: string) => {
                 type: 'success',
             });
         },
-        onError: (error: any) => {
+        onError: (error: ApiError) => {
             toaster.create({
                 title: 'Failed to delete comment',
                 description: error.body?.detail || error.message || 'Unknown error',

@@ -17,7 +17,7 @@ describe('AdminPendingRequests', () => {
     });
 
     it('renders no requests message when empty', async () => {
-        (AuthenticationService.listPendingRequestsAuthPendingRequestsGet as any).mockResolvedValue([]);
+        vi.mocked(AuthenticationService.listPendingRequestsAuthPendingRequestsGet).mockResolvedValue([]);
 
         renderWithProviders(<AdminPendingRequests />);
 
@@ -28,10 +28,10 @@ describe('AdminPendingRequests', () => {
 
     it('renders list of pending requests', async () => {
         const requests = [
-            { id: '1', email: 'test1@example.com', first_name: 'Test', last_name: 'One' },
-            { id: '2', email: 'test2@example.com', first_name: 'Test', last_name: 'Two' },
+            { id: '1', email: 'test1@example.com', first_name: 'Test', last_name: 'One', created_at: '2023-01-01T00:00:00Z', status: 'pending' },
+            { id: '2', email: 'test2@example.com', first_name: 'Test', last_name: 'Two', created_at: '2023-01-02T00:00:00Z', status: 'pending' },
         ];
-        (AuthenticationService.listPendingRequestsAuthPendingRequestsGet as any).mockResolvedValue(requests);
+        vi.mocked(AuthenticationService.listPendingRequestsAuthPendingRequestsGet).mockResolvedValue(requests);
 
         renderWithProviders(<AdminPendingRequests />);
 
@@ -43,10 +43,18 @@ describe('AdminPendingRequests', () => {
 
     it('approves a request', async () => {
         const requests = [
-            { id: '1', email: 'test1@example.com', first_name: 'Test', last_name: 'One' },
+            { id: '1', email: 'test1@example.com', first_name: 'Test', last_name: 'One', created_at: '2023-01-01T00:00:00Z', status: 'pending' },
         ];
-        (AuthenticationService.listPendingRequestsAuthPendingRequestsGet as any).mockResolvedValue(requests);
-        (AuthenticationService.approveRequestAuthApproveRequestRequestIdPost as any).mockResolvedValue({});
+        vi.mocked(AuthenticationService.listPendingRequestsAuthPendingRequestsGet).mockResolvedValue(requests);
+        vi.mocked(AuthenticationService.approveRequestAuthApproveRequestRequestIdPost).mockResolvedValue({
+            id: '1',
+            email: 'test1@example.com',
+            first_name: 'Test',
+            last_name: 'One',
+            is_active: true,
+            is_admin: false,
+            is_first_login: true
+        });
 
         renderWithProviders(<AdminPendingRequests />);
 
