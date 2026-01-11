@@ -123,8 +123,10 @@ const MealDetails = () => {
                                             variant="ghost"
                                             onClick={() => navigate(`/recipes/${item.recipe_id}`, {
                                                 state: {
-                                                    backUrl: `/meals/${meal.id}`,
-                                                    backLabel: meal.name || 'Meal'
+                                                    breadcrumbs: [
+                                                        { label: 'Meals', url: '/meals' },
+                                                        { label: meal.name || 'Meal', url: `/meals/${meal.id}` }
+                                                    ]
                                                 }
                                             })}
                                         >

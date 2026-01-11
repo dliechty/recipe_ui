@@ -105,14 +105,24 @@ const RecipeDetails = () => {
         <Container maxW="container.xl" pt={2} pb={8}>
             <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm" className="no-print">
                 <Breadcrumb.List>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
-                            <RouterLink to={backUrl}>{backLabel}</RouterLink>
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Separator>
-                        <Icon as={FaChevronRight} color="fg.muted" />
-                    </Breadcrumb.Separator>
+                    {(() => {
+                        const crumbs = location.state?.breadcrumbs || [
+                            { label: backLabel, url: backUrl }
+                        ];
+
+                        return crumbs.map((crumb: { label: string, url: string }, index: number) => (
+                            <React.Fragment key={index}>
+                                <Breadcrumb.Item>
+                                    <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                        <RouterLink to={crumb.url}>{crumb.label}</RouterLink>
+                                    </Breadcrumb.Link>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Separator>
+                                    <Icon as={FaChevronRight} color="fg.muted" />
+                                </Breadcrumb.Separator>
+                            </React.Fragment>
+                        ));
+                    })()}
                     <Breadcrumb.Item>
                         <Breadcrumb.CurrentLink color="fg.default">{recipe.core.name}</Breadcrumb.CurrentLink>
                     </Breadcrumb.Item>
