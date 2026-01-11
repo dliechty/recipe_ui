@@ -56,6 +56,7 @@ describe('TemplateDetails', () => {
                 return HttpResponse.json({
                     id: 't1',
                     name: 'Action Template',
+                    user_id: 'user-123',
                     slots: [],
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z'
@@ -75,6 +76,7 @@ describe('TemplateDetails', () => {
             expect(screen.getByRole('heading', { name: 'Action Template' })).toBeInTheDocument();
         });
 
+        expect(screen.getByRole('button', { name: /Duplicate Template/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Generate Meal/i })).toBeInTheDocument();

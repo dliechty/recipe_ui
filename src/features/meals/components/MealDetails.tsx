@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon } from '@chakra-ui/react';
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaRegCopy, FaEdit } from 'react-icons/fa';
 import { useMeal, useDeleteMeal } from '../../../hooks/useMeals';
+import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { MealItem } from '../../../client';
 
@@ -17,8 +18,11 @@ const MealDetails = () => {
     const navigate = useNavigate();
     const { data: meal, isLoading, error } = useMeal(id || '');
     const deleteMeal = useDeleteMeal();
+    const { user: currentUser } = useAuth();
 
     const [isDeleting, setIsDeleting] = useState(false);
+
+    const canEdit = currentUser?.is_admin || (currentUser?.id && meal?.user_id && currentUser.id === meal.user_id);
 
     if (isLoading) {
         return (
@@ -71,36 +75,67 @@ const MealDetails = () => {
                 </Breadcrumb.List>
             </Breadcrumb.Root>
 
+            <HStack mb={6} gap={2} className="no-print">
+                {currentUser && (
+                    <Button
+                        onClick={() => {
+                            navigate('/meals/new', {
+                                state: {
+                                    initialData: {
+                                        name: `${meal.name} (Copy)`,
+                                        status: meal.status,
+                                        classification: meal.classification,
+                                        date: meal.date,
+                                        items: meal.items?.map(item => ({
+                                            recipe_id: item.recipe_id
+                                        }))
+                                    }
+                                }
+                            });
+                        }}
+                        bg="vscode.button"
+                        color="white"
+                        _hover={{ bg: "vscode.buttonHover" }}
+                        size="xs"
+                    >
+                        <Icon as={FaRegCopy} /> Duplicate Meal
+                    </Button>
+                )}
+                {canEdit && (
+                    <Button
+                        onClick={() => navigate(`/meals/${meal.id}/edit`)}
+                        bg="vscode.button"
+                        color="white"
+                        _hover={{ bg: "vscode.buttonHover" }}
+                        size="xs"
+                    >
+                        <Icon as={FaEdit} /> Edit
+                    </Button>
+                )}
+                {canEdit && (
+                    <Button
+                        onClick={handleDelete}
+                        loading={isDeleting}
+                        bg="red.600"
+                        color="white"
+                        _hover={{ bg: "red.700" }}
+                        size="xs"
+                    >
+                        Delete
+                    </Button>
+                )}
+            </HStack>
+
             <VStack align="stretch" gap={6}>
-                <HStack justify="space-between" align="center">
-                    <VStack align="start" gap={1}>
-                        <Heading size="lg">{meal.name || 'Untitled Meal'}</Heading>
-                        <HStack>
-                            <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
-                                {meal.status}
-                            </Badge>
-                            {meal.classification && <Badge variant="outline">{meal.classification}</Badge>}
-                        </HStack>
-                    </VStack>
+                <VStack align="start" gap={1}>
+                    <Heading size="lg">{meal.name || 'Untitled Meal'}</Heading>
                     <HStack>
-                        <Button
-                            colorPalette="red"
-                            variant="outline"
-                            onClick={handleDelete}
-                            loading={isDeleting}
-                            size="xs"
-                        >
-                            Delete
-                        </Button>
-                        <Button
-                            colorPalette="blue"
-                            onClick={() => navigate(`/meals/${meal.id}/edit`)}
-                            size="xs"
-                        >
-                            Edit
-                        </Button>
+                        <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
+                            {meal.status}
+                        </Badge>
+                        {meal.classification && <Badge variant="outline">{meal.classification}</Badge>}
                     </HStack>
-                </HStack>
+                </VStack>
 
                 <Box>
                     <Text fontSize="lg" fontWeight="bold" mb={4}>Recipes</Text>

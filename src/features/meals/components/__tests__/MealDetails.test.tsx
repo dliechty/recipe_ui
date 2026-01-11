@@ -57,6 +57,7 @@ describe('MealDetails', () => {
                     id: '1',
                     name: 'Delete Me',
                     status: 'Proposed',
+                    user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
                     items: []
@@ -76,6 +77,7 @@ describe('MealDetails', () => {
             expect(screen.getByRole('heading', { name: 'Delete Me' })).toBeInTheDocument();
         });
 
+        expect(screen.getByRole('button', { name: /Duplicate Meal/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
     });

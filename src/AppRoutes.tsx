@@ -20,6 +20,10 @@ const MealList = React.lazy(() => import('./features/meals/components/MealList')
 const TemplateList = React.lazy(() => import('./features/meals/components/TemplateList'));
 const MealDetails = React.lazy(() => import('./features/meals/components/MealDetails'));
 const TemplateDetails = React.lazy(() => import('./features/meals/components/TemplateDetails'));
+const AddMealPage = React.lazy(() => import('./features/meals/pages/AddMealPage'));
+const EditMealPage = React.lazy(() => import('./features/meals/pages/EditMealPage'));
+const AddTemplatePage = React.lazy(() => import('./features/meals/pages/AddTemplatePage'));
+const EditTemplatePage = React.lazy(() => import('./features/meals/pages/EditTemplatePage'));
 
 
 const AppRoutes = () => {
@@ -106,6 +110,38 @@ const AppRoutes = () => {
                                 <Route index element={<MealList />} />
                                 <Route path="templates" element={<TemplateList />} />
                             </Route>
+                            <Route
+                                path="/meals/new"
+                                element={
+                                    <ProtectedRoute>
+                                        <AddMealPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/meals/templates/new"
+                                element={
+                                    <ProtectedRoute>
+                                        <AddTemplatePage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/meals/:id/edit"
+                                element={
+                                    <ProtectedRoute>
+                                        <EditMealPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/meals/templates/:id/edit"
+                                element={
+                                    <ProtectedRoute>
+                                        <EditTemplatePage />
+                                    </ProtectedRoute>
+                                }
+                            />
                             <Route
                                 path="/meals/:id"
                                 element={

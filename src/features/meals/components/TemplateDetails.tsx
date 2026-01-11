@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon } from '@chakra-ui/react';
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaRegCopy, FaEdit } from 'react-icons/fa';
 import { useMealTemplate, useDeleteMealTemplate } from '../../../hooks/useMeals';
+import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const TemplateDetails = () => {
@@ -10,8 +11,11 @@ const TemplateDetails = () => {
     const navigate = useNavigate();
     const { data: template, isLoading, error } = useMealTemplate(id || '');
     const deleteTemplate = useDeleteMealTemplate();
+    const { user: currentUser } = useAuth();
 
     const [isDeleting, setIsDeleting] = useState(false);
+
+    const canEdit = currentUser?.is_admin || (currentUser?.id && template?.user_id && currentUser.id === template.user_id);
 
     if (isLoading) {
         return (
@@ -75,40 +79,73 @@ const TemplateDetails = () => {
                 </Breadcrumb.List>
             </Breadcrumb.Root>
 
+            <HStack mb={6} gap={2} className="no-print">
+                {currentUser && (
+                    <Button
+                        onClick={() => {
+                            navigate('/meals/templates/new', {
+                                state: {
+                                    initialData: {
+                                        name: `${template.name} (Copy)`,
+                                        classification: template.classification,
+                                        slots: template.slots?.map(slot => ({
+                                            strategy: slot.strategy
+                                        }))
+                                    }
+                                }
+                            });
+                        }}
+                        bg="vscode.button"
+                        color="white"
+                        _hover={{ bg: "vscode.buttonHover" }}
+                        size="xs"
+                    >
+                        <Icon as={FaRegCopy} /> Duplicate Template
+                    </Button>
+                )}
+                {canEdit && (
+                    <Button
+                        onClick={() => navigate(`/meals/templates/${template.id}/edit`)}
+                        bg="vscode.button"
+                        color="white"
+                        _hover={{ bg: "vscode.buttonHover" }}
+                        size="xs"
+                    >
+                        <Icon as={FaEdit} /> Edit
+                    </Button>
+                )}
+                {canEdit && (
+                    <Button
+                        onClick={handleDelete}
+                        loading={isDeleting}
+                        bg="red.600"
+                        color="white"
+                        _hover={{ bg: "red.700" }}
+                        size="xs"
+                    >
+                        Delete
+                    </Button>
+                )}
+                {currentUser && (
+                    <Button
+                        onClick={handleGenerateMeal}
+                        bg="green.600"
+                        color="white"
+                        _hover={{ bg: "green.700" }}
+                        size="xs"
+                    >
+                        Generate Meal
+                    </Button>
+                )}
+            </HStack>
+
             <VStack align="stretch" gap={6}>
-                <HStack justify="space-between" align="center">
-                    <VStack align="start" gap={1}>
-                        <Heading size="lg">{template.name || 'Untitled Template'}</Heading>
-                        <HStack>
-                            <Badge variant="outline">{template.classification}</Badge>
-                        </HStack>
-                    </VStack>
+                <VStack align="start" gap={1}>
+                    <Heading size="lg">{template.name || 'Untitled Template'}</Heading>
                     <HStack>
-                        <Button
-                            colorPalette="red"
-                            variant="outline"
-                            onClick={handleDelete}
-                            loading={isDeleting}
-                            size="xs"
-                        >
-                            Delete
-                        </Button>
-                        <Button
-                            colorPalette="blue"
-                            onClick={() => navigate(`/meals/templates/${template.id}/edit`)}
-                            size="xs"
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            colorPalette="green"
-                            onClick={handleGenerateMeal}
-                            size="xs"
-                        >
-                            Generate Meal
-                        </Button>
+                        <Badge variant="outline">{template.classification}</Badge>
                     </HStack>
-                </HStack>
+                </VStack>
 
                 <Box>
                     <Text fontSize="lg" fontWeight="bold" mb={4}>Slots</Text>
