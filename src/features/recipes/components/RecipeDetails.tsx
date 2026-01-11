@@ -31,7 +31,8 @@ const RecipeDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const backUrl = location.state?.fromSearch ? `/recipes?${location.state.fromSearch}` : '/recipes';
+    const backUrl = location.state?.backUrl || (location.state?.fromSearch ? `/recipes?${location.state.fromSearch}` : '/recipes');
+    const backLabel = location.state?.backLabel || 'Recipes';
     const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
     const deleteRecipe = useDeleteRecipe();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -56,7 +57,7 @@ const RecipeDetails = () => {
         return (
             <Container maxW="container.xl" py={8}>
                 <ErrorAlert title="Failed to load recipe" description={error.message || "An unexpected error occurred."} />
-                <Button mt={4} onClick={() => navigate(backUrl)}>Back to Recipes</Button>
+                <Button mt={4} onClick={() => navigate(backUrl)}>Back to {backLabel}</Button>
             </Container>
         );
     }
@@ -80,7 +81,7 @@ const RecipeDetails = () => {
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                 >
-                    Back to Recipes
+                    Back to {backLabel}
                 </Button>
             </Container>
         );
@@ -106,7 +107,7 @@ const RecipeDetails = () => {
                 <Breadcrumb.List>
                     <Breadcrumb.Item>
                         <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
-                            <RouterLink to={backUrl}>Recipes</RouterLink>
+                            <RouterLink to={backUrl}>{backLabel}</RouterLink>
                         </Breadcrumb.Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Separator>

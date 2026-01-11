@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card } from '@chakra-ui/react';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon } from '@chakra-ui/react';
+import { FaChevronRight } from 'react-icons/fa';
 import { useMealTemplate, useDeleteMealTemplate } from '../../../hooks/useMeals';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
@@ -58,6 +59,22 @@ const TemplateDetails = () => {
 
     return (
         <Container maxW="container.lg" py={8}>
+            <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                            <RouterLink to="/meals/templates">Templates</RouterLink>
+                        </Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator>
+                        <Icon as={FaChevronRight} color="fg.muted" />
+                    </Breadcrumb.Separator>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink color="fg.default">{template.name || 'Untitled Template'}</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+
             <VStack align="stretch" gap={6}>
                 <HStack justify="space-between" align="center">
                     <VStack align="start" gap={1}>
@@ -72,18 +89,21 @@ const TemplateDetails = () => {
                             variant="outline"
                             onClick={handleDelete}
                             loading={isDeleting}
+                            size="xs"
                         >
                             Delete
                         </Button>
                         <Button
                             colorPalette="blue"
                             onClick={() => navigate(`/meals/templates/${template.id}/edit`)}
+                            size="xs"
                         >
                             Edit
                         </Button>
                         <Button
                             colorPalette="green"
                             onClick={handleGenerateMeal}
+                            size="xs"
                         >
                             Generate Meal
                         </Button>

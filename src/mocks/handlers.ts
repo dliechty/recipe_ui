@@ -593,6 +593,92 @@ export const handlers = [
         return new HttpResponse(null, { status: 204 });
     }),
 
+    // --- MEAL TEMPLATES ---
+
+    // GET /meals/templates
+    http.get('*/meals/templates', ({ request }) => {
+        const url = new URL(request.url);
+        const skip = Number(url.searchParams.get('skip') || '0');
+        const limit = Number(url.searchParams.get('limit') || '100');
+
+        const paginated = mealTemplateStore.slice(skip, skip + limit);
+
+        return HttpResponse.json(paginated, {
+            headers: {
+                'X-Total-Count': mealTemplateStore.length.toString(),
+                'Access-Control-Expose-Headers': 'X-Total-Count'
+            },
+        });
+    }),
+
+    // GET /meals/templates/:id
+    http.get('*/meals/templates/:id', ({ params }) => {
+        const { id } = params;
+        const template = mealTemplateStore.find(t => t.id === id);
+
+        if (!template) {
+            return new HttpResponse(null, { status: 404 });
+        }
+        return HttpResponse.json(template);
+    }),
+
+    // POST /meals/templates
+    http.post('*/meals/templates', async ({ request }) => {
+        const body = await request.json() as MealTemplateCreate;
+        const newTemplate: MealTemplate = {
+            id: crypto.randomUUID(),
+            name: body.name,
+            classification: body.classification || null,
+            user_id: "550e8400-e29b-41d4-a716-446655440000",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            slots: body.slots ? body.slots.map(s => ({
+                id: crypto.randomUUID(),
+                template_id: "temp",
+                strategy: s.strategy,
+                recipe_id: s.recipe_id, // Map other fields if needed
+            })) : []
+        };
+        newTemplate.slots.forEach(s => s.template_id = newTemplate.id);
+
+        mealTemplateStore.push(newTemplate);
+        return HttpResponse.json(newTemplate, { status: 201 });
+    }),
+
+    // PUT /meals/templates/:id
+    http.put('*/meals/templates/:id', async ({ request, params }) => {
+        const { id } = params;
+        const body = await request.json() as MealTemplateUpdate;
+
+        const index = mealTemplateStore.findIndex(t => t.id === id);
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const updatedTemplate = {
+            ...mealTemplateStore[index],
+            ...body,
+            name: body.name || mealTemplateStore[index].name,
+            updated_at: new Date().toISOString()
+        };
+        // TODO: Handle slot updates properly if needed, similar to Meal items
+
+        mealTemplateStore[index] = updatedTemplate;
+        return HttpResponse.json(updatedTemplate);
+    }),
+
+    // DELETE /meals/templates/:id
+    http.delete('*/meals/templates/:id', ({ params }) => {
+        const { id } = params;
+        const index = mealTemplateStore.findIndex(t => t.id === id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+        mealTemplateStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
     // --- MEALS ---
 
     // GET /meals/
@@ -688,90 +774,6 @@ export const handlers = [
         return new HttpResponse(null, { status: 204 });
     }),
 
-    // --- MEAL TEMPLATES ---
 
-    // GET /meals/templates
-    http.get('*/meals/templates', ({ request }) => {
-        const url = new URL(request.url);
-        const skip = Number(url.searchParams.get('skip') || '0');
-        const limit = Number(url.searchParams.get('limit') || '100');
-
-        const paginated = mealTemplateStore.slice(skip, skip + limit);
-
-        return HttpResponse.json(paginated, {
-            headers: {
-                'X-Total-Count': mealTemplateStore.length.toString(),
-                'Access-Control-Expose-Headers': 'X-Total-Count'
-            },
-        });
-    }),
-
-    // GET /meals/templates/:id
-    http.get('*/meals/templates/:id', ({ params }) => {
-        const { id } = params;
-        const template = mealTemplateStore.find(t => t.id === id);
-
-        if (!template) {
-            return new HttpResponse(null, { status: 404 });
-        }
-        return HttpResponse.json(template);
-    }),
-
-    // POST /meals/templates
-    http.post('*/meals/templates', async ({ request }) => {
-        const body = await request.json() as MealTemplateCreate;
-        const newTemplate: MealTemplate = {
-            id: crypto.randomUUID(),
-            name: body.name,
-            classification: body.classification || null,
-            user_id: "550e8400-e29b-41d4-a716-446655440000",
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            slots: body.slots ? body.slots.map(s => ({
-                id: crypto.randomUUID(),
-                template_id: "temp",
-                strategy: s.strategy,
-                recipe_id: s.recipe_id, // Map other fields if needed
-            })) : []
-        };
-        newTemplate.slots.forEach(s => s.template_id = newTemplate.id);
-
-        mealTemplateStore.push(newTemplate);
-        return HttpResponse.json(newTemplate, { status: 201 });
-    }),
-
-    // PUT /meals/templates/:id
-    http.put('*/meals/templates/:id', async ({ request, params }) => {
-        const { id } = params;
-        const body = await request.json() as MealTemplateUpdate;
-
-        const index = mealTemplateStore.findIndex(t => t.id === id);
-        if (index === -1) {
-            return new HttpResponse(null, { status: 404 });
-        }
-
-        const updatedTemplate = {
-            ...mealTemplateStore[index],
-            ...body,
-            name: body.name || mealTemplateStore[index].name,
-            updated_at: new Date().toISOString()
-        };
-        // TODO: Handle slot updates properly if needed, similar to Meal items
-
-        mealTemplateStore[index] = updatedTemplate;
-        return HttpResponse.json(updatedTemplate);
-    }),
-
-    // DELETE /meals/templates/:id
-    http.delete('*/meals/templates/:id', ({ params }) => {
-        const { id } = params;
-        const index = mealTemplateStore.findIndex(t => t.id === id);
-
-        if (index === -1) {
-            return new HttpResponse(null, { status: 404 });
-        }
-        mealTemplateStore.splice(index, 1);
-        return new HttpResponse(null, { status: 204 });
-    }),
 ];
 

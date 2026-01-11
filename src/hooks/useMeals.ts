@@ -104,7 +104,7 @@ export const useInfiniteMealTemplates = (limit: number = 20) => {
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
 
-            const url = `${OpenAPI.BASE}/meals/templates/?${params.toString()}`;
+            const url = `${OpenAPI.BASE}/meals/templates?${params.toString()}`;
 
             // Get token if available
             const token = typeof OpenAPI.TOKEN === 'function'

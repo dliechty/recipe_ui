@@ -66,7 +66,7 @@ const TemplateList = () => {
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="flex-start"
-                    size="sm"
+                    size="xs"
                 >
                     <Icon as={FaPlus} mr={2} /> Add Template
                 </Button>

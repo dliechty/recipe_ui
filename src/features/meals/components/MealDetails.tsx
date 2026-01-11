@@ -1,8 +1,16 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card } from '@chakra-ui/react';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon } from '@chakra-ui/react';
+import { FaChevronRight } from 'react-icons/fa';
 import { useMeal, useDeleteMeal } from '../../../hooks/useMeals';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { MealItem } from '../../../client';
+
+interface MealItemWithRecipe extends MealItem {
+    recipe?: {
+        name: string;
+    };
+}
 
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -47,6 +55,22 @@ const MealDetails = () => {
 
     return (
         <Container maxW="container.lg" py={8}>
+            <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                            <RouterLink to="/meals">Meals</RouterLink>
+                        </Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator>
+                        <Icon as={FaChevronRight} color="fg.muted" />
+                    </Breadcrumb.Separator>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink color="fg.default">{meal.name || 'Untitled Meal'}</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+
             <VStack align="stretch" gap={6}>
                 <HStack justify="space-between" align="center">
                     <VStack align="start" gap={1}>
@@ -64,12 +88,14 @@ const MealDetails = () => {
                             variant="outline"
                             onClick={handleDelete}
                             loading={isDeleting}
+                            size="xs"
                         >
                             Delete
                         </Button>
                         <Button
                             colorPalette="blue"
                             onClick={() => navigate(`/meals/${meal.id}/edit`)}
+                            size="xs"
                         >
                             Edit
                         </Button>
@@ -90,9 +116,18 @@ const MealDetails = () => {
                                                 We'll just show Recipe ID for now or try to cast if we trusted mock enrichment.
                                                 Let's stay safe and just show "Recipe [ID]" if name unavailable.
                                             */}
-                                            {(item as any).recipe?.name || `Recipe ${item.recipe_id}`}
+                                            {(item as MealItemWithRecipe).recipe?.name || `Recipe ${item.recipe_id}`}
                                         </Text>
-                                        <Button size="xs" variant="ghost" onClick={() => navigate(`/recipes/${item.recipe_id}`)}>
+                                        <Button
+                                            size="xs"
+                                            variant="ghost"
+                                            onClick={() => navigate(`/recipes/${item.recipe_id}`, {
+                                                state: {
+                                                    backUrl: `/meals/${meal.id}`,
+                                                    backLabel: meal.name || 'Meal'
+                                                }
+                                            })}
+                                        >
                                             View Recipe
                                         </Button>
                                     </HStack>

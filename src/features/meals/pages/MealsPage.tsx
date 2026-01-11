@@ -1,4 +1,4 @@
-import { Container, Tabs, Box, Heading } from '@chakra-ui/react';
+import { Container, Tabs, Box } from '@chakra-ui/react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 
 const MealsPage = () => {
@@ -20,11 +20,11 @@ const MealsPage = () => {
 
     return (
         <Container maxW="container.xl" py={8}>
-            <Heading mb={6}>Meals</Heading>
+
             <Tabs.Root value={currentTab} onValueChange={(e) => handleTabChange(e.value)}>
-                <Tabs.List mb={6}>
-                    <Tabs.Trigger value="meals">Meals</Tabs.Trigger>
-                    <Tabs.Trigger value="templates">Templates</Tabs.Trigger>
+                <Tabs.List borderWidth="1px" borderColor="border.default" borderRadius="md" p="1" bg="bg.surface" mb={6}>
+                    <Tabs.Trigger value="meals" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>Meals</Tabs.Trigger>
+                    <Tabs.Trigger value="templates" _selected={{ color: "white", bg: "button" }} borderRadius="sm" px={4} py={2}>Templates</Tabs.Trigger>
                 </Tabs.List>
 
                 {/* 

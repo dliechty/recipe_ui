@@ -66,7 +66,7 @@ const MealList = () => {
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="flex-start"
-                    size="sm"
+                    size="xs"
                 >
                     <Icon as={FaPlus} mr={2} /> Add Meal
                 </Button>
@@ -77,6 +77,7 @@ const MealList = () => {
                     <Table.Root interactive minW="800px">
                         <Table.Header>
                             <Table.Row bg="bg.surface">
+                                <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Status</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Recipes</Table.ColumnHeader>
@@ -93,6 +94,9 @@ const MealList = () => {
                                     color="fg.default"
                                     _hover={{ bg: "bg.muted" }}
                                 >
+                                    <Table.Cell borderColor="border.default" fontWeight="medium">
+                                        {meal.name || 'Untitled'}
+                                    </Table.Cell>
                                     <Table.Cell borderColor="border.default">
                                         <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
                                             {meal.status}
