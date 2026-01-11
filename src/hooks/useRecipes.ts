@@ -27,8 +27,9 @@ export interface RecipeFilters {
     sort?: string;
 }
 
-export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = {}) => {
+export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = {}, options?: { enabled?: boolean }) => {
     return useInfiniteQuery<RecipesResponse>({
+        enabled: options?.enabled,
         queryKey: ['recipes', 'infinite', limit, filters],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;

@@ -10,6 +10,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import { MealCreate, MealStatus, MealClassification, MealItemBase } from '../../../client';
+import RecipeSearchSelector from './RecipeSearchSelector';
 
 interface MealFormProps {
     onSubmit: (data: MealCreate) => void;
@@ -23,19 +24,16 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
     const [status, setStatus] = useState<MealStatus>(initialData?.status || MealStatus.SCHEDULED);
     const [classification, setClassification] = useState<MealClassification | ''>(initialData?.classification || '');
     const [date, setDate] = useState(initialData?.date || '');
-    const [recipeIds, setRecipeIds] = useState<string>(
-        initialData?.items?.map(item => item.recipe_id).join(', ') || ''
+    const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>(
+        initialData?.items?.map(item => item.recipe_id) || []
     );
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         // Parse recipe IDs from comma-separated string
-        const items: MealItemBase[] = recipeIds
-            .split(',')
-            .map(id => id.trim())
-            .filter(id => id.length > 0)
-            .map(recipe_id => ({ recipe_id }));
+        // Create meal items from selected recipe IDs
+        const items: MealItemBase[] = selectedRecipeIds.map(recipe_id => ({ recipe_id }));
 
         const mealData: MealCreate = {
             name: name || null,
@@ -104,18 +102,14 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                     </Box>
 
                     <Box>
-                        <Text as="label" mb={2} display="block" fontWeight="bold">Recipe IDs</Text>
-                        <Input
-                            value={recipeIds}
-                            onChange={(e) => setRecipeIds(e.target.value)}
-                            placeholder="Enter recipe IDs, separated by commas"
+                        <Text as="label" mb={2} display="block" fontWeight="bold">Recipes</Text>
+                        <RecipeSearchSelector
+                            selectedRecipeIds={selectedRecipeIds}
+                            onChange={setSelectedRecipeIds}
                         />
-                        <Text fontSize="xs" color="fg.muted" mt={1}>
-                            Enter one or more recipe IDs separated by commas (e.g., "abc123, def456")
-                        </Text>
                     </Box>
 
-                    <HStack justify="flex-end" mt={4} gap={2}>
+                    <HStack justify="flex-start" mt={4} gap={2}>
                         {onCancel && (
                             <Button
                                 onClick={onCancel}
@@ -123,6 +117,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 color="white"
                                 _hover={{ bg: "gray.700" }}
                                 disabled={isLoading}
+                                size="xs"
                             >
                                 Cancel
                             </Button>
@@ -133,6 +128,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                             color="white"
                             _hover={{ bg: "vscode.buttonHover" }}
                             loading={isLoading}
+                            size="xs"
                         >
                             Save Meal
                         </Button>

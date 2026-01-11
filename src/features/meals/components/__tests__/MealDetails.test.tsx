@@ -12,7 +12,33 @@ vi.mock('../../../../context/AuthContext', () => ({
 
 describe('MealDetails', () => {
     beforeEach(() => {
-        mockUseAuth.mockReturnValue({ user: { id: 'user-123' } });
+        mockUseAuth.mockReturnValue({ user: { id: 'user-123', is_admin: true } });
+        // Mock user endpoint
+        server.use(
+            http.get('*/users/:id', () => {
+                return HttpResponse.json({
+                    id: 'user-123',
+                    email: 'test@example.com',
+                    first_name: 'Test',
+                    last_name: 'User'
+                });
+            })
+        );
+        // Mock recipes endpoint for fetching details
+        server.use(
+            http.get('*/recipes/', () => {
+                return HttpResponse.json([
+                    {
+                        core: { id: 'r1', name: 'Tasty Dish', difficulty: 'Easy', category: 'Dinner' },
+                        times: { total_time_minutes: 30 },
+                        items: [],
+                        components: [],
+                        instructions: [],
+                        layout: []
+                    }
+                ], { headers: { 'x-total-count': '1' } });
+            })
+        );
     });
 
     it('renders meal details from API', async () => {
@@ -26,8 +52,9 @@ describe('MealDetails', () => {
                     date: '2025-01-01',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
                     items: [
-                        { id: 'i1', recipe_id: 'r1', meal_id: '1', recipe: { id: 'r1', name: 'Tasty Dish' } }
+                        { id: 'i1', recipe_id: 'r1', meal_id: '1' }
                     ]
                 });
             })
@@ -46,11 +73,16 @@ describe('MealDetails', () => {
         });
 
         expect(screen.getByText(/Scheduled/i)).toBeInTheDocument();
-        expect(screen.getAllByText(/Dinner/i)[0]).toBeInTheDocument();
-        expect(screen.getByText(/Tasty Dish/i)).toBeInTheDocument();
+        // Classification is now in grid, "Dinner" badge
+        expect(screen.getAllByText('Dinner').length).toBeGreaterThan(0);
+
+        // Wait for recipe to load
+        await waitFor(() => {
+            expect(screen.getByText('Tasty Dish')).toBeInTheDocument();
+        });
     });
 
-    it('shows delete and edit buttons', async () => {
+    it('shows delete and edit buttons for owner/admin', async () => {
         server.use(
             http.get('*/meals/:id', () => {
                 return HttpResponse.json({
@@ -80,9 +112,5 @@ describe('MealDetails', () => {
         expect(screen.getByRole('button', { name: /Duplicate Meal/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
-    });
-
-    it('navigates to edit page', async () => {
-        // ... similar to previous navigation tests, verifying URL change or component rendering
     });
 });

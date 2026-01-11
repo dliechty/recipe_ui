@@ -1,26 +1,57 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon } from '@chakra-ui/react';
-import { FaChevronRight, FaRegCopy, FaEdit } from 'react-icons/fa';
+import {
+    Box,
+    Container,
+    Heading,
+    Text,
+    VStack,
+    HStack,
+    Button,
+    Badge,
+    Spinner,
+    Center,
+    Breadcrumb,
+    Icon,
+    Grid
+} from '@chakra-ui/react';
+import { FaChevronRight, FaRegCopy, FaEdit, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useMeal, useDeleteMeal } from '../../../hooks/useMeals';
+import { useInfiniteRecipes } from '../../../hooks/useRecipes';
+import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
-import { MealItem } from '../../../client';
-
-interface MealItemWithRecipe extends MealItem {
-    recipe?: {
-        name: string;
-    };
-}
+import { formatDuration } from '../../../utils/formatters';
+import ExpandableRecipeCard from './ExpandableRecipeCard';
+import IngredientAggregation from './IngredientAggregation';
 
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+
+    // Fetch meal
     const { data: meal, isLoading, error } = useMeal(id || '');
     const deleteMeal = useDeleteMeal();
     const { user: currentUser } = useAuth();
 
+    // Fetch creator
+    const { data: creator } = useUser(meal?.user_id);
+
+    // Fetch recipes
+    const recipeIds = meal?.items?.map(item => item.recipe_id) || [];
+    const {
+        data: recipesData,
+        isLoading: isLoadingRecipes,
+        error: recipesError
+    } = useInfiniteRecipes(
+        recipeIds.length || 1,
+        { ids: recipeIds },
+        { enabled: recipeIds.length > 0 }
+    );
+    const recipes = recipesData?.pages.flatMap(p => p.recipes) || [];
+
     const [isDeleting, setIsDeleting] = useState(false);
+    const [allExpanded, setAllExpanded] = useState(false);
 
     const canEdit = currentUser?.is_admin || (currentUser?.id && meal?.user_id && currentUser.id === meal.user_id);
 
@@ -56,6 +87,15 @@ const MealDetails = () => {
             }
         }
     };
+
+    const getCreatorName = () => {
+        if (!creator) return 'Unknown';
+        if (creator.first_name && creator.last_name) return `${creator.first_name} ${creator.last_name}`;
+        if (creator.first_name) return creator.first_name;
+        return creator.email || 'Unknown';
+    };
+
+    const totalMinutes = recipes.reduce((sum, r) => sum + (r.times?.total_time_minutes || 0), 0);
 
     return (
         <Container maxW="container.lg" py={8}>
@@ -127,48 +167,78 @@ const MealDetails = () => {
             </HStack>
 
             <VStack align="stretch" gap={6}>
-                <VStack align="start" gap={1}>
+                <VStack align="start" gap={4}>
                     <Heading size="lg">{meal.name || 'Untitled Meal'}</Heading>
-                    <HStack>
-                        <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
-                            {meal.status}
-                        </Badge>
-                        {meal.classification && <Badge variant="outline">{meal.classification}</Badge>}
-                    </HStack>
+
+                    {/* Metadata Grid */}
+                    <Grid templateColumns="auto 1fr" gap={2} rowGap={2} mb={0}>
+                        <Text fontWeight="bold" color="fg.muted" fontSize="sm">Status:</Text>
+                        <Box>
+                            <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
+                                {meal.status}
+                            </Badge>
+                        </Box>
+
+                        {meal.classification && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Classification:</Text>
+                                <Box>
+                                    <Badge variant="outline">{meal.classification}</Badge>
+                                </Box>
+                            </>
+                        )}
+
+                        {meal.date && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Date:</Text>
+                                <Text fontSize="sm">{new Date(meal.date).toLocaleDateString()}</Text>
+                            </>
+                        )}
+
+                        {creator && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Created By:</Text>
+                                <Text fontSize="sm">{getCreatorName()}</Text>
+                            </>
+                        )}
+
+                        {totalMinutes > 0 && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Total Time:</Text>
+                                <Text fontSize="sm">{formatDuration(totalMinutes)}</Text>
+                            </>
+                        )}
+                    </Grid>
                 </VStack>
 
                 <Box>
-                    <Text fontSize="lg" fontWeight="bold" mb={4}>Recipes</Text>
-                    {meal.items && meal.items.length > 0 ? (
+                    <HStack justify="space-between" mb={4}>
+                        <Heading size="md" color="fg.default">Recipes</Heading>
+                        <Button
+                            size="xs"
+                            variant="ghost"
+                            onClick={() => setAllExpanded(!allExpanded)}
+                        >
+                            {allExpanded ? 'Collapse All' : 'Expand All'}
+                            <Icon as={allExpanded ? FaChevronUp : FaChevronDown} ml={2} />
+                        </Button>
+                    </HStack>
+
+                    {isLoadingRecipes ? (
+                        <Center p={8}>
+                            <Spinner color="vscode.accent" />
+                        </Center>
+                    ) : recipesError ? (
+                        <ErrorAlert title="Failed to load recipes" description={recipesError.message} />
+                    ) : recipes.length > 0 ? (
                         <VStack align="stretch" gap={4}>
-                            {meal.items.map((item) => (
-                                <Card.Root key={item.id} variant="outline" p={4}>
-                                    <HStack justify="space-between">
-                                        <Text fontWeight="medium">
-                                            {/* Assuming item would have recipe details populated or we fetch them separately.
-                                                For now displaying ID or if mock data enriched it.
-                                                The mock data has 'recipe' property but type doesn't.
-                                                We'll just show Recipe ID for now or try to cast if we trusted mock enrichment.
-                                                Let's stay safe and just show "Recipe [ID]" if name unavailable.
-                                            */}
-                                            {(item as MealItemWithRecipe).recipe?.name || `Recipe ${item.recipe_id}`}
-                                        </Text>
-                                        <Button
-                                            size="xs"
-                                            variant="ghost"
-                                            onClick={() => navigate(`/recipes/${item.recipe_id}`, {
-                                                state: {
-                                                    breadcrumbs: [
-                                                        { label: 'Meals', url: '/meals' },
-                                                        { label: meal.name || 'Meal', url: `/meals/${meal.id}` }
-                                                    ]
-                                                }
-                                            })}
-                                        >
-                                            View Recipe
-                                        </Button>
-                                    </HStack>
-                                </Card.Root>
+                            {recipes.map((recipe) => (
+                                <ExpandableRecipeCard
+                                    key={recipe.core.id}
+                                    recipe={recipe}
+                                    mealName={meal.name || 'Meal'}
+                                    defaultExpanded={allExpanded}
+                                />
                             ))}
                         </VStack>
                     ) : (
@@ -176,7 +246,12 @@ const MealDetails = () => {
                     )}
                 </Box>
 
-                <Box pt={4} borderTopWidth={1} borderColor="border.default">
+                {/* Shopping List */}
+                {!isLoadingRecipes && recipes.length > 0 && (
+                    <IngredientAggregation recipes={recipes} />
+                )}
+
+                <Box pt={4} borderTopWidth={1} borderColor="border.default" mt={4}>
                     <Text fontSize="sm" color="fg.muted">
                         Created: {new Date(meal.created_at).toLocaleString()}
                     </Text>
