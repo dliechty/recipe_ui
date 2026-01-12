@@ -186,4 +186,39 @@ describe('MealDetails', () => {
             expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
         });
     });
+    it('allows setting classification when blank', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Unclassified Meal',
+                    status: 'Proposed',
+                    classification: null,
+                    date: '2025-01-01',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Unclassified Meal' })).toBeInTheDocument();
+        });
+
+        // Should show "Classification:" label
+        expect(screen.getByText('Classification:')).toBeInTheDocument();
+
+        // Should show "Add Classification" badge/button
+        expect(screen.getByText('Add Classification')).toBeInTheDocument();
+    });
 });

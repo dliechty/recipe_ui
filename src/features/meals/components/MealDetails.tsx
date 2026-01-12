@@ -179,7 +179,7 @@ const MealDetails = () => {
                             <EditableStatusBadge mealId={meal.id} status={meal.status || MealStatus.PROPOSED} canEdit={!!canEdit} />
                         </Box>
 
-                        {meal.classification && (
+                        {(meal.classification || canEdit) && (
                             <>
                                 <Text fontWeight="bold" color="fg.muted" fontSize="sm">Classification:</Text>
                                 <Box>
