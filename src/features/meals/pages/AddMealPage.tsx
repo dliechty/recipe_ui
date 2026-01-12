@@ -47,9 +47,27 @@ const AddMealPage = () => {
                     <Breadcrumb.Separator>
                         <Icon as={FaChevronRight} color="fg.muted" />
                     </Breadcrumb.Separator>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.CurrentLink color="fg.default">Add Meal</Breadcrumb.CurrentLink>
-                    </Breadcrumb.Item>
+                    {location.state?.sourceMeal ? (
+                        <>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                    <RouterLink to={`/meals/${location.state.sourceMeal.id}`}>
+                                        {location.state.sourceMeal.name}
+                                    </RouterLink>
+                                </Breadcrumb.Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Separator>
+                                <Icon as={FaChevronRight} color="fg.muted" />
+                            </Breadcrumb.Separator>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.CurrentLink color="fg.default">Duplicate Meal</Breadcrumb.CurrentLink>
+                            </Breadcrumb.Item>
+                        </>
+                    ) : (
+                        <Breadcrumb.Item>
+                            <Breadcrumb.CurrentLink color="fg.default">Add Meal</Breadcrumb.CurrentLink>
+                        </Breadcrumb.Item>
+                    )}
                 </Breadcrumb.List>
             </Breadcrumb.Root>
 

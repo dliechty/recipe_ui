@@ -6,7 +6,8 @@ import {
     HStack,
     Heading,
     Button,
-    Text
+    Text,
+    SimpleGrid
 } from '@chakra-ui/react';
 import Select, { StylesConfig } from 'react-select';
 import { MealCreate, MealStatus, MealClassification, MealItemBase } from '../../../client';
@@ -143,50 +144,52 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                         />
                     </Box>
 
-                    <Box>
-                        <Text as="label" mb={2} display="block" fontWeight="bold">Status</Text>
-                        <Select
-                            options={statusOptions}
-                            value={statusOptions.find(opt => opt.value === status)}
-                            onChange={(option) => {
-                                if (option) setStatus(option.value as MealStatus);
-                            }}
-                            styles={customStyles}
-                            isSearchable={false}
-                            aria-label="Status"
-                            inputId="status-select"
-                        />
-                    </Box>
+                    <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+                        <Box>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Status</Text>
+                            <Select
+                                options={statusOptions}
+                                value={statusOptions.find(opt => opt.value === status)}
+                                onChange={(option) => {
+                                    if (option) setStatus(option.value as MealStatus);
+                                }}
+                                styles={customStyles}
+                                isSearchable={false}
+                                aria-label="Status"
+                                inputId="status-select"
+                            />
+                        </Box>
 
-                    <Box>
-                        <Text as="label" mb={2} display="block" fontWeight="bold">Classification</Text>
-                        <Select
-                            options={classificationOptions}
-                            value={classificationOptions.find(opt => opt.value === classification)}
-                            onChange={(option) => {
-                                setClassification(option ? (option.value as MealClassification) : '');
-                            }}
-                            styles={customStyles}
-                            placeholder="Select classification..."
-                            isClearable
-                            aria-label="Classification"
-                            inputId="classification-select"
-                        />
-                    </Box>
+                        <Box>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Classification</Text>
+                            <Select
+                                options={classificationOptions}
+                                value={classificationOptions.find(opt => opt.value === classification)}
+                                onChange={(option) => {
+                                    setClassification(option ? (option.value as MealClassification) : '');
+                                }}
+                                styles={customStyles}
+                                placeholder="Select classification..."
+                                isClearable
+                                aria-label="Classification"
+                                inputId="classification-select"
+                            />
+                        </Box>
 
-                    <Box>
-                        <Text as="label" mb={2} display="block" fontWeight="bold">Date (Optional)</Text>
-                        <Input
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            bg="vscode.inputBg"
-                            borderColor="border.default"
-                            color="fg.default"
-                            _hover={{ borderColor: 'vscode.accent' }}
-                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
-                        />
-                    </Box>
+                        <Box>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Date (Optional)</Text>
+                            <Input
+                                type="date"
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            />
+                        </Box>
+                    </SimpleGrid>
 
                     <Box>
                         <Text as="label" mb={2} display="block" fontWeight="bold">Recipes</Text>

@@ -134,6 +134,10 @@ const MealDetails = () => {
                                         items: meal.items?.map(item => ({
                                             recipe_id: item.recipe_id
                                         }))
+                                    },
+                                    sourceMeal: {
+                                        id: meal.id,
+                                        name: meal.name
                                     }
                                 }
                             });
