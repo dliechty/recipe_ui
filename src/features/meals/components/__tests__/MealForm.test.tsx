@@ -15,6 +15,35 @@ vi.mock('../RecipeSearchSelector', () => ({
     )
 }));
 
+// Mock react-select
+interface MockSelectProps {
+    options: Array<{ label: string; value: string }>;
+    value: { label: string; value: string } | null;
+    onChange: (value: { label: string; value: string } | null) => void;
+    inputId?: string;
+    'aria-label'?: string;
+}
+
+vi.mock('react-select', () => ({
+    default: ({ options, value, onChange, inputId, 'aria-label': ariaLabel }: MockSelectProps) => (
+        <select
+            data-testid={inputId || ariaLabel}
+            value={value?.value || ''}
+            onChange={(e) => {
+                const selected = options.find((o) => o.value === e.target.value);
+                onChange(selected || null);
+            }}
+        >
+            <option value="">Select...</option>
+            {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                </option>
+            ))}
+        </select>
+    ),
+}));
+
 const renderWithProviders = (ui: React.ReactElement) => {
     return render(
         <ChakraProvider value={defaultSystem}>{ui}</ChakraProvider>
@@ -57,10 +86,10 @@ describe('MealForm', () => {
         const nameInput = screen.getByPlaceholderText('Enter meal name') as HTMLInputElement;
         expect(nameInput.value).toBe('Test Meal');
 
-        const statusSelect = screen.getByDisplayValue('Cooked') as HTMLSelectElement;
+        const statusSelect = screen.getByTestId('status-select') as HTMLSelectElement;
         expect(statusSelect.value).toBe(MealStatus.COOKED);
 
-        const classificationSelect = screen.getByDisplayValue('Dinner') as HTMLSelectElement;
+        const classificationSelect = screen.getByTestId('classification-select') as HTMLSelectElement;
         expect(classificationSelect.value).toBe(MealClassification.DINNER);
 
         const recipeSelector = screen.getByTestId('recipe-selector') as HTMLInputElement;
@@ -88,10 +117,10 @@ describe('MealForm', () => {
         const nameInput = screen.getByPlaceholderText('Enter meal name');
         fireEvent.change(nameInput, { target: { value: 'Sunday Dinner' } });
 
-        const statusSelect = screen.getByDisplayValue('Scheduled');
+        const statusSelect = screen.getByTestId('status-select');
         fireEvent.change(statusSelect, { target: { value: MealStatus.PROPOSED } });
 
-        const classificationSelect = screen.getAllByRole('combobox')[1]; // Second select is classification
+        const classificationSelect = screen.getByTestId('classification-select');
         fireEvent.change(classificationSelect, { target: { value: MealClassification.BREAKFAST } });
 
         const recipeSelector = screen.getByTestId('recipe-selector');
