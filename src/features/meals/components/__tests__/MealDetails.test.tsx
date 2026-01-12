@@ -1,4 +1,4 @@
-import { renderWithProviders, screen, waitFor } from '../../../../test-utils';
+import { renderWithProviders, screen, waitFor, fireEvent } from '../../../../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import MealDetails from '../MealDetails';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -121,5 +121,77 @@ describe('MealDetails', () => {
         // And the HStack with buttons is rendered.
         // So Edit Recipes button should be there.
         expect(screen.getByRole('button', { name: /Edit Recipes/i })).toBeInTheDocument();
+    });
+
+    it('allows editing meal name', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Old Name',
+                    status: 'Proposed',
+                    classification: 'Dinner',
+                    date: '2025-01-01',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            }),
+            http.put('*/meals/1', async ({ request }) => {
+                const body = await request.json() as { name: string };
+                return HttpResponse.json({
+                    id: '1',
+                    name: body.name,
+                    status: 'Proposed',
+                    // ... other fields
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Old Name' })).toBeInTheDocument();
+        });
+
+        // Click heading to edit
+        const heading = screen.getByRole('heading', { name: 'Old Name' });
+        // Need to click the parent HStack? The onClick is on the HStack.
+        // fireEvent.click on the heading (child) should bubble up.
+        // But verifying that "Edit" icon is present might be good?
+        // It has opacity 0 by default, so might be checking its existence.
+
+        fireEvent.click(heading);
+
+        // Input should appear
+        const input = screen.getByRole('textbox');
+        expect(input).toBeInTheDocument();
+        expect(input).toHaveValue('Old Name');
+
+        // Change name
+        fireEvent.change(input, { target: { value: 'New Name' } });
+
+        // Save
+        const saveButton = screen.getByRole('button', { name: /save/i });
+        fireEvent.click(saveButton);
+
+        // Expectation: mutation called. 
+        // We can't easily check mutation internal state here without spying.
+        // But we can check if it goes back to view mode?
+        // Or check if toast appears? Toaster is mocked/stubbed usually? 
+        // We see `toaster.create` in `EditableMealName`.
+        // Let's assume on successful mutation (which MSW handles), it switches back.
+
+        // Wait for input to disappear
+        await waitFor(() => {
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+        });
     });
 });

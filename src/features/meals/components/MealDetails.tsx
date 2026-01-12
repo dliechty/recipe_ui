@@ -26,6 +26,7 @@ import ExpandableRecipeCard from './ExpandableRecipeCard';
 import IngredientAggregation from './IngredientAggregation';
 import EditableStatusBadge from './EditableStatusBadge';
 import EditableClassificationBadge from './EditableClassificationBadge';
+import EditableMealName from './EditableMealName';
 
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -170,7 +171,11 @@ const MealDetails = () => {
 
             <VStack align="stretch" gap={6}>
                 <VStack align="start" gap={4}>
-                    <Heading size="lg">{meal.name || 'Untitled Meal'}</Heading>
+                    <EditableMealName
+                        mealId={meal.id}
+                        initialName={meal.name || 'Untitled Meal'}
+                        canEdit={!!canEdit}
+                    />
 
                     {/* Metadata Grid */}
                     <Grid templateColumns="auto 1fr" gap={2} rowGap={2} mb={0}>
