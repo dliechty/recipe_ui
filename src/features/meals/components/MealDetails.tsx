@@ -8,7 +8,6 @@ import {
     VStack,
     HStack,
     Button,
-    Badge,
     Spinner,
     Center,
     Breadcrumb,
@@ -22,8 +21,11 @@ import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatDuration } from '../../../utils/formatters';
+import { MealStatus } from '../../../client';
 import ExpandableRecipeCard from './ExpandableRecipeCard';
 import IngredientAggregation from './IngredientAggregation';
+import EditableStatusBadge from './EditableStatusBadge';
+import EditableClassificationBadge from './EditableClassificationBadge';
 
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -174,16 +176,16 @@ const MealDetails = () => {
                     <Grid templateColumns="auto 1fr" gap={2} rowGap={2} mb={0}>
                         <Text fontWeight="bold" color="fg.muted" fontSize="sm">Status:</Text>
                         <Box>
-                            <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
-                                {meal.status}
-                            </Badge>
+                            <EditableStatusBadge mealId={meal.id} status={meal.status || MealStatus.PROPOSED} canEdit={!!canEdit} />
                         </Box>
 
                         {meal.classification && (
                             <>
                                 <Text fontWeight="bold" color="fg.muted" fontSize="sm">Classification:</Text>
                                 <Box>
-                                    <Badge variant="outline">{meal.classification}</Badge>
+                                    <Box>
+                                        <EditableClassificationBadge mealId={meal.id} classification={meal.classification} canEdit={!!canEdit} />
+                                    </Box>
                                 </Box>
                             </>
                         )}
@@ -208,20 +210,47 @@ const MealDetails = () => {
                                 <Text fontSize="sm">{formatDuration(totalMinutes)}</Text>
                             </>
                         )}
+
+                        <Text fontWeight="bold" color="fg.muted" fontSize="sm">Created:</Text>
+                        <Text fontSize="sm">{new Date(meal.created_at).toLocaleString()}</Text>
+
+                        <Text fontWeight="bold" color="fg.muted" fontSize="sm">Updated:</Text>
+                        <Text fontSize="sm">{new Date(meal.updated_at).toLocaleString()}</Text>
                     </Grid>
                 </VStack>
+
+                {/* Shopping List */}
+                {!isLoadingRecipes && recipes.length > 0 && (
+                    <IngredientAggregation recipes={recipes} />
+                )}
 
                 <Box>
                     <HStack justify="space-between" mb={4}>
                         <Heading size="md" color="fg.default">Recipes</Heading>
-                        <Button
-                            size="xs"
-                            variant="ghost"
-                            onClick={() => setAllExpanded(!allExpanded)}
-                        >
-                            {allExpanded ? 'Collapse All' : 'Expand All'}
-                            <Icon as={allExpanded ? FaChevronUp : FaChevronDown} ml={2} />
-                        </Button>
+                        <HStack>
+                            {canEdit && (
+                                <Button
+                                    size="xs"
+                                    bg="vscode.button"
+                                    color="white"
+                                    _hover={{ bg: "vscode.buttonHover" }}
+                                    onClick={() => navigate(`/meals/${meal.id}/edit`)}
+                                    mr={2}
+                                >
+                                    <Icon as={FaEdit} mr={1} /> Edit Recipes
+                                </Button>
+                            )}
+                            <Button
+                                size="xs"
+                                bg="vscode.button"
+                                color="white"
+                                _hover={{ bg: "vscode.buttonHover" }}
+                                onClick={() => setAllExpanded(!allExpanded)}
+                            >
+                                {allExpanded ? 'Collapse All' : 'Expand All'}
+                                <Icon as={allExpanded ? FaChevronUp : FaChevronDown} ml={2} />
+                            </Button>
+                        </HStack>
                     </HStack>
 
                     {isLoadingRecipes ? (
@@ -246,19 +275,7 @@ const MealDetails = () => {
                     )}
                 </Box>
 
-                {/* Shopping List */}
-                {!isLoadingRecipes && recipes.length > 0 && (
-                    <IngredientAggregation recipes={recipes} />
-                )}
 
-                <Box pt={4} borderTopWidth={1} borderColor="border.default" mt={4}>
-                    <Text fontSize="sm" color="fg.muted">
-                        Created: {new Date(meal.created_at).toLocaleString()}
-                    </Text>
-                    <Text fontSize="sm" color="fg.muted">
-                        Last Updated: {new Date(meal.updated_at).toLocaleString()}
-                    </Text>
-                </Box>
             </VStack>
         </Container>
     );

@@ -78,7 +78,6 @@ describe('ExpandableRecipeCard', () => {
         renderWithProviders(<ExpandableRecipeCard recipe={mockRecipe} mealName="Test Meal" />);
         fireEvent.click(screen.getByText('Test Recipe'));
 
-        expect(screen.getByText('Cuisine:')).toBeInTheDocument();
         expect(screen.getByText('Italian')).toBeInTheDocument();
         expect(screen.getByText('Chicken')).toBeInTheDocument();
         expect(screen.getByText('Gluten Free')).toBeInTheDocument();

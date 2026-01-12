@@ -111,6 +111,15 @@ describe('MealDetails', () => {
 
         expect(screen.getByRole('button', { name: /Duplicate Meal/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /^Edit$/ })).toBeInTheDocument();
+        // Since there are no recipes in this mock, Edit Recipes might not show?
+        // Wait, Edit Recipes button is shown if canEdit is true, regardless of recipes count?
+        // Let's check MealDetails.tsx logic.
+        // It is inside the Box wrapping recipes list.
+        // The Box is rendered even if no recipes?
+        // 'Heading size="md"... Recipes' is rendered.
+        // And the HStack with buttons is rendered.
+        // So Edit Recipes button should be there.
+        expect(screen.getByRole('button', { name: /Edit Recipes/i })).toBeInTheDocument();
     });
 });

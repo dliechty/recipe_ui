@@ -8,18 +8,16 @@ import {
     Icon,
     Grid,
     VStack,
-    List,
     Button
 } from '@chakra-ui/react';
 import {
     FaChevronDown,
     FaChevronUp,
-    FaCheckCircle,
     FaExternalLinkAlt
 } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Recipe } from '../../../client';
-import { formatQuantity, formatDuration, formatDietName } from '../../../utils/formatters';
+import { formatDuration, formatDietName } from '../../../utils/formatters';
 
 interface ExpandableRecipeCardProps {
     recipe: Recipe;
@@ -91,58 +89,55 @@ const ExpandableRecipeCard = ({ recipe, mealName, defaultExpanded = false }: Exp
             {isExpanded && (
                 <Box p={4} borderTopWidth={1} borderColor="border.default">
                     {/* Metadata Grid */}
-                    <Grid templateColumns="auto 1fr" gap={2} rowGap={1} mb={4}>
-                        {recipe.core.cuisine && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Cuisine:</Text>
-                                <Badge colorPalette="purple" alignSelf="flex-start">{recipe.core.cuisine}</Badge>
-                            </>
-                        )}
-                        {recipe.core.protein && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Protein:</Text>
-                                <Badge colorPalette="blue" alignSelf="flex-start">{recipe.core.protein}</Badge>
-                            </>
-                        )}
-                        {(recipe.suitable_for_diet || []).length > 0 && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Diet:</Text>
-                                <HStack wrap="wrap" gap={1}>
-                                    {recipe.suitable_for_diet?.map(diet => (
-                                        <Badge key={diet} colorPalette="teal">{formatDietName(diet)}</Badge>
-                                    ))}
-                                </HStack>
-                            </>
-                        )}
+                    <Grid templateColumns="1fr 1fr" gap={4} mb={4}>
+                        {/* Left column: Times */}
+                        <Box>
+                            <HStack mb={1}>
+                                <Text fontWeight="bold" fontSize="sm">Total:</Text>
+                                <Text fontSize="sm">{formatDuration(recipe.times.total_time_minutes)}</Text>
+                            </HStack>
+                            <VStack align="start" pl={4} gap={0}>
+                                {(recipe.times.prep_time_minutes ?? 0) > 0 && (
+                                    <HStack>
+                                        <Text fontSize="xs" color="fg.muted">Prep:</Text>
+                                        <Text fontSize="xs">{formatDuration(recipe.times.prep_time_minutes)}</Text>
+                                    </HStack>
+                                )}
+                                {(recipe.times.active_time_minutes ?? 0) > 0 && (
+                                    <HStack>
+                                        <Text fontSize="xs" color="fg.muted">Active:</Text>
+                                        <Text fontSize="xs">{formatDuration(recipe.times.active_time_minutes)}</Text>
+                                    </HStack>
+                                )}
+                                {(recipe.times.cook_time_minutes ?? 0) > 0 && (
+                                    <HStack>
+                                        <Text fontSize="xs" color="fg.muted">Cook:</Text>
+                                        <Text fontSize="xs">{formatDuration(recipe.times.cook_time_minutes)}</Text>
+                                    </HStack>
+                                )}
+                            </VStack>
+                        </Box>
 
-                        {(recipe.times.prep_time_minutes ?? 0) > 0 && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Prep:</Text>
-                                <Text fontSize="sm">{formatDuration(recipe.times.prep_time_minutes)}</Text>
-                            </>
-                        )}
-                        {(recipe.times.active_time_minutes ?? 0) > 0 && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Active:</Text>
-                                <Text fontSize="sm">{formatDuration(recipe.times.active_time_minutes)}</Text>
-                            </>
-                        )}
-                        {(recipe.times.cook_time_minutes ?? 0) > 0 && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Cook:</Text>
-                                <Text fontSize="sm">{formatDuration(recipe.times.cook_time_minutes)}</Text>
-                            </>
-                        )}
+                        {/* Right column: Yield & Metadata */}
+                        <Box>
+                            <HStack mb={2}>
+                                <Text fontWeight="bold" fontSize="sm">Yield:</Text>
+                                <Text fontSize="sm">{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
+                            </HStack>
 
-                        <Text fontWeight="bold" color="fg.muted" fontSize="sm">Yield:</Text>
-                        <Text fontSize="sm">{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
-
-                        {(recipe.nutrition?.calories ?? 0) > 0 && (
-                            <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Calories:</Text>
-                                <Text fontSize="sm">{recipe.nutrition?.calories} kcal</Text>
-                            </>
-                        )}
+                            {/* Tags */}
+                            <HStack wrap="wrap" gap={2}>
+                                {recipe.core.cuisine && (
+                                    <Badge colorPalette="purple" size="xs">{recipe.core.cuisine}</Badge>
+                                )}
+                                {recipe.core.protein && (
+                                    <Badge colorPalette="blue" size="xs">{recipe.core.protein}</Badge>
+                                )}
+                                {recipe.suitable_for_diet?.map(diet => (
+                                    <Badge key={diet} colorPalette="teal" size="xs">{formatDietName(diet)}</Badge>
+                                ))}
+                            </HStack>
+                        </Box>
                     </Grid>
 
                     <Button
@@ -156,41 +151,7 @@ const ExpandableRecipeCard = ({ recipe, mealName, defaultExpanded = false }: Exp
                         <Icon as={FaExternalLinkAlt} mr={2} /> View Full Recipe
                     </Button>
 
-                    <Heading size="xs" mb={2} color="fg.default">Ingredients</Heading>
-                    <VStack align="stretch" gap={3}>
-                        {recipe.components.map((component, cIndex) => (
-                            <Box key={cIndex}>
-                                {component.name && component.name !== 'Main' && (
-                                    <Text fontWeight="bold" fontSize="xs" mb={1} color="fg.muted">{component.name}</Text>
-                                )}
-                                <List.Root gap={1}>
-                                    {component.ingredients.map((ingredient, index) => {
-                                        const isToTaste = ingredient.quantity === 0 && ingredient.unit.toLowerCase() === 'to taste';
-                                        return (
-                                            <List.Item key={index} display="flex" alignItems="center">
-                                                <List.Indicator asChild>
-                                                    <Box as="span" mr={2}>
-                                                        <Icon as={FaCheckCircle} color="vscode.accent" boxSize={3} />
-                                                    </Box>
-                                                </List.Indicator>
-                                                <Text fontSize="sm">
-                                                    {isToTaste ? (
-                                                        <>
-                                                            <Text as="span" fontWeight="bold">{ingredient.item}</Text> {ingredient.unit}
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <Text as="span" fontWeight="bold">{formatQuantity(ingredient.quantity)} {ingredient.unit}</Text> {ingredient.item}
-                                                        </>
-                                                    )}
-                                                </Text>
-                                            </List.Item>
-                                        );
-                                    })}
-                                </List.Root>
-                            </Box>
-                        ))}
-                    </VStack>
+
                 </Box>
             )}
         </Box>
