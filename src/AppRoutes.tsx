@@ -21,7 +21,7 @@ const TemplateList = React.lazy(() => import('./features/meals/components/Templa
 const MealDetails = React.lazy(() => import('./features/meals/components/MealDetails'));
 const TemplateDetails = React.lazy(() => import('./features/meals/components/TemplateDetails'));
 const AddMealPage = React.lazy(() => import('./features/meals/pages/AddMealPage'));
-const EditMealPage = React.lazy(() => import('./features/meals/pages/EditMealPage'));
+
 const AddTemplatePage = React.lazy(() => import('./features/meals/pages/AddTemplatePage'));
 const EditTemplatePage = React.lazy(() => import('./features/meals/pages/EditTemplatePage'));
 
@@ -126,14 +126,7 @@ const AppRoutes = () => {
                                     </ProtectedRoute>
                                 }
                             />
-                            <Route
-                                path="/meals/:id/edit"
-                                element={
-                                    <ProtectedRoute>
-                                        <EditMealPage />
-                                    </ProtectedRoute>
-                                }
-                            />
+
                             <Route
                                 path="/meals/templates/:id/edit"
                                 element={
