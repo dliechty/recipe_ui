@@ -57,7 +57,7 @@ export const meals = [
     {
         id: "m1",
         name: "Weeknight Dinner",
-        status: "Planned",
+        status: "Proposed",
         classification: "Dinner",
         date: new Date().toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",
