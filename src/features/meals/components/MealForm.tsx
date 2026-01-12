@@ -110,6 +110,16 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                     </Box>
 
                     <HStack justify="flex-start" mt={4} gap={2}>
+                        <Button
+                            type="submit"
+                            bg="vscode.button"
+                            color="white"
+                            _hover={{ bg: "vscode.buttonHover" }}
+                            loading={isLoading}
+                            size="xs"
+                        >
+                            Save Meal
+                        </Button>
                         {onCancel && (
                             <Button
                                 onClick={onCancel}
@@ -122,16 +132,6 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 Cancel
                             </Button>
                         )}
-                        <Button
-                            type="submit"
-                            bg="vscode.button"
-                            color="white"
-                            _hover={{ bg: "vscode.buttonHover" }}
-                            loading={isLoading}
-                            size="xs"
-                        >
-                            Save Meal
-                        </Button>
                     </HStack>
                 </VStack>
             </form>

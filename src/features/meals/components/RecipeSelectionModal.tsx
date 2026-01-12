@@ -137,21 +137,24 @@ const RecipeSelectionModal = ({
                     borderColor="border.default"
                 >
                     <Button
-                        variant="ghost"
-                        color="fg.muted"
-                        onClick={handleCancel}
-                        disabled={updateMeal.isPending}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
                         bg="vscode.button"
                         color="white"
                         _hover={{ bg: "vscode.buttonHover" }}
+                        size="xs"
                         onClick={handleSave}
                         loading={updateMeal.isPending}
                     >
                         Save Changes
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        bg="gray.600"
+                        color="white"
+                        size="xs"
+                        onClick={handleCancel}
+                        disabled={updateMeal.isPending}
+                    >
+                        Cancel
                     </Button>
                 </HStack>
             </Box>
