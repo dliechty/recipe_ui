@@ -748,14 +748,22 @@ export const handlers = [
             return new HttpResponse(null, { status: 404 });
         }
 
-        const updatedMeal = {
+        const { items, ...restBody } = body;
+
+        const updatedMeal: Meal = {
             ...mealsStore[index],
-            ...body, // simple merge for top level fields
+            ...restBody, // simple merge for top level fields
             status: body.status || mealsStore[index].status || MealStatus.PROPOSED,
             updated_at: new Date().toISOString(),
+            items: items
+                ? items.map(i => ({
+                    id: crypto.randomUUID(),
+                    meal_id: id as string,
+                    recipe_id: i.recipe_id,
+                    slot_id: null
+                }))
+                : (items === null ? [] : mealsStore[index].items)
         };
-
-        // items update removed as it's not in MealUpdate type
 
         mealsStore[index] = updatedMeal;
         return HttpResponse.json(updatedMeal);

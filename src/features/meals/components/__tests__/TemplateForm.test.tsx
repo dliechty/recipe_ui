@@ -133,7 +133,7 @@ describe('TemplateForm', () => {
         fireEvent.click(addButton);
 
         // Submit the form
-        const submitButton = screen.getByText('Save Template').closest('button');
+        const submitButton = screen.getByRole('button', { name: /Save Template/i });
         fireEvent.click(submitButton);
 
         await waitFor(() => {

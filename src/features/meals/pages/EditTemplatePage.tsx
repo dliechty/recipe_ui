@@ -34,7 +34,7 @@ const EditTemplatePage = () => {
 
     const handleSubmit = async (formData: MealTemplateCreate) => {
         updateTemplateMutation.mutate(
-            { id: template.id, data: formData },
+            { id: template.id, requestBody: formData },
             {
                 onSuccess: () => {
                     toaster.create({
