@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, HStack, Heading, Badge, Text, List, Icon } from '@chakra-ui/react';
 import { FaChevronDown, FaChevronUp, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { Recipe } from '../../../client';
