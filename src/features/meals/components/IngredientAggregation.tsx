@@ -153,7 +153,10 @@ const IngredientAggregation = ({ recipes }: IngredientAggregationProps) => {
                             bg={viewMode === 'byRecipe' ? 'vscode.button' : 'bg.surface'}
                             color={viewMode === 'byRecipe' ? 'white' : 'fg.default'}
                             _hover={{ bg: viewMode === 'byRecipe' ? 'vscode.buttonHover' : 'bg.muted' }}
-                            onClick={() => setViewMode('byRecipe')}
+                            onClick={() => {
+                                setViewMode('byRecipe');
+                                setExpandedRecipes(new Set(recipes.map(r => r.core.name)));
+                            }}
                             borderRadius={0}
                         >
                             By Recipe
@@ -196,7 +199,7 @@ const IngredientAggregation = ({ recipes }: IngredientAggregationProps) => {
                                         >
                                             <HStack>
                                                 <Heading size="sm" fontSize="sm">{recipe.core.name}</Heading>
-                                                <Badge size="xs" variant="outline">{totalItems} items</Badge>
+                                                <Badge size="xs" colorPalette="cyan" variant="solid">{totalItems} items</Badge>
                                             </HStack>
                                             <Icon as={isRecipeExpanded ? FaChevronUp : FaChevronDown} size="xs" color="fg.muted" />
                                         </HStack>

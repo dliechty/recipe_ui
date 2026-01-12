@@ -101,6 +101,7 @@ describe('IngredientAggregation', () => {
         expect(screen.getByText('From: Recipe 1, Recipe 2')).toBeInTheDocument(); // Flour sources
     });
 
+
     it('sorts alphabetically', () => {
         renderWithProviders(<IngredientAggregation recipes={mockRecipes} />);
         fireEvent.click(screen.getByText('Shopping List'));
@@ -109,5 +110,16 @@ describe('IngredientAggregation', () => {
         expect(items[0]).toHaveTextContent('Flour');
         expect(items[1]).toHaveTextContent('Salt');
         expect(items[2]).toHaveTextContent('Sugar'); // F, Sa, Su
+    });
+
+    it('expands all recipes by default when switching to By Recipe mode', () => {
+        renderWithProviders(<IngredientAggregation recipes={mockRecipes} />);
+        fireEvent.click(screen.getByText('Shopping List'));
+        fireEvent.click(screen.getByText('By Recipe'));
+
+        // Check if recipes are expanded by looking for ingredients
+        expect(screen.getAllByText('Flour').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('Salt').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('Sugar').length).toBeGreaterThan(0);
     });
 });
