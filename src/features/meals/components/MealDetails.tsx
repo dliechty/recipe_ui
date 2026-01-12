@@ -14,7 +14,7 @@ import {
     Icon,
     Grid
 } from '@chakra-ui/react';
-import { FaChevronRight, FaRegCopy, FaEdit, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaChevronRight, FaRegCopy, FaChevronDown, FaChevronUp, FaPlus } from 'react-icons/fa';
 import { useMeal, useDeleteMeal } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
@@ -27,6 +27,7 @@ import IngredientAggregation from './IngredientAggregation';
 import EditableStatusBadge from './EditableStatusBadge';
 import EditableClassificationBadge from './EditableClassificationBadge';
 import EditableMealName from './EditableMealName';
+import RecipeSelectionModal from './RecipeSelectionModal';
 
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -55,6 +56,7 @@ const MealDetails = () => {
 
     const [isDeleting, setIsDeleting] = useState(false);
     const [allExpanded, setAllExpanded] = useState(false);
+    const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
 
     const canEdit = currentUser?.is_admin || (currentUser?.id && meal?.user_id && currentUser.id === meal.user_id);
 
@@ -146,17 +148,6 @@ const MealDetails = () => {
                 )}
                 {canEdit && (
                     <Button
-                        onClick={() => navigate(`/meals/${meal.id}/edit`)}
-                        bg="vscode.button"
-                        color="white"
-                        _hover={{ bg: "vscode.buttonHover" }}
-                        size="xs"
-                    >
-                        <Icon as={FaEdit} /> Edit
-                    </Button>
-                )}
-                {canEdit && (
-                    <Button
                         onClick={handleDelete}
                         loading={isDeleting}
                         bg="red.600"
@@ -239,10 +230,10 @@ const MealDetails = () => {
                                     bg="vscode.button"
                                     color="white"
                                     _hover={{ bg: "vscode.buttonHover" }}
-                                    onClick={() => navigate(`/meals/${meal.id}/edit`)}
+                                    onClick={() => setIsRecipeModalOpen(true)}
                                     mr={2}
                                 >
-                                    <Icon as={FaEdit} mr={1} /> Edit Recipes
+                                    <Icon as={FaPlus} mr={1} /> Select Recipes
                                 </Button>
                             )}
                             <Button
@@ -282,6 +273,13 @@ const MealDetails = () => {
 
 
             </VStack>
+
+            <RecipeSelectionModal
+                isOpen={isRecipeModalOpen}
+                onClose={() => setIsRecipeModalOpen(false)}
+                mealId={meal.id}
+                initialRecipeIds={recipeIds}
+            />
         </Container>
     );
 };
