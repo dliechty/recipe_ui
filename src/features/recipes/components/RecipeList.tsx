@@ -127,7 +127,49 @@ const RecipeList = () => {
         );
     }
 
-    const recipes = data?.pages.flatMap((page) => page.recipes) || [];
+    const recipes = React.useMemo(() => data?.pages.flatMap((page) => page.recipes) || [], [data]);
+
+    const groupedRecipes = React.useMemo(() => {
+        const recipesMap = new Map(recipes.map(r => [r.core.id, r]));
+        const visited = new Set<string>();
+        const grouped: Array<{ recipe: typeof recipes[0], isVariant: boolean, hasVariants: boolean, isExpanded: boolean }> = [];
+
+        // Roots are recipes that either have no parent OR their parent is not in the current list
+        const roots = recipes.filter(r => !r.parent_recipe_id || !recipesMap.has(r.parent_recipe_id));
+
+        roots.forEach(root => {
+            if (visited.has(root.core.id)) return;
+            visited.add(root.core.id);
+
+            // Find variants for this root that are in the current list
+            const variants = recipes.filter(r => r.parent_recipe_id === root.core.id);
+
+            // Mark variants as visited so we don't process them again
+            variants.forEach(v => visited.add(v.core.id));
+
+            const isExpanded = !collapsedParents.has(root.core.id);
+
+            grouped.push({
+                recipe: root,
+                isVariant: false,
+                hasVariants: variants.length > 0,
+                isExpanded
+            });
+
+            if (isExpanded) {
+                variants.forEach(variant => {
+                    grouped.push({
+                        recipe: variant,
+                        isVariant: true,
+                        hasVariants: false,
+                        isExpanded: true
+                    });
+                });
+            }
+        });
+
+        return grouped;
+    }, [recipes, collapsedParents]);
 
     return (
         <Container maxW="container.xl" py={8}>
@@ -217,95 +259,54 @@ const RecipeList = () => {
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
-                            {(() => {
-                                // Group recipes logic
-                                const recipesMap = new Map(recipes.map(r => [r.core.id, r]));
-                                const visited = new Set<string>();
-                                const grouped: Array<{ recipe: typeof recipes[0], isVariant: boolean, hasVariants: boolean, isExpanded: boolean }> = [];
-
-                                // Roots are recipes that either have no parent OR their parent is not in the current list
-                                const roots = recipes.filter(r => !r.parent_recipe_id || !recipesMap.has(r.parent_recipe_id));
-
-                                roots.forEach(root => {
-                                    if (visited.has(root.core.id)) return;
-                                    visited.add(root.core.id);
-
-                                    // Find variants for this root that are in the current list
-                                    const variants = recipes.filter(r => r.parent_recipe_id === root.core.id);
-
-                                    // Mark variants as visited so we don't process them again if logic fails
-                                    variants.forEach(v => visited.add(v.core.id));
-
-                                    const isExpanded = !collapsedParents.has(root.core.id);
-
-                                    grouped.push({
-                                        recipe: root,
-                                        isVariant: false,
-                                        hasVariants: variants.length > 0,
-                                        isExpanded
-                                    });
-
-                                    if (isExpanded) {
-                                        variants.forEach(variant => {
-                                            grouped.push({
-                                                recipe: variant,
-                                                isVariant: true,
-                                                hasVariants: false, // Variants shouldn't have variants displayed in this flat model usually, or simplified for now
-                                                isExpanded: true
-                                            });
-                                        });
-                                    }
-                                });
-
-                                return grouped.map(({ recipe, isVariant, hasVariants, isExpanded }) => (
-                                    <Table.Row
-                                        key={recipe.core.id}
-                                        onClick={() => handleRecipeClick(recipe.core.id)}
-                                        cursor="pointer"
-                                        bg="bg.surface"
-                                        color="fg.default"
-                                        _hover={{ bg: "bg.muted" }}
-                                    >
-                                        <Table.Cell borderColor="border.default" fontWeight="medium" style={{ paddingLeft: isVariant ? '2rem' : 0 }}>
-                                            <HStack gap={2}>
-                                                {hasVariants && (
-                                                    <Box
-                                                        as="span"
-                                                        onClick={(e) => toggleParent(recipe.core.id, e)}
-                                                        cursor="pointer"
-                                                        display="inline-flex"
-                                                        alignItems="center"
-                                                        justifyContent="center"
-                                                        w="20px"
-                                                        h="20px"
-                                                        aria-label={isExpanded ? "Collapse" : "Expand"}
-                                                        role="button"
-                                                    >
-                                                        <Icon as={isExpanded ? FaChevronDown : FaChevronRight} boxSize={3} />
-                                                    </Box>
-                                                )}
-                                                {/* Align text for root recipes without variants to match those with the chevron */}
-                                                {!hasVariants && !isVariant && <Box w="20px" />}
-                                                {!hasVariants && isVariant && <Box w="5px" />} {/* Spacer for alignment */}
-                                                <Text>{recipe.core.name}</Text>
-                                            </HStack>
-                                        </Table.Cell>
-                                        <Table.Cell borderColor="border.default">{recipe.core.category || '-'}</Table.Cell>
-                                        <Table.Cell borderColor="border.default">{recipe.core.cuisine || '-'}</Table.Cell>
-                                        <Table.Cell borderColor="border.default">
-                                            {recipe.core.difficulty && (
-                                                <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
-                                                    {recipe.core.difficulty}
-                                                </Badge>
+                            {groupedRecipes.map(({ recipe, isVariant, hasVariants, isExpanded }) => (
+                                <Table.Row
+                                    key={recipe.core.id}
+                                    onClick={() => handleRecipeClick(recipe.core.id)}
+                                    cursor="pointer"
+                                    bg="bg.surface"
+                                    color="fg.default"
+                                    _hover={{ bg: "bg.muted" }}
+                                >
+                                    <Table.Cell borderColor="border.default" fontWeight="medium" style={{ paddingLeft: isVariant ? '2rem' : 0 }}>
+                                        <HStack gap={2}>
+                                            {hasVariants && (
+                                                <Box
+                                                    as="span"
+                                                    onClick={(e) => toggleParent(recipe.core.id, e)}
+                                                    cursor="pointer"
+                                                    display="inline-flex"
+                                                    alignItems="center"
+                                                    justifyContent="center"
+                                                    w="20px"
+                                                    h="20px"
+                                                    aria-label={isExpanded ? "Collapse" : "Expand"}
+                                                    role="button"
+                                                >
+                                                    <Icon as={isExpanded ? FaChevronDown : FaChevronRight} boxSize={3} />
+                                                </Box>
                                             )}
-                                        </Table.Cell>
-                                        <Table.Cell borderColor="border.default">
-                                            {(recipe.times.total_time_minutes ?? 0) > 0 ? formatDuration(recipe.times.total_time_minutes) : '-'}
-                                        </Table.Cell>
-                                        <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
-                                    </Table.Row>
-                                ));
-                            })()}
+                                            {/* Align text for root recipes without variants to match those with the chevron */}
+                                            {!hasVariants && !isVariant && <Box w="20px" />}
+                                            {!hasVariants && isVariant && <Box w="5px" />} {/* Spacer for alignment */}
+                                            <Text>{recipe.core.name}</Text>
+                                        </HStack>
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">{recipe.core.category || '-'}</Table.Cell>
+                                    <Table.Cell borderColor="border.default">{recipe.core.cuisine || '-'}</Table.Cell>
+                                    <Table.Cell borderColor="border.default">
+                                        {recipe.core.difficulty && (
+                                            <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
+                                                {recipe.core.difficulty}
+                                            </Badge>
+                                        )}
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">
+                                        {(recipe.times.total_time_minutes ?? 0) > 0 ? formatDuration(recipe.times.total_time_minutes) : '-'}
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
+                                </Table.Row>
+                            ))}
                         </Table.Body>
                     </Table.Root>
                 </Box>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import { OpenAPI, AuthenticationService, UserPublic } from '../client';
 
 interface AuthContextType {
@@ -21,34 +22,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Parse JWT payload safely - returns null if invalid
     const parseJwtPayload = useCallback((jwtToken: string): { sub?: string } | null => {
         try {
-            const parts = jwtToken.split('.');
-            if (parts.length !== 3) {
-                // Not a valid JWT structure
-                return null;
-            }
-
-            // Validate base64 format before decoding
-            const base64Payload = parts[1];
-            if (!/^[A-Za-z0-9_-]*$/.test(base64Payload)) {
-                return null;
-            }
-
-            // Handle base64url encoding (replace URL-safe chars)
-            const normalizedPayload = base64Payload
-                .replace(/-/g, '+')
-                .replace(/_/g, '/');
-
-            const decoded = atob(normalizedPayload);
-            const payload = JSON.parse(decoded);
-
-            // Validate expected payload structure
-            if (typeof payload !== 'object' || payload === null) {
-                return null;
-            }
-
-            return payload;
+            return jwtDecode<{ sub?: string }>(jwtToken);
         } catch {
-            // Invalid base64, invalid JSON, or other parsing error
+            // Invalid token format
             return null;
         }
     }, []);

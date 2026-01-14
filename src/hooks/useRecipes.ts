@@ -36,8 +36,12 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
             // Calculate skip based on page and limit
             const skip = (page - 1) * limit;
 
-            // Construct URL manually to bypass service wrapper and get headers
-            // Construct URL manually to bypass service wrapper and get headers
+            /**
+             * NOTE: We construct the URL manually and use axios directly here instead of using 
+             * RecipesService.readRecipesRecipesGet because we need access to the response headers
+             * (specifically 'X-Total-Count') to handle infinite scroll pagination correctly.
+             * The auto-generated service wrapper currently only returns the response body.
+             */
             const params = new URLSearchParams();
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
