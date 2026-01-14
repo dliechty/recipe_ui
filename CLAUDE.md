@@ -20,7 +20,7 @@ npm run lint          # Run ESLint
 ```bash
 npm test              # Run tests in watch mode
 npm run test:once     # Run all tests once and exit
-npm test src/features/recipes/__tests__/RecipeDetails.test.tsx  # Run a single test file
+npm test:once src/features/recipes/__tests__/RecipeDetails.test.tsx  # Run a single test file
 ```
 
 ### API Client Generation
