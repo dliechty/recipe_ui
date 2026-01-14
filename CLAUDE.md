@@ -20,6 +20,7 @@ npm run lint          # Run ESLint
 ```bash
 npm test              # Run tests in watch mode
 npm run test:once     # Run all tests once and exit
+npm test src/features/recipes/__tests__/RecipeDetails.test.tsx  # Run a single test file
 ```
 
 ### API Client Generation
@@ -64,7 +65,9 @@ src/
 - `AuthContext` (src/context/AuthContext.tsx) manages global auth state using JWT tokens
 - Tokens are stored in localStorage and set on `OpenAPI.TOKEN`
 - An Axios interceptor automatically logs out users on 401 responses
-- `ProtectedRoute` component guards authenticated routes
+- `ProtectedRoute` component guards authenticated routes and redirects first-time users to `/change-password`
+
+**Route Code Splitting**: All page components are lazy-loaded via `React.lazy()` in `AppRoutes.tsx` for optimal bundle size.
 
 **Base URL Configuration**: The app is served from `/recipes/` base path (see `vite.config.ts` and router basename). This affects routing and asset URLs.
 
@@ -79,7 +82,7 @@ Recipe forms use a multi-step pattern split across:
 - `RecipeIngredientsForm`: Component-based ingredient lists with drag-and-drop reordering
 - `RecipeInstructionsForm`: Step-by-step instructions with drag-and-drop reordering
 
-Forms maintain internal state with stable IDs for UI elements (e.g., `RecipeIngredientWithId`, `InstructionWithId`) to support reordering while the API models use simple arrays.
+Forms maintain internal state with stable IDs for UI elements (e.g., `RecipeIngredientWithId`, `InstructionWithId`) to support drag-and-drop reordering via `@dnd-kit`. IDs are stripped before API submission.
 
 ### Recipe Filtering
 
