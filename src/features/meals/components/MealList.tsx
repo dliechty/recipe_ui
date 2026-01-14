@@ -4,6 +4,7 @@ import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, Badge } f
 import { FaPlus } from 'react-icons/fa';
 import { useInfiniteMeals } from '../../../hooks/useMeals';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { UserDisplay } from '../../../components/common/UserDisplay';
 
 const MealList = () => {
     const navigate = useNavigate();
@@ -81,6 +82,7 @@ const MealList = () => {
                                 <Table.ColumnHeader color="fg.default">Status</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Recipes</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created At</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
@@ -108,13 +110,16 @@ const MealList = () => {
                                         {meal.items?.length || 0} recipes
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
+                                        <UserDisplay userId={meal.user_id} />
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">
                                         {new Date(meal.created_at).toLocaleDateString()}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}
                             {meals.length === 0 && status === 'success' && (
                                 <Table.Row bg="bg.surface">
-                                    <Table.Cell colSpan={4} textAlign="center" color="fg.muted" borderColor="border.default">
+                                    <Table.Cell colSpan={6} textAlign="center" color="fg.muted" borderColor="border.default">
                                         No meals found. Create one to get started!
                                     </Table.Cell>
                                 </Table.Row>
