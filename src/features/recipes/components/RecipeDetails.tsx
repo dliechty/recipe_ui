@@ -394,7 +394,7 @@ const RecipeDetails = () => {
                             </Text>
 
                             {/* Ingredients Section */}
-                            <Box w="fit-content" mx={{ base: "auto", md: "0" }}>
+                            <Box w="fit-content" mx="0">
                                 <HStack justify="center" mb={4} gap={0} className="no-print">
                                     {[0.5, 1.0, 2.0].map((s, index, arr) => (
                                         <Button
@@ -424,7 +424,7 @@ const RecipeDetails = () => {
                                             {component.name && component.name !== 'Main' && (
                                                 <Text fontWeight="bold" mb={2} color="fg.default">{component.name}</Text>
                                             )}
-                                            <List.Root gap={1} mb={component.name ? 4 : 0}>
+                                            <List.Root gap={1} mb={component.name ? 4 : 0} ps={0} variant="plain">
                                                 {component.ingredients
                                                     .slice()
                                                     .sort((a, b) => (a.order || 0) - (b.order || 0))
