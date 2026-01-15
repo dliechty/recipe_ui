@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Box,
@@ -6,11 +7,13 @@ import {
     Text,
     Badge,
     Icon,
-    Spinner
+    Spinner,
+    Grid
 } from '@chakra-ui/react';
 import { FaChevronDown, FaChevronUp, FaExternalLinkAlt, FaSearch, FaListUl, FaLink } from 'react-icons/fa';
 import { MealTemplateSlot, MealTemplateSlotStrategy } from '../../../client';
 import { useRecipe, useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
+import { formatDuration, formatDietName } from '../../../utils/formatters';
 
 interface TemplateSlotCardProps {
     slot: MealTemplateSlot;
@@ -100,44 +103,86 @@ const DirectSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
         <Box
             p={3}
             borderWidth={1}
-            borderColor="#3c3c3c"
+            borderColor="border.default"
             borderRadius="md"
-            bg="#1e1e1e"
-            _hover={{ bg: '#2d2d30', cursor: 'pointer' }}
+            bg="bg.canvas"
+            _hover={{ bg: 'vscode.inputBg', cursor: 'pointer' }}
             onClick={handleViewRecipe}
+            transition="background-color 0.2s"
         >
-            <HStack justify="space-between" align="center">
-                <VStack align="start" gap={1}>
-                    <Text fontWeight="medium" color="fg.default">{recipe.core.name}</Text>
-                    <HStack gap={2} wrap="wrap">
-                        {recipe.core.category && <Badge colorPalette="orange" size="sm">{recipe.core.category}</Badge>}
-                        {recipe.core.cuisine && <Badge colorPalette="purple" size="sm">{recipe.core.cuisine}</Badge>}
-                        {recipe.core.difficulty && (
-                            <Badge
-                                colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}
-                                size="sm"
-                            >
-                                {recipe.core.difficulty}
-                            </Badge>
-                        )}
-                        {recipe.core.protein && <Badge colorPalette="blue" size="sm">{recipe.core.protein}</Badge>}
-                    </HStack>
-                    {/* Expanded view - more metadata */}
-                    {isExpanded && (
-                        <VStack align="start" gap={2} pt={2}>
-                            {recipe.core.description && (
-                                <Text fontSize="sm" color="fg.muted">{recipe.core.description}</Text>
+            <VStack align="stretch" gap={2}>
+                <HStack justify="space-between" align="center">
+                    <VStack align="start" gap={1}>
+                        <Text fontWeight="medium" color="fg.default">{recipe.core.name}</Text>
+                        <HStack gap={2} wrap="wrap">
+                            {recipe.core.category && <Badge colorPalette="orange" size="sm">{recipe.core.category}</Badge>}
+                            {recipe.core.cuisine && <Badge colorPalette="purple" size="sm">{recipe.core.cuisine}</Badge>}
+                            {recipe.core.difficulty && (
+                                <Badge
+                                    colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}
+                                    size="sm"
+                                >
+                                    {recipe.core.difficulty}
+                                </Badge>
                             )}
-                            {recipe.core.yield_amount && (
-                                <Text fontSize="xs" color="fg.muted">
-                                    Yields: {recipe.core.yield_amount} {recipe.core.yield_unit}
-                                </Text>
-                            )}
-                        </VStack>
-                    )}
-                </VStack>
-                <Icon as={FaExternalLinkAlt} color="fg.muted" boxSize={3} />
-            </HStack>
+                            {recipe.core.protein && <Badge colorPalette="blue" size="sm">{recipe.core.protein}</Badge>}
+                        </HStack>
+                    </VStack>
+                    <Icon as={FaExternalLinkAlt} color="fg.muted" boxSize={3} />
+                </HStack>
+
+                {/* Expanded view - more metadata */}
+                {isExpanded && (
+                    <Box pt={2} borderTopWidth={1} borderColor="border.default">
+                         <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
+                            <VStack align="start" gap={2}>
+                                {recipe.core.description && (
+                                    <Text fontSize="sm" color="fg.muted" noOfLines={3}>{recipe.core.description}</Text>
+                                )}
+                                <VStack align="start" gap={1}>
+                                     {(recipe.times.total_time_minutes ?? 0) > 0 && (
+                                         <HStack>
+                                            <Text fontSize="xs" fontWeight="bold" color="fg.muted">Total Time:</Text>
+                                            <Text fontSize="xs" color="fg.default">{formatDuration(recipe.times.total_time_minutes)}</Text>
+                                         </HStack>
+                                     )}
+                                     {(recipe.times.prep_time_minutes ?? 0) > 0 && (
+                                         <HStack>
+                                            <Text fontSize="xs" fontWeight="bold" color="fg.muted">Prep:</Text>
+                                            <Text fontSize="xs" color="fg.default">{formatDuration(recipe.times.prep_time_minutes)}</Text>
+                                         </HStack>
+                                     )}
+                                     {(recipe.times.cook_time_minutes ?? 0) > 0 && (
+                                         <HStack>
+                                            <Text fontSize="xs" fontWeight="bold" color="fg.muted">Cook:</Text>
+                                            <Text fontSize="xs" color="fg.default">{formatDuration(recipe.times.cook_time_minutes)}</Text>
+                                         </HStack>
+                                     )}
+                                </VStack>
+                            </VStack>
+                            <VStack align="start" gap={2}>
+                                {recipe.core.yield_amount && (
+                                    <HStack>
+                                        <Text fontSize="xs" fontWeight="bold" color="fg.muted">Yields:</Text>
+                                        <Text fontSize="xs" color="fg.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Text>
+                                    </HStack>
+                                )}
+                                <Box>
+                                    <Text fontSize="xs" fontWeight="bold" color="fg.muted" mb={1}>Dietary Info:</Text>
+                                    <HStack wrap="wrap" gap={1}>
+                                        {recipe.suitable_for_diet?.map(diet => (
+                                            <Badge key={diet} colorPalette="teal" size="xs">{formatDietName(diet)}</Badge>
+                                        ))}
+                                        {(!recipe.suitable_for_diet || recipe.suitable_for_diet.length === 0) && (
+                                            <Text fontSize="xs" color="fg.muted" fontStyle="italic">None specified</Text>
+                                        )}
+                                    </HStack>
+                                </Box>
+                            </VStack>
+                        </Grid>
+                    </Box>
+                )}
+            </VStack>
         </Box>
     );
 };
@@ -182,18 +227,19 @@ const ListSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTemplat
 
             {/* Expanded view - recipe list */}
             {isExpanded && recipes.length > 0 && (
-                <Box pt={3} borderTopWidth={1} borderColor="#3c3c3c">
+                <Box pt={3} borderTopWidth={1} borderColor="border.default">
                     <VStack align="stretch" gap={2}>
                         {recipes.map((recipe) => (
                             <Box
                                 key={recipe.core.id}
                                 p={3}
                                 borderWidth={1}
-                                borderColor="#3c3c3c"
+                                borderColor="border.default"
                                 borderRadius="md"
-                                bg="#1e1e1e"
-                                _hover={{ bg: '#2d2d30', cursor: 'pointer' }}
+                                bg="bg.canvas"
+                                _hover={{ bg: 'vscode.inputBg', cursor: 'pointer' }}
                                 onClick={(e) => handleViewRecipe(e, recipe.core.id)}
+                                transition="background-color 0.2s"
                             >
                                 <HStack justify="space-between" align="center">
                                     <VStack align="start" gap={1}>
@@ -202,7 +248,6 @@ const ListSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTemplat
                                         </Text>
                                         <HStack gap={2} wrap="wrap">
                                             {recipe.core.category && <Badge colorPalette="orange" size="xs">{recipe.core.category}</Badge>}
-                                            {recipe.core.cuisine && <Badge colorPalette="purple" size="xs">{recipe.core.cuisine}</Badge>}
                                             {recipe.core.difficulty && (
                                                 <Badge
                                                     colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}
@@ -210,6 +255,11 @@ const ListSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTemplat
                                                 >
                                                     {recipe.core.difficulty}
                                                 </Badge>
+                                            )}
+                                            {(recipe.times.total_time_minutes ?? 0) > 0 && (
+                                                <Text fontSize="xs" color="fg.muted">
+                                                    {formatDuration(recipe.times.total_time_minutes)}
+                                                </Text>
                                             )}
                                         </HStack>
                                     </VStack>
@@ -261,6 +311,9 @@ const SearchSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
                             {formatCriterion(criterion)}
                         </Badge>
                     ))}
+                    {criteria.length === 0 && (
+                         <Text fontSize="sm" color="fg.muted" fontStyle="italic">No criteria (matches all)</Text>
+                    )}
                 </HStack>
                 <Text fontSize="sm" color="fg.muted">
                     {isLoading ? (
@@ -273,7 +326,7 @@ const SearchSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
 
             {/* Expanded view - scrollable results */}
             {isExpanded && !isLoading && recipes.length > 0 && (
-                <Box pt={3} borderTopWidth={1} borderColor="#3c3c3c">
+                <Box pt={3} borderTopWidth={1} borderColor="border.default">
                     <Box
                         maxH="300px"
                         overflowY="auto"
@@ -290,11 +343,12 @@ const SearchSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
                                     key={recipe.core.id}
                                     p={3}
                                     borderWidth={1}
-                                    borderColor="#3c3c3c"
+                                    borderColor="border.default"
                                     borderRadius="md"
-                                    bg="#1e1e1e"
-                                    _hover={{ bg: '#2d2d30', cursor: 'pointer' }}
+                                    bg="bg.canvas"
+                                    _hover={{ bg: 'vscode.inputBg', cursor: 'pointer' }}
                                     onClick={(e) => handleViewRecipe(e, recipe.core.id)}
+                                    transition="background-color 0.2s"
                                 >
                                     <HStack justify="space-between" align="center">
                                         <VStack align="start" gap={1}>
@@ -304,7 +358,11 @@ const SearchSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
                                             <HStack gap={2} wrap="wrap">
                                                 {recipe.core.category && <Badge colorPalette="orange" size="xs">{recipe.core.category}</Badge>}
                                                 {recipe.core.cuisine && <Badge colorPalette="purple" size="xs">{recipe.core.cuisine}</Badge>}
-                                                {recipe.core.protein && <Badge colorPalette="blue" size="xs">{recipe.core.protein}</Badge>}
+                                                {(recipe.times.total_time_minutes ?? 0) > 0 && (
+                                                    <Text fontSize="xs" color="fg.muted">
+                                                        {formatDuration(recipe.times.total_time_minutes)}
+                                                    </Text>
+                                                )}
                                             </HStack>
                                         </VStack>
                                         <Icon as={FaExternalLinkAlt} color="fg.muted" boxSize={3} />
@@ -322,7 +380,7 @@ const SearchSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
             )}
 
             {isExpanded && !isLoading && recipes.length === 0 && (
-                <Box pt={3} borderTopWidth={1} borderColor="#3c3c3c">
+                <Box pt={3} borderTopWidth={1} borderColor="border.default">
                     <Text fontSize="sm" color="fg.muted">No recipes match the search criteria.</Text>
                 </Box>
             )}
@@ -349,10 +407,10 @@ const TemplateSlotCard = ({ slot, slotNumber, templateName, isExpanded, onToggle
     return (
         <Box
             borderWidth={1}
-            borderColor="#3c3c3c"
+            borderColor="border.default"
             borderRadius="md"
             overflow="hidden"
-            bg="#252526"
+            bg="bg.surface"
         >
             {/* Header - Clickable to toggle */}
             <Box
@@ -360,11 +418,10 @@ const TemplateSlotCard = ({ slot, slotNumber, templateName, isExpanded, onToggle
                 py={3}
                 cursor="pointer"
                 onClick={onToggle}
-                _hover={{ bg: '#2d2d30' }}
+                _hover={{ bg: 'vscode.inputBg' }}
                 transition="background-color 0.2s"
                 borderBottomWidth={1}
-                borderColor="#3c3c3c"
-                bg="#1e1e1e"
+                borderColor="border.default"
             >
                 <HStack justify="space-between" align="center">
                     <HStack gap={3}>

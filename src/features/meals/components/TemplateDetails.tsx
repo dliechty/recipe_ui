@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon, Grid } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Breadcrumb, Icon, Grid } from '@chakra-ui/react';
 import { FaChevronRight, FaRegCopy, FaEdit } from 'react-icons/fa';
 import { useMealTemplate, useDeleteMealTemplate } from '../../../hooks/useMeals';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import TemplateSlotCard from './TemplateSlotCard';
 
 const TemplateDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -16,6 +17,7 @@ const TemplateDetails = () => {
     const { data: creator } = useUser(template?.user_id);
 
     const [isDeleting, setIsDeleting] = useState(false);
+    const [expandedSlotId, setExpandedSlotId] = useState<string | null>(null);
 
     const canEdit = currentUser?.is_admin || (currentUser?.id && template?.user_id && currentUser.id === template.user_id);
 
@@ -183,14 +185,14 @@ const TemplateDetails = () => {
                     {template.slots && template.slots.length > 0 ? (
                         <VStack align="stretch" gap={4}>
                             {template.slots.map((slot, index) => (
-                                <Card.Root key={slot.id} variant="outline" p={4}>
-                                    <HStack justify="space-between">
-                                        <VStack align="start" gap={0}>
-                                            <Text fontWeight="medium">Slot {index + 1}</Text>
-                                            <Text fontSize="sm" color="fg.muted">Strategy: {slot.strategy}</Text>
-                                        </VStack>
-                                    </HStack>
-                                </Card.Root>
+                                <TemplateSlotCard
+                                    key={slot.id}
+                                    slot={slot}
+                                    slotNumber={index + 1}
+                                    templateName={template.name || 'Untitled Template'}
+                                    isExpanded={expandedSlotId === slot.id}
+                                    onToggle={() => setExpandedSlotId(expandedSlotId === slot.id ? null : slot.id)}
+                                />
                             ))}
                         </VStack>
                     ) : (
