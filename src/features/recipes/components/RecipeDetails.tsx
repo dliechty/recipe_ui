@@ -395,7 +395,7 @@ const RecipeDetails = () => {
 
                             {/* Ingredients Section */}
                             <Box w="fit-content" mx="0">
-                                <HStack justify="center" mb={4} gap={0} className="no-print">
+                                <HStack mb={4} gap={0} className="no-print">
                                     {[0.5, 1.0, 2.0].map((s, index, arr) => (
                                         <Button
                                             key={s}
