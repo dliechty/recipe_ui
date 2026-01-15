@@ -25,7 +25,7 @@ describe('TemplateDetails', () => {
                     created_at: '2024-01-01T00:00:00Z',
                     slots: [
                         { id: 's1', strategy: 'Direct', recipe_id: 'r1' },
-                        { id: 's2', strategy: 'Simple' }
+                        { id: 's2', strategy: 'List', recipe_ids: ['r2', 'r3'] }
                     ]
                 });
             })
@@ -47,7 +47,7 @@ describe('TemplateDetails', () => {
         expect(screen.getByText('Slot 1')).toBeInTheDocument(); // Index based name
         expect(screen.getByText(/Direct/)).toBeInTheDocument();
         expect(screen.getByText('Slot 2')).toBeInTheDocument();
-        expect(screen.getByText(/Simple/)).toBeInTheDocument();
+        expect(screen.getByText(/List/)).toBeInTheDocument();
     });
 
     it('shows actions: edit, delete, generate', async () => {
