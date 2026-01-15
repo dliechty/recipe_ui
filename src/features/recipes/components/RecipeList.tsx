@@ -119,14 +119,6 @@ const RecipeList = () => {
         });
     };
 
-    if (status === 'error') {
-        return (
-            <Container maxW="container.xl" py={8}>
-                <ErrorAlert title="Failed to load recipes" description={error?.message || "An unexpected error occurred."} />
-            </Container>
-        );
-    }
-
     const recipes = React.useMemo(() => data?.pages.flatMap((page) => page.recipes) || [], [data]);
 
     const groupedRecipes = React.useMemo(() => {
@@ -170,6 +162,14 @@ const RecipeList = () => {
 
         return grouped;
     }, [recipes, collapsedParents]);
+
+    if (status === 'error') {
+        return (
+            <Container maxW="container.xl" py={8}>
+                <ErrorAlert title="Failed to load recipes" description={error?.message || "An unexpected error occurred."} />
+            </Container>
+        );
+    }
 
     return (
         <Container maxW="container.xl" py={8}>

@@ -84,18 +84,26 @@ export class RecipesService {
     /**
      * Read Recipe
      * Retrieve a single recipe by its ID.
+     *
+     * Optionally provide a `scale` parameter to multiply all ingredient quantities.
+     * For example, scale=2 doubles all quantities, scale=0.5 halves them.
      * @param recipeId
+     * @param scale Scale factor for ingredient quantities (must be > 0)
      * @returns Recipe Successful Response
      * @throws ApiError
      */
     public static readRecipeRecipesRecipeIdGet(
         recipeId: string,
+        scale?: (number | null),
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/recipes/{recipe_id}',
             path: {
                 'recipe_id': recipeId,
+            },
+            query: {
+                'scale': scale,
             },
             errors: {
                 422: `Validation Error`,
@@ -235,13 +243,13 @@ export class RecipesService {
      * Delete a comment. Only the author of the comment or an admin can delete it.
      * @param recipeId
      * @param commentId
-     * @returns any Successful Response
+     * @returns void
      * @throws ApiError
      */
     public static deleteCommentRecipesRecipeIdCommentsCommentIdDelete(
         recipeId: string,
         commentId: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/recipes/{recipe_id}/comments/{comment_id}',

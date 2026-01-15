@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { recipes as initialRecipes, users, comments as initialComments, meals as initialMeals, mealTemplates as initialMealTemplates } from './data';
-import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate } from '../client';
+import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient } from '../client';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 const recipes: Recipe[] = [...initialRecipes] as unknown as Recipe[];
@@ -219,12 +219,37 @@ export const handlers = [
     }),
 
     // Intercept "GET /recipes/:id" requests...
-    http.get('*/recipes/:id', ({ params }) => {
+    http.get('*/recipes/:id', ({ params, request }) => {
         const { id } = params;
+        const url = new URL(request.url);
+        const scaleParam = url.searchParams.get('scale');
+        const scale = scaleParam ? Number(scaleParam) : 1;
+
         const recipe = recipes.find(r => r.core.id === id);
 
         if (!recipe) {
             return new HttpResponse(null, { status: 404 });
+        }
+
+        if (scale !== 1) {
+            // Clone and scale
+            const scaledRecipe = JSON.parse(JSON.stringify(recipe)); // Deep clone
+
+            // Scale ingredients
+            scaledRecipe.components.forEach((comp: Component) => {
+                comp.ingredients.forEach((ing: RecipeIngredient) => {
+                    if (ing.quantity) {
+                        ing.quantity = ing.quantity * scale;
+                    }
+                });
+            });
+
+            // Scale Yield
+            if (scaledRecipe.core.yield_amount) {
+                scaledRecipe.core.yield_amount = scaledRecipe.core.yield_amount * scale;
+            }
+
+            return HttpResponse.json(scaledRecipe);
         }
 
         return HttpResponse.json(recipe);

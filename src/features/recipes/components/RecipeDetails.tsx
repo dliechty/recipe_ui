@@ -33,7 +33,8 @@ const RecipeDetails = () => {
     const location = useLocation();
     const backUrl = location.state?.backUrl || (location.state?.fromSearch ? `/recipes?${location.state.fromSearch}` : '/recipes');
     const backLabel = location.state?.backLabel || 'Recipes';
-    const { data: recipe, isLoading: loading, error } = useRecipe(id || '');
+    const [scale, setScale] = React.useState<number>(1.0);
+    const { data: recipe, isLoading: loading, error } = useRecipe(id || '', scale);
     const deleteRecipe = useDeleteRecipe();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
@@ -393,7 +394,29 @@ const RecipeDetails = () => {
                             </Text>
 
                             {/* Ingredients Section */}
-                            <Box w="full">
+                            <Box w="fit-content" mx={{ base: "auto", md: "0" }}>
+                                <HStack justify="center" mb={4} gap={0} className="no-print">
+                                    {[0.5, 1.0, 2.0].map((s, index, arr) => (
+                                        <Button
+                                            key={s}
+                                            size="xs"
+                                            variant={scale === s ? 'solid' : 'outline'}
+                                            bg={scale === s ? 'vscode.button' : 'transparent'}
+                                            borderColor="vscode.button"
+                                            color={scale === s ? 'white' : 'vscode.button'}
+                                            _hover={{ bg: scale === s ? 'vscode.buttonHover' : 'rgba(14, 99, 156, 0.1)' }}
+                                            onClick={() => setScale(s)}
+                                            borderTopRightRadius={index === arr.length - 1 ? 'md' : 0}
+                                            borderBottomRightRadius={index === arr.length - 1 ? 'md' : 0}
+                                            borderTopLeftRadius={index === 0 ? 'md' : 0}
+                                            borderBottomLeftRadius={index === 0 ? 'md' : 0}
+                                            borderRightWidth={index === arr.length - 1 ? 1 : 0}
+                                            borderLeftWidth={1}
+                                        >
+                                            {s}x
+                                        </Button>
+                                    ))}
+                                </HStack>
                                 <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
                                 <VStack align="stretch" gap={3}>
                                     {recipe.components.map((component, cIndex) => (

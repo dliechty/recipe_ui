@@ -115,10 +115,10 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
     });
 };
 
-export const useRecipe = (id: string) => {
+export const useRecipe = (id: string, scale?: number) => {
     return useQuery<Recipe>({
-        queryKey: ['recipes', id],
-        queryFn: () => RecipesService.readRecipeRecipesRecipeIdGet(id),
+        queryKey: ['recipes', id, scale],
+        queryFn: () => RecipesService.readRecipeRecipesRecipeIdGet(id, scale),
         enabled: !!id,
     });
 };
