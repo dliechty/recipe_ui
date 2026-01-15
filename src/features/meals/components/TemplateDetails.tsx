@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Card, Breadcrumb, Icon, Grid } from '@chakra-ui/react';
 import { FaChevronRight, FaRegCopy, FaEdit } from 'react-icons/fa';
 import { useMealTemplate, useDeleteMealTemplate } from '../../../hooks/useMeals';
+import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
@@ -12,6 +13,7 @@ const TemplateDetails = () => {
     const { data: template, isLoading, error } = useMealTemplate(id || '');
     const deleteTemplate = useDeleteMealTemplate();
     const { user: currentUser } = useAuth();
+    const { data: creator } = useUser(template?.user_id);
 
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -59,6 +61,13 @@ const TemplateDetails = () => {
         // I'll assume I can implement the hook later or use a generic one.
         // Actually I should add `useGenerateMeal` to useMeals.ts.
         window.alert("Generate Meal functionality implementation pending API hook update.");
+    };
+
+    const getCreatorName = () => {
+        if (!creator) return 'Unknown';
+        if (creator.first_name && creator.last_name) return `${creator.first_name} ${creator.last_name}`;
+        if (creator.first_name) return creator.first_name;
+        return creator.email || 'Unknown';
     };
 
     return (
@@ -140,11 +149,33 @@ const TemplateDetails = () => {
             </HStack>
 
             <VStack align="stretch" gap={6}>
-                <VStack align="start" gap={1}>
+                <VStack align="start" gap={4}>
                     <Heading size="lg">{template.name || 'Untitled Template'}</Heading>
-                    <HStack>
-                        <Badge variant="outline">{template.classification}</Badge>
-                    </HStack>
+
+                    {/* Metadata Grid */}
+                    <Grid templateColumns="auto 1fr" gap={2} rowGap={2} mb={0}>
+                        {template.classification && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Classification:</Text>
+                                <Box>
+                                    <Badge colorPalette="teal">{template.classification}</Badge>
+                                </Box>
+                            </>
+                        )}
+
+                        {creator && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Created By:</Text>
+                                <Text fontSize="sm">{getCreatorName()}</Text>
+                            </>
+                        )}
+
+                        <Text fontWeight="bold" color="fg.muted" fontSize="sm">Created:</Text>
+                        <Text fontSize="sm">{new Date(template.created_at).toLocaleString()}</Text>
+
+                        <Text fontWeight="bold" color="fg.muted" fontSize="sm">Updated:</Text>
+                        <Text fontSize="sm">{new Date(template.updated_at).toLocaleString()}</Text>
+                    </Grid>
                 </VStack>
 
                 <Box>
@@ -167,14 +198,6 @@ const TemplateDetails = () => {
                     )}
                 </Box>
 
-                <Box pt={4} borderTopWidth={1} borderColor="border.default">
-                    <Text fontSize="sm" color="fg.muted">
-                        Created: {new Date(template.created_at).toLocaleString()}
-                    </Text>
-                    <Text fontSize="sm" color="fg.muted">
-                        Last Updated: {new Date(template.updated_at).toLocaleString()}
-                    </Text>
-                </Box>
             </VStack>
         </Container>
     );

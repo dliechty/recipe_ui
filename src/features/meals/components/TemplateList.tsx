@@ -4,6 +4,7 @@ import { Box, Spinner, Center, Container, Button, Icon, Table, VStack } from '@c
 import { FaPlus } from 'react-icons/fa';
 import { useInfiniteMealTemplates } from '../../../hooks/useMeals';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { UserDisplay } from '../../../components/common/UserDisplay';
 
 const TemplateList = () => {
     const navigate = useNavigate();
@@ -79,7 +80,7 @@ const TemplateList = () => {
                             <Table.Row bg="bg.surface">
                                 <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">User</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created At</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
@@ -98,8 +99,7 @@ const TemplateList = () => {
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">{template.classification}</Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        {/* Assuming user_id is displayable or we fetch user. using ID for now */}
-                                        {template.user_id}
+                                        <UserDisplay userId={template.user_id} />
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
                                         {new Date(template.created_at).toLocaleDateString()}
