@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Breadcrumb, Icon, Grid } from '@chakra-ui/react';
-import { FaChevronRight, FaRegCopy, FaEdit } from 'react-icons/fa';
+import { FaChevronRight, FaRegCopy, FaEdit, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useMealTemplate, useDeleteMealTemplate } from '../../../hooks/useMeals';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -17,7 +17,28 @@ const TemplateDetails = () => {
     const { data: creator } = useUser(template?.user_id);
 
     const [isDeleting, setIsDeleting] = useState(false);
-    const [expandedSlotId, setExpandedSlotId] = useState<string | null>(null);
+    
+    // State for expanded slots, initialized from sessionStorage if available
+    const [expandedSlotIds, setExpandedSlotIds] = useState<Set<string>>(() => {
+        if (!id) return new Set();
+        try {
+            const saved = sessionStorage.getItem(`template_expansion_${id}`);
+            return saved ? new Set(JSON.parse(saved)) : new Set();
+        } catch (e) {
+            console.error("Failed to load expansion state", e);
+            return new Set();
+        }
+    });
+
+    // Save expansion state to sessionStorage whenever it changes
+    useEffect(() => {
+        if (!id) return;
+        try {
+            sessionStorage.setItem(`template_expansion_${id}`, JSON.stringify(Array.from(expandedSlotIds)));
+        } catch (e) {
+            console.error("Failed to save expansion state", e);
+        }
+    }, [expandedSlotIds, id]);
 
     const canEdit = currentUser?.is_admin || (currentUser?.id && template?.user_id && currentUser.id === template.user_id);
 
@@ -70,6 +91,28 @@ const TemplateDetails = () => {
         if (creator.first_name && creator.last_name) return `${creator.first_name} ${creator.last_name}`;
         if (creator.first_name) return creator.first_name;
         return creator.email || 'Unknown';
+    };
+
+    const handleToggleSlot = (slotId: string) => {
+        const newSet = new Set(expandedSlotIds);
+        if (newSet.has(slotId)) {
+            newSet.delete(slotId);
+        } else {
+            newSet.add(slotId);
+        }
+        setExpandedSlotIds(newSet);
+    };
+
+    const allExpanded = template.slots && template.slots.length > 0 && expandedSlotIds.size === template.slots.length;
+
+    const handleToggleAll = () => {
+        if (allExpanded) {
+            setExpandedSlotIds(new Set());
+        } else {
+            if (template.slots) {
+                setExpandedSlotIds(new Set(template.slots.map(s => s.id)));
+            }
+        }
     };
 
     return (
@@ -181,7 +224,20 @@ const TemplateDetails = () => {
                 </VStack>
 
                 <Box>
-                    <Text fontSize="lg" fontWeight="bold" mb={4}>Slots</Text>
+                    <HStack justify="space-between" mb={4} align="center">
+                         <Text fontSize="lg" fontWeight="bold">Slots</Text>
+                         <Button
+                             size="xs"
+                             bg="vscode.button"
+                             color="white"
+                             _hover={{ bg: "vscode.buttonHover" }}
+                             onClick={handleToggleAll}
+                         >
+                             {allExpanded ? 'Collapse All' : 'Expand All'}
+                             <Icon as={allExpanded ? FaChevronUp : FaChevronDown} ml={2} />
+                         </Button>
+                    </HStack>
+
                     {template.slots && template.slots.length > 0 ? (
                         <VStack align="stretch" gap={4}>
                             {template.slots.map((slot, index) => (
@@ -190,8 +246,8 @@ const TemplateDetails = () => {
                                     slot={slot}
                                     slotNumber={index + 1}
                                     templateName={template.name || 'Untitled Template'}
-                                    isExpanded={expandedSlotId === slot.id}
-                                    onToggle={() => setExpandedSlotId(expandedSlotId === slot.id ? null : slot.id)}
+                                    isExpanded={expandedSlotIds.has(slot.id)}
+                                    onToggle={() => handleToggleSlot(slot.id)}
                                 />
                             ))}
                         </VStack>
