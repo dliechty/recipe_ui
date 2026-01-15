@@ -137,7 +137,7 @@ const DirectSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
                          <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
                             <VStack align="start" gap={2}>
                                 {recipe.core.description && (
-                                    <Text fontSize="sm" color="fg.muted" noOfLines={3}>{recipe.core.description}</Text>
+                                    <Text fontSize="sm" color="fg.muted" lineClamp={3}>{recipe.core.description}</Text>
                                 )}
                                 <VStack align="start" gap={1}>
                                      {(recipe.times.total_time_minutes ?? 0) > 0 && (
