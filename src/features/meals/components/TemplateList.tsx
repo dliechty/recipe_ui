@@ -80,6 +80,7 @@ const TemplateList = () => {
                             <Table.Row bg="bg.surface">
                                 <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Slots</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created At</Table.ColumnHeader>
                             </Table.Row>
@@ -99,6 +100,9 @@ const TemplateList = () => {
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">{template.classification}</Table.Cell>
                                     <Table.Cell borderColor="border.default">
+                                        {template.slots?.length || 0}
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">
                                         <UserDisplay userId={template.user_id} />
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
@@ -108,7 +112,7 @@ const TemplateList = () => {
                             ))}
                             {templates.length === 0 && status === 'success' && (
                                 <Table.Row bg="bg.surface">
-                                    <Table.Cell colSpan={4} textAlign="center" color="fg.muted" borderColor="border.default">
+                                    <Table.Cell colSpan={5} textAlign="center" color="fg.muted" borderColor="border.default">
                                         No templates found. Create one to get started!
                                     </Table.Cell>
                                 </Table.Row>
