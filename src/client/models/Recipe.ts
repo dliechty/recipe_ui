@@ -9,6 +9,7 @@ import type { RecipeAudit } from './RecipeAudit';
 import type { RecipeCore } from './RecipeCore';
 import type { RecipeNutrition } from './RecipeNutrition';
 import type { RecipeTimes } from './RecipeTimes';
+import type { UnitSystem } from './UnitSystem';
 export type Recipe = {
     core: RecipeCore;
     times: RecipeTimes;
@@ -19,5 +20,6 @@ export type Recipe = {
     variant_recipe_ids: Array<string>;
     parent_recipe_id?: (string | null);
     audit: RecipeAudit;
+    unit_system?: (UnitSystem | null);
 };
 

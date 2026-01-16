@@ -607,4 +607,43 @@ describe('RecipeDetails', () => {
         // Detailed navigation testing with state requires mocking useNavigate hook reference which is hard with current setup.
         // We trust the integration test covering the flow or add a dedicated unit test file for this component if needed later.
     });
+
+    it('displays unit toggle and reflects default unit system', async () => {
+        server.use(
+            http.get('*/recipes/50', () => {
+                return HttpResponse.json({
+                    id: 50,
+                    core: {
+                        name: 'Unit Toggle Test',
+                        owner_id: '1',
+                        yield_amount: 1,
+                        yield_unit: 'serving',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: [],
+                    unit_system: 'metric'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/50']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Unit Toggle Test')[0]).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Metric')).toBeInTheDocument();
+        
+        // Check if switch exists and is checked (Metric)
+        const checkbox = screen.getByRole('checkbox', { name: "Toggle Metric", hidden: true });
+        expect(checkbox).toBeInTheDocument();
+        expect(checkbox).toBeChecked();
+    });
 });

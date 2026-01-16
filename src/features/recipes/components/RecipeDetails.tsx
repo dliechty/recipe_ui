@@ -16,7 +16,8 @@ import {
     Grid,
     GridItem,
     Link,
-    Breadcrumb
+    Breadcrumb,
+    Switch
 } from '@chakra-ui/react';
 import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy, FaRegSquare, FaTrash } from 'react-icons/fa';
 import { useRecipe, useDeleteRecipe } from '../../../hooks/useRecipes';
@@ -25,6 +26,7 @@ import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatQuantity, formatDuration, formatDietName } from '../../../utils/formatters';
 import CommentList from './comments/CommentList';
+import { UnitSystem } from '../../../client';
 
 
 const RecipeDetails = () => {
@@ -34,9 +36,15 @@ const RecipeDetails = () => {
     const backUrl = location.state?.backUrl || (location.state?.fromSearch ? `/recipes?${location.state.fromSearch}` : '/recipes');
     const backLabel = location.state?.backLabel || 'Recipes';
     const [scale, setScale] = React.useState<number>(1.0);
-    const { data: recipe, isLoading: loading, error } = useRecipe(id || '', scale);
+    const [unitSystem, setUnitSystem] = React.useState<UnitSystem | null>(null);
+    const { data: recipe, isLoading: loading, error } = useRecipe(id || '', scale, unitSystem);
     const deleteRecipe = useDeleteRecipe();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        setScale(1.0);
+        setUnitSystem(null);
+    }, [id]);
 
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -395,27 +403,45 @@ const RecipeDetails = () => {
 
                             {/* Ingredients Section */}
                             <Box w="fit-content" mx="0">
-                                <HStack mb={4} gap={0} className="no-print">
-                                    {[0.5, 1.0, 2.0].map((s, index, arr) => (
-                                        <Button
-                                            key={s}
-                                            size="xs"
-                                            variant={scale === s ? 'solid' : 'outline'}
-                                            bg={scale === s ? 'vscode.button' : 'transparent'}
-                                            borderColor="vscode.button"
-                                            color={scale === s ? 'white' : 'vscode.button'}
-                                            _hover={{ bg: scale === s ? 'vscode.buttonHover' : 'rgba(14, 99, 156, 0.1)' }}
-                                            onClick={() => setScale(s)}
-                                            borderTopRightRadius={index === arr.length - 1 ? 'md' : 0}
-                                            borderBottomRightRadius={index === arr.length - 1 ? 'md' : 0}
-                                            borderTopLeftRadius={index === 0 ? 'md' : 0}
-                                            borderBottomLeftRadius={index === 0 ? 'md' : 0}
-                                            borderRightWidth={index === arr.length - 1 ? 1 : 0}
-                                            borderLeftWidth={1}
+                                <HStack mb={4} gap={6} className="no-print">
+                                    <HStack gap={0}>
+                                        {[0.5, 1.0, 2.0].map((s, index, arr) => (
+                                            <Button
+                                                key={s}
+                                                size="xs"
+                                                variant={scale === s ? 'solid' : 'outline'}
+                                                bg={scale === s ? 'vscode.button' : 'transparent'}
+                                                borderColor="vscode.button"
+                                                color={scale === s ? 'white' : 'vscode.button'}
+                                                _hover={{ bg: scale === s ? 'vscode.buttonHover' : 'rgba(14, 99, 156, 0.1)' }}
+                                                onClick={() => setScale(s)}
+                                                borderTopRightRadius={index === arr.length - 1 ? 'md' : 0}
+                                                borderBottomRightRadius={index === arr.length - 1 ? 'md' : 0}
+                                                borderTopLeftRadius={index === 0 ? 'md' : 0}
+                                                borderBottomLeftRadius={index === 0 ? 'md' : 0}
+                                                borderRightWidth={index === arr.length - 1 ? 1 : 0}
+                                                borderLeftWidth={1}
+                                            >
+                                                {s}x
+                                            </Button>
+                                        ))}
+                                    </HStack>
+
+                                    <HStack gap={2} alignItems="center">
+                                        <Text fontSize="sm" fontWeight="medium" color="fg.muted">Metric</Text>
+                                        <Switch.Root
+                                            aria-label="Toggle Metric"
+                                            checked={unitSystem === UnitSystem.METRIC || (!unitSystem && recipe.unit_system === UnitSystem.METRIC) || (!unitSystem && !recipe.unit_system)}
+                                            onCheckedChange={(e) => setUnitSystem(e.checked ? UnitSystem.METRIC : UnitSystem.IMPERIAL)}
+                                            size="sm"
+                                            colorPalette="blue"
                                         >
-                                            {s}x
-                                        </Button>
-                                    ))}
+                                            <Switch.HiddenInput />
+                                            <Switch.Control>
+                                                <Switch.Thumb />
+                                            </Switch.Control>
+                                        </Switch.Root>
+                                    </HStack>
                                 </HStack>
                                 <Heading size="md" mb={4} fontWeight="bold" color="fg.default">INGREDIENTS</Heading>
                                 <VStack align="stretch" gap={3}>

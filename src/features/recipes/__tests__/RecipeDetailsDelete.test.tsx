@@ -33,7 +33,7 @@ describe('RecipeDetails Delete Functionality', () => {
             expect(screen.getAllByText(/2/)[0]).toBeInTheDocument();
         });
 
-        const deleteButton = screen.getByRole('button', { name: /Delete/i });
+        const deleteButton = screen.getByRole('button', { name: /^Delete$/i });
         expect(deleteButton).toBeInTheDocument();
         expect(deleteButton).not.toBeDisabled();
     });
@@ -53,7 +53,7 @@ describe('RecipeDetails Delete Functionality', () => {
             expect(screen.getAllByText(/2/)[0]).toBeInTheDocument();
         });
 
-        expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /^Delete$/i })).not.toBeInTheDocument();
     });
 
     it('opens confirmation modal on click', async () => {
@@ -69,7 +69,7 @@ describe('RecipeDetails Delete Functionality', () => {
             expect(screen.getAllByText(/2/)[0]).toBeInTheDocument();
         });
 
-        const deleteButton = screen.getByRole('button', { name: /Delete/i });
+        const deleteButton = screen.getByRole('button', { name: /^Delete$/i });
         fireEvent.click(deleteButton);
 
         await waitFor(() => {
@@ -98,7 +98,7 @@ describe('RecipeDetails Delete Functionality', () => {
             expect(screen.getAllByText(/2/)[0]).toBeInTheDocument();
         });
 
-        const deleteButton = screen.getByRole('button', { name: /Delete/i });
+        const deleteButton = screen.getByRole('button', { name: /^Delete$/i });
         fireEvent.click(deleteButton);
 
         await waitFor(() => {
@@ -127,7 +127,7 @@ describe('RecipeDetails Delete Functionality', () => {
             expect(screen.getAllByText(/1/)[0]).toBeInTheDocument();
         });
 
-        const deleteButton = screen.getByRole('button', { name: /Delete/i });
+        const deleteButton = screen.getByRole('button', { name: /^Delete$/i });
         expect(deleteButton).toBeInTheDocument();
         expect(deleteButton).toBeDisabled();
         expect(deleteButton).toHaveAttribute('title', 'Cannot delete recipe with variants');

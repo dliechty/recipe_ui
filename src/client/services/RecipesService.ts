@@ -7,6 +7,7 @@ import type { CommentCreate } from '../models/CommentCreate';
 import type { CommentUpdate } from '../models/CommentUpdate';
 import type { Recipe } from '../models/Recipe';
 import type { RecipeCreate } from '../models/RecipeCreate';
+import type { UnitSystem } from '../models/UnitSystem';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -85,16 +86,25 @@ export class RecipesService {
      * Read Recipe
      * Retrieve a single recipe by its ID.
      *
+     * The response includes a `unit_system` field indicating the predominant unit system
+     * used in the recipe's ingredients (metric or imperial).
+     *
      * Optionally provide a `scale` parameter to multiply all ingredient quantities.
      * For example, scale=2 doubles all quantities, scale=0.5 halves them.
+     *
+     * Optionally provide a `units` parameter to convert ingredient quantities:
+     * - 'metric': Convert to metric units (ml, g, cm)
+     * - 'imperial': Convert to imperial units (cups, oz, inches)
      * @param recipeId
      * @param scale Scale factor for ingredient quantities (must be > 0)
+     * @param units Convert ingredient units to 'metric' (ml, g, cm) or 'imperial' (cups, oz, inches)
      * @returns Recipe Successful Response
      * @throws ApiError
      */
     public static readRecipeRecipesRecipeIdGet(
         recipeId: string,
         scale?: (number | null),
+        units?: (UnitSystem | null),
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -104,6 +114,7 @@ export class RecipesService {
             },
             query: {
                 'scale': scale,
+                'units': units,
             },
             errors: {
                 422: `Validation Error`,

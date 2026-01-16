@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { RecipesService, Recipe, RecipeCreate, OpenAPI } from '../client';
+import { RecipesService, Recipe, RecipeCreate, OpenAPI, UnitSystem } from '../client';
 import axios from 'axios';
 
 interface RecipesResponse {
@@ -115,10 +115,10 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
     });
 };
 
-export const useRecipe = (id: string, scale?: number) => {
+export const useRecipe = (id: string, scale?: number, units?: UnitSystem | null) => {
     return useQuery<Recipe>({
-        queryKey: ['recipes', id, scale],
-        queryFn: () => RecipesService.readRecipeRecipesRecipeIdGet(id, scale),
+        queryKey: ['recipes', id, scale, units],
+        queryFn: () => RecipesService.readRecipeRecipesRecipeIdGet(id, scale, units),
         enabled: !!id,
     });
 };
