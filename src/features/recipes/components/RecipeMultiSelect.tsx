@@ -31,10 +31,14 @@ const customStyles: StylesConfig<Option, true> = {
     menu: (provided) => ({
         ...provided,
         backgroundColor: '#3c3c3c', // vscode.inputBg (opaque)
-        zIndex: 10,
+        zIndex: 9999,
         border: '1px solid #454545', // vscode.border
         marginTop: '2px',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.4)'
+    }),
+    menuPortal: (provided) => ({
+        ...provided,
+        zIndex: 9999
     }),
     option: (provided, state) => ({
         ...provided,
@@ -123,6 +127,8 @@ const RecipeMultiSelect = ({ label, options, value, onChange, placeholder, testI
                 styles={customStyles}
                 placeholder={placeholder || "Select..."}
                 instanceId={`select-${label.replace(/\s+/g, '-').toLowerCase()}`}
+                menuPortalTarget={document.body}
+                menuPlacement="auto"
             />
         </Box>
     );
