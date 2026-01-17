@@ -7,9 +7,9 @@ interface MealsResponse {
     totalCount: number;
 }
 
-export const useInfiniteMeals = (limit: number = 20) => {
+export const useInfiniteMeals = (limit: number = 20, sort: string = '-created_at') => {
     return useInfiniteQuery<MealsResponse>({
-        queryKey: ['meals', 'infinite', limit],
+        queryKey: ['meals', 'infinite', limit, sort],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             const skip = (page - 1) * limit;
@@ -17,6 +17,9 @@ export const useInfiniteMeals = (limit: number = 20) => {
             const params = new URLSearchParams();
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
+            if (sort) {
+                params.append('sort', sort);
+            }
 
             const url = `${OpenAPI.BASE}/meals/?${params.toString()}`;
 

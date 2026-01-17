@@ -784,10 +784,16 @@ export const handlers = [
         const url = new URL(request.url);
         const skip = Number(url.searchParams.get('skip') || '0');
         const limit = Number(url.searchParams.get('limit') || '100');
+        const sort = url.searchParams.get('sort');
 
-        // TODO: Add filtering logic if needed (classification, status, etc.)
+        const sortedMeals = [...mealsStore];
+        if (sort === '-created_at') {
+            sortedMeals.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        } else if (sort === 'created_at') {
+            sortedMeals.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        }
 
-        const paginatedMeals = mealsStore.slice(skip, skip + limit);
+        const paginatedMeals = sortedMeals.slice(skip, skip + limit);
 
         return HttpResponse.json(paginatedMeals, {
             headers: {

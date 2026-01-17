@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, Badge } from '@chakra-ui/react';
+import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, Badge, Text } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
 import { useInfiniteMeals } from '../../../hooks/useMeals';
 import ErrorAlert from '../../../components/common/ErrorAlert';
@@ -16,7 +16,7 @@ const MealList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteMeals(20);
+    } = useInfiniteMeals(20, '-created_at');
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -134,6 +134,12 @@ const MealList = () => {
                 {(status === 'pending' || isFetchingNextPage) && (
                     <Center p={4}>
                         <Spinner size="lg" color="vscode.accent" />
+                    </Center>
+                )}
+
+                {!hasNextPage && status === 'success' && meals.length > 0 && (
+                    <Center p={4}>
+                        <Text color="fg.muted" fontSize="sm">No more meals to load</Text>
                     </Center>
                 )}
             </VStack>
