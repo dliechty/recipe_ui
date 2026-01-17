@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, Badge, Text } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
@@ -48,6 +48,8 @@ const MealList = () => {
         navigate(`/meals/${id}`);
     };
 
+    const meals = React.useMemo(() => data?.pages.flatMap((page) => page.meals) || [], [data]);
+
     if (status === 'error') {
         return (
             <Container maxW="container.xl" py={0} px={0}>
@@ -56,10 +58,8 @@ const MealList = () => {
         );
     }
 
-    const meals = data?.pages.flatMap((page) => page.meals) || [];
-
     return (
-        <Container maxW="container.xl" py={0} px={0}>
+        <Box>
             <Box mb={4}>
                 <Button
                     onClick={() => navigate('/meals/new')}
@@ -143,7 +143,7 @@ const MealList = () => {
                     </Center>
                 )}
             </VStack>
-        </Container>
+        </Box>
     );
 };
 
