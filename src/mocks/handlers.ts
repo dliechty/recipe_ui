@@ -704,6 +704,79 @@ export const handlers = [
         return new HttpResponse(null, { status: 204 });
     }),
 
+    // POST /meals/generate - Generate a meal from a template
+    http.post('*/meals/generate', ({ request }) => {
+        const url = new URL(request.url);
+        const templateId = url.searchParams.get('template_id');
+
+        if (!templateId) {
+            return HttpResponse.json(
+                { detail: 'template_id is required' },
+                { status: 422 }
+            );
+        }
+
+        const template = mealTemplateStore.find(t => t.id === templateId);
+
+        if (!template) {
+            return HttpResponse.json(
+                { detail: 'Template not found' },
+                { status: 404 }
+            );
+        }
+
+        // Generate meal items from template slots
+        const items: Meal['items'] = [];
+
+        for (const slot of template.slots) {
+            let recipeId: string | undefined;
+
+            if (slot.strategy === 'Direct' && slot.recipe_id) {
+                // Direct strategy: use the specified recipe
+                recipeId = slot.recipe_id;
+            } else if (slot.strategy === 'List' && slot.recipe_ids && slot.recipe_ids.length > 0) {
+                // List strategy: pick a random recipe from the list
+                const randomIndex = Math.floor(Math.random() * slot.recipe_ids.length);
+                recipeId = slot.recipe_ids[randomIndex];
+            } else if (slot.strategy === 'Search') {
+                // Search strategy: pick a random recipe from the store
+                // In a real implementation, this would apply search criteria
+                if (recipes.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * recipes.length);
+                    recipeId = recipes[randomIndex].core.id;
+                }
+            }
+
+            if (recipeId) {
+                items.push({
+                    id: crypto.randomUUID(),
+                    meal_id: "temp", // Will be set after meal creation
+                    recipe_id: recipeId,
+                    slot_id: slot.id
+                });
+            }
+        }
+
+        const newMeal: Meal = {
+            id: crypto.randomUUID(),
+            user_id: "550e8400-e29b-41d4-a716-446655440000",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            name: template.name,
+            status: MealStatus.PROPOSED,
+            classification: template.classification,
+            date: null,
+            template_id: template.id,
+            items: items
+        };
+
+        // Fix meal_id on items
+        newMeal.items.forEach(item => item.meal_id = newMeal.id);
+
+        mealsStore.push(newMeal);
+        return HttpResponse.json(newMeal, { status: 201 });
+    }),
+
     // --- MEALS ---
 
     // GET /meals/

@@ -173,3 +173,13 @@ export const useDeleteMealTemplate = () => {
         },
     });
 };
+
+export const useGenerateMeal = () => {
+    const queryClient = useQueryClient();
+    return useMutation<Meal, Error, string>({
+        mutationFn: (templateId) => MealsService.generateMealMealsGeneratePost(templateId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['meals'] });
+        },
+    });
+};

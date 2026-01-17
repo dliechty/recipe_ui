@@ -1,18 +1,37 @@
-import { renderWithProviders, screen, waitFor } from '../../../../test-utils';
+import { renderWithProviders, screen, waitFor, fireEvent } from '../../../../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import TemplateDetails from '../TemplateDetails';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../../../mocks/server';
+import { toaster } from '../../../../toaster';
 
 const mockUseAuth = vi.fn();
+const mockNavigate = vi.fn();
+
 vi.mock('../../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
+}));
+
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => mockNavigate,
+    };
+});
+
+vi.mock('../../../../toaster', () => ({
+    toaster: {
+        create: vi.fn(),
+    },
 }));
 
 describe('TemplateDetails', () => {
     beforeEach(() => {
         mockUseAuth.mockReturnValue({ user: { id: 'user-123' } });
+        mockNavigate.mockClear();
+        vi.mocked(toaster.create).mockClear();
     });
 
     it('renders template details from API', async () => {
@@ -80,5 +99,109 @@ describe('TemplateDetails', () => {
         expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Generate Meal/i })).toBeInTheDocument();
+    });
+
+    it('generates a meal and navigates to the new meal on success', async () => {
+        const generatedMealId = 'generated-meal-123';
+
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Test Template',
+                    user_id: 'user-123',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            }),
+            http.post('*/meals/generate', () => {
+                return HttpResponse.json({
+                    id: generatedMealId,
+                    name: 'Generated Meal',
+                    status: 'Draft',
+                    template_id: 't1',
+                    items: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Test Template' })).toBeInTheDocument();
+        });
+
+        const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
+        fireEvent.click(generateButton);
+
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith(`/meals/${generatedMealId}`, {
+                state: {
+                    sourceTemplate: {
+                        id: 't1',
+                        name: 'Test Template'
+                    }
+                }
+            });
+        });
+
+        expect(toaster.create).toHaveBeenCalledWith({
+            title: 'Meal generated successfully',
+            type: 'success',
+        });
+    });
+
+    it('shows error toast when meal generation fails', async () => {
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Test Template',
+                    user_id: 'user-123',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            }),
+            http.post('*/meals/generate', () => {
+                return HttpResponse.json(
+                    { detail: 'Failed to generate meal' },
+                    { status: 500 }
+                );
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Test Template' })).toBeInTheDocument();
+        });
+
+        const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
+        fireEvent.click(generateButton);
+
+        await waitFor(() => {
+            expect(toaster.create).toHaveBeenCalledWith({
+                title: 'Failed to generate meal',
+                type: 'error',
+            });
+        });
+
+        expect(mockNavigate).not.toHaveBeenCalled();
     });
 });

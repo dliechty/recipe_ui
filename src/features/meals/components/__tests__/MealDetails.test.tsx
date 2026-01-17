@@ -221,4 +221,126 @@ describe('MealDetails', () => {
         // Should show "Add Classification" badge/button
         expect(screen.getByText('Add Classification')).toBeInTheDocument();
     });
+
+    it('shows template breadcrumb when navigating from template details', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Generated Meal',
+                    status: 'Proposed',
+                    classification: 'Dinner',
+                    template_id: 't1',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            })
+        );
+
+        const locationState = {
+            sourceTemplate: {
+                id: 't1',
+                name: 'My Template'
+            }
+        };
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={[{ pathname: '/meals/1', state: locationState }]}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Generated Meal' })).toBeInTheDocument();
+        });
+
+        // Should show Templates > My Template > Generated Meal breadcrumb
+        expect(screen.getByRole('link', { name: 'Templates' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'My Template' })).toBeInTheDocument();
+        // Meal name appears in both heading and breadcrumb, just verify link structure
+        expect(screen.getByRole('link', { name: 'Templates' })).toHaveAttribute('href', '/meals/templates');
+        expect(screen.getByRole('link', { name: 'My Template' })).toHaveAttribute('href', '/meals/templates/t1');
+    });
+
+    it('shows template list breadcrumb when navigating from template list', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Generated Meal',
+                    status: 'Proposed',
+                    classification: 'Dinner',
+                    template_id: 't1',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            })
+        );
+
+        const locationState = {
+            sourceTemplate: {
+                id: 't1',
+                name: 'My Template'
+            },
+            fromTemplateList: true
+        };
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={[{ pathname: '/meals/1', state: locationState }]}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Generated Meal' })).toBeInTheDocument();
+        });
+
+        // Should show Templates > Generated Meal breadcrumb (no template name link)
+        expect(screen.getByRole('link', { name: 'Templates' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Templates' })).toHaveAttribute('href', '/meals/templates');
+        // Should NOT show the template name as a link
+        expect(screen.queryByRole('link', { name: 'My Template' })).not.toBeInTheDocument();
+    });
+
+    it('shows default meals breadcrumb when no source template', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Regular Meal',
+                    status: 'Proposed',
+                    classification: 'Dinner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Regular Meal' })).toBeInTheDocument();
+        });
+
+        // Should show Meals > Regular Meal breadcrumb
+        expect(screen.getByRole('link', { name: 'Meals' })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: 'Meals' })).toHaveAttribute('href', '/meals');
+        expect(screen.queryByRole('link', { name: 'Templates' })).not.toBeInTheDocument();
+    });
 });

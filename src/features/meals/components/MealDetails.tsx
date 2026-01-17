@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
 import {
     Box,
     Container,
@@ -32,6 +32,9 @@ import RecipeSelectionModal from './RecipeSelectionModal';
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
+    const sourceTemplate = location.state?.sourceTemplate as { id: string; name: string } | undefined;
+    const fromTemplateList = location.state?.fromTemplateList as boolean | undefined;
 
     // Fetch meal
     const { data: meal, isLoading, error } = useMeal(id || '');
@@ -106,17 +109,49 @@ const MealDetails = () => {
         <Container maxW="container.lg" py={8}>
             <Breadcrumb.Root mb={6} color="fg.muted" fontSize="sm">
                 <Breadcrumb.List>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
-                            <RouterLink to="/meals">Meals</RouterLink>
-                        </Breadcrumb.Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Separator>
-                        <Icon as={FaChevronRight} color="fg.muted" />
-                    </Breadcrumb.Separator>
-                    <Breadcrumb.Item>
-                        <Breadcrumb.CurrentLink color="fg.default">{meal.name || 'Untitled Meal'}</Breadcrumb.CurrentLink>
-                    </Breadcrumb.Item>
+                    {sourceTemplate ? (
+                        <>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                    <RouterLink to="/meals/templates">Templates</RouterLink>
+                                </Breadcrumb.Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Separator>
+                                <Icon as={FaChevronRight} color="fg.muted" />
+                            </Breadcrumb.Separator>
+                            {!fromTemplateList && (
+                                <>
+                                    <Breadcrumb.Item>
+                                        <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                            <RouterLink to={`/meals/templates/${sourceTemplate.id}`}>
+                                                {sourceTemplate.name}
+                                            </RouterLink>
+                                        </Breadcrumb.Link>
+                                    </Breadcrumb.Item>
+                                    <Breadcrumb.Separator>
+                                        <Icon as={FaChevronRight} color="fg.muted" />
+                                    </Breadcrumb.Separator>
+                                </>
+                            )}
+                            <Breadcrumb.Item>
+                                <Breadcrumb.CurrentLink color="fg.default">{meal.name || 'Untitled Meal'}</Breadcrumb.CurrentLink>
+                            </Breadcrumb.Item>
+                        </>
+                    ) : (
+                        <>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                    <RouterLink to="/meals">Meals</RouterLink>
+                                </Breadcrumb.Link>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Separator>
+                                <Icon as={FaChevronRight} color="fg.muted" />
+                            </Breadcrumb.Separator>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.CurrentLink color="fg.default">{meal.name || 'Untitled Meal'}</Breadcrumb.CurrentLink>
+                            </Breadcrumb.Item>
+                        </>
+                    )}
                 </Breadcrumb.List>
             </Breadcrumb.Root>
 

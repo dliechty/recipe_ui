@@ -1,13 +1,16 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Spinner, Center, Container, Button, Icon, Table, VStack } from '@chakra-ui/react';
-import { FaPlus } from 'react-icons/fa';
-import { useInfiniteMealTemplates } from '../../../hooks/useMeals';
+import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton } from '@chakra-ui/react';
+import { FaPlus, FaUtensils } from 'react-icons/fa';
+import { useInfiniteMealTemplates, useGenerateMeal } from '../../../hooks/useMeals';
+import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
 
 const TemplateList = () => {
     const navigate = useNavigate();
+    const generateMeal = useGenerateMeal();
+    const [generatingTemplateId, setGeneratingTemplateId] = useState<string | null>(null);
 
     const {
         data,
@@ -48,6 +51,34 @@ const TemplateList = () => {
         navigate(`/meals/templates/${id}`);
     };
 
+    const handleGenerateMeal = async (templateId: string, templateName: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setGeneratingTemplateId(templateId);
+        try {
+            const meal = await generateMeal.mutateAsync(templateId);
+            toaster.create({
+                title: 'Meal generated successfully',
+                type: 'success',
+            });
+            navigate(`/meals/${meal.id}`, {
+                state: {
+                    sourceTemplate: {
+                        id: templateId,
+                        name: templateName
+                    },
+                    fromTemplateList: true
+                }
+            });
+        } catch (err) {
+            console.error("Failed to generate meal", err);
+            toaster.create({
+                title: 'Failed to generate meal',
+                type: 'error',
+            });
+            setGeneratingTemplateId(null);
+        }
+    };
+
     if (status === 'error') {
         return (
             <Container maxW="container.xl" py={0} px={0}>
@@ -83,6 +114,7 @@ const TemplateList = () => {
                                 <Table.ColumnHeader color="fg.default">Slots</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created At</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" width="80px">Actions</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -108,11 +140,25 @@ const TemplateList = () => {
                                     <Table.Cell borderColor="border.default">
                                         {new Date(template.created_at).toLocaleDateString()}
                                     </Table.Cell>
+                                    <Table.Cell borderColor="border.default">
+                                        <IconButton
+                                            aria-label="Generate Meal"
+                                            title="Generate Meal"
+                                            size="xs"
+                                            bg="green.600"
+                                            color="white"
+                                            _hover={{ bg: "green.700" }}
+                                            onClick={(e) => handleGenerateMeal(template.id, template.name, e)}
+                                            loading={generatingTemplateId === template.id}
+                                        >
+                                            <Icon as={FaUtensils} />
+                                        </IconButton>
+                                    </Table.Cell>
                                 </Table.Row>
                             ))}
                             {templates.length === 0 && status === 'success' && (
                                 <Table.Row bg="bg.surface">
-                                    <Table.Cell colSpan={5} textAlign="center" color="fg.muted" borderColor="border.default">
+                                    <Table.Cell colSpan={6} textAlign="center" color="fg.muted" borderColor="border.default">
                                         No templates found. Create one to get started!
                                     </Table.Cell>
                                 </Table.Row>

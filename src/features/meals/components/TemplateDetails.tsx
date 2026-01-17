@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Breadcrumb, Icon, Grid } from '@chakra-ui/react';
 import { FaChevronRight, FaRegCopy, FaEdit, FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import { useMealTemplate, useDeleteMealTemplate } from '../../../hooks/useMeals';
+import { useMealTemplate, useDeleteMealTemplate, useGenerateMeal } from '../../../hooks/useMeals';
+import { toaster } from '../../../toaster';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
@@ -13,10 +14,12 @@ const TemplateDetails = () => {
     const navigate = useNavigate();
     const { data: template, isLoading, error } = useMealTemplate(id || '');
     const deleteTemplate = useDeleteMealTemplate();
+    const generateMeal = useGenerateMeal();
     const { user: currentUser } = useAuth();
     const { data: creator } = useUser(template?.user_id);
 
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
     
     // State for expanded slots, initialized from sessionStorage if available
     const [expandedSlotIds, setExpandedSlotIds] = useState<Set<string>>(() => {
@@ -76,14 +79,30 @@ const TemplateDetails = () => {
     };
 
     const handleGenerateMeal = async () => {
-        // In real app, this might call POST /meals/generate?template_id=...
-        // But useCreateMeal hooks usually takes MealCreate not query param generation.
-        // Wait, MealsService has generateMealMealsGeneratePost. Checked earlier.
-        // I need a hook for that.
-        // For now, I'll alert or mock it if hook missing.
-        // I'll assume I can implement the hook later or use a generic one.
-        // Actually I should add `useGenerateMeal` to useMeals.ts.
-        window.alert("Generate Meal functionality implementation pending API hook update.");
+        if (!template) return;
+        setIsGenerating(true);
+        try {
+            const meal = await generateMeal.mutateAsync(template.id);
+            toaster.create({
+                title: 'Meal generated successfully',
+                type: 'success',
+            });
+            navigate(`/meals/${meal.id}`, {
+                state: {
+                    sourceTemplate: {
+                        id: template.id,
+                        name: template.name
+                    }
+                }
+            });
+        } catch (e) {
+            console.error("Failed to generate meal", e);
+            toaster.create({
+                title: 'Failed to generate meal',
+                type: 'error',
+            });
+            setIsGenerating(false);
+        }
     };
 
     const getCreatorName = () => {
@@ -137,6 +156,7 @@ const TemplateDetails = () => {
                 {currentUser && (
                     <Button
                         onClick={handleGenerateMeal}
+                        loading={isGenerating}
                         bg="green.600"
                         color="white"
                         _hover={{ bg: "green.700" }}
