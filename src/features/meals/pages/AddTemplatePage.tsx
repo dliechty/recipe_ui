@@ -10,6 +10,8 @@ const AddTemplatePage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const initialData = location.state?.initialData;
+    const sourceTemplateId = location.state?.sourceTemplateId;
+    const sourceTemplateName = location.state?.sourceTemplateName;
     const createTemplateMutation = useCreateMealTemplate();
 
     const handleSubmit = async (formData: MealTemplateCreate) => {
@@ -44,11 +46,27 @@ const AddTemplatePage = () => {
                             <RouterLink to="/meals/templates">Templates</RouterLink>
                         </Breadcrumb.Link>
                     </Breadcrumb.Item>
+                    {sourceTemplateId && sourceTemplateName && (
+                        <>
+                            <Breadcrumb.Separator>
+                                <Icon as={FaChevronRight} color="fg.muted" />
+                            </Breadcrumb.Separator>
+                            <Breadcrumb.Item>
+                                <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
+                                    <RouterLink to={`/meals/templates/${sourceTemplateId}`}>
+                                        {sourceTemplateName}
+                                    </RouterLink>
+                                </Breadcrumb.Link>
+                            </Breadcrumb.Item>
+                        </>
+                    )}
                     <Breadcrumb.Separator>
                         <Icon as={FaChevronRight} color="fg.muted" />
                     </Breadcrumb.Separator>
                     <Breadcrumb.Item>
-                        <Breadcrumb.CurrentLink color="fg.default">Add Template</Breadcrumb.CurrentLink>
+                        <Breadcrumb.CurrentLink color="fg.default">
+                            {initialData ? 'Duplicate Template' : 'Add Template'}
+                        </Breadcrumb.CurrentLink>
                     </Breadcrumb.Item>
                 </Breadcrumb.List>
             </Breadcrumb.Root>

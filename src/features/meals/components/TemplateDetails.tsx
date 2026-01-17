@@ -145,7 +145,9 @@ const TemplateDetails = () => {
                                         slots: template.slots?.map(slot => ({
                                             strategy: slot.strategy
                                         }))
-                                    }
+                                    },
+                                    sourceTemplateId: template.id,
+                                    sourceTemplateName: template.name
                                 }
                             });
                         }}
