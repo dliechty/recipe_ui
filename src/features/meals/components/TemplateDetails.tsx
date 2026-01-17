@@ -136,6 +136,17 @@ const TemplateDetails = () => {
             <HStack mb={6} gap={2} className="no-print">
                 {currentUser && (
                     <Button
+                        onClick={handleGenerateMeal}
+                        bg="green.600"
+                        color="white"
+                        _hover={{ bg: "green.700" }}
+                        size="xs"
+                    >
+                        Generate Meal
+                    </Button>
+                )}
+                {currentUser && (
+                    <Button
                         onClick={() => {
                             navigate('/meals/templates/new', {
                                 state: {
@@ -180,17 +191,6 @@ const TemplateDetails = () => {
                         size="xs"
                     >
                         Delete
-                    </Button>
-                )}
-                {currentUser && (
-                    <Button
-                        onClick={handleGenerateMeal}
-                        bg="green.600"
-                        color="white"
-                        _hover={{ bg: "green.700" }}
-                        size="xs"
-                    >
-                        Generate Meal
                     </Button>
                 )}
             </HStack>
