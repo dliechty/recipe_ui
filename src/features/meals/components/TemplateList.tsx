@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton } from '@chakra-ui/react';
+import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton, Text } from '@chakra-ui/react';
 import { FaPlus, FaUtensils } from 'react-icons/fa';
 import { useInfiniteMealTemplates, useGenerateMeal } from '../../../hooks/useMeals';
 import { toaster } from '../../../toaster';
@@ -173,6 +173,12 @@ const TemplateList = () => {
                 {(status === 'pending' || isFetchingNextPage) && (
                     <Center p={4}>
                         <Spinner size="lg" color="vscode.accent" />
+                    </Center>
+                )}
+
+                {!hasNextPage && status === 'success' && templates.length > 0 && (
+                    <Center p={4}>
+                        <Text color="fg.muted" fontSize="sm">No more templates to load</Text>
                     </Center>
                 )}
             </VStack>

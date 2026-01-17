@@ -627,7 +627,7 @@ export const handlers = [
         const limit = Number(url.searchParams.get('limit') || '100');
         const sort = url.searchParams.get('sort');
 
-        let sorted = [...mealTemplateStore];
+        const sorted = [...mealTemplateStore];
         if (sort === 'name') {
             sorted.sort((a, b) => a.name.localeCompare(b.name));
         } else if (sort === '-name') {

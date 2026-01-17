@@ -293,4 +293,39 @@ describe('TemplateList', () => {
         // Should NOT navigate to the template details page
         expect(mockNavigate).not.toHaveBeenCalledWith('/meals/templates/t1');
     });
+
+    it('shows "No more templates to load" when all templates are loaded', async () => {
+        // Mock API to return 5 templates with total count 5
+        server.use(
+            http.get('*/meals/templates', () => {
+                const templates = Array.from({ length: 5 }, (_, i) => ({
+                    id: `t${i}`,
+                    name: `Template ${i}`,
+                    classification: 'Dinner',
+                    created_at: new Date().toISOString(),
+                    user_id: 'u1',
+                    slots: []
+                }));
+
+                return HttpResponse.json(templates, {
+                    headers: { 'X-Total-Count': '5' }
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter>
+                <TemplateList />
+            </MemoryRouter>
+        );
+
+        // Wait for templates to load
+        await waitFor(() => {
+            expect(screen.getByText('Template 0')).toBeInTheDocument();
+            expect(screen.getByText('Template 4')).toBeInTheDocument();
+        });
+
+        // Check for the end message
+        expect(screen.getByText('No more templates to load')).toBeInTheDocument();
+    });
 });

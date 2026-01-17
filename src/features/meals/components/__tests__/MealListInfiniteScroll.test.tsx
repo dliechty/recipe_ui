@@ -1,4 +1,4 @@
-import { renderWithProviders, screen, waitFor, within } from '../../../../test-utils';
+import { renderWithProviders, screen, waitFor } from '../../../../test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import MealList from '../MealList';
 import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
