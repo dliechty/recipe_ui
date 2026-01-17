@@ -96,7 +96,10 @@ describe('MealList', () => {
         expect(cells[2]).toHaveTextContent(/Dinner/i);
         expect(cells[3]).toHaveTextContent('2'); // Recipe count
         expect(cells[4]).toHaveTextContent('Test User'); // Created By
-        // index 5 is Created At
+        
+        // Date
+        // 2025-01-01 -> 1/1/2025 in US locale
+        expect(cells[5]).toHaveTextContent(new Date('2025-01-01').toLocaleDateString());
     });
 
     it('shows add meal button', async () => {

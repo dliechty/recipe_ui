@@ -16,7 +16,7 @@ const MealList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteMeals(20, '-created_at');
+    } = useInfiniteMeals(20, '-date');
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -83,7 +83,7 @@ const MealList = () => {
                                 <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Recipes</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Created At</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Date</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -113,7 +113,7 @@ const MealList = () => {
                                         <UserDisplay userId={meal.user_id} />
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        {new Date(meal.created_at).toLocaleDateString()}
+                                        {meal.date ? new Date(meal.date).toLocaleDateString() : 'N/A'}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}
