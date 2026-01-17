@@ -96,9 +96,9 @@ interface TemplatesResponse {
     totalCount: number;
 }
 
-export const useInfiniteMealTemplates = (limit: number = 20) => {
+export const useInfiniteMealTemplates = (limit: number = 20, sort: string = 'name') => {
     return useInfiniteQuery<TemplatesResponse>({
-        queryKey: ['meal-templates', 'infinite', limit],
+        queryKey: ['meal-templates', 'infinite', limit, sort],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             const skip = (page - 1) * limit;
@@ -106,6 +106,9 @@ export const useInfiniteMealTemplates = (limit: number = 20) => {
             const params = new URLSearchParams();
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
+            if (sort) {
+                params.append('sort', sort);
+            }
 
             const url = `${OpenAPI.BASE}/meals/templates?${params.toString()}`;
 

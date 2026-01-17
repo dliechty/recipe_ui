@@ -625,8 +625,16 @@ export const handlers = [
         const url = new URL(request.url);
         const skip = Number(url.searchParams.get('skip') || '0');
         const limit = Number(url.searchParams.get('limit') || '100');
+        const sort = url.searchParams.get('sort');
 
-        const paginated = mealTemplateStore.slice(skip, skip + limit);
+        let sorted = [...mealTemplateStore];
+        if (sort === 'name') {
+            sorted.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sort === '-name') {
+            sorted.sort((a, b) => b.name.localeCompare(a.name));
+        }
+
+        const paginated = sorted.slice(skip, skip + limit);
 
         return HttpResponse.json(paginated, {
             headers: {

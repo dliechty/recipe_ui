@@ -19,7 +19,7 @@ const TemplateList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteMealTemplates(20);
+    } = useInfiniteMealTemplates(20, 'name');
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);

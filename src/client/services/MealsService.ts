@@ -35,12 +35,14 @@ export class MealsService {
      * Get Meal Templates
      * @param skip
      * @param limit
+     * @param sort
      * @returns MealTemplate Successful Response
      * @throws ApiError
      */
     public static getMealTemplatesMealsTemplatesGet(
         skip?: number,
         limit: number = 100,
+        sort?: string,
     ): CancelablePromise<Array<MealTemplate>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -48,6 +50,7 @@ export class MealsService {
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort': sort,
             },
             errors: {
                 422: `Validation Error`,
