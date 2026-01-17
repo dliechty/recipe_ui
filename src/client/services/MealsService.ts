@@ -161,12 +161,14 @@ export class MealsService {
      * Get Meals
      * @param skip
      * @param limit
+     * @param sort
      * @returns Meal Successful Response
      * @throws ApiError
      */
     public static getMealsMealsGet(
         skip?: number,
         limit: number = 100,
+        sort?: string,
     ): CancelablePromise<Array<Meal>> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -174,6 +176,7 @@ export class MealsService {
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort': sort,
             },
             errors: {
                 422: `Validation Error`,
