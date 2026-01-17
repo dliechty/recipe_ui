@@ -105,3 +105,89 @@ export function generateMockRecipes(count: number) {
 
     return recipes;
 }
+
+export function generateMockMeals(count: number) {
+    const statuses = ['Proposed', 'Scheduled', 'Cooked'];
+    const classifications = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Brunch'];
+    const meals = [];
+
+    for (let i = 1; i <= count; i++) {
+        const idx = i - 1;
+        const status = statuses[idx % statuses.length];
+        const classification = classifications[idx % classifications.length];
+        const dateOffset = idx - (count / 2); // Spread dates around today
+        const date = new Date(Date.now() + (dateOffset * 86400000)).toISOString().split('T')[0];
+
+        meals.push({
+            id: `mock-meal-${i}`,
+            name: `${classification} Meal ${i}`,
+            status: status,
+            classification: classification,
+            date: date,
+            user_id: "550e8400-e29b-41d4-a716-446655440000",
+            template_id: null,
+            created_at: new Date(Date.now() - (i * 3600000)).toISOString(),
+            updated_at: new Date(Date.now() - (i * 3600000)).toISOString(),
+            items: [
+                {
+                    id: `mock-meal-item-${i}-1`,
+                    meal_id: `mock-meal-${i}`,
+                    recipe_id: `${(i % 50) + 1}`, // Assuming we have at least 50 mock recipes
+                    order: 1
+                }
+            ]
+        });
+    }
+
+    return meals;
+}
+
+export function generateMockMealTemplates(count: number) {
+    const classifications = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Brunch'];
+    const strategies = ['Direct', 'List', 'Search'];
+    const templates = [];
+
+    for (let i = 1; i <= count; i++) {
+        const idx = i - 1;
+        const classification = classifications[idx % classifications.length];
+        const strategy = strategies[idx % strategies.length];
+
+        const slots = [];
+        if (strategy === 'Direct') {
+            slots.push({
+                id: `mock-slot-${i}-1`,
+                template_id: `mock-template-${i}`,
+                strategy: 'Direct',
+                recipe_id: `${(i % 50) + 1}`
+            });
+        } else if (strategy === 'List') {
+            slots.push({
+                id: `mock-slot-${i}-1`,
+                template_id: `mock-template-${i}`,
+                strategy: 'List',
+                recipe_ids: [`${(i % 50) + 1}`, `${((i + 1) % 50) + 1}`]
+            });
+        } else {
+             slots.push({
+                id: `mock-slot-${i}-1`,
+                template_id: `mock-template-${i}`,
+                strategy: 'Search',
+                search_criteria: [
+                    { field: "category", operator: "eq", value: "Main Course" }
+                ]
+            });
+        }
+
+        templates.push({
+            id: `mock-template-${i}`,
+            name: `${classification} Template ${i}`,
+            user_id: "550e8400-e29b-41d4-a716-446655440000",
+            classification: classification,
+            created_at: new Date(Date.now() - (i * 86400000)).toISOString(),
+            updated_at: new Date(Date.now() - (i * 86400000)).toISOString(),
+            slots: slots
+        });
+    }
+
+    return templates;
+}

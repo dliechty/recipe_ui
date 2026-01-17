@@ -20,7 +20,7 @@ export const users = [
     }
 ];
 
-import { generateMockRecipes } from './data-generator';
+import { generateMockRecipes, generateMockMeals, generateMockMealTemplates } from './data-generator';
 
 // Generate 120 mock recipes for testing infinite scroll (updated)
 export const recipes = generateMockRecipes(120);
@@ -383,7 +383,8 @@ export const meals = [
                 order: 4
             }
         ]
-    }
+    },
+    ...generateMockMeals(50)
 ];
 
 export const mealTemplates = [
@@ -662,6 +663,7 @@ export const mealTemplates = [
                 ]
             }
         ]
-    }
+    },
+    ...generateMockMealTemplates(50)
 ];
 
