@@ -771,7 +771,7 @@ export const handlers = [
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             name: template.name,
-            status: MealStatus.PROPOSED,
+            status: MealStatus.DRAFT,
             classification: template.classification,
             date: null,
             template_id: template.id,
@@ -832,7 +832,7 @@ export const handlers = [
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             name: body.name || null,
-            status: body.status === null ? undefined : body.status || MealStatus.PROPOSED,
+            status: body.status === null ? undefined : body.status || MealStatus.DRAFT,
             classification: body.classification || null,
             date: body.date || null,
             template_id: body.template_id || null, // Assuming template_id is used but not in Create body usually? Check MealCreate.
@@ -865,7 +865,7 @@ export const handlers = [
         const updatedMeal: Meal = {
             ...mealsStore[index],
             ...restBody, // simple merge for top level fields
-            status: body.status || mealsStore[index].status || MealStatus.PROPOSED,
+            status: body.status || mealsStore[index].status || MealStatus.DRAFT,
             updated_at: new Date().toISOString(),
             items: items
                 ? items.map(i => ({

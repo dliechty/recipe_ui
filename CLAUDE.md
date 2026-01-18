@@ -18,7 +18,6 @@ npm run lint          # Run ESLint
 
 ### Testing
 ```bash
-npm test              # Run tests in watch mode
 npm run test:once     # Run all tests once and exit
 npm test:once src/features/recipes/__tests__/RecipeDetails.test.tsx  # Run a single test file
 ```

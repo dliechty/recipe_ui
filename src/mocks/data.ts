@@ -58,7 +58,7 @@ export const meals = [
     {
         id: "m1",
         name: "Weeknight Pasta Dinner",
-        status: "Proposed",
+        status: "Draft",
         classification: "Dinner",
         date: new Date().toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",
@@ -165,7 +165,7 @@ export const meals = [
     {
         id: "m5",
         name: "Weekend Brunch Spread",
-        status: "Proposed",
+        status: "Draft",
         classification: "Brunch",
         date: new Date(Date.now() + 518400000).toISOString().split('T')[0], // 6 days from now (next weekend)
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
@@ -238,7 +238,7 @@ export const meals = [
     {
         id: "m8",
         name: "Office Lunch",
-        status: "Proposed",
+        status: "Draft",
         classification: "Lunch",
         date: new Date().toISOString().split('T')[0],
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
@@ -289,7 +289,7 @@ export const meals = [
     {
         id: "m10",
         name: "Afternoon Snack",
-        status: "Proposed",
+        status: "Draft",
         classification: "Snack",
         date: new Date().toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",

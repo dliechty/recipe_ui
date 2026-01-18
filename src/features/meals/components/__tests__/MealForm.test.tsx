@@ -60,7 +60,7 @@ describe('MealForm', () => {
         expect(screen.getByPlaceholderText('Enter meal name')).toBeInTheDocument();
         expect(screen.getByText('Status')).toBeInTheDocument();
         expect(screen.getByText('Classification')).toBeInTheDocument();
-        expect(screen.getByText('Date (Optional)')).toBeInTheDocument();
+        expect(screen.getByText('Date')).toBeInTheDocument();
         expect(screen.getByText('Recipes')).toBeInTheDocument();
         expect(screen.getByTestId('recipe-selector')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Save Meal/i })).toBeInTheDocument();
@@ -118,7 +118,7 @@ describe('MealForm', () => {
         fireEvent.change(nameInput, { target: { value: 'Sunday Dinner' } });
 
         const statusSelect = screen.getByTestId('status-select');
-        fireEvent.change(statusSelect, { target: { value: MealStatus.PROPOSED } });
+        fireEvent.change(statusSelect, { target: { value: MealStatus.DRAFT } });
 
         const classificationSelect = screen.getByTestId('classification-select');
         fireEvent.change(classificationSelect, { target: { value: MealClassification.BREAKFAST } });
@@ -133,7 +133,7 @@ describe('MealForm', () => {
         await waitFor(() => {
             expect(mockOnSubmit).toHaveBeenCalledWith({
                 name: 'Sunday Dinner',
-                status: MealStatus.PROPOSED,
+                status: MealStatus.DRAFT,
                 classification: MealClassification.BREAKFAST,
                 date: null,
                 items: [

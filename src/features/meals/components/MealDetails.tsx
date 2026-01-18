@@ -241,7 +241,7 @@ const MealDetails = () => {
                     <Grid templateColumns="auto 1fr" gap={2} rowGap={2} mb={0}>
                         <Text fontWeight="bold" color="fg.muted" fontSize="sm">Status:</Text>
                         <Box>
-                            <EditableStatusBadge mealId={meal.id} status={meal.status || MealStatus.PROPOSED} canEdit={!!canEdit} />
+                            <EditableStatusBadge mealId={meal.id} status={meal.status || MealStatus.DRAFT} canEdit={!!canEdit} />
                         </Box>
 
                         {(meal.classification || canEdit) && (

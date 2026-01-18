@@ -14,7 +14,7 @@ const statusColor = (status: MealStatus) => {
     switch (status) {
         case 'Cooked': return 'green';
         case 'Scheduled': return 'blue';
-        default: return 'gray'; // Proposed
+        default: return 'gray'; // Draft
     }
 };
 
@@ -59,7 +59,7 @@ const EditableStatusBadge = ({ mealId, status, canEdit }: EditableStatusBadgePro
             </Menu.Trigger>
             <Menu.Positioner>
                 <Menu.Content bg="vscode.surface" borderColor="vscode.border">
-                    {(['Proposed', 'Scheduled', 'Cooked'] as MealStatus[]).map((s) => (
+                    {(['Draft', 'Scheduled', 'Cooked'] as MealStatus[]).map((s) => (
                         <Menu.Item 
                             key={s} 
                             value={s} 

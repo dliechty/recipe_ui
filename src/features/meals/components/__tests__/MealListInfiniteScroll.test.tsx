@@ -48,7 +48,7 @@ describe('MealList Infinite Scroll', () => {
                 const allMeals = Array.from({ length: 40 }, (_, i) => ({
                     id: `m${i}`,
                     name: `Meal ${i}`,
-                    status: 'Proposed',
+                    status: 'Draft',
                     classification: 'Dinner',
                     date: '2025-01-01',
                     created_at: new Date().toISOString(),

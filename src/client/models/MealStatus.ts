@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum MealStatus {
-    PROPOSED = 'Proposed',
+    DRAFT = 'Draft',
     SCHEDULED = 'Scheduled',
     COOKED = 'Cooked',
 }

@@ -107,7 +107,7 @@ export function generateMockRecipes(count: number) {
 }
 
 export function generateMockMeals(count: number) {
-    const statuses = ['Proposed', 'Scheduled', 'Cooked'];
+    const statuses = ['Draft', 'Scheduled', 'Cooked'];
     const classifications = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Brunch'];
     const meals = [];
 

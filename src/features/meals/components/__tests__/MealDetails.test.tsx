@@ -88,7 +88,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Delete Me',
-                    status: 'Proposed',
+                    status: 'Draft',
                     user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
@@ -121,7 +121,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Old Name',
-                    status: 'Proposed',
+                    status: 'Draft',
                     classification: 'Dinner',
                     date: '2025-01-01',
                     created_at: '2024-01-01T00:00:00Z',
@@ -135,7 +135,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: body.name,
-                    status: 'Proposed',
+                    status: 'Draft',
                     // ... other fields
                 });
             })
@@ -213,23 +213,23 @@ describe('MealDetails', () => {
 
         
 
-                                id: '1',
+                                                                id: '1',
 
         
 
-                                name: 'Date Test',
+                                                                name: 'Date Test',
 
         
 
-                                status: 'Proposed',
+                                                                status: 'Draft',
 
         
 
-                                classification: 'Dinner',
+                                                                classification: 'Dinner',
 
         
 
-                                date: currentMealDate,
+                                                                date: currentMealDate,
 
         
 
@@ -273,23 +273,23 @@ describe('MealDetails', () => {
 
         
 
-                                id: '1',
+                                                                id: '1',
 
         
 
-                                name: 'Date Test',
+                                                                name: 'Date Test',
 
         
 
-                                status: 'Proposed',
+                                                                status: 'Draft',
 
         
 
-                                date: currentMealDate,
+                                                                date: currentMealDate,
 
         
 
-                            });
+                                                            });
 
         
 
@@ -459,7 +459,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Unclassified Meal',
-                    status: 'Proposed',
+                    status: 'Draft',
                     classification: null,
                     date: '2025-01-01',
                     created_at: '2024-01-01T00:00:00Z',
@@ -495,7 +495,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Generated Meal',
-                    status: 'Proposed',
+                    status: 'Draft',
                     classification: 'Dinner',
                     template_id: 't1',
                     created_at: '2024-01-01T00:00:00Z',
@@ -539,7 +539,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Generated Meal',
-                    status: 'Proposed',
+                    status: 'Draft',
                     classification: 'Dinner',
                     template_id: 't1',
                     created_at: '2024-01-01T00:00:00Z',
@@ -583,7 +583,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Regular Meal',
-                    status: 'Proposed',
+                    status: 'Draft',
                     classification: 'Dinner',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',

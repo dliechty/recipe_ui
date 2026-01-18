@@ -86,7 +86,7 @@ const customStyles: StylesConfig<Option, false> = {
 };
 
 const statusOptions: Option[] = [
-    { label: 'Proposed', value: MealStatus.PROPOSED },
+    { label: 'Draft', value: MealStatus.DRAFT },
     { label: 'Scheduled', value: MealStatus.SCHEDULED },
     { label: 'Cooked', value: MealStatus.COOKED },
 ];
