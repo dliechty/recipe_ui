@@ -130,33 +130,18 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
 
             <form onSubmit={handleSubmit}>
                 <VStack gap={4} align="stretch">
-                    <Box>
-                        <Text as="label" mb={2} display="block" fontWeight="bold">Meal Name</Text>
-                        <Input
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Enter meal name"
-                            bg="vscode.inputBg"
-                            borderColor="border.default"
-                            color="fg.default"
-                            _hover={{ borderColor: 'vscode.accent' }}
-                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
-                        />
-                    </Box>
-
-                    <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} maxW="600px">
                         <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Status</Text>
-                            <Select
-                                options={statusOptions}
-                                value={statusOptions.find(opt => opt.value === status)}
-                                onChange={(option) => {
-                                    if (option) setStatus(option.value as MealStatus);
-                                }}
-                                styles={customStyles}
-                                isSearchable={false}
-                                aria-label="Status"
-                                inputId="status-select"
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Meal Name</Text>
+                            <Input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Enter meal name"
+                                bg="vscode.inputBg"
+                                borderColor="border.default"
+                                color="fg.default"
+                                _hover={{ borderColor: 'vscode.accent' }}
+                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                         </Box>
 
@@ -175,9 +160,26 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 inputId="classification-select"
                             />
                         </Box>
+                    </SimpleGrid>
+
+                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} maxW="600px">
+                        <Box>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Status</Text>
+                            <Select
+                                options={statusOptions}
+                                value={statusOptions.find(opt => opt.value === status)}
+                                onChange={(option) => {
+                                    if (option) setStatus(option.value as MealStatus);
+                                }}
+                                styles={customStyles}
+                                isSearchable={false}
+                                aria-label="Status"
+                                inputId="status-select"
+                            />
+                        </Box>
 
                         <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Date (Optional)</Text>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Date</Text>
                             <Input
                                 type="date"
                                 value={date}
@@ -185,6 +187,8 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 bg="vscode.inputBg"
                                 borderColor="border.default"
                                 color="fg.default"
+                                colorScheme="dark"
+                                css={{ colorScheme: 'dark' }}
                                 _hover={{ borderColor: 'vscode.accent' }}
                                 _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
