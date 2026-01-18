@@ -27,6 +27,7 @@ import IngredientAggregation from './IngredientAggregation';
 import EditableStatusBadge from './EditableStatusBadge';
 import EditableClassificationBadge from './EditableClassificationBadge';
 import EditableMealName from './EditableMealName';
+import EditableMealDate from './EditableMealDate';
 import RecipeSelectionModal from './RecipeSelectionModal';
 
 const MealDetails = () => {
@@ -225,10 +226,12 @@ const MealDetails = () => {
                             </>
                         )}
 
-                        {meal.date && (
+                        {(meal.date || canEdit) && (
                             <>
                                 <Text fontWeight="bold" color="fg.muted" fontSize="sm">Date:</Text>
-                                <Text fontSize="sm">{new Date(meal.date).toLocaleDateString()}</Text>
+                                <Box>
+                                    <EditableMealDate mealId={meal.id} date={meal.date} canEdit={!!canEdit} />
+                                </Box>
                             </>
                         )}
 

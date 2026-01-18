@@ -181,12 +181,279 @@ describe('MealDetails', () => {
         // We see `toaster.create` in `EditableMealName`.
         // Let's assume on successful mutation (which MSW handles), it switches back.
 
-        // Wait for input to disappear
-        await waitFor(() => {
-            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
-        });
-    });
-    it('allows setting classification when blank', async () => {
+                // Wait for input to disappear
+
+                await waitFor(() => {
+
+                    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+
+                });
+
+            });
+
+        
+
+                it('allows editing meal date', async () => {
+
+        
+
+                    let currentMealDate = '2025-01-01';
+
+        
+
+                    server.use(
+
+        
+
+                        http.get('*/meals/:id', () => {
+
+        
+
+                            return HttpResponse.json({
+
+        
+
+                                id: '1',
+
+        
+
+                                name: 'Date Test',
+
+        
+
+                                status: 'Proposed',
+
+        
+
+                                classification: 'Dinner',
+
+        
+
+                                date: currentMealDate,
+
+        
+
+                                created_at: '2024-01-01T00:00:00Z',
+
+        
+
+                                updated_at: '2024-01-01T00:00:00Z',
+
+        
+
+                                user_id: 'user-123',
+
+        
+
+                                items: []
+
+        
+
+                            });
+
+        
+
+                        }),
+
+        
+
+                        http.put('*/meals/1', async ({ request }) => {
+
+        
+
+                            const body = await request.json() as { date: string };
+
+        
+
+                            currentMealDate = body.date;
+
+        
+
+                            return HttpResponse.json({
+
+        
+
+                                id: '1',
+
+        
+
+                                name: 'Date Test',
+
+        
+
+                                status: 'Proposed',
+
+        
+
+                                date: currentMealDate,
+
+        
+
+                            });
+
+        
+
+                        })
+
+        
+
+                    );
+
+        
+
+            
+
+        
+
+                    renderWithProviders(
+
+        
+
+                        <MemoryRouter initialEntries={['/meals/1']}>
+
+        
+
+                            <Routes>
+
+        
+
+                                <Route path="/meals/:id" element={<MealDetails />} />
+
+        
+
+                            </Routes>
+
+        
+
+                        </MemoryRouter>
+
+        
+
+                    );
+
+        
+
+            
+
+        
+
+                    await waitFor(() => {
+
+        
+
+                        // Use regex to be more flexible with leading zeros (1/1/2025 vs 01/01/2025)
+
+        
+
+                        expect(screen.getByText(/1\/1\/2025|01\/01\/2025/)).toBeInTheDocument();
+
+        
+
+                    });
+
+        
+
+            
+
+        
+
+                    // Click date to edit
+
+        
+
+                    const dateText = screen.getByText(/1\/1\/2025|01\/01\/2025/);
+
+        
+
+                    fireEvent.click(dateText);
+
+        
+
+            
+
+        
+
+                    // Date input should appear (type="date" is still a textbox or special input)
+
+        
+
+                    const input = screen.getByDisplayValue('2025-01-01');
+
+        
+
+                    expect(input).toBeInTheDocument();
+
+        
+
+            
+
+        
+
+                    // Change date
+
+        
+
+                    fireEvent.change(input, { target: { value: '2025-12-25' } });
+
+        
+
+            
+
+        
+
+                    // Save
+
+        
+
+                    const saveButton = screen.getByRole('button', { name: /save/i });
+
+        
+
+                    fireEvent.click(saveButton);
+
+        
+
+            
+
+        
+
+                    // Wait for input to disappear and new date to appear
+
+        
+
+                    await waitFor(() => {
+
+        
+
+                        expect(screen.queryByDisplayValue('2025-12-25')).not.toBeInTheDocument();
+
+        
+
+                    });
+
+        
+
+                    
+
+        
+
+                    await waitFor(() => {
+
+        
+
+                        expect(screen.getByText(/12\/25\/2025/)).toBeInTheDocument();
+
+        
+
+                    });
+
+        
+
+                });
+
+        
+
+            it('allows setting classification when blank', async () => {
         server.use(
             http.get('*/meals/:id', () => {
                 return HttpResponse.json({
