@@ -158,7 +158,7 @@ describe('MealForm', () => {
         await waitFor(() => {
             expect(mockOnSubmit).toHaveBeenCalledWith({
                 name: 'Empty Meal',
-                status: MealStatus.SCHEDULED,
+                status: MealStatus.DRAFT,
                 classification: null,
                 date: null,
                 items: []

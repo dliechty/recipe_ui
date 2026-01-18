@@ -101,7 +101,7 @@ const classificationOptions: Option[] = [
 
 const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps) => {
     const [name, setName] = useState(initialData?.name || '');
-    const [status, setStatus] = useState<MealStatus>(initialData?.status || MealStatus.SCHEDULED);
+    const [status, setStatus] = useState<MealStatus>(initialData?.status || MealStatus.DRAFT);
     const [classification, setClassification] = useState<MealClassification | ''>(initialData?.classification || '');
     const [date, setDate] = useState(initialData?.date || '');
     const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>(
