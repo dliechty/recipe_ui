@@ -50,9 +50,18 @@ const EditableClassificationBadge = ({ mealId, classification, canEdit }: Editab
                 </HStack>
             </Menu.Trigger>
             <Menu.Positioner>
-                <Menu.Content>
+                <Menu.Content bg="vscode.surface" borderColor="vscode.border">
                     {options.map(opt => (
-                        <Menu.Item key={opt} value={opt} onClick={() => handleSelect(opt)}>
+                        <Menu.Item 
+                            key={opt} 
+                            value={opt} 
+                            onClick={() => handleSelect(opt)}
+                            bg="vscode.surface"
+                            _hover={{ bg: "vscode.inputBg" }}
+                            _focus={{ bg: "vscode.inputBg" }}
+                            cursor="pointer"
+                            color="fg.default"
+                        >
                             {opt}
                         </Menu.Item>
                     ))}

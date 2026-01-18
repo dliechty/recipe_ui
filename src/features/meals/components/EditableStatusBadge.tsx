@@ -58,9 +58,17 @@ const EditableStatusBadge = ({ mealId, status, canEdit }: EditableStatusBadgePro
                 </HStack>
             </Menu.Trigger>
             <Menu.Positioner>
-                <Menu.Content>
+                <Menu.Content bg="vscode.surface" borderColor="vscode.border">
                     {(['Proposed', 'Scheduled', 'Cooked'] as MealStatus[]).map((s) => (
-                        <Menu.Item key={s} value={s} onClick={() => handleSelect(s)}>
+                        <Menu.Item 
+                            key={s} 
+                            value={s} 
+                            onClick={() => handleSelect(s)}
+                            bg="vscode.surface"
+                            _hover={{ bg: "vscode.inputBg" }}
+                            _focus={{ bg: "vscode.inputBg" }}
+                            cursor="pointer"
+                        >
                             <Badge colorPalette={statusColor(s)}>{s}</Badge>
                         </Menu.Item>
                     ))}

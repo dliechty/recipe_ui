@@ -84,6 +84,7 @@ const EditableMealDate = ({ mealId, date, canEdit }: EditableMealDateProps) => {
                     color="fg.default"
                     _hover={{ borderColor: 'vscode.accent' }}
                     _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    css={{ colorScheme: 'dark' }}
                 />
                 <IconButton
                     aria-label="Save"
