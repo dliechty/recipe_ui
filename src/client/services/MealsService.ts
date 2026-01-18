@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Meal } from '../models/Meal';
 import type { MealCreate } from '../models/MealCreate';
+import type { MealScheduleRequest } from '../models/MealScheduleRequest';
 import type { MealTemplate } from '../models/MealTemplate';
 import type { MealTemplateCreate } from '../models/MealTemplateCreate';
 import type { MealTemplateUpdate } from '../models/MealTemplateUpdate';
@@ -124,11 +125,13 @@ export class MealsService {
     /**
      * Generate Meal
      * @param templateId
+     * @param requestBody
      * @returns Meal Successful Response
      * @throws ApiError
      */
     public static generateMealMealsGeneratePost(
         templateId: string,
+        requestBody?: (MealScheduleRequest | null),
     ): CancelablePromise<Meal> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -136,6 +139,8 @@ export class MealsService {
             query: {
                 'template_id': templateId,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

@@ -6,11 +6,14 @@ import { useInfiniteMealTemplates, useGenerateMeal } from '../../../hooks/useMea
 import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
+import GenerateMealModal from './GenerateMealModal';
 
 const TemplateList = () => {
     const navigate = useNavigate();
     const generateMeal = useGenerateMeal();
     const [generatingTemplateId, setGeneratingTemplateId] = useState<string | null>(null);
+    const [selectedTemplate, setSelectedTemplate] = useState<{ id: string, name: string } | null>(null);
+    const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
 
     const {
         data,
@@ -51,20 +54,30 @@ const TemplateList = () => {
         navigate(`/meals/templates/${id}`);
     };
 
-    const handleGenerateMeal = async (templateId: string, templateName: string, e: React.MouseEvent) => {
+    const handleGenerateClick = (templateId: string, templateName: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        setGeneratingTemplateId(templateId);
+        setSelectedTemplate({ id: templateId, name: templateName });
+        setIsGenerateModalOpen(true);
+    };
+
+    const confirmGenerateMeal = async (scheduledDate: string | null) => {
+        if (!selectedTemplate) return;
+        setGeneratingTemplateId(selectedTemplate.id);
         try {
-            const meal = await generateMeal.mutateAsync(templateId);
+            const meal = await generateMeal.mutateAsync({
+                templateId: selectedTemplate.id,
+                scheduledDate
+            });
             toaster.create({
                 title: 'Meal generated successfully',
                 type: 'success',
             });
+            setIsGenerateModalOpen(false);
             navigate(`/meals/${meal.id}`, {
                 state: {
                     sourceTemplate: {
-                        id: templateId,
-                        name: templateName
+                        id: selectedTemplate.id,
+                        name: selectedTemplate.name
                     },
                     fromTemplateList: true
                 }
@@ -75,6 +88,7 @@ const TemplateList = () => {
                 title: 'Failed to generate meal',
                 type: 'error',
             });
+        } finally {
             setGeneratingTemplateId(null);
         }
     };
@@ -148,7 +162,7 @@ const TemplateList = () => {
                                             bg="green.600"
                                             color="white"
                                             _hover={{ bg: "green.700" }}
-                                            onClick={(e) => handleGenerateMeal(template.id, template.name, e)}
+                                            onClick={(e) => handleGenerateClick(template.id, template.name, e)}
                                             loading={generatingTemplateId === template.id}
                                         >
                                             <Icon as={FaUtensils} />
@@ -182,6 +196,14 @@ const TemplateList = () => {
                     </Center>
                 )}
             </VStack>
+
+            <GenerateMealModal
+                isOpen={isGenerateModalOpen}
+                onClose={() => setIsGenerateModalOpen(false)}
+                onGenerate={confirmGenerateMeal}
+                isGenerating={!!generatingTemplateId}
+                templateName={selectedTemplate?.name || ''}
+            />
         </Container>
     );
 };

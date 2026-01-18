@@ -182,8 +182,12 @@ export const useDeleteMealTemplate = () => {
 
 export const useGenerateMeal = () => {
     const queryClient = useQueryClient();
-    return useMutation<Meal, Error, string>({
-        mutationFn: (templateId) => MealsService.generateMealMealsGeneratePost(templateId),
+    return useMutation<Meal, Error, { templateId: string, scheduledDate?: string | null }>({
+        mutationFn: ({ templateId, scheduledDate }) => 
+            MealsService.generateMealMealsGeneratePost(
+                templateId, 
+                scheduledDate ? { scheduled_date: scheduledDate } : undefined
+            ),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
         },

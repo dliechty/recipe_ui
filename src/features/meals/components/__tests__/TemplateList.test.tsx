@@ -168,8 +168,21 @@ describe('TemplateList', () => {
             expect(screen.getByText('Test Template')).toBeInTheDocument();
         });
 
+        // Click generate on the list item
         const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
         fireEvent.click(generateButton);
+
+        // Wait for modal
+        await waitFor(() => {
+            expect(screen.getByText(/Generating meal from template/i)).toBeInTheDocument();
+        });
+
+        // Click generate in modal
+        // Since there might be multiple buttons with same name (one in list, one in modal), 
+        // we target the one in modal.
+        const modalGenerateButton = screen.getAllByRole('button', { name: /Generate Meal/i }).pop();
+        if (!modalGenerateButton) throw new Error("Modal generate button not found");
+        fireEvent.click(modalGenerateButton);
 
         await waitFor(() => {
             expect(mockNavigate).toHaveBeenCalledWith(`/meals/${generatedMealId}`, {
@@ -226,6 +239,16 @@ describe('TemplateList', () => {
         const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
         fireEvent.click(generateButton);
 
+        // Wait for modal
+        await waitFor(() => {
+            expect(screen.getByText(/Generating meal from template/i)).toBeInTheDocument();
+        });
+
+        // Click generate in modal
+        const modalGenerateButton = screen.getAllByRole('button', { name: /Generate Meal/i }).pop();
+        if (!modalGenerateButton) throw new Error("Modal generate button not found");
+        fireEvent.click(modalGenerateButton);
+
         await waitFor(() => {
             expect(toaster.create).toHaveBeenCalledWith({
                 title: 'Failed to generate meal',
@@ -277,6 +300,16 @@ describe('TemplateList', () => {
 
         const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
         fireEvent.click(generateButton);
+        
+        // Wait for modal to ensure we didn't navigate
+        await waitFor(() => {
+             expect(screen.getByText(/Generating meal from template/i)).toBeInTheDocument();
+        });
+
+        // Click generate in modal
+        const modalGenerateButton = screen.getAllByRole('button', { name: /Generate Meal/i }).pop();
+        if (!modalGenerateButton) throw new Error("Modal generate button not found");
+        fireEvent.click(modalGenerateButton);
 
         await waitFor(() => {
             expect(mockNavigate).toHaveBeenCalledWith('/meals/generated-meal-789', {

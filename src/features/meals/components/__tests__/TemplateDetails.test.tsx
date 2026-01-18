@@ -5,6 +5,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../../../mocks/server';
 import { toaster } from '../../../../toaster';
+import { MealScheduleRequest } from '../../../../client';
 
 const mockUseAuth = vi.fn();
 const mockNavigate = vi.fn();
@@ -140,8 +141,19 @@ describe('TemplateDetails', () => {
             expect(screen.getByRole('heading', { name: 'Test Template' })).toBeInTheDocument();
         });
 
+        // Open modal
         const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
         fireEvent.click(generateButton);
+
+        // Wait for modal and click confirm
+        await waitFor(() => {
+            expect(screen.getByText(/Generating meal from template/i)).toBeInTheDocument();
+        });
+
+        // Target the button inside the modal (it's the second one with "Generate Meal" text usually, or use role in modal)
+        // Since there are two buttons with "Generate Meal", we can use a more specific selector or index
+        const modalGenerateButton = screen.getAllByRole('button', { name: /Generate Meal/i })[1]; 
+        fireEvent.click(modalGenerateButton);
 
         await waitFor(() => {
             expect(mockNavigate).toHaveBeenCalledWith(`/meals/${generatedMealId}`, {
@@ -157,6 +169,70 @@ describe('TemplateDetails', () => {
         expect(toaster.create).toHaveBeenCalledWith({
             title: 'Meal generated successfully',
             type: 'success',
+        });
+    });
+
+    it('generates a meal with scheduled date', async () => {
+        const generatedMealId = 'generated-meal-date';
+        const scheduledDate = '2026-01-20';
+        let capturedBody: MealScheduleRequest | undefined;
+
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Test Template',
+                    user_id: 'user-123',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            }),
+            http.post('*/meals/generate', async ({ request }) => {
+                capturedBody = await request.json() as MealScheduleRequest;
+                return HttpResponse.json({
+                    id: generatedMealId,
+                    name: 'Generated Meal',
+                    status: 'Draft',
+                    template_id: 't1',
+                    items: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            })
+        );
+
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Test Template' })).toBeInTheDocument();
+        });
+
+        // Open modal
+        fireEvent.click(screen.getByRole('button', { name: /Generate Meal/i }));
+
+        // Enter date
+        const dateInput = await screen.findByLabelText(/Scheduled Date/i);
+        
+        fireEvent.change(dateInput, { target: { value: scheduledDate } });
+
+        // Click generate
+        const modalGenerateButton = screen.getAllByRole('button', { name: /Generate Meal/i })[1];
+        fireEvent.click(modalGenerateButton);
+
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalled();
+        });
+
+        expect(capturedBody).toEqual({
+            scheduled_date: scheduledDate
         });
     });
 
@@ -192,8 +268,12 @@ describe('TemplateDetails', () => {
             expect(screen.getByRole('heading', { name: 'Test Template' })).toBeInTheDocument();
         });
 
-        const generateButton = screen.getByRole('button', { name: /Generate Meal/i });
-        fireEvent.click(generateButton);
+        // Open modal
+        fireEvent.click(screen.getByRole('button', { name: /Generate Meal/i }));
+
+        // Confirm
+        const modalGenerateButton = screen.getAllByRole('button', { name: /Generate Meal/i })[1];
+        fireEvent.click(modalGenerateButton);
 
         await waitFor(() => {
             expect(toaster.create).toHaveBeenCalledWith({

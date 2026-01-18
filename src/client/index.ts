@@ -24,6 +24,7 @@ export { MealClassification } from './models/MealClassification';
 export type { MealCreate } from './models/MealCreate';
 export type { MealItem } from './models/MealItem';
 export type { MealItemBase } from './models/MealItemBase';
+export type { MealScheduleRequest } from './models/MealScheduleRequest';
 export { MealStatus } from './models/MealStatus';
 export type { MealTemplate } from './models/MealTemplate';
 export type { MealTemplateCreate } from './models/MealTemplateCreate';

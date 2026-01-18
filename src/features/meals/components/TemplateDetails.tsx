@@ -8,6 +8,7 @@ import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import TemplateSlotCard from './TemplateSlotCard';
+import GenerateMealModal from './GenerateMealModal';
 
 const TemplateDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -22,6 +23,7 @@ const TemplateDetails = () => {
 
     const [isDeleting, setIsDeleting] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
     
     // State for expanded slots, initialized from sessionStorage if available
     const [expandedSlotIds, setExpandedSlotIds] = useState<Set<string>>(() => {
@@ -80,15 +82,19 @@ const TemplateDetails = () => {
         }
     };
 
-    const handleGenerateMeal = async () => {
+    const confirmGenerateMeal = async (scheduledDate: string | null) => {
         if (!template) return;
         setIsGenerating(true);
         try {
-            const meal = await generateMeal.mutateAsync(template.id);
+            const meal = await generateMeal.mutateAsync({
+                templateId: template.id,
+                scheduledDate
+            });
             toaster.create({
                 title: 'Meal generated successfully',
                 type: 'success',
             });
+            setIsGenerateModalOpen(false);
             navigate(`/meals/${meal.id}`, {
                 state: {
                     sourceTemplate: {
@@ -103,6 +109,7 @@ const TemplateDetails = () => {
                 title: 'Failed to generate meal',
                 type: 'error',
             });
+        } finally {
             setIsGenerating(false);
         }
     };
@@ -185,7 +192,7 @@ const TemplateDetails = () => {
             <HStack mb={6} gap={2} className="no-print">
                 {currentUser && (
                     <Button
-                        onClick={handleGenerateMeal}
+                        onClick={() => setIsGenerateModalOpen(true)}
                         loading={isGenerating}
                         bg="green.600"
                         color="white"
@@ -309,6 +316,14 @@ const TemplateDetails = () => {
                 </Box>
 
             </VStack>
+            
+            <GenerateMealModal
+                isOpen={isGenerateModalOpen}
+                onClose={() => setIsGenerateModalOpen(false)}
+                onGenerate={confirmGenerateMeal}
+                isGenerating={isGenerating}
+                templateName={template.name || 'Untitled Template'}
+            />
         </Container>
     );
 };
