@@ -14,8 +14,8 @@ import {
     Icon,
     Grid
 } from '@chakra-ui/react';
-import { FaChevronRight, FaRegCopy, FaChevronDown, FaChevronUp, FaPlus } from 'react-icons/fa';
-import { useMeal, useDeleteMeal } from '../../../hooks/useMeals';
+import { FaChevronRight, FaRegCopy, FaChevronDown, FaChevronUp, FaPlus, FaFileAlt } from 'react-icons/fa';
+import { useMeal, useDeleteMeal, useMealTemplate } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -44,6 +44,9 @@ const MealDetails = () => {
 
     // Fetch creator
     const { data: creator } = useUser(meal?.user_id);
+
+    // Fetch linked template if exists
+    const { data: linkedTemplate } = useMealTemplate(meal?.template_id || '');
 
     // Fetch recipes
     const recipeIds = meal?.items?.map(item => item.recipe_id) || [];
@@ -155,6 +158,32 @@ const MealDetails = () => {
                     )}
                 </Breadcrumb.List>
             </Breadcrumb.Root>
+
+            {linkedTemplate && (
+                <Box textAlign="right" mb={2}>
+                    <RouterLink
+                        to={`/meals/templates/${linkedTemplate.id}`}
+                        state={{
+                            sourceMeal: {
+                                id: meal.id,
+                                name: meal.name
+                            }
+                        }}
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <HStack
+                            gap={1}
+                            display="inline-flex"
+                            color="fg.muted"
+                            fontSize="xs"
+                            _hover={{ color: 'vscode.accent' }}
+                        >
+                            <Icon as={FaFileAlt} />
+                            <Text>From template: {linkedTemplate.name}</Text>
+                        </HStack>
+                    </RouterLink>
+                </Box>
+            )}
 
             <HStack mb={6} gap={2} className="no-print">
                 {currentUser && (
