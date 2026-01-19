@@ -109,6 +109,7 @@ Configure via `.env` file (see `.env.example`):
 
 ## Development Notes
 
+- **Dark Theme**: The application uses a dark theme. All pages, components, input fields, widgets, and UI elements must conform to dark-inspired styling. Ensure high contrast and consistent use of the dark color palette provided by Chakra UI.
 - The app uses React 19 with React Router v7 for routing
 - Chakra UI v3 provides the component library and theming system
 - All routes except login (`/`) and request account (`/request-account`) require authentication
