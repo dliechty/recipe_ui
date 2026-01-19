@@ -68,6 +68,15 @@ describe('MealList', () => {
                     first_name: 'Test',
                     last_name: 'User'
                 });
+            }),
+            http.get('*/recipes/', () => {
+                const mockRecipes = [
+                    { core: { id: 'r1', name: 'Pasta' } },
+                    { core: { id: 'r2', name: 'Salad' } }
+                ];
+                return HttpResponse.json(mockRecipes, {
+                    headers: { 'X-Total-Count': '2' }
+                });
             })
         );
 
@@ -86,19 +95,31 @@ describe('MealList', () => {
             expect(screen.getByText('Test User')).toBeInTheDocument();
         });
 
+        // Wait for recipes to resolve
+        await waitFor(() => {
+            expect(screen.getByText('Pasta')).toBeInTheDocument();
+        });
+
         const row = screen.getByRole('row', { name: /Dinner Party/i });
         const utils = within(row);
 
         const cells = utils.getAllByRole('cell');
 
         // Name (index 0) tested above
-        expect(cells[1]).toHaveTextContent(/Scheduled/i);
-        expect(cells[2]).toHaveTextContent(/Dinner/i);
-        expect(cells[3]).toHaveTextContent('2'); // Recipe count
-        expect(cells[4]).toHaveTextContent('Test User'); // Created By
+        // Recipes (index 1)
+        expect(cells[1]).toHaveTextContent(/Pasta/i);
+        expect(cells[1]).toHaveTextContent(/Salad/i);
+
+        // Status (index 2)
+        expect(cells[2]).toHaveTextContent(/Scheduled/i);
+
+        // Classification (index 3)
+        expect(cells[3]).toHaveTextContent(/Dinner/i);
+
+        // Created By (index 4)
+        expect(cells[4]).toHaveTextContent('Test User');
         
-        // Date
-        // 2025-01-01 -> 1/1/2025 in US locale
+        // Date (index 5)
         expect(cells[5]).toHaveTextContent(new Date('2025-01-01').toLocaleDateString());
     });
 

@@ -1,8 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, Badge, Text } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
 import { useInfiniteMeals } from '../../../hooks/useMeals';
+import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
 
@@ -50,6 +51,32 @@ const MealList = () => {
 
     const meals = React.useMemo(() => data?.pages.flatMap((page) => page.meals) || [], [data]);
 
+    // Collect all recipe IDs to fetch names
+    const recipeIds = useMemo(() => {
+        const ids = new Set<string>();
+        meals.forEach(meal => {
+            meal.items?.forEach(item => {
+                if (item.recipe_id) ids.add(item.recipe_id);
+            });
+        });
+        return Array.from(ids);
+    }, [meals]);
+
+    // Fetch recipes to get names
+    const { data: recipesData } = useInfiniteRecipes(
+        recipeIds.length || 1,
+        { ids: recipeIds },
+        { enabled: recipeIds.length > 0 }
+    );
+
+    const recipeMap = useMemo(() => {
+        const map = new Map<string, string>();
+        recipesData?.pages.flatMap(p => p.recipes).forEach(r => {
+            map.set(r.core.id, r.core.name);
+        });
+        return map;
+    }, [recipesData]);
+
     if (status === 'error') {
         return (
             <Container maxW="container.xl" py={0} px={0}>
@@ -79,9 +106,9 @@ const MealList = () => {
                         <Table.Header>
                             <Table.Row bg="bg.surface">
                                 <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default">Recipes</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Status</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Recipes</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default">Date</Table.ColumnHeader>
                             </Table.Row>
@@ -100,15 +127,24 @@ const MealList = () => {
                                         {meal.name || 'Untitled'}
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
+                                        <VStack align="start" gap={1}>
+                                            {meal.items?.length > 0 ? (
+                                                meal.items.map((item, idx) => (
+                                                    <Text key={`${item.recipe_id}-${idx}`} fontSize="sm">
+                                                        {recipeMap.get(item.recipe_id) || 'Loading...'}
+                                                    </Text>
+                                                ))
+                                            ) : (
+                                                <Text fontSize="sm" color="fg.muted">-</Text>
+                                            )}
+                                        </VStack>
+                                    </Table.Cell>
+                                    <Table.Cell borderColor="border.default">
                                         <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
                                             {meal.status}
                                         </Badge>
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">{meal.classification}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">
-                                        {/* Use items length since the model uses 'items' array of MealItem */}
-                                        {meal.items?.length || 0} recipes
-                                    </Table.Cell>
                                     <Table.Cell borderColor="border.default">
                                         <UserDisplay userId={meal.user_id} />
                                     </Table.Cell>
