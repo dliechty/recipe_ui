@@ -18,7 +18,7 @@ npm run lint          # Run ESLint
 
 ### Testing
 ```bash
-npm run test:once     # Run all tests once and exit
+npm run test:once     # Run all tests once and exit. Do NOT use `npm run test` (it watches file for changes and agents can't handle that gracefully)
 npm test:once src/features/recipes/__tests__/RecipeDetails.test.tsx  # Run a single test file
 ```
 
