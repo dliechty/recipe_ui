@@ -115,3 +115,11 @@ Configure via `.env` file (see `.env.example`):
 - Admin routes (`/admin`) require the `is_admin` flag on the user object
 - Recipe forms support complex nested structures (components with ingredients, multiple instructions)
 - The codebase uses TypeScript strict mode with ESLint configured for React hooks and TypeScript
+
+## General Workflow Requirements
+
+- **Before finalizing changes or committing**:
+  - Run the full test suite: `npm run test:once`
+  - Check for typing errors: `npx tsc --noEmit`
+  - Run the linter: `npm run lint`
+  - Address all issues found before proceeding.
