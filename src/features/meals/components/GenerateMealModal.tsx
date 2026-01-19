@@ -97,7 +97,8 @@ const GenerateMealModal = ({
                     </Text>
                     
                     <Box>
-                        <Text as="label" htmlFor="scheduled-date" mb={2} fontSize="sm" fontWeight="medium" display="block">Scheduled Date (Optional)</Text>
+                        {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
+                        <Box as="label" htmlFor="scheduled-date" mb={2} fontSize="sm" fontWeight="medium" display="block">Scheduled Date (Optional)</Box>
                         <Input 
                             id="scheduled-date"
                             type="date" 
