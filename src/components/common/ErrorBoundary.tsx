@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { Box, Button, Container, Heading, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Container, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 
 interface Props {
     children: ReactNode;
@@ -76,25 +76,22 @@ class ErrorBoundary extends Component<Props, State> {
                                 </Text>
                             </Box>
                         )}
-                        <Box>
+                        <HStack gap={3}>
                             <Button
                                 onClick={this.handleReset}
-                                bg="vscode.button"
-                                color="white"
-                                _hover={{ bg: 'vscode.buttonHover' }}
-                                mr={3}
+                                colorScheme="blue"
+                                variant="solid"
                             >
                                 Try Again
                             </Button>
                             <Button
                                 onClick={this.handleReload}
+                                colorScheme="gray"
                                 variant="outline"
-                                borderColor="border.default"
-                                color="fg.default"
                             >
                                 Reload Page
                             </Button>
-                        </Box>
+                        </HStack>
                     </VStack>
                 </Container>
             );
