@@ -62,21 +62,21 @@ describe('mealParams', () => {
     });
 
     describe('templateFiltersToSearchParams', () => {
-        it('should convert slot count range', () => {
+        it('should convert num_slots range', () => {
             const filters: TemplateFilters = {
-                slot_count: { gt: 2, lt: 5 }
+                num_slots: { gt: 2, lt: 5 }
             };
             const params = templateFiltersToSearchParams(filters);
-            expect(params.get('slot_count_gt')).toBe('2');
-            expect(params.get('slot_count_lt')).toBe('5');
+            expect(params.get('num_slots_gt')).toBe('2');
+            expect(params.get('num_slots_lt')).toBe('5');
         });
     });
 
     describe('searchParamsToTemplateFilters', () => {
-        it('should parse slot count range', () => {
-            const params = new URLSearchParams('slot_count_gt=1&slot_count_lt=10');
+        it('should parse num_slots range', () => {
+            const params = new URLSearchParams('num_slots_gt=1&num_slots_lt=10');
             const filters = searchParamsToTemplateFilters(params);
-            expect(filters.slot_count).toEqual({ gt: 1, lt: 10 });
+            expect(filters.num_slots).toEqual({ gt: 1, lt: 10 });
         });
     });
 });

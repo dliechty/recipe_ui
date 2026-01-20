@@ -85,8 +85,8 @@ export class AuthenticationService {
     /**
      * List Active Users
      * List all active users. Admin only.
-     * @param skip
-     * @param limit
+     * @param skip Number of records to skip for pagination
+     * @param limit Maximum number of records to return (1-1000)
      * @returns UserPublic Successful Response
      * @throws ApiError
      */

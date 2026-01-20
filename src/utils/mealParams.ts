@@ -15,7 +15,7 @@ export interface TemplateFilters {
     name?: string;
     classification?: MealClassification[];
     created_by?: string[];
-    slot_count?: { gt?: number; lt?: number };
+    num_slots?: { gt?: number; lt?: number };
     recipe?: string[];
     sort?: string;
 }
@@ -88,9 +88,9 @@ export const templateFiltersToSearchParams = (filters: TemplateFilters): URLSear
     if (filters.recipe?.length) params.set('recipe', filters.recipe.join(','));
 
     // Slot Count Range
-    if (filters.slot_count) {
-        if (filters.slot_count.gt !== undefined) params.set('slot_count_gt', filters.slot_count.gt.toString());
-        if (filters.slot_count.lt !== undefined) params.set('slot_count_lt', filters.slot_count.lt.toString());
+    if (filters.num_slots) {
+        if (filters.num_slots.gt !== undefined) params.set('num_slots_gt', filters.num_slots.gt.toString());
+        if (filters.num_slots.lt !== undefined) params.set('num_slots_lt', filters.num_slots.lt.toString());
     }
 
     return params;
@@ -116,13 +116,13 @@ export const searchParamsToTemplateFilters = (params: URLSearchParams): Template
     if (recipe) filters.recipe = recipe.split(',');
 
     // Slot Count Range
-    const slotsGt = params.get('slot_count_gt');
-    const slotsLt = params.get('slot_count_lt');
+    const slotsGt = params.get('num_slots_gt');
+    const slotsLt = params.get('num_slots_lt');
 
     if (slotsGt || slotsLt) {
-        filters.slot_count = {};
-        if (slotsGt) filters.slot_count.gt = Number(slotsGt);
-        if (slotsLt) filters.slot_count.lt = Number(slotsLt);
+        filters.num_slots = {};
+        if (slotsGt) filters.num_slots.gt = Number(slotsGt);
+        if (slotsLt) filters.num_slots.lt = Number(slotsLt);
     }
 
     return filters;

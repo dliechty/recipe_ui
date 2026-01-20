@@ -35,11 +35,26 @@ export class RecipesService {
     /**
      * Read Recipes
      * Retrieve a list of all recipes with optional filtering and sorting.
-     * Filters: field[eq]=value, field[gt]=value, etc.
-     * Sort: sort=field1,-field2
-     * @param skip
-     * @param limit
-     * @param sort
+     *
+     * **Filtering:** Use bracket notation `field[operator]=value` for filters.
+     *
+     * Operators: `eq` (equals), `neq` (not equals), `gt`, `gte`, `lt`, `lte`, `in` (comma-separated list), `like` (case-insensitive substring), `all` (must match all values).
+     *
+     * Filter fields: `id`, `name`, `description`, `category`, `cuisine`, `difficulty`, `protein`, `yield_amount`, `calories`, `prep_time_minutes`, `cook_time_minutes`, `active_time_minutes`, `total_time_minutes`, `owner`, `ingredients`, `suitable_for_diet`.
+     *
+     * Examples:
+     * - `?name[like]=chicken` - Recipes with 'chicken' in name
+     * - `?difficulty[eq]=easy` - Easy recipes only
+     * - `?calories[gte]=200&calories[lte]=500` - Calories between 200-500
+     * - `?category[in]=breakfast,lunch` - Breakfast or lunch recipes
+     * - `?ingredients[all]=flour,eggs` - Recipes containing both flour AND eggs
+     *
+     * **Sorting:** Use the `sort` parameter with comma-separated fields. Prefix with `-` for descending.
+     *
+     * Returns total count in `X-Total-Count` response header.
+     * @param skip Number of records to skip for pagination
+     * @param limit Maximum number of records to return (1-1000)
+     * @param sort Comma-separated sort fields. Prefix with '-' for descending order. Valid fields: name, calories, total_time_minutes, difficulty, category, cuisine, prep_time_minutes, cook_time_minutes, active_time_minutes, yield_amount, protein, created_at, updated_at. Example: '-created_at,name'
      * @returns Recipe Successful Response
      * @throws ApiError
      */
@@ -196,8 +211,8 @@ export class RecipesService {
      * Read Comments
      * Get comments for a recipe.
      * @param recipeId
-     * @param skip
-     * @param limit
+     * @param skip Number of records to skip for pagination
+     * @param limit Maximum number of records to return (1-1000)
      * @returns Comment Successful Response
      * @throws ApiError
      */

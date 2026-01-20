@@ -631,8 +631,8 @@ export const handlers = [
         const classifications = url.searchParams.get('classification[in]')?.split(',').filter(Boolean) || [];
         const createdBy = url.searchParams.get('created_by[in]')?.split(',').filter(Boolean) || [];
         const recipeIds = url.searchParams.get('recipe_id[in]')?.split(',').filter(Boolean) || [];
-        const slotCountGt = url.searchParams.get('slot_count[gt]');
-        const slotCountLt = url.searchParams.get('slot_count[lt]');
+        const slotCountGt = url.searchParams.get('num_slots[gt]');
+        const slotCountLt = url.searchParams.get('num_slots[lt]');
 
         let filteredTemplates = [...mealTemplateStore];
 

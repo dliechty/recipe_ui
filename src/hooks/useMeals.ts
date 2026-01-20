@@ -121,8 +121,8 @@ export const useInfiniteMealTemplates = (limit: number = 20, filters: TemplateFi
             if (filters.created_by?.length) params.append('created_by[in]', filters.created_by.join(','));
             if (filters.recipe?.length) params.append('recipe_id[in]', filters.recipe.join(','));
 
-            if (filters.slot_count?.gt !== undefined) params.append('slot_count[gt]', filters.slot_count.gt.toString());
-            if (filters.slot_count?.lt !== undefined) params.append('slot_count[lt]', filters.slot_count.lt.toString());
+            if (filters.num_slots?.gt !== undefined) params.append('num_slots[gt]', filters.num_slots.gt.toString());
+            if (filters.num_slots?.lt !== undefined) params.append('num_slots[lt]', filters.num_slots.lt.toString());
 
             if (filters.sort) params.append('sort', filters.sort);
 
