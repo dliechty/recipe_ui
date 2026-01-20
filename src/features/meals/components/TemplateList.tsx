@@ -154,7 +154,6 @@ const TemplateList = () => {
                     <Box display="flex" gap={2} alignItems="center">
                         <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
                         <Box minW="130px">
-                            {/* @ts-expect-error - Chakra UI select styling hack */}
                             <select
                                 value={sortField}
                                 onChange={(e) => handleSortFieldChange(e.target.value)}
@@ -176,7 +175,6 @@ const TemplateList = () => {
                         </Box>
                     </Box>
                     <Box minW="110px">
-                        {/* @ts-expect-error - Chakra UI select styling hack */}
                         <select
                             value={sortDirection}
                             onChange={(e) => handleSortDirectionChange(e.target.value)}
