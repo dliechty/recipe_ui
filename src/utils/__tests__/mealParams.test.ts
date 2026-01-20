@@ -64,19 +64,19 @@ describe('mealParams', () => {
     describe('templateFiltersToSearchParams', () => {
         it('should convert num_slots range', () => {
             const filters: TemplateFilters = {
-                num_slots: { gt: 2, lt: 5 }
+                num_slots: { gte: 2, lte: 5 }
             };
             const params = templateFiltersToSearchParams(filters);
-            expect(params.get('num_slots_gt')).toBe('2');
-            expect(params.get('num_slots_lt')).toBe('5');
+            expect(params.get('num_slots_gte')).toBe('2');
+            expect(params.get('num_slots_lte')).toBe('5');
         });
     });
 
     describe('searchParamsToTemplateFilters', () => {
         it('should parse num_slots range', () => {
-            const params = new URLSearchParams('num_slots_gt=1&num_slots_lt=10');
+            const params = new URLSearchParams('num_slots_gte=1&num_slots_lte=10');
             const filters = searchParamsToTemplateFilters(params);
-            expect(filters.num_slots).toEqual({ gt: 1, lt: 10 });
+            expect(filters.num_slots).toEqual({ gte: 1, lte: 10 });
         });
     });
 });

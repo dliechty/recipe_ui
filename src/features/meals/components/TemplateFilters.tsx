@@ -156,8 +156,8 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
                                         placeholder="Min"
                                         type="number"
                                         size="xs"
-                                        value={localFilters.num_slots?.gt || ''}
-                                        onChange={(val) => handleChange('num_slots', { ...localFilters.num_slots, gt: val ? Number(val) : undefined })}
+                                        value={localFilters.num_slots?.gte || ''}
+                                        onChange={(val) => handleChange('num_slots', { ...localFilters.num_slots, gte: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
@@ -165,8 +165,8 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
                                         placeholder="Max"
                                         type="number"
                                         size="xs"
-                                        value={localFilters.num_slots?.lt || ''}
-                                        onChange={(val) => handleChange('num_slots', { ...localFilters.num_slots, lt: val ? Number(val) : undefined })}
+                                        value={localFilters.num_slots?.lte || ''}
+                                        onChange={(val) => handleChange('num_slots', { ...localFilters.num_slots, lte: val ? Number(val) : undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>
