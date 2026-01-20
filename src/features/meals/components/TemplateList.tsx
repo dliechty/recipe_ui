@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRef, useState, useEffect, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton, Text } from '@chakra-ui/react';
 import { FaPlus, FaUtensils } from 'react-icons/fa';
 import { useInfiniteMealTemplates, useGenerateMeal } from '../../../hooks/useMeals';
@@ -7,13 +7,27 @@ import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
 import GenerateMealModal from './GenerateMealModal';
+import TemplateFilters from './TemplateFilters';
+import { searchParamsToTemplateFilters, templateFiltersToSearchParams } from '../../../utils/mealParams';
 
 const TemplateList = () => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const generateMeal = useGenerateMeal();
     const [generatingTemplateId, setGeneratingTemplateId] = useState<string | null>(null);
     const [selectedTemplate, setSelectedTemplate] = useState<{ id: string, name: string } | null>(null);
     const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+
+    // Parse filters from URL
+    const filters = useMemo(() => {
+        const parsed = searchParamsToTemplateFilters(searchParams);
+        // Default sort if not present
+        if (!parsed.sort) {
+            parsed.sort = 'name';
+        }
+        return parsed;
+    }, [searchParams]);
 
     const {
         data,
@@ -22,7 +36,7 @@ const TemplateList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteMealTemplates(20, 'name');
+    } = useInfiniteMealTemplates(20, filters);
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -52,6 +66,26 @@ const TemplateList = () => {
 
     const handleTemplateClick = (id: string) => {
         navigate(`/meals/templates/${id}`);
+    };
+
+    const handleFilterChange = (newFilters: typeof filters) => {
+        setSearchParams(templateFiltersToSearchParams(newFilters));
+    };
+
+    const currentSort = filters.sort || 'name';
+    const isDesc = currentSort.startsWith('-');
+    const sortField = isDesc ? currentSort.slice(1) : currentSort;
+    const sortDirection = isDesc ? 'desc' : 'asc';
+
+    const handleSortFieldChange = (newField: string) => {
+        const newSort = sortDirection === 'desc' ? `-${newField}` : newField;
+        handleFilterChange({ ...filters, sort: newSort });
+    };
+
+    const handleSortDirectionChange = (newDirection: string) => {
+        const prefix = newDirection === 'desc' ? '-' : '';
+        const newSort = `${prefix}${sortField}`;
+        handleFilterChange({ ...filters, sort: newSort });
     };
 
     const handleGenerateClick = (templateId: string, templateName: string, e: React.MouseEvent) => {
@@ -105,17 +139,68 @@ const TemplateList = () => {
 
     return (
         <Container maxW="container.xl" py={0} px={0}>
-            <Box mb={4}>
+            <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
                 <Button
                     onClick={() => navigate('/meals/templates/new')}
                     bg="vscode.button"
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
-                    alignSelf="flex-start"
                     size="xs"
                 >
                     <Icon as={FaPlus} mr={2} /> Add Template
                 </Button>
+
+                <Box display="flex" gap={4} alignItems="center">
+                    <Box display="flex" gap={2} alignItems="center">
+                        <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
+                        <Box minW="130px">
+                            {/* @ts-expect-error - Chakra UI select styling hack */}
+                            <select
+                                value={sortField}
+                                onChange={(e) => handleSortFieldChange(e.target.value)}
+                                style={{
+                                    width: "100%",
+                                    padding: "6px",
+                                    borderRadius: "4px",
+                                    backgroundColor: "#3c3c3c",
+                                    borderColor: "#454545",
+                                    borderWidth: "1px",
+                                    fontSize: "0.875rem",
+                                    color: "#d4d4d4",
+                                    outline: "none"
+                                }}
+                            >
+                                <option value="name">Name</option>
+                                <option value="updated_at">Last Updated</option>
+                            </select>
+                        </Box>
+                    </Box>
+                    <Box minW="110px">
+                        {/* @ts-expect-error - Chakra UI select styling hack */}
+                        <select
+                            value={sortDirection}
+                            onChange={(e) => handleSortDirectionChange(e.target.value)}
+                            style={{
+                                width: "100%",
+                                padding: "6px",
+                                borderRadius: "4px",
+                                backgroundColor: "#3c3c3c",
+                                borderColor: "#454545",
+                                borderWidth: "1px",
+                                fontSize: "0.875rem",
+                                color: "#d4d4d4",
+                                outline: "none"
+                            }}
+                        >
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                    </Box>
+                </Box>
+            </Box>
+
+            <Box mb={6}>
+                <TemplateFilters filters={filters} onFilterChange={handleFilterChange} />
             </Box>
 
             <VStack align="stretch" gap={6}>

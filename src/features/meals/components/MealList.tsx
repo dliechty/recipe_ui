@@ -1,14 +1,27 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, Badge, Text } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
 import { useInfiniteMeals } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
+import MealFilters from './MealFilters';
+import { mealFiltersToSearchParams, searchParamsToMealFilters } from '../../../utils/mealParams';
 
 const MealList = () => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    
+    // Parse filters from URL
+    const filters = useMemo(() => {
+        const parsed = searchParamsToMealFilters(searchParams);
+        // Default sort if not present
+        if (!parsed.sort) {
+            parsed.sort = '-date';
+        }
+        return parsed;
+    }, [searchParams]);
 
     const {
         data,
@@ -17,7 +30,7 @@ const MealList = () => {
         hasNextPage,
         isFetchingNextPage,
         status,
-    } = useInfiniteMeals(20, '-date');
+    } = useInfiniteMeals(20, filters);
 
     const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null);
@@ -47,6 +60,26 @@ const MealList = () => {
 
     const handleMealClick = (id: string) => {
         navigate(`/meals/${id}`);
+    };
+
+    const handleFilterChange = (newFilters: typeof filters) => {
+        setSearchParams(mealFiltersToSearchParams(newFilters));
+    };
+
+    const currentSort = filters.sort || '-date';
+    const isDesc = currentSort.startsWith('-');
+    const sortField = isDesc ? currentSort.slice(1) : currentSort;
+    const sortDirection = isDesc ? 'desc' : 'asc';
+
+    const handleSortFieldChange = (newField: string) => {
+        const newSort = sortDirection === 'desc' ? `-${newField}` : newField;
+        handleFilterChange({ ...filters, sort: newSort });
+    };
+
+    const handleSortDirectionChange = (newDirection: string) => {
+        const prefix = newDirection === 'desc' ? '-' : '';
+        const newSort = `${prefix}${sortField}`;
+        handleFilterChange({ ...filters, sort: newSort });
     };
 
     const meals = React.useMemo(() => data?.pages.flatMap((page) => page.meals) || [], [data]);
@@ -87,17 +120,69 @@ const MealList = () => {
 
     return (
         <Box>
-            <Box mb={4}>
+            <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
                 <Button
                     onClick={() => navigate('/meals/new')}
                     bg="vscode.button"
                     color="white"
                     _hover={{ bg: "vscode.buttonHover" }}
-                    alignSelf="flex-start"
                     size="xs"
                 >
                     <Icon as={FaPlus} mr={2} /> Add Meal
                 </Button>
+
+                <Box display="flex" gap={4} alignItems="center">
+                    <Box display="flex" gap={2} alignItems="center">
+                        <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
+                        <Box minW="130px">
+                            {/* @ts-expect-error - Chakra UI select styling hack */}
+                            <select
+                                value={sortField}
+                                onChange={(e) => handleSortFieldChange(e.target.value)}
+                                style={{
+                                    width: "100%",
+                                    padding: "6px",
+                                    borderRadius: "4px",
+                                    backgroundColor: "#3c3c3c",
+                                    borderColor: "#454545",
+                                    borderWidth: "1px",
+                                    fontSize: "0.875rem",
+                                    color: "#d4d4d4",
+                                    outline: "none"
+                                }}
+                            >
+                                <option value="date">Scheduled Date</option>
+                                <option value="created_at">Created Date</option>
+                                <option value="name">Name</option>
+                            </select>
+                        </Box>
+                    </Box>
+                    <Box minW="110px">
+                        {/* @ts-expect-error - Chakra UI select styling hack */}
+                        <select
+                            value={sortDirection}
+                            onChange={(e) => handleSortDirectionChange(e.target.value)}
+                            style={{
+                                width: "100%",
+                                padding: "6px",
+                                borderRadius: "4px",
+                                backgroundColor: "#3c3c3c",
+                                borderColor: "#454545",
+                                borderWidth: "1px",
+                                fontSize: "0.875rem",
+                                color: "#d4d4d4",
+                                outline: "none"
+                            }}
+                        >
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                    </Box>
+                </Box>
+            </Box>
+
+            <Box mb={6}>
+                <MealFilters filters={filters} onFilterChange={handleFilterChange} />
             </Box>
 
             <VStack align="stretch" gap={6}>

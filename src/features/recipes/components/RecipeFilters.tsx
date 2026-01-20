@@ -78,7 +78,8 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
         borderColor: "border.default",
         color: "fg.default",
         _hover: { borderColor: 'vscode.accent' },
-        _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }
+        _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
+        css: { colorScheme: 'dark' }
     };
 
     return (

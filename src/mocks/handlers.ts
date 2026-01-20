@@ -627,18 +627,77 @@ export const handlers = [
         const limit = Number(url.searchParams.get('limit') || '100');
         const sort = url.searchParams.get('sort');
 
-        const sorted = [...mealTemplateStore];
-        if (sort === 'name') {
-            sorted.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sort === '-name') {
-            sorted.sort((a, b) => b.name.localeCompare(a.name));
+        const nameLike = url.searchParams.get('name[like]');
+        const classifications = url.searchParams.get('classification[in]')?.split(',').filter(Boolean) || [];
+        const createdBy = url.searchParams.get('created_by[in]')?.split(',').filter(Boolean) || [];
+        const recipeIds = url.searchParams.get('recipe_id[in]')?.split(',').filter(Boolean) || [];
+        const slotCountGt = url.searchParams.get('slot_count[gt]');
+        const slotCountLt = url.searchParams.get('slot_count[lt]');
+
+        let filteredTemplates = [...mealTemplateStore];
+
+        if (nameLike) {
+            const lowerName = nameLike.toLowerCase();
+            filteredTemplates = filteredTemplates.filter(t => t.name.toLowerCase().includes(lowerName));
         }
 
-        const paginated = sorted.slice(skip, skip + limit);
+        if (classifications.length > 0) {
+            filteredTemplates = filteredTemplates.filter(t => t.classification && classifications.includes(t.classification));
+        }
+
+        if (createdBy.length > 0) {
+            filteredTemplates = filteredTemplates.filter(t => createdBy.includes(t.user_id));
+        }
+
+        if (recipeIds.length > 0) {
+            filteredTemplates = filteredTemplates.filter(t => 
+                t.slots.some(s => {
+                    // Direct match
+                    if (s.recipe_id && recipeIds.includes(s.recipe_id)) return true;
+                    // List match
+                    if (s.recipe_ids && s.recipe_ids.some(rid => recipeIds.includes(rid))) return true;
+                    return false;
+                })
+            );
+        }
+
+        if (slotCountGt) {
+            filteredTemplates = filteredTemplates.filter(t => t.slots.length > Number(slotCountGt));
+        }
+        if (slotCountLt) {
+            filteredTemplates = filteredTemplates.filter(t => t.slots.length < Number(slotCountLt));
+        }
+
+        if (sort) {
+            const fields = sort.split(',');
+            filteredTemplates.sort((a, b) => {
+                for (const field of fields) {
+                    const desc = field.startsWith('-');
+                    const key = desc ? field.substring(1) : field;
+                    
+                    let valA: string | number = 0;
+                    let valB: string | number = 0;
+
+                    if (key === 'name') {
+                        valA = a.name.toLowerCase();
+                        valB = b.name.toLowerCase();
+                    } else if (key === 'updated_at') {
+                        valA = new Date(a.updated_at).getTime();
+                        valB = new Date(b.updated_at).getTime();
+                    }
+
+                    if (valA < valB) return desc ? 1 : -1;
+                    if (valA > valB) return desc ? -1 : 1;
+                }
+                return 0;
+            });
+        }
+
+        const paginated = filteredTemplates.slice(skip, skip + limit);
 
         return HttpResponse.json(paginated, {
             headers: {
-                'X-Total-Count': mealTemplateStore.length.toString(),
+                'X-Total-Count': filteredTemplates.length.toString(),
                 'Access-Control-Expose-Headers': 'X-Total-Count'
             },
         });
@@ -794,18 +853,79 @@ export const handlers = [
         const limit = Number(url.searchParams.get('limit') || '100');
         const sort = url.searchParams.get('sort');
 
-        const sortedMeals = [...mealsStore];
-        if (sort === '-created_at') {
-            sortedMeals.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        } else if (sort === 'created_at') {
-            sortedMeals.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        const nameLike = url.searchParams.get('name[like]');
+        const statuses = url.searchParams.get('status[in]')?.split(',').filter(Boolean) || [];
+        const classifications = url.searchParams.get('classification[in]')?.split(',').filter(Boolean) || [];
+        const createdBy = url.searchParams.get('created_by[in]')?.split(',').filter(Boolean) || [];
+        const recipeIds = url.searchParams.get('recipe_id[in]')?.split(',').filter(Boolean) || [];
+        const dateGt = url.searchParams.get('date[gt]');
+        const dateLt = url.searchParams.get('date[lt]');
+
+        let filteredMeals = [...mealsStore];
+
+        if (nameLike) {
+            const lowerName = nameLike.toLowerCase();
+            filteredMeals = filteredMeals.filter(m => m.name && m.name.toLowerCase().includes(lowerName));
         }
 
-        const paginatedMeals = sortedMeals.slice(skip, skip + limit);
+        if (statuses.length > 0) {
+            filteredMeals = filteredMeals.filter(m => m.status && statuses.includes(m.status));
+        }
+
+        if (classifications.length > 0) {
+            filteredMeals = filteredMeals.filter(m => m.classification && classifications.includes(m.classification));
+        }
+
+        if (createdBy.length > 0) {
+            filteredMeals = filteredMeals.filter(m => createdBy.includes(m.user_id));
+        }
+
+        if (recipeIds.length > 0) {
+            filteredMeals = filteredMeals.filter(m => 
+                m.items.some(item => item.recipe_id && recipeIds.includes(item.recipe_id))
+            );
+        }
+
+        if (dateGt) {
+            filteredMeals = filteredMeals.filter(m => m.date && new Date(m.date).getTime() > new Date(dateGt).getTime());
+        }
+        if (dateLt) {
+            filteredMeals = filteredMeals.filter(m => m.date && new Date(m.date).getTime() < new Date(dateLt).getTime());
+        }
+
+        if (sort) {
+            const fields = sort.split(',');
+            filteredMeals.sort((a, b) => {
+                for (const field of fields) {
+                    const desc = field.startsWith('-');
+                    const key = desc ? field.substring(1) : field;
+                    
+                    let valA: number | string = 0;
+                    let valB: number | string = 0;
+
+                    if (key === 'created_at') {
+                        valA = new Date(a.created_at).getTime();
+                        valB = new Date(b.created_at).getTime();
+                    } else if (key === 'date') {
+                        valA = a.date ? new Date(a.date).getTime() : 0;
+                        valB = b.date ? new Date(b.date).getTime() : 0;
+                    } else if (key === 'name') {
+                        valA = (a.name || '').toLowerCase();
+                        valB = (b.name || '').toLowerCase();
+                    }
+
+                    if (valA < valB) return desc ? 1 : -1;
+                    if (valA > valB) return desc ? -1 : 1;
+                }
+                return 0;
+            });
+        }
+
+        const paginatedMeals = filteredMeals.slice(skip, skip + limit);
 
         return HttpResponse.json(paginatedMeals, {
             headers: {
-                'X-Total-Count': mealsStore.length.toString(),
+                'X-Total-Count': filteredMeals.length.toString(),
                 'Access-Control-Expose-Headers': 'X-Total-Count'
             },
         });

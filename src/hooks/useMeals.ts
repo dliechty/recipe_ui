@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { MealsService, Meal, MealCreate, MealUpdate, MealTemplate, MealTemplateCreate, MealTemplateUpdate, OpenAPI } from '../client';
+import { MealFilters, TemplateFilters } from '../utils/mealParams';
 import axios from 'axios';
 
 interface MealsResponse {
@@ -7,9 +8,9 @@ interface MealsResponse {
     totalCount: number;
 }
 
-export const useInfiniteMeals = (limit: number = 20, sort: string = '-created_at') => {
+export const useInfiniteMeals = (limit: number = 20, filters: MealFilters = {}) => {
     return useInfiniteQuery<MealsResponse>({
-        queryKey: ['meals', 'infinite', limit, sort],
+        queryKey: ['meals', 'infinite', limit, filters],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             const skip = (page - 1) * limit;
@@ -17,9 +18,17 @@ export const useInfiniteMeals = (limit: number = 20, sort: string = '-created_at
             const params = new URLSearchParams();
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
-            if (sort) {
-                params.append('sort', sort);
-            }
+
+            if (filters.name) params.append('name[like]', filters.name);
+            if (filters.status?.length) params.append('status[in]', filters.status.join(','));
+            if (filters.classification?.length) params.append('classification[in]', filters.classification.join(','));
+            if (filters.created_by?.length) params.append('created_by[in]', filters.created_by.join(','));
+            if (filters.recipe?.length) params.append('recipe_id[in]', filters.recipe.join(','));
+
+            if (filters.date?.gt) params.append('date[gt]', filters.date.gt);
+            if (filters.date?.lt) params.append('date[lt]', filters.date.lt);
+
+            if (filters.sort) params.append('sort', filters.sort);
 
             const url = `${OpenAPI.BASE}/meals/?${params.toString()}`;
 
@@ -96,9 +105,9 @@ interface TemplatesResponse {
     totalCount: number;
 }
 
-export const useInfiniteMealTemplates = (limit: number = 20, sort: string = 'name') => {
+export const useInfiniteMealTemplates = (limit: number = 20, filters: TemplateFilters = {}) => {
     return useInfiniteQuery<TemplatesResponse>({
-        queryKey: ['meal-templates', 'infinite', limit, sort],
+        queryKey: ['meal-templates', 'infinite', limit, filters],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             const skip = (page - 1) * limit;
@@ -106,9 +115,16 @@ export const useInfiniteMealTemplates = (limit: number = 20, sort: string = 'nam
             const params = new URLSearchParams();
             params.append('skip', skip.toString());
             params.append('limit', limit.toString());
-            if (sort) {
-                params.append('sort', sort);
-            }
+
+            if (filters.name) params.append('name[like]', filters.name);
+            if (filters.classification?.length) params.append('classification[in]', filters.classification.join(','));
+            if (filters.created_by?.length) params.append('created_by[in]', filters.created_by.join(','));
+            if (filters.recipe?.length) params.append('recipe_id[in]', filters.recipe.join(','));
+
+            if (filters.slot_count?.gt !== undefined) params.append('slot_count[gt]', filters.slot_count.gt.toString());
+            if (filters.slot_count?.lt !== undefined) params.append('slot_count[lt]', filters.slot_count.lt.toString());
+
+            if (filters.sort) params.append('sort', filters.sort);
 
             const url = `${OpenAPI.BASE}/meals/templates?${params.toString()}`;
 

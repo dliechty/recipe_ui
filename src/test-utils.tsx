@@ -24,6 +24,17 @@ export function renderWithProviders(ui: React.ReactElement) {
     );
 }
 
+export const TestWrapper = ({ children }: { children: React.ReactNode }) => {
+    const testQueryClient = createTestQueryClient();
+    return (
+        <QueryClientProvider client={testQueryClient}>
+            <ChakraProvider value={system}>
+                {children}
+            </ChakraProvider>
+        </QueryClientProvider>
+    );
+};
+
 // re-export everything
 // eslint-disable-next-line react-refresh/only-export-components
 export * from '@testing-library/react';

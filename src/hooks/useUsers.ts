@@ -8,3 +8,10 @@ export const useUser = (userId: string | undefined) => {
         enabled: !!userId,
     });
 };
+
+export const useUsers = () => {
+    return useQuery<UserPublic[]>({
+        queryKey: ['users'],
+        queryFn: () => AuthenticationService.listActiveUsersAuthUsersGet(),
+    });
+};
