@@ -149,13 +149,13 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
                                 onChange={(val) => handleChange('classification', val.length ? val : undefined)}
                             />
 
-                            {/* Created By */}
+                            {/* Owner / Author */}
                             <RecipeMultiSelect
-                                label="Created By"
+                                label="Owner / Author"
                                 placeholder="Any User"
                                 options={(users || []).map(u => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }))}
-                                value={localFilters.created_by || []}
-                                onChange={(val) => handleChange('created_by', val.length ? val : undefined)}
+                                value={localFilters.owner || []}
+                                onChange={(val) => handleChange('owner', val.length ? val : undefined)}
                             />
 
                             {/* Date Range */}

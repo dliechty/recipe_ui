@@ -74,7 +74,7 @@ describe('MealFilters', () => {
         fireEvent.click(screen.getByText('More Filters'));
 
         expect(screen.getByTestId('select-Classification')).toBeInTheDocument();
-        expect(screen.getByTestId('select-Created By')).toBeInTheDocument();
+        expect(screen.getByTestId('select-Owner / Author')).toBeInTheDocument();
         expect(screen.getByText('Date Range')).toBeInTheDocument();
     });
 

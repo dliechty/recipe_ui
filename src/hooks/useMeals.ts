@@ -22,7 +22,7 @@ export const useInfiniteMeals = (limit: number = 20, filters: MealFilters = {}) 
             if (filters.name) params.append('name[like]', filters.name);
             if (filters.status?.length) params.append('status[in]', filters.status.join(','));
             if (filters.classification?.length) params.append('classification[in]', filters.classification.join(','));
-            if (filters.created_by?.length) params.append('created_by[in]', filters.created_by.join(','));
+            if (filters.owner?.length) params.append('owner[in]', filters.owner.join(','));
             if (filters.recipe?.length) params.append('recipe_id[in]', filters.recipe.join(','));
 
             if (filters.date?.gt) params.append('date[gt]', filters.date.gt);
@@ -118,7 +118,7 @@ export const useInfiniteMealTemplates = (limit: number = 20, filters: TemplateFi
 
             if (filters.name) params.append('name[like]', filters.name);
             if (filters.classification?.length) params.append('classification[in]', filters.classification.join(','));
-            if (filters.created_by?.length) params.append('created_by[in]', filters.created_by.join(','));
+            if (filters.owner?.length) params.append('owner[in]', filters.owner.join(','));
             if (filters.recipe?.length) params.append('recipe_id[in]', filters.recipe.join(','));
 
             if (filters.num_slots?.gte !== undefined) params.append('num_slots[gte]', filters.num_slots.gte.toString());

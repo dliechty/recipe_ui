@@ -139,13 +139,13 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
                     <Box pt={2} borderTopWidth={1} borderColor="border.muted">
                         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6} mt={4}>
                             
-                            {/* Created By */}
+                            {/* Owner / Author */}
                             <RecipeMultiSelect
-                                label="Created By"
+                                label="Owner / Author"
                                 placeholder="Any User"
                                 options={(users || []).map(u => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }))}
-                                value={localFilters.created_by || []}
-                                onChange={(val) => handleChange('created_by', val.length ? val : undefined)}
+                                value={localFilters.owner || []}
+                                onChange={(val) => handleChange('owner', val.length ? val : undefined)}
                             />
 
                             {/* Slot Count Range */}

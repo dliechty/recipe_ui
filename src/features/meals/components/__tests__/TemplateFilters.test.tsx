@@ -72,14 +72,14 @@ describe('TemplateFilters', () => {
 
         fireEvent.click(screen.getByText('More Filters'));
 
-        expect(screen.getByTestId('select-Created By')).toBeInTheDocument();
+        expect(screen.getByTestId('select-Owner / Author')).toBeInTheDocument();
         expect(screen.getByText('Number of Slots')).toBeInTheDocument();
     });
 
     it('should auto-expand if advanced filters are present', () => {
         const filters: TemplateFiltersType = {
             ...defaultFilters,
-            created_by: ['u1']
+            owner: ['u1']
         };
         render(
             <TestWrapper>
@@ -87,7 +87,7 @@ describe('TemplateFilters', () => {
             </TestWrapper>
         );
 
-        expect(screen.getByTestId('select-Created By')).toBeInTheDocument();
+        expect(screen.getByTestId('select-Owner / Author')).toBeInTheDocument();
     });
 
     it('should open recipe modal and apply filters', () => {

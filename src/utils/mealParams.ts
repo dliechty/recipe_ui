@@ -5,7 +5,7 @@ export interface MealFilters {
     name?: string;
     status?: MealStatus[];
     classification?: MealClassification[];
-    created_by?: string[];
+    owner?: string[];
     date?: { gt?: string; lt?: string };
     recipe?: string[];
     sort?: string;
@@ -14,7 +14,7 @@ export interface MealFilters {
 export interface TemplateFilters {
     name?: string;
     classification?: MealClassification[];
-    created_by?: string[];
+    owner?: string[];
     num_slots?: { gte?: number; lte?: number };
     recipe?: string[];
     sort?: string;
@@ -29,7 +29,7 @@ export const mealFiltersToSearchParams = (filters: MealFilters): URLSearchParams
     // Arrays
     if (filters.status?.length) params.set('status', filters.status.join(','));
     if (filters.classification?.length) params.set('classification', filters.classification.join(','));
-    if (filters.created_by?.length) params.set('created_by', filters.created_by.join(','));
+    if (filters.owner?.length) params.set('owner', filters.owner.join(','));
     if (filters.recipe?.length) params.set('recipe', filters.recipe.join(','));
 
     // Date Range
@@ -57,8 +57,8 @@ export const searchParamsToMealFilters = (params: URLSearchParams): MealFilters 
     const classification = params.get('classification');
     if (classification) filters.classification = classification.split(',') as MealClassification[];
 
-    const createdBy = params.get('created_by');
-    if (createdBy) filters.created_by = createdBy.split(',');
+    const owner = params.get('owner');
+    if (owner) filters.owner = owner.split(',');
 
     const recipe = params.get('recipe');
     if (recipe) filters.recipe = recipe.split(',');
@@ -84,7 +84,7 @@ export const templateFiltersToSearchParams = (filters: TemplateFilters): URLSear
 
     // Arrays
     if (filters.classification?.length) params.set('classification', filters.classification.join(','));
-    if (filters.created_by?.length) params.set('created_by', filters.created_by.join(','));
+    if (filters.owner?.length) params.set('owner', filters.owner.join(','));
     if (filters.recipe?.length) params.set('recipe', filters.recipe.join(','));
 
     // Slot Count Range
@@ -109,8 +109,8 @@ export const searchParamsToTemplateFilters = (params: URLSearchParams): Template
     const classification = params.get('classification');
     if (classification) filters.classification = classification.split(',') as MealClassification[];
 
-    const createdBy = params.get('created_by');
-    if (createdBy) filters.created_by = createdBy.split(',');
+    const owner = params.get('owner');
+    if (owner) filters.owner = owner.split(',');
 
     const recipe = params.get('recipe');
     if (recipe) filters.recipe = recipe.split(',');
