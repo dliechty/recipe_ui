@@ -139,7 +139,7 @@ const TemplateList = () => {
 
     return (
         <Container maxW="container.xl" py={0} px={0}>
-            <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
+            <Box mb={4} display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={3}>
                 <Button
                     onClick={() => navigate('/meals/templates/new')}
                     bg="vscode.button"
@@ -150,7 +150,7 @@ const TemplateList = () => {
                     <Icon as={FaPlus} mr={2} /> Add Template
                 </Button>
 
-                <Box display="flex" gap={4} alignItems="center">
+                <Box display="flex" gap={4} alignItems="center" flexWrap="wrap">
                     <Box display="flex" gap={2} alignItems="center">
                         <Text fontSize="sm" color="fg.muted" whiteSpace="nowrap">Sort:</Text>
                         <Box minW="130px">
