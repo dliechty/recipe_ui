@@ -41,6 +41,11 @@ export type { RecipeCoreCreate } from './models/RecipeCoreCreate';
 export type { RecipeCreate } from './models/RecipeCreate';
 export type { RecipeIngredient } from './models/RecipeIngredient';
 export type { RecipeIngredientCreate } from './models/RecipeIngredientCreate';
+export type { RecipeList } from './models/RecipeList';
+export type { RecipeListAddRecipe } from './models/RecipeListAddRecipe';
+export type { RecipeListCreate } from './models/RecipeListCreate';
+export type { RecipeListItem } from './models/RecipeListItem';
+export type { RecipeListUpdate } from './models/RecipeListUpdate';
 export type { RecipeNutrition } from './models/RecipeNutrition';
 export type { RecipeTimes } from './models/RecipeTimes';
 export type { SearchCriterion } from './models/SearchCriterion';
@@ -55,5 +60,6 @@ export type { ValidationError } from './models/ValidationError';
 
 export { AuthenticationService } from './services/AuthenticationService';
 export { MealsService } from './services/MealsService';
+export { RecipeListsService } from './services/RecipeListsService';
 export { RecipesService } from './services/RecipesService';
 export { RootService } from './services/RootService';

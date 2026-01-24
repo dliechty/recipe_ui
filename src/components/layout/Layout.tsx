@@ -92,6 +92,11 @@ const Layout = ({ children }: LayoutProps) => {
                                                     <NavLink to="/admin">Admin</NavLink>
                                                 </Menu.Item>
                                             )}
+                                            {import.meta.env.VITE_ENABLE_RECIPE_LISTS_FEATURE === 'true' && (
+                                                <Menu.Item value="recipe-box" asChild>
+                                                    <NavLink to="/recipe-box">Recipe Box</NavLink>
+                                                </Menu.Item>
+                                            )}
                                             <Menu.Item value="account" asChild>
                                                 <NavLink to="/account">Account</NavLink>
                                             </Menu.Item>
@@ -106,6 +111,9 @@ const Layout = ({ children }: LayoutProps) => {
                         <Flex alignItems={'center'}>
                             <HStack gap={4} mr={4} display={{ base: 'none', md: 'flex' }}>
                                 {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
+                                {import.meta.env.VITE_ENABLE_RECIPE_LISTS_FEATURE === 'true' && (
+                                    <NavItem to="/recipe-box">Recipe Box</NavItem>
+                                )}
                                 <NavItem to="/account">Account</NavItem>
                                 <Button
                                     variant={'solid'}

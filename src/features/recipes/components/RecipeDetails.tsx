@@ -27,6 +27,7 @@ import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatQuantity, formatDuration, formatDietName } from '../../../utils/formatters';
 import CommentList from './comments/CommentList';
 import { UnitSystem } from '../../../client';
+import AddToListButton from '../../recipe-lists/components/AddToListButton';
 
 
 const RecipeDetails = () => {
@@ -164,6 +165,9 @@ const RecipeDetails = () => {
                             >
                                 <Icon as={FaRegCopy} /> Create Variant
                             </Button>
+                        )}
+                        {currentUser && id && import.meta.env.VITE_ENABLE_RECIPE_LISTS_FEATURE === 'true' && (
+                            <AddToListButton recipeId={id} />
                         )}
                         {canEdit && (
                             <Button
