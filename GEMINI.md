@@ -38,7 +38,7 @@ src/
 ├── features/           # Feature-based modules (auth, recipes, meals, admin, users)
 │   ├── auth/          # Authentication (login, protected routes, password management)
 │   ├── recipes/       # Recipe CRUD, filtering, comments
-│   ├── meals/         # Meal planning (feature-flagged with VITE_ENABLE_MEALS_FEATURE)
+│   ├── meals/         # Meal planning
 │   ├── admin/         # Admin dashboard, user management, pending requests
 │   └── users/         # User account management
 ├── components/        # Shared components (layout, error handling, common UI)
@@ -72,8 +72,6 @@ src/
 
 **MSW for Mocking**: In development mode, Mock Service Worker intercepts API requests. Handlers are in `src/mocks/`. The worker is conditionally enabled in `src/main.tsx`.
 
-**Feature Flags**: The Meals feature can be toggled with the `VITE_ENABLE_MEALS_FEATURE=true` environment variable (see `AppRoutes.tsx` for conditional route rendering).
-
 ### Form Handling Patterns
 
 Recipe forms use a multi-step pattern split across:
@@ -104,7 +102,6 @@ Filters are managed via URL search params (`src/utils/recipeParams.ts`) and pass
 
 Configure via `.env` file (see `.env.example`):
 - `VITE_API_URL`: Backend API base URL (default: http://localhost:8000)
-- `VITE_ENABLE_MEALS_FEATURE`: Enable meals functionality (true/false)
 - `RECIPE_UI_PORT`: Port for deployment (used in Docker)
 
 ## Development Notes

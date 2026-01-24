@@ -96,10 +96,7 @@ const AppRoutes = () => {
                             </ProtectedRoute>
                         }
                     />
-                    {/* Feature guarded Meals functionality */}
-                    {import.meta.env.VITE_ENABLE_MEALS_FEATURE === 'true' && (
-                        <>
-                            <Route
+                    <Route
                                 path="/meals"
                                 element={
                                     <ProtectedRoute>
@@ -143,7 +140,7 @@ const AppRoutes = () => {
                                     </ProtectedRoute>
                                 }
                             />
-                            <Route
+                    <Route
                                 path="/meals/templates/:id"
                                 element={
                                     <ProtectedRoute>
@@ -151,8 +148,6 @@ const AppRoutes = () => {
                                     </ProtectedRoute>
                                 }
                             />
-                        </>
-                    )}
                 </Routes>
             </Suspense>
         </Layout>
