@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { recipes as initialRecipes, users, comments as initialComments, meals as initialMeals, mealTemplates as initialMealTemplates } from './data';
-import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient } from '../client';
+import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient, RecipeList, RecipeListCreate, RecipeListUpdate, RecipeListItem, RecipeListAddRecipe } from '../client';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 const recipes: Recipe[] = [...initialRecipes] as unknown as Recipe[];
@@ -11,6 +11,7 @@ type StoredComment = Omit<Comment, 'user'>;
 const commentsStore: StoredComment[] = [...initialComments] as unknown as StoredComment[];
 const mealsStore: Meal[] = [...initialMeals] as unknown as Meal[];
 const mealTemplateStore: MealTemplate[] = [...initialMealTemplates] as unknown as MealTemplate[];
+const recipeListsStore: RecipeList[] = [];
 
 
 
@@ -26,6 +27,7 @@ export const resetStore = () => {
     mealsStore.push(...initialMeals as unknown as Meal[]);
     mealTemplateStore.length = 0;
     mealTemplateStore.push(...initialMealTemplates as unknown as MealTemplate[]);
+    recipeListsStore.length = 0;
 
 
 };
@@ -1011,6 +1013,132 @@ export const handlers = [
         }
 
         mealsStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // Recipe Lists handlers
+    // GET /lists/
+    http.get('*/lists/', () => {
+        return HttpResponse.json(recipeListsStore, {
+            headers: {
+                'X-Total-Count': recipeListsStore.length.toString(),
+            },
+        });
+    }),
+
+    // POST /lists/
+    http.post('*/lists/', async ({ request }) => {
+        const body = await request.json() as RecipeListCreate;
+        const newList: RecipeList = {
+            id: `list-${Date.now()}`,
+            user_id: 'user-1',
+            name: body.name,
+            description: body.description || null,
+            items: [],
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        };
+        recipeListsStore.push(newList);
+        return HttpResponse.json(newList);
+    }),
+
+    // GET /lists/:list_id
+    http.get('*/lists/:list_id', ({ params }) => {
+        const { list_id } = params;
+        const list = recipeListsStore.find(l => l.id === list_id);
+        if (!list) {
+            return new HttpResponse(null, { status: 404 });
+        }
+        return HttpResponse.json(list);
+    }),
+
+    // PUT /lists/:list_id
+    http.put('*/lists/:list_id', async ({ params, request }) => {
+        const { list_id } = params;
+        const body = await request.json() as RecipeListUpdate;
+        const index = recipeListsStore.findIndex(l => l.id === list_id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const updatedList: RecipeList = {
+            ...recipeListsStore[index],
+            name: body.name || recipeListsStore[index].name,
+            description: body.description !== undefined ? body.description : recipeListsStore[index].description,
+            updated_at: new Date().toISOString(),
+        };
+
+        recipeListsStore[index] = updatedList;
+        return HttpResponse.json(updatedList);
+    }),
+
+    // DELETE /lists/:list_id
+    http.delete('*/lists/:list_id', ({ params }) => {
+        const { list_id } = params;
+        const index = recipeListsStore.findIndex(l => l.id === list_id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        recipeListsStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // POST /lists/:list_id/recipes
+    http.post('*/lists/:list_id/recipes', async ({ params, request }) => {
+        const { list_id } = params;
+        const body = await request.json() as RecipeListAddRecipe;
+        const list = recipeListsStore.find(l => l.id === list_id);
+
+        if (!list) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        // Check if recipe is already in the list
+        const existingItem = list.items?.find(item => item.recipe_id === body.recipe_id);
+        if (existingItem) {
+            return new HttpResponse(JSON.stringify({ detail: 'Recipe already in list' }), { status: 400 });
+        }
+
+        const newItem: RecipeListItem = {
+            id: `item-${Date.now()}`,
+            recipe_list_id: list_id as string,
+            recipe_id: body.recipe_id,
+            added_at: new Date().toISOString(),
+        };
+
+        if (!list.items) {
+            list.items = [];
+        }
+        list.items.push(newItem);
+        list.updated_at = new Date().toISOString();
+
+        return HttpResponse.json(newItem);
+    }),
+
+    // DELETE /lists/:list_id/recipes/:recipe_id
+    http.delete('*/lists/:list_id/recipes/:recipe_id', ({ params }) => {
+        const { list_id, recipe_id } = params;
+        const list = recipeListsStore.find(l => l.id === list_id);
+
+        if (!list) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        if (!list.items) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const itemIndex = list.items.findIndex(item => item.recipe_id === recipe_id);
+        if (itemIndex === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        list.items.splice(itemIndex, 1);
+        list.updated_at = new Date().toISOString();
+
         return new HttpResponse(null, { status: 204 });
     }),
 

@@ -15,6 +15,7 @@ const RequestAccountPage = React.lazy(() => import('./features/auth/components/R
 const AdminDashboard = React.lazy(() => import('./features/admin/pages/AdminDashboard'));
 const ChangePasswordPage = React.lazy(() => import('./features/auth/components/ChangePasswordPage'));
 const AccountPage = React.lazy(() => import('./features/users/AccountPage'));
+const RecipeBoxPage = React.lazy(() => import('./features/recipe-lists/pages/RecipeBoxPage'));
 const MealsPage = React.lazy(() => import('./features/meals/pages/MealsPage'));
 const MealList = React.lazy(() => import('./features/meals/components/MealList'));
 const TemplateList = React.lazy(() => import('./features/meals/components/TemplateList'));
@@ -53,6 +54,14 @@ const AppRoutes = () => {
                         element={
                             <ProtectedRoute>
                                 <AccountPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/recipe-box"
+                        element={
+                            <ProtectedRoute>
+                                <RecipeBoxPage />
                             </ProtectedRoute>
                         }
                     />
