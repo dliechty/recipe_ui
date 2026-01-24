@@ -11,6 +11,9 @@ global.Response = Response as unknown as typeof global.Response;
 import { OpenAPI } from './client';
 OpenAPI.BASE = 'http://localhost:8000';
 
+// Set feature flags for tests
+import.meta.env.VITE_ENABLE_RECIPE_LISTS_FEATURE = 'true';
+
 // Establish API mocking before all tests.
 beforeAll(() => server.listen());
 
