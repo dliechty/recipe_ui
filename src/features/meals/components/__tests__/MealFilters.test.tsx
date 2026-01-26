@@ -5,6 +5,8 @@ import { TestWrapper } from '../../../../test-utils';
 import { MealFilters as MealFiltersType } from '../../../../utils/mealParams';
 import { MealStatus } from '../../../../client/models/MealStatus';
 
+import { MealClassification } from '../../../../client/models/MealClassification';
+
 // Mocks
 vi.mock('../../../hooks/useUsers', () => ({
     useUsers: () => ({
@@ -81,7 +83,7 @@ describe('MealFilters', () => {
     it('should auto-expand if advanced filters are present', () => {
         const filters: MealFiltersType = {
             ...defaultFilters,
-            classification: [1 as number] // Trigger boolean check
+            classification: [MealClassification.BREAKFAST] // Trigger boolean check
         };
         render(
             <TestWrapper>

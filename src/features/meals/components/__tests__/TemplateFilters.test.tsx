@@ -4,6 +4,8 @@ import TemplateFilters from '../TemplateFilters';
 import { TestWrapper } from '../../../../test-utils';
 import { TemplateFilters as TemplateFiltersType } from '../../../../utils/mealParams';
 
+import { MealClassification } from '../../../../client/models/MealClassification';
+
 // Mocks
 vi.mock('../../../hooks/useUsers', () => ({
     useUsers: () => ({
@@ -114,7 +116,7 @@ describe('TemplateFilters', () => {
         const filters: TemplateFiltersType = {
             sort: 'name',
             name: 'Template 1',
-            classification: [1 as number]
+            classification: [MealClassification.BREAKFAST]
         };
         const onFilterChange = vi.fn();
         render(
