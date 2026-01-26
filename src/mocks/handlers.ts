@@ -1029,9 +1029,26 @@ export const handlers = [
     // POST /lists/
     http.post('*/lists/', async ({ request }) => {
         const body = await request.json() as RecipeListCreate;
+        const authHeader = request.headers.get('Authorization');
+
+        let userId = "550e8400-e29b-41d4-a716-446655440000"; // default mock user
+
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                }
+            } catch {
+                // ignore
+            }
+        }
+
         const newList: RecipeList = {
             id: `list-${Date.now()}`,
-            user_id: 'user-1',
+            user_id: userId,
             name: body.name,
             description: body.description || null,
             items: [],
