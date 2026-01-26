@@ -1,4 +1,4 @@
-import { renderWithProviders, screen, fireEvent, waitFor } from '../../../../test-utils';
+import { renderWithProviders, screen, fireEvent, waitFor, act } from '../../../../test-utils';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 import AdminUserManagement from '../AdminUserManagement';
 import { AuthenticationService } from '../../../../client';
@@ -105,7 +105,10 @@ describe('AdminUserManagement', () => {
 
         // Test checkbox toggle
         const adminCheckbox = screen.getByRole('checkbox', { hidden: true });
-        fireEvent.click(adminCheckbox);
+        // Wrap state update in act
+        await act(async () => {
+            fireEvent.click(adminCheckbox);
+        });
         expect(adminCheckbox).toBeChecked();
     });
 

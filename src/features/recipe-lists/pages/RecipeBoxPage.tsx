@@ -309,43 +309,45 @@ const RecipeBoxPage = () => {
                                         </VStack>
                                     </Box>
                                 ) : (
-                                    <Accordion.ItemTrigger p={4} cursor="pointer" _hover={{ bg: 'bg.muted' }}>
-                                        <HStack justify="space-between" align="start" flex="1">
-                                            <VStack align="stretch" gap={1} flex="1">
-                                                <Heading size="md" color="fg.default">{list.name}</Heading>
-                                                {list.description && (
-                                                    <Text fontSize="sm" color="fg.muted">{list.description}</Text>
-                                                )}
-                                                <HStack gap={4} fontSize="sm" color="fg.subtle">
-                                                    <Text>{list.items?.length || 0} recipes</Text>
-                                                    <Text>•</Text>
-                                                    <Text>Created {new Date(list.created_at).toLocaleDateString()}</Text>
-                                                </HStack>
-                                            </VStack>
-                                            <HStack gap={2} onClick={(e) => e.stopPropagation()}>
-                                                <IconButton
-                                                    aria-label="Edit list"
-                                                    size="xs"
-                                                    variant="ghost"
-                                                    color="vscode.accent"
-                                                    onClick={() => handleStartEdit(list)}
-                                                >
-                                                    <Icon as={FaEdit} />
-                                                </IconButton>
-                                                <IconButton
-                                                    aria-label="Delete list"
-                                                    size="xs"
-                                                    variant="ghost"
-                                                    color="status.error"
-                                                    onClick={() => handleDeleteList(list.id, list.name)}
-                                                    loading={deleteList.isPending}
-                                                >
-                                                    <Icon as={FaTrash} />
-                                                </IconButton>
+                                    <Box position="relative">
+                                        <Accordion.ItemTrigger p={4} cursor="pointer" _hover={{ bg: 'bg.muted' }}>
+                                            <HStack justify="space-between" align="start" flex="1">
+                                                <VStack align="stretch" gap={1} flex="1" pr={16}>
+                                                    <Heading size="md" color="fg.default">{list.name}</Heading>
+                                                    {list.description && (
+                                                        <Text fontSize="sm" color="fg.muted">{list.description}</Text>
+                                                    )}
+                                                    <HStack gap={4} fontSize="sm" color="fg.subtle">
+                                                        <Text>{list.items?.length || 0} recipes</Text>
+                                                        <Text>•</Text>
+                                                        <Text>Created {new Date(list.created_at).toLocaleDateString()}</Text>
+                                                    </HStack>
+                                                </VStack>
                                             </HStack>
+                                            <Accordion.ItemIndicator />
+                                        </Accordion.ItemTrigger>
+                                        <HStack gap={2} position="absolute" top={4} right={12} zIndex={1}>
+                                            <IconButton
+                                                aria-label="Edit list"
+                                                size="xs"
+                                                variant="ghost"
+                                                color="vscode.accent"
+                                                onClick={() => handleStartEdit(list)}
+                                            >
+                                                <Icon as={FaEdit} />
+                                            </IconButton>
+                                            <IconButton
+                                                aria-label="Delete list"
+                                                size="xs"
+                                                variant="ghost"
+                                                color="status.error"
+                                                onClick={() => handleDeleteList(list.id, list.name)}
+                                                loading={deleteList.isPending}
+                                            >
+                                                <Icon as={FaTrash} />
+                                            </IconButton>
                                         </HStack>
-                                        <Accordion.ItemIndicator />
-                                    </Accordion.ItemTrigger>
+                                    </Box>
                                 )}
                                 <Accordion.ItemContent p={4} pt={0}>
                                     {list.items && list.items.length > 0 ? (
