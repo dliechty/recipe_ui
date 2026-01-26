@@ -13,6 +13,7 @@ const createTestQueryClient = () => new QueryClient({
     },
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function renderWithProviders(ui: React.ReactElement) {
     const testQueryClient = createTestQueryClient();
     return render(

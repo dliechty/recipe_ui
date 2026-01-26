@@ -15,7 +15,7 @@ vi.mock('../../../hooks/useUsers', () => ({
 }));
 
 vi.mock('../../../recipes/components/RecipeMultiSelect', () => ({
-    default: ({ label, value, onChange }: any) => (
+    default: ({ label, value, onChange }: { label: string; value: string[]; onChange: (val: string[]) => void }) => (
         <div data-testid={`select-${label}`}>
             <label>{label}</label>
             <button onClick={() => onChange(['test-value'])}>Select Test</button>
@@ -25,7 +25,7 @@ vi.mock('../../../recipes/components/RecipeMultiSelect', () => ({
 }));
 
 vi.mock('../RecipeFilterModal', () => ({
-    default: ({ isOpen, onApply }: any) => isOpen ? (
+    default: ({ isOpen, onApply }: { isOpen: boolean; onApply: (ids: string[]) => void }) => isOpen ? (
         <div data-testid="recipe-modal">
             <button onClick={() => onApply(['r1', 'r2'])}>Apply Recipes</button>
         </div>
@@ -114,7 +114,7 @@ describe('TemplateFilters', () => {
         const filters: TemplateFiltersType = {
             sort: 'name',
             name: 'Template 1',
-            classification: [1 as any]
+            classification: [1 as number]
         };
         const onFilterChange = vi.fn();
         render(
