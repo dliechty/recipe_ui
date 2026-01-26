@@ -22,6 +22,7 @@ import { useRecipeMeta } from '../../recipes/hooks/useRecipeMeta';
 import RecipeMultiSelect from '../../recipes/components/RecipeMultiSelect';
 import DebouncedInput from '../../../components/common/DebouncedInput';
 import { formatDuration } from '../../../utils/formatters';
+import { nativeSelectOptionsCss } from '../../../utils/styles';
 
 interface TemplateFormProps {
     onSubmit: (data: MealTemplateCreate) => void;
@@ -49,12 +50,7 @@ const inputStyles = {
     _hover: { borderColor: 'vscode.accent' },
     _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
     // Style for native select options (dark theme)
-    css: {
-        '& option': {
-            backgroundColor: '#3c3c3c',
-            color: '#d4d4d4',
-        }
-    }
+    css: nativeSelectOptionsCss
 };
 
 // Searchable fields for search criteria
@@ -235,9 +231,9 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
                         {onCancel && (
                             <Button
                                 onClick={onCancel}
-                                bg="gray.600"
+                                bg="button.secondary"
                                 color="white"
-                                _hover={{ bg: "gray.700" }}
+                                _hover={{ bg: "button.secondaryHover" }}
                                 disabled={isLoading}
                             >
                                 Cancel
@@ -722,9 +718,9 @@ const SearchSlotEditor = ({ criteria, onChange }: SearchSlotEditorProps) => {
                 {criteria.length > 0 && (
                     <Button
                         size="xs"
-                        bg="gray.600"
+                        bg="button.secondary"
                         color="white"
-                        _hover={{ bg: "gray.700" }}
+                        _hover={{ bg: "button.secondaryHover" }}
                         onClick={() => setShowPreview(!showPreview)}
                     >
                         {showPreview ? 'Hide Preview' : 'Preview Results'}
@@ -914,9 +910,9 @@ const RecipeSelector = ({ mode, selectedIds, onSelect, onCancel }: RecipeSelecto
                     </Button>
                     <Button
                         size="xs"
-                        bg="gray.600"
+                        bg="button.secondary"
                         color="white"
-                        _hover={{ bg: "gray.700" }}
+                        _hover={{ bg: "button.secondaryHover" }}
                         onClick={onCancel}
                     >
                         Cancel

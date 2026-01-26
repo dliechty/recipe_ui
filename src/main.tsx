@@ -51,7 +51,16 @@ enableMocking().then(() => {
               <App />
               <Toaster toaster={toaster}>
                 {(toast) => (
-                  <Box p={3} bg={toast.type === 'error' ? 'red.100' : 'green.100'} color="black" borderRadius="md" boxShadow="lg" m={2}>
+                  <Box
+                    p={3}
+                    bg={toast.type === 'error' ? 'status.errorBg' : 'status.successBg'}
+                    color={toast.type === 'error' ? 'status.error' : 'status.success'}
+                    borderWidth={1}
+                    borderColor={toast.type === 'error' ? 'status.errorBorder' : 'status.successBorder'}
+                    borderRadius="md"
+                    boxShadow="lg"
+                    m={2}
+                  >
                     <Text fontWeight="bold">{toast.title}</Text>
                     {toast.description && <Text>{toast.description}</Text>}
                   </Box>

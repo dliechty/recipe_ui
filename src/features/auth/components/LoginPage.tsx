@@ -68,7 +68,7 @@ const LoginPage = () => {
                             Welcome Back
                         </Heading>
                         {error && (
-                            <Box w="full" p={3} bg="red.900" color="white" borderRadius="md" borderColor="red.500" borderWidth={1}>
+                            <Box w="full" p={3} bg="status.errorBg" color="status.error" borderRadius="md" borderColor="status.errorBorder" borderWidth={1}>
                                 <Text fontSize="sm">{error}</Text>
                             </Box>
                         )}

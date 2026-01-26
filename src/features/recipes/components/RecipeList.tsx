@@ -7,6 +7,7 @@ import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatDuration } from '../../../utils/formatters';
 import RecipeFiltersDisplay from './RecipeFilters';
 import { filtersToSearchParams, searchParamsToFilters } from '../../../utils/recipeParams';
+import { themeColors } from '../../../utils/styles';
 
 const RecipeList = () => {
     const navigate = useNavigate();
@@ -198,13 +199,13 @@ const RecipeList = () => {
                                 width="100%"
                                 padding="6px"
                                 borderRadius="4px"
-                                bg="#3c3c3c"
-                                borderColor="#454545"
+                                bg={themeColors.inputBg}
+                                borderColor={themeColors.border}
                                 borderWidth="1px"
                                 fontSize="0.875rem"
-                                color="#d4d4d4"
-                                _hover={{ borderColor: '#007acc' }}
-                                _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
+                                color={themeColors.text}
+                                _hover={{ borderColor: themeColors.accent }}
+                                _focus={{ borderColor: themeColors.accent, boxShadow: `0 0 0 1px ${themeColors.accent}`, outline: 'none' }}
                             >
                                 <option value="name">Name</option>
                                 <option value="category">Category</option>
@@ -223,13 +224,13 @@ const RecipeList = () => {
                                 width="100%"
                                 padding="6px"
                                 borderRadius="4px"
-                                bg="#3c3c3c"
-                                borderColor="#454545"
+                                bg={themeColors.inputBg}
+                                borderColor={themeColors.border}
                                 borderWidth="1px"
                                 fontSize="0.875rem"
-                                color="#d4d4d4"
-                                _hover={{ borderColor: '#007acc' }}
-                                _focus={{ borderColor: '#007acc', boxShadow: '0 0 0 1px #007acc', outline: 'none' }}
+                                color={themeColors.text}
+                                _hover={{ borderColor: themeColors.accent }}
+                                _focus={{ borderColor: themeColors.accent, boxShadow: `0 0 0 1px ${themeColors.accent}`, outline: 'none' }}
                             >
                                 <option value="asc">Ascending</option>
                                 <option value="desc">Descending</option>

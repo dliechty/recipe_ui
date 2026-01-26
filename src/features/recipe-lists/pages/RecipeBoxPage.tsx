@@ -336,7 +336,7 @@ const RecipeBoxPage = () => {
                                                     aria-label="Delete list"
                                                     size="xs"
                                                     variant="ghost"
-                                                    color="red.400"
+                                                    color="status.error"
                                                     onClick={() => handleDeleteList(list.id, list.name)}
                                                     loading={deleteList.isPending}
                                                 >
@@ -377,7 +377,7 @@ const RecipeBoxPage = () => {
                                                             aria-label="Remove recipe"
                                                             size="xs"
                                                             variant="ghost"
-                                                            color="red.400"
+                                                            color="status.error"
                                                             onClick={() => handleRemoveRecipe(list.id, item.recipe_id, 'this recipe')}
                                                         >
                                                             <Icon as={FaTrash} />

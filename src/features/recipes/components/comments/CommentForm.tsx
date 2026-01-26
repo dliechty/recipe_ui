@@ -53,9 +53,9 @@ const CommentForm: React.FC<CommentFormProps> = ({ recipeId, onCancel, initialVa
                     <Button
                         onClick={onCancel}
                         size="sm"
-                        bg="gray.600"
+                        bg="button.secondary"
                         color="white"
-                        _hover={{ bg: "gray.700" }}
+                        _hover={{ bg: "button.secondaryHover" }}
                     >
                         Cancel
                     </Button>

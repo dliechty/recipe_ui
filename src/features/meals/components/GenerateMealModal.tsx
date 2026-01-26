@@ -48,7 +48,7 @@ const GenerateMealModal = ({
             left={0}
             right={0}
             bottom={0}
-            bg="rgba(0,0,0,0.6)"
+            bg="overlay.backdrop"
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -127,9 +127,9 @@ const GenerateMealModal = ({
                     borderColor="border.default"
                 >
                     <Button
-                        bg="green.600"
+                        bg="button.success"
                         color="white"
-                        _hover={{ bg: "green.700" }}
+                        _hover={{ bg: "button.successHover" }}
                         size="sm"
                         onClick={handleConfirm}
                         loading={isGenerating}
@@ -138,8 +138,9 @@ const GenerateMealModal = ({
                     </Button>
                     <Button
                         variant="ghost"
-                        bg="gray.600"
+                        bg="button.secondary"
                         color="white"
+                        _hover={{ bg: "button.secondaryHover" }}
                         size="sm"
                         onClick={onClose}
                         disabled={isGenerating}

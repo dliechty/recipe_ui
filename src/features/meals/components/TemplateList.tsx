@@ -9,6 +9,7 @@ import { UserDisplay } from '../../../components/common/UserDisplay';
 import GenerateMealModal from './GenerateMealModal';
 import TemplateFilters from './TemplateFilters';
 import { searchParamsToTemplateFilters, templateFiltersToSearchParams } from '../../../utils/mealParams';
+import { themeColors } from '../../../utils/styles';
 
 const TemplateList = () => {
     const navigate = useNavigate();
@@ -161,11 +162,11 @@ const TemplateList = () => {
                                     width: "100%",
                                     padding: "6px",
                                     borderRadius: "4px",
-                                    backgroundColor: "#3c3c3c",
-                                    borderColor: "#454545",
+                                    backgroundColor: themeColors.inputBg,
+                                    borderColor: themeColors.border,
                                     borderWidth: "1px",
                                     fontSize: "0.875rem",
-                                    color: "#d4d4d4",
+                                    color: themeColors.text,
                                     outline: "none"
                                 }}
                             >
@@ -182,11 +183,11 @@ const TemplateList = () => {
                                 width: "100%",
                                 padding: "6px",
                                 borderRadius: "4px",
-                                backgroundColor: "#3c3c3c",
-                                borderColor: "#454545",
+                                backgroundColor: themeColors.inputBg,
+                                borderColor: themeColors.border,
                                 borderWidth: "1px",
                                 fontSize: "0.875rem",
-                                color: "#d4d4d4",
+                                color: themeColors.text,
                                 outline: "none"
                             }}
                         >
@@ -242,9 +243,9 @@ const TemplateList = () => {
                                             aria-label="Generate Meal"
                                             title="Generate Meal"
                                             size="xs"
-                                            bg="green.600"
+                                            bg="button.success"
                                             color="white"
-                                            _hover={{ bg: "green.700" }}
+                                            _hover={{ bg: "button.successHover" }}
                                             onClick={(e) => handleGenerateClick(template.id, template.name, e)}
                                             loading={generatingTemplateId === template.id}
                                         >

@@ -59,9 +59,11 @@ class ErrorBoundary extends Component<Props, State> {
                             <Box
                                 w="full"
                                 p={4}
-                                bg="red.900"
-                                color="red.100"
+                                bg="status.errorBg"
+                                color="status.error"
                                 borderRadius="md"
+                                borderWidth={1}
+                                borderColor="status.errorBorder"
                                 textAlign="left"
                                 fontFamily="mono"
                                 fontSize="sm"

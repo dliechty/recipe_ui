@@ -9,9 +9,10 @@ import {
     Text,
     SimpleGrid
 } from '@chakra-ui/react';
-import Select, { StylesConfig } from 'react-select';
+import Select from 'react-select';
 import { MealCreate, MealStatus, MealClassification, MealItemBase } from '../../../client';
 import RecipeSearchSelector from './RecipeSearchSelector';
+import { selectStyles } from '../../../utils/styles';
 
 interface MealFormProps {
     onSubmit: (data: MealCreate) => void;
@@ -20,70 +21,10 @@ interface MealFormProps {
     onCancel?: () => void;
 }
 
-// Custom styles for react-select to match VS Code theme
 interface Option {
     label: string;
     value: string;
 }
-
-const customStyles: StylesConfig<Option, false> = {
-    control: (provided, state) => ({
-        ...provided,
-        backgroundColor: '#3c3c3c', // vscode.inputBg
-        borderColor: state.isFocused ? '#007acc' : '#454545', // vscode.accent : vscode.border
-        color: '#d4d4d4', // vscode.text
-        minHeight: '32px',
-        boxShadow: state.isFocused ? '0 0 0 1px #007acc' : 'none',
-        '&:hover': {
-            borderColor: '#007acc'
-        }
-    }),
-    menu: (provided) => ({
-        ...provided,
-        backgroundColor: '#3c3c3c', // vscode.inputBg (opaque)
-        zIndex: 10,
-        border: '1px solid #454545', // vscode.border
-        marginTop: '2px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.4)'
-    }),
-    option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected
-            ? '#007acc' // vscode.accent
-            : state.isFocused
-                ? '#454545' // vscode.border (hover state)
-                : 'transparent',
-        color: state.isSelected ? 'white' : '#d4d4d4',
-        cursor: 'pointer',
-        fontSize: '0.875rem',
-        ':active': {
-            backgroundColor: '#007acc'
-        }
-    }),
-    singleValue: (provided) => ({
-        ...provided,
-        color: '#d4d4d4'
-    }),
-    placeholder: (provided) => ({
-        ...provided,
-        color: '#a0a0a0' // vscode.textMuted
-    }),
-    input: (provided) => ({
-        ...provided,
-        color: '#d4d4d4'
-    }),
-    indicatorSeparator: (provided) => ({
-        ...provided,
-        backgroundColor: '#454545'
-    }),
-    dropdownIndicator: (provided) => ({
-        ...provided,
-        color: '#a0a0a0',
-        ':hover': {
-            color: '#d4d4d4'
-        }
-    })
-};
 
 const statusOptions: Option[] = [
     { label: 'Draft', value: MealStatus.DRAFT },
@@ -153,7 +94,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 onChange={(option) => {
                                     setClassification(option ? (option.value as MealClassification) : '');
                                 }}
-                                styles={customStyles}
+                                styles={selectStyles.form}
                                 placeholder="Select classification..."
                                 isClearable
                                 aria-label="Classification"
@@ -171,7 +112,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 onChange={(option) => {
                                     if (option) setStatus(option.value as MealStatus);
                                 }}
-                                styles={customStyles}
+                                styles={selectStyles.form}
                                 isSearchable={false}
                                 aria-label="Status"
                                 inputId="status-select"
@@ -217,9 +158,9 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                         {onCancel && (
                             <Button
                                 onClick={onCancel}
-                                bg="gray.600"
+                                bg="button.secondary"
                                 color="white"
-                                _hover={{ bg: "gray.700" }}
+                                _hover={{ bg: "button.secondaryHover" }}
                                 disabled={isLoading}
                                 size="xs"
                             >

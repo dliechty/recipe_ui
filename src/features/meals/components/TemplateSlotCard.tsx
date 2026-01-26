@@ -14,6 +14,7 @@ import { FaChevronDown, FaChevronUp, FaExternalLinkAlt, FaSearch, FaListUl, FaLi
 import { MealTemplateSlot, MealTemplateSlotStrategy } from '../../../client';
 import { useRecipe, useInfiniteRecipes, RecipeFilters } from '../../../hooks/useRecipes';
 import { formatDuration, formatDietName } from '../../../utils/formatters';
+import { scrollbarColor } from '../../../utils/styles';
 
 interface TemplateSlotCardProps {
     slot: MealTemplateSlot;
@@ -334,7 +335,7 @@ const SearchSlotContent = ({ slot, templateName, isExpanded }: { slot: MealTempl
                         css={{
                             '&::-webkit-scrollbar': { width: '6px' },
                             '&::-webkit-scrollbar-track': { background: 'transparent' },
-                            '&::-webkit-scrollbar-thumb': { background: '#4a4a4a', borderRadius: '3px' },
+                            '&::-webkit-scrollbar-thumb': { background: scrollbarColor, borderRadius: '3px' },
                         }}
                     >
                         <VStack align="stretch" gap={2}>

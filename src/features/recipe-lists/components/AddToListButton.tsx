@@ -156,7 +156,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                                         </Text>
                                                     </Box>
                                                     {isInList && (
-                                                        <Icon as={FaCheck} color="green.400" />
+                                                        <Icon as={FaCheck} color="status.success" />
                                                     )}
                                                 </HStack>
                                             </Menu.Item>

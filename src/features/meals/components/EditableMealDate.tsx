@@ -98,9 +98,9 @@ const EditableMealDate = ({ mealId, date, canEdit }: EditableMealDateProps) => {
                 <IconButton
                     aria-label="Cancel"
                     size="xs"
-                    bg="gray.500"
+                    bg="button.secondary"
                     color="white"
-                    _hover={{ bg: "gray.600" }}
+                    _hover={{ bg: "button.secondaryHover" }}
                     onClick={handleCancel}
                     disabled={updateMeal.isPending}
                 >

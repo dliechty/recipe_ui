@@ -194,9 +194,9 @@ const TemplateDetails = () => {
                     <Button
                         onClick={() => setIsGenerateModalOpen(true)}
                         loading={isGenerating}
-                        bg="green.600"
+                        bg="button.success"
                         color="white"
-                        _hover={{ bg: "green.700" }}
+                        _hover={{ bg: "button.successHover" }}
                         size="xs"
                     >
                         Generate Meal
@@ -242,9 +242,9 @@ const TemplateDetails = () => {
                     <Button
                         onClick={handleDelete}
                         loading={isDeleting}
-                        bg="red.600"
+                        bg="button.danger"
                         color="white"
-                        _hover={{ bg: "red.700" }}
+                        _hover={{ bg: "button.dangerHover" }}
                         size="xs"
                     >
                         Delete

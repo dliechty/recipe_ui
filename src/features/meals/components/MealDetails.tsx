@@ -219,9 +219,9 @@ const MealDetails = () => {
                     <Button
                         onClick={handleDelete}
                         loading={isDeleting}
-                        bg="red.600"
+                        bg="button.danger"
                         color="white"
-                        _hover={{ bg: "red.700" }}
+                        _hover={{ bg: "button.dangerHover" }}
                         size="xs"
                     >
                         Delete

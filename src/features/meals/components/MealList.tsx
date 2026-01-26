@@ -8,6 +8,7 @@ import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
 import MealFilters from './MealFilters';
 import { mealFiltersToSearchParams, searchParamsToMealFilters } from '../../../utils/mealParams';
+import { themeColors } from '../../../utils/styles';
 
 const MealList = () => {
     const navigate = useNavigate();
@@ -142,11 +143,11 @@ const MealList = () => {
                                     width: "100%",
                                     padding: "6px",
                                     borderRadius: "4px",
-                                    backgroundColor: "#3c3c3c",
-                                    borderColor: "#454545",
+                                    backgroundColor: themeColors.inputBg,
+                                    borderColor: themeColors.border,
                                     borderWidth: "1px",
                                     fontSize: "0.875rem",
-                                    color: "#d4d4d4",
+                                    color: themeColors.text,
                                     outline: "none"
                                 }}
                             >
@@ -164,11 +165,11 @@ const MealList = () => {
                                 width: "100%",
                                 padding: "6px",
                                 borderRadius: "4px",
-                                backgroundColor: "#3c3c3c",
-                                borderColor: "#454545",
+                                backgroundColor: themeColors.inputBg,
+                                borderColor: themeColors.border,
                                 borderWidth: "1px",
                                 fontSize: "0.875rem",
-                                color: "#d4d4d4",
+                                color: themeColors.text,
                                 outline: "none"
                             }}
                         >

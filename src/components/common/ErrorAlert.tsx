@@ -7,7 +7,7 @@ interface ErrorAlertProps {
 
 const ErrorAlert = ({ title = "Error", description }: ErrorAlertProps) => {
     return (
-        <Box my={4} p={4} bg="red.900" color="red.100" borderRadius="md" borderWidth={1} borderColor="red.700">
+        <Box my={4} p={4} bg="status.errorBg" color="status.error" borderRadius="md" borderWidth={1} borderColor="status.errorBorder">
             <Text fontWeight="bold" fontSize="lg" mb={1}>
                 {title}
             </Text>

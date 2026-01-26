@@ -1,7 +1,8 @@
-import Select, { MultiValue, StylesConfig } from 'react-select';
+import Select, { MultiValue } from 'react-select';
 import { DietType } from '../../../client';
 import { formatDietName } from '../../../utils/formatters';
 import { Box, Text } from '@chakra-ui/react';
+import { selectStyles } from '../../../utils/styles';
 
 interface DietOption {
     label: string;
@@ -17,87 +18,6 @@ const options: DietOption[] = Object.values(DietType).map(diet => ({
     label: formatDietName(diet),
     value: diet
 }));
-
-const customStyles: StylesConfig<DietOption, true> = {
-    control: (provided, state) => ({
-        ...provided,
-        backgroundColor: '#3c3c3c', // vscode.inputBg
-        borderColor: state.isFocused ? '#007acc' : '#454545', // vscode.accent : vscode.border
-        color: '#d4d4d4', // vscode.text
-        minHeight: '40px',
-        boxShadow: state.isFocused ? '0 0 0 1px #007acc' : 'none',
-        '&:hover': {
-            borderColor: '#007acc'
-        }
-    }),
-    menu: (provided) => ({
-        ...provided,
-        backgroundColor: '#3c3c3c', // vscode.inputBg (opaque)
-        zIndex: 5,
-        border: '1px solid #454545', // vscode.border
-        marginTop: '2px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.4)'
-    }),
-    option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected
-            ? '#007acc' // vscode.accent
-            : state.isFocused
-                ? '#454545' // vscode.border (hover state)
-                : 'transparent',
-        color: state.isSelected ? 'white' : '#d4d4d4',
-        cursor: 'pointer',
-        ':active': {
-            backgroundColor: '#007acc'
-        }
-    }),
-    multiValue: (provided) => ({
-        ...provided,
-        backgroundColor: '#0e639c', // vscode.button
-    }),
-    multiValueLabel: (provided) => ({
-        ...provided,
-        color: '#ffffff',
-    }),
-    multiValueRemove: (provided) => ({
-        ...provided,
-        color: '#ffffff',
-        ':hover': {
-            backgroundColor: '#1177bb', // vscode.buttonHover
-            color: '#ffffff',
-        },
-    }),
-    input: (provided) => ({
-        ...provided,
-        color: '#d4d4d4' // vscode.text
-    }),
-    singleValue: (provided) => ({
-        ...provided,
-        color: '#d4d4d4'
-    }),
-    placeholder: (provided) => ({
-        ...provided,
-        color: '#a0a0a0' // vscode.textMuted
-    }),
-    indicatorSeparator: (provided) => ({
-        ...provided,
-        backgroundColor: '#454545'
-    }),
-    dropdownIndicator: (provided) => ({
-        ...provided,
-        color: '#a0a0a0',
-        ':hover': {
-            color: '#d4d4d4'
-        }
-    }),
-    clearIndicator: (provided) => ({
-        ...provided,
-        color: '#a0a0a0',
-        ':hover': {
-            color: '#d4d4d4'
-        }
-    })
-};
 
 const DietSelect = ({ selectedDiets, onChange }: DietSelectProps) => {
     // Map selected enum values to option objects
@@ -115,7 +35,7 @@ const DietSelect = ({ selectedDiets, onChange }: DietSelectProps) => {
                 options={options}
                 value={value}
                 onChange={handleChange}
-                styles={customStyles}
+                styles={selectStyles.default}
                 placeholder="Select suitable diets..."
                 instanceId="diet-select" // accessiblity
             />
