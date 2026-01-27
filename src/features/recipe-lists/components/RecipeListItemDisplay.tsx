@@ -66,8 +66,9 @@ const RecipeListItemDisplay = ({ item, onRemove }: RecipeListItemDisplayProps) =
                 <IconButton
                     aria-label="Remove recipe"
                     size="xs"
-                    variant="ghost"
-                    color="status.error"
+                    bg="button.danger"
+                    color="white"
+                    _hover={{ bg: 'button.dangerHover' }}
                     onClick={() => onRemove(item.recipe_id, recipeName)}
                 >
                     <Icon as={FaTrash} />
