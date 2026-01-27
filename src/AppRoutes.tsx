@@ -57,17 +57,14 @@ const AppRoutes = () => {
                             </ProtectedRoute>
                         }
                     />
-                    {/* Feature guarded Recipe Lists functionality */}
-                    {import.meta.env.VITE_ENABLE_RECIPE_LISTS_FEATURE === 'true' && (
-                        <Route
-                            path="/recipe-box"
-                            element={
-                                <ProtectedRoute>
-                                    <RecipeBoxPage />
-                                </ProtectedRoute>
-                            }
-                        />
-                    )}
+                    <Route
+                        path="/recipe-box"
+                        element={
+                            <ProtectedRoute>
+                                <RecipeBoxPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="/change-password"
                         element={

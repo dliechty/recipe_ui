@@ -166,7 +166,7 @@ const RecipeDetails = () => {
                                 <Icon as={FaRegCopy} /> Create Variant
                             </Button>
                         )}
-                        {currentUser && id && import.meta.env.VITE_ENABLE_RECIPE_LISTS_FEATURE === 'true' && (
+                        {currentUser && id && (
                             <AddToListButton recipeId={id} />
                         )}
                         {canEdit && (
