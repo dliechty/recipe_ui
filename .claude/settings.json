@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run test:once:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run api:sync:*)",
+      "Bash(npx tsc:*)",
+      "Bash(bd:*)",
+      "Bash(git push)",
+      "Bash(npm run lint:*)",
+      "Edit"
+    ]
+  }
+}
