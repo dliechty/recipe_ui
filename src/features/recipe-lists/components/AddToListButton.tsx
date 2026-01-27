@@ -190,6 +190,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                         placeholder="e.g., Favorites"
                                         value={newListName}
                                         onChange={(e) => setNewListName(e.target.value)}
+                                        onKeyDown={(e) => e.stopPropagation()}
                                         bg="vscode.inputBg"
                                         borderColor="border.default"
                                         color="fg.default"
@@ -204,6 +205,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                         placeholder="Add a description"
                                         value={newListDescription}
                                         onChange={(e) => setNewListDescription(e.target.value)}
+                                        onKeyDown={(e) => e.stopPropagation()}
                                         bg="vscode.inputBg"
                                         borderColor="border.default"
                                         color="fg.default"
