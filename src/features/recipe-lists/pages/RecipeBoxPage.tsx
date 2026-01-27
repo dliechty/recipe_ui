@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -18,13 +17,13 @@ import {
 } from '@chakra-ui/react';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave } from 'react-icons/fa';
 import { useRecipeLists, useCreateRecipeList, useUpdateRecipeList, useDeleteRecipeList, useRemoveRecipeFromList } from '../../../hooks/useRecipeLists';
+import RecipeListItemDisplay from '../components/RecipeListItemDisplay';
 import { useAuth } from '../../../context/AuthContext';
 import { RecipeList } from '../../../client';
 import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const RecipeBoxPage = () => {
-    const navigate = useNavigate();
     const { user } = useAuth();
     const { data: lists, isLoading, error } = useRecipeLists();
     const createList = useCreateRecipeList();
@@ -330,8 +329,9 @@ const RecipeBoxPage = () => {
                                             <IconButton
                                                 aria-label="Edit list"
                                                 size="xs"
-                                                variant="ghost"
-                                                color="vscode.accent"
+                                                bg="vscode.button"
+                                                color="white"
+                                                _hover={{ bg: 'vscode.buttonHover' }}
                                                 onClick={() => handleStartEdit(list)}
                                             >
                                                 <Icon as={FaEdit} />
@@ -339,8 +339,9 @@ const RecipeBoxPage = () => {
                                             <IconButton
                                                 aria-label="Delete list"
                                                 size="xs"
-                                                variant="ghost"
-                                                color="status.error"
+                                                bg="button.danger"
+                                                color="white"
+                                                _hover={{ bg: 'button.dangerHover' }}
                                                 onClick={() => handleDeleteList(list.id, list.name)}
                                                 loading={deleteList.isPending}
                                             >
@@ -353,39 +354,11 @@ const RecipeBoxPage = () => {
                                     {list.items && list.items.length > 0 ? (
                                         <VStack align="stretch" gap={2}>
                                             {list.items.map((item) => (
-                                                <Box
+                                                <RecipeListItemDisplay
                                                     key={item.id}
-                                                    p={3}
-                                                    borderWidth={1}
-                                                    borderColor="border.default"
-                                                    borderRadius="md"
-                                                    bg="bg.canvas"
-                                                    _hover={{ bg: 'bg.muted' }}
-                                                >
-                                                    <HStack justify="space-between">
-                                                        <Box
-                                                            flex="1"
-                                                            cursor="pointer"
-                                                            onClick={() => navigate(`/recipes/${item.recipe_id}`)}
-                                                        >
-                                                            <Text color="vscode.accent" fontSize="sm">
-                                                                View Recipe →
-                                                            </Text>
-                                                            <Text fontSize="xs" color="fg.subtle" mt={1}>
-                                                                Added {new Date(item.added_at).toLocaleDateString()}
-                                                            </Text>
-                                                        </Box>
-                                                        <IconButton
-                                                            aria-label="Remove recipe"
-                                                            size="xs"
-                                                            variant="ghost"
-                                                            color="status.error"
-                                                            onClick={() => handleRemoveRecipe(list.id, item.recipe_id, 'this recipe')}
-                                                        >
-                                                            <Icon as={FaTrash} />
-                                                        </IconButton>
-                                                    </HStack>
-                                                </Box>
+                                                    item={item}
+                                                    onRemove={(recipeId, recipeName) => handleRemoveRecipe(list.id, recipeId, recipeName)}
+                                                />
                                             ))}
                                         </VStack>
                                     ) : (
