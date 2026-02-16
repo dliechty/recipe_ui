@@ -1,6 +1,6 @@
 # Plan: Meal Planning Iteration 2
 
-## Phase 1: MSW Mock Fixes
+## Phase 1: MSW Mock Fixes [checkpoint: 49a7666]
 
 - [x] Task 1.1: Write tests for MSW mock sort by queue_position (ae7c332)
   - Test that GET /meals/?sort=queue_position returns meals sorted by queue_position
@@ -15,7 +15,7 @@
   - Ensure requested count is always honored regardless of template count
   - Add test coverage for generating more meals than templates
 
-- [ ] Task 1.4: Conductor - User Manual Verification 'Phase 1: MSW Mock Fixes' (Protocol in workflow.md)
+- [x] Task 1.4: Conductor - User Manual Verification 'Phase 1: MSW Mock Fixes' (49a7666)
 
 ## Phase 2: Meal Name Validation
 
