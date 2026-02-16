@@ -27,9 +27,9 @@ interface Option {
 }
 
 const statusOptions: Option[] = [
-    { label: 'Draft', value: MealStatus.DRAFT },
-    { label: 'Scheduled', value: MealStatus.SCHEDULED },
+    { label: 'Queued', value: MealStatus.QUEUED },
     { label: 'Cooked', value: MealStatus.COOKED },
+    { label: 'Cancelled', value: MealStatus.CANCELLED },
 ];
 
 const classificationOptions: Option[] = [
@@ -42,9 +42,9 @@ const classificationOptions: Option[] = [
 
 const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps) => {
     const [name, setName] = useState(initialData?.name || '');
-    const [status, setStatus] = useState<MealStatus>(initialData?.status || MealStatus.DRAFT);
+    const [status, setStatus] = useState<MealStatus>(initialData?.status || MealStatus.QUEUED);
     const [classification, setClassification] = useState<MealClassification | ''>(initialData?.classification || '');
-    const [date, setDate] = useState(initialData?.date || '');
+    const [date, setDate] = useState(initialData?.scheduled_date || '');
     const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>(
         initialData?.items?.map(item => item.recipe_id) || []
     );
@@ -58,7 +58,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
             name: name || null,
             status,
             classification: classification || null,
-            date: date || null,
+            scheduled_date: date || null,
             items
         };
 
@@ -120,7 +120,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                         </Box>
 
                         <Box>
-                            <Text as="label" mb={2} display="block" fontWeight="bold">Date</Text>
+                            <Text as="label" mb={2} display="block" fontWeight="bold">Scheduled Date</Text>
                             <Input
                                 type="date"
                                 value={date}

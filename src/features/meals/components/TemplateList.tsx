@@ -2,7 +2,8 @@ import { useRef, useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton, Text } from '@chakra-ui/react';
 import { FaPlus, FaUtensils } from 'react-icons/fa';
-import { useInfiniteMealTemplates, useGenerateMeal } from '../../../hooks/useMeals';
+import { useInfiniteMealTemplates, useCreateMeal } from '../../../hooks/useMeals';
+import type { MealTemplate } from '../../../client';
 import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
@@ -15,9 +16,9 @@ const TemplateList = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const generateMeal = useGenerateMeal();
+    const createMeal = useCreateMeal();
     const [generatingTemplateId, setGeneratingTemplateId] = useState<string | null>(null);
-    const [selectedTemplate, setSelectedTemplate] = useState<{ id: string, name: string } | null>(null);
+    const [selectedTemplate, setSelectedTemplate] = useState<MealTemplate | null>(null);
     const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
 
     // Parse filters from URL
@@ -89,9 +90,9 @@ const TemplateList = () => {
         handleFilterChange({ ...filters, sort: newSort });
     };
 
-    const handleGenerateClick = (templateId: string, templateName: string, e: React.MouseEvent) => {
+    const handleGenerateClick = (template: MealTemplate, e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedTemplate({ id: templateId, name: templateName });
+        setSelectedTemplate(template);
         setIsGenerateModalOpen(true);
     };
 
@@ -99,9 +100,14 @@ const TemplateList = () => {
         if (!selectedTemplate) return;
         setGeneratingTemplateId(selectedTemplate.id);
         try {
-            const meal = await generateMeal.mutateAsync({
-                templateId: selectedTemplate.id,
-                scheduledDate
+            const meal = await createMeal.mutateAsync({
+                name: selectedTemplate.name,
+                classification: selectedTemplate.classification as import('../../../client').MealClassification ?? undefined,
+                scheduled_date: scheduledDate || undefined,
+                template_id: selectedTemplate.id,
+                items: (selectedTemplate.slots || [])
+                    .filter(slot => slot.recipe_id)
+                    .map(slot => ({ recipe_id: slot.recipe_id! })),
             });
             toaster.create({
                 title: 'Meal generated successfully',
@@ -246,7 +252,7 @@ const TemplateList = () => {
                                             bg="button.success"
                                             color="white"
                                             _hover={{ bg: "button.successHover" }}
-                                            onClick={(e) => handleGenerateClick(template.id, template.name, e)}
+                                            onClick={(e) => handleGenerateClick(template, e)}
                                             loading={generatingTemplateId === template.id}
                                         >
                                             <Icon as={FaUtensils} />

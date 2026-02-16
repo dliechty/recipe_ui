@@ -24,7 +24,7 @@ const EditableMealDate = ({ mealId, date, canEdit }: EditableMealDateProps) => {
 
         updateMeal.mutate({
             id: mealId,
-            requestBody: { date: dateToSend }
+            requestBody: { scheduled_date: dateToSend }
         }, {
             onSuccess: () => {
                 setIsEditing(false);

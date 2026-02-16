@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { MealsService, Meal, MealCreate, MealUpdate, MealTemplate, MealTemplateCreate, MealTemplateUpdate, OpenAPI } from '../client';
+import { MealsService, Meal, MealCreate, MealUpdate, MealGenerateRequest, MealTemplate, MealTemplateCreate, MealTemplateUpdate, OpenAPI } from '../client';
 import { MealFilters, TemplateFilters } from '../utils/mealParams';
 import axios from 'axios';
 
@@ -25,8 +25,10 @@ export const useInfiniteMeals = (limit: number = 20, filters: MealFilters = {}) 
             if (filters.owner?.length) params.append('owner[in]', filters.owner.join(','));
             if (filters.recipe?.length) params.append('recipe_id[in]', filters.recipe.join(','));
 
-            if (filters.date?.gt) params.append('date[gt]', filters.date.gt);
-            if (filters.date?.lt) params.append('date[lt]', filters.date.lt);
+            if (filters.scheduled_date?.gt) params.append('scheduled_date[gt]', filters.scheduled_date.gt);
+            if (filters.scheduled_date?.lt) params.append('scheduled_date[lt]', filters.scheduled_date.lt);
+
+            if (filters.is_shopped !== undefined) params.append('is_shopped[eq]', filters.is_shopped.toString());
 
             if (filters.sort) params.append('sort', filters.sort);
 
@@ -196,14 +198,27 @@ export const useDeleteMealTemplate = () => {
     });
 };
 
-export const useGenerateMeal = () => {
+export const useGenerateMeals = () => {
     const queryClient = useQueryClient();
-    return useMutation<Meal, Error, { templateId: string, scheduledDate?: string | null }>({
-        mutationFn: ({ templateId, scheduledDate }) => 
-            MealsService.generateMealMealsGeneratePost(
-                templateId, 
-                scheduledDate ? { scheduled_date: scheduledDate } : undefined
-            ),
+    return useMutation<Meal[], Error, MealGenerateRequest>({
+        mutationFn: (requestBody) => MealsService.generateMealsMealsGeneratePost(requestBody),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['meals'] });
+        },
+    });
+};
+
+export const useBulkUpdateMeals = () => {
+    const queryClient = useQueryClient();
+    return useMutation<Meal[], Error, Array<{ id: string, requestBody: MealUpdate }>>({
+        mutationFn: async (updates) => {
+            const results = await Promise.all(
+                updates.map(({ id, requestBody }) =>
+                    MealsService.updateMealMealsMealIdPut(id, requestBody)
+                )
+            );
+            return results;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
         },

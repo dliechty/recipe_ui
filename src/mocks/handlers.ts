@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { recipes as initialRecipes, users, comments as initialComments, meals as initialMeals, mealTemplates as initialMealTemplates } from './data';
-import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient, RecipeList, RecipeListCreate, RecipeListUpdate, RecipeListItem, RecipeListAddRecipe } from '../client';
+import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealGenerateRequest, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient, RecipeList, RecipeListCreate, RecipeListUpdate, RecipeListItem, RecipeListAddRecipe } from '../client';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 const recipes: Recipe[] = [...initialRecipes] as unknown as Recipe[];
@@ -832,9 +832,11 @@ export const handlers = [
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             name: template.name,
-            status: MealStatus.DRAFT,
+            status: MealStatus.QUEUED,
             classification: template.classification,
-            date: null,
+            scheduled_date: null,
+            is_shopped: false,
+            queue_position: mealsStore.length,
             template_id: template.id,
             items: items
         };
@@ -844,6 +846,48 @@ export const handlers = [
 
         mealsStore.push(newMeal);
         return HttpResponse.json(newMeal, { status: 201 });
+    }),
+
+    // POST /meals/generate
+    http.post('*/meals/generate', async ({ request }) => {
+        const body = await request.json() as MealGenerateRequest;
+        const count = body.count || 1;
+        const scheduledDates = body.scheduled_dates || [];
+
+        const generatedMeals: Meal[] = [];
+        const availableTemplates = [...mealTemplateStore];
+
+        for (let i = 0; i < count && availableTemplates.length > 0; i++) {
+            const templateIndex = Math.floor(Math.random() * availableTemplates.length);
+            const template = availableTemplates.splice(templateIndex, 1)[0];
+
+            const items = template.slots.map((slot: { id?: string; recipe_id?: string | null }) => ({
+                id: crypto.randomUUID(),
+                meal_id: "temp",
+                recipe_id: slot.recipe_id || crypto.randomUUID(),
+                slot_id: slot.id || null,
+            }));
+
+            const newMeal: Meal = {
+                id: crypto.randomUUID(),
+                user_id: "550e8400-e29b-41d4-a716-446655440000",
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                name: template.name,
+                status: MealStatus.QUEUED,
+                classification: template.classification,
+                scheduled_date: scheduledDates[i] || null,
+                is_shopped: false,
+                queue_position: mealsStore.length + i,
+                template_id: template.id,
+                items: items,
+            };
+            newMeal.items.forEach(item => item.meal_id = newMeal.id);
+            generatedMeals.push(newMeal);
+        }
+
+        mealsStore.push(...generatedMeals);
+        return HttpResponse.json(generatedMeals, { status: 201 });
     }),
 
     // --- MEALS ---
@@ -860,8 +904,9 @@ export const handlers = [
         const classifications = url.searchParams.get('classification[in]')?.split(',').filter(Boolean) || [];
         const createdBy = url.searchParams.get('created_by[in]')?.split(',').filter(Boolean) || [];
         const recipeIds = url.searchParams.get('recipe_id[in]')?.split(',').filter(Boolean) || [];
-        const dateGt = url.searchParams.get('date[gt]');
-        const dateLt = url.searchParams.get('date[lt]');
+        const dateGt = url.searchParams.get('scheduled_date[gt]');
+        const dateLt = url.searchParams.get('scheduled_date[lt]');
+        const isShoppedParam = url.searchParams.get('is_shopped[eq]');
 
         let filteredMeals = [...mealsStore];
 
@@ -889,10 +934,14 @@ export const handlers = [
         }
 
         if (dateGt) {
-            filteredMeals = filteredMeals.filter(m => m.date && new Date(m.date).getTime() > new Date(dateGt).getTime());
+            filteredMeals = filteredMeals.filter(m => m.scheduled_date && new Date(m.scheduled_date).getTime() > new Date(dateGt).getTime());
         }
         if (dateLt) {
-            filteredMeals = filteredMeals.filter(m => m.date && new Date(m.date).getTime() < new Date(dateLt).getTime());
+            filteredMeals = filteredMeals.filter(m => m.scheduled_date && new Date(m.scheduled_date).getTime() < new Date(dateLt).getTime());
+        }
+        if (isShoppedParam !== null) {
+            const isShopped = isShoppedParam === 'true';
+            filteredMeals = filteredMeals.filter(m => m.is_shopped === isShopped);
         }
 
         if (sort) {
@@ -908,9 +957,9 @@ export const handlers = [
                     if (key === 'created_at') {
                         valA = new Date(a.created_at).getTime();
                         valB = new Date(b.created_at).getTime();
-                    } else if (key === 'date') {
-                        valA = a.date ? new Date(a.date).getTime() : 0;
-                        valB = b.date ? new Date(b.date).getTime() : 0;
+                    } else if (key === 'scheduled_date') {
+                        valA = a.scheduled_date ? new Date(a.scheduled_date).getTime() : 0;
+                        valB = b.scheduled_date ? new Date(b.scheduled_date).getTime() : 0;
                     } else if (key === 'name') {
                         valA = (a.name || '').toLowerCase();
                         valB = (b.name || '').toLowerCase();
@@ -954,9 +1003,11 @@ export const handlers = [
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             name: body.name || null,
-            status: body.status === null ? undefined : body.status || MealStatus.DRAFT,
+            status: body.status === null ? undefined : body.status || MealStatus.QUEUED,
             classification: body.classification || null,
-            date: body.date || null,
+            scheduled_date: body.scheduled_date || null,
+            is_shopped: body.is_shopped ?? false,
+            queue_position: body.queue_position ?? mealsStore.length,
             template_id: body.template_id || null, // Assuming template_id is used but not in Create body usually? Check MealCreate.
             items: (body.items || []).map(item => ({
                 id: crypto.randomUUID(),
@@ -982,12 +1033,13 @@ export const handlers = [
             return new HttpResponse(null, { status: 404 });
         }
 
-        const { items, ...restBody } = body;
+        const { items, is_shopped, ...restBody } = body;
 
         const updatedMeal: Meal = {
             ...mealsStore[index],
             ...restBody, // simple merge for top level fields
-            status: body.status || mealsStore[index].status || MealStatus.DRAFT,
+            is_shopped: is_shopped !== undefined && is_shopped !== null ? is_shopped : mealsStore[index].is_shopped,
+            status: body.status || mealsStore[index].status || MealStatus.QUEUED,
             updated_at: new Date().toISOString(),
             items: items
                 ? items.map(i => ({

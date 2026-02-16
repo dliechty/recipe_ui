@@ -46,9 +46,9 @@ describe('MealList', () => {
                     {
                         id: '1',
                         name: 'Dinner Party',
-                        status: 'Scheduled',
+                        status: 'Queued',
                         classification: 'Dinner',
-                        date: '2025-01-01',
+                        scheduled_date: '2025-01-01',
                         created_at: '2024-01-01T00:00:00Z',
                         user_id: 'u1',
                         items: [
@@ -111,7 +111,7 @@ describe('MealList', () => {
         expect(cells[1]).toHaveTextContent(/Salad/i);
 
         // Status (index 2)
-        expect(cells[2]).toHaveTextContent(/Scheduled/i);
+        expect(cells[2]).toHaveTextContent(/Queued/i);
 
         // Classification (index 3)
         expect(cells[3]).toHaveTextContent(/Dinner/i);

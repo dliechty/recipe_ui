@@ -77,7 +77,7 @@ describe('MealFilters', () => {
 
         expect(screen.getByTestId('select-Classification')).toBeInTheDocument();
         expect(screen.getByTestId('select-Owner / Author')).toBeInTheDocument();
-        expect(screen.getByText('Date Range')).toBeInTheDocument();
+        expect(screen.getByText('Scheduled Date Range')).toBeInTheDocument();
     });
 
     it('should auto-expand if advanced filters are present', () => {

@@ -195,7 +195,7 @@ const MealDetails = () => {
                                         name: `${meal.name} (Copy)`,
                                         status: meal.status,
                                         classification: meal.classification,
-                                        date: meal.date,
+                                        scheduled_date: meal.scheduled_date,
                                         items: meal.items?.map(item => ({
                                             recipe_id: item.recipe_id
                                         }))
@@ -241,7 +241,7 @@ const MealDetails = () => {
                     <Grid templateColumns="auto 1fr" gap={2} rowGap={2} mb={0}>
                         <Text fontWeight="bold" color="fg.muted" fontSize="sm">Status:</Text>
                         <Box>
-                            <EditableStatusBadge mealId={meal.id} status={meal.status || MealStatus.DRAFT} canEdit={!!canEdit} />
+                            <EditableStatusBadge mealId={meal.id} status={meal.status || MealStatus.QUEUED} canEdit={!!canEdit} />
                         </Box>
 
                         {(meal.classification || canEdit) && (
@@ -255,11 +255,11 @@ const MealDetails = () => {
                             </>
                         )}
 
-                        {(meal.date || canEdit) && (
+                        {(meal.scheduled_date || canEdit) && (
                             <>
-                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Date:</Text>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Scheduled Date:</Text>
                                 <Box>
-                                    <EditableMealDate mealId={meal.id} date={meal.date} canEdit={!!canEdit} />
+                                    <EditableMealDate mealId={meal.id} date={meal.scheduled_date} canEdit={!!canEdit} />
                                 </Box>
                             </>
                         )}

@@ -5,8 +5,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../../../mocks/server';
 import { toaster } from '../../../../toaster';
-import { MealScheduleRequest } from '../../../../client';
-
 const mockUseAuth = vi.fn();
 const mockNavigate = vi.fn();
 
@@ -116,16 +114,17 @@ describe('TemplateDetails', () => {
                     updated_at: '2024-01-01T00:00:00Z'
                 });
             }),
-            http.post('*/meals/generate', () => {
+            http.post('*/meals/', () => {
                 return HttpResponse.json({
                     id: generatedMealId,
-                    name: 'Generated Meal',
-                    status: 'Draft',
+                    name: 'Test Template',
+                    status: 'Queued',
                     template_id: 't1',
                     items: [],
+                    user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z'
-                });
+                }, { status: 201 });
             })
         );
 
@@ -175,7 +174,7 @@ describe('TemplateDetails', () => {
     it('generates a meal with scheduled date', async () => {
         const generatedMealId = 'generated-meal-date';
         const scheduledDate = '2026-01-20';
-        let capturedBody: MealScheduleRequest | undefined;
+        let capturedBody: Record<string, unknown> | undefined;
 
         server.use(
             http.get('*/meals/templates/:id', () => {
@@ -188,17 +187,18 @@ describe('TemplateDetails', () => {
                     updated_at: '2024-01-01T00:00:00Z'
                 });
             }),
-            http.post('*/meals/generate', async ({ request }) => {
-                capturedBody = await request.json() as MealScheduleRequest;
+            http.post('*/meals/', async ({ request }) => {
+                capturedBody = await request.json() as Record<string, unknown>;
                 return HttpResponse.json({
                     id: generatedMealId,
-                    name: 'Generated Meal',
-                    status: 'Draft',
+                    name: 'Test Template',
+                    status: 'Queued',
                     template_id: 't1',
                     items: [],
+                    user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z'
-                });
+                }, { status: 201 });
             })
         );
 
@@ -231,9 +231,7 @@ describe('TemplateDetails', () => {
             expect(mockNavigate).toHaveBeenCalled();
         });
 
-        expect(capturedBody).toEqual({
-            scheduled_date: scheduledDate
-        });
+        expect(capturedBody?.scheduled_date).toBe(scheduledDate);
     });
 
     it('shows error toast when meal generation fails', async () => {
@@ -248,7 +246,7 @@ describe('TemplateDetails', () => {
                     updated_at: '2024-01-01T00:00:00Z'
                 });
             }),
-            http.post('*/meals/generate', () => {
+            http.post('*/meals/', () => {
                 return HttpResponse.json(
                     { detail: 'Failed to generate meal' },
                     { status: 500 }

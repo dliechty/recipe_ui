@@ -160,21 +160,21 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
 
                             {/* Date Range */}
                             <Box>
-                                <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Date Range</Text>
+                                <Text fontSize="xs" fontWeight="bold" mb={1} color="fg.muted">Scheduled Date Range</Text>
                                 <HStack>
                                     <DebouncedInput
                                         type="date"
                                         size="xs"
-                                        value={localFilters.date?.gt || ''}
-                                        onChange={(val) => handleChange('date', { ...localFilters.date, gt: val || undefined })}
+                                        value={localFilters.scheduled_date?.gt || ''}
+                                        onChange={(val) => handleChange('scheduled_date', { ...localFilters.scheduled_date, gt: val || undefined })}
                                         {...inputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
                                         type="date"
                                         size="xs"
-                                        value={localFilters.date?.lt || ''}
-                                        onChange={(val) => handleChange('date', { ...localFilters.date, lt: val || undefined })}
+                                        value={localFilters.scheduled_date?.lt || ''}
+                                        onChange={(val) => handleChange('scheduled_date', { ...localFilters.scheduled_date, lt: val || undefined })}
                                         {...inputStyles}
                                     />
                                 </HStack>

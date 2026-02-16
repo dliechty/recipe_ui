@@ -13,8 +13,8 @@ interface EditableStatusBadgeProps {
 const statusColor = (status: MealStatus) => {
     switch (status) {
         case 'Cooked': return 'green';
-        case 'Scheduled': return 'blue';
-        default: return 'gray'; // Draft
+        case 'Cancelled': return 'red';
+        default: return 'gray'; // Queued
     }
 };
 
@@ -26,7 +26,6 @@ const EditableStatusBadge = ({ mealId, status, canEdit }: EditableStatusBadgePro
     }
 
     const handleSelect = (newStatus: string) => {
-        // Optimistic update could be done here but react-query invalidation is safer/easier
         updateMeal.mutate({
             id: mealId,
             requestBody: { status: newStatus as MealStatus }
@@ -59,10 +58,10 @@ const EditableStatusBadge = ({ mealId, status, canEdit }: EditableStatusBadgePro
             </Menu.Trigger>
             <Menu.Positioner>
                 <Menu.Content bg="vscode.surface" borderColor="vscode.border">
-                    {(['Draft', 'Scheduled', 'Cooked'] as MealStatus[]).map((s) => (
-                        <Menu.Item 
-                            key={s} 
-                            value={s} 
+                    {(['Queued', 'Cooked', 'Cancelled'] as MealStatus[]).map((s) => (
+                        <Menu.Item
+                            key={s}
+                            value={s}
                             onClick={() => handleSelect(s)}
                             bg="vscode.surface"
                             _hover={{ bg: "vscode.inputBg" }}

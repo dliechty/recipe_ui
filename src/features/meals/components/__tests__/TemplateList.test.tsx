@@ -145,16 +145,17 @@ describe('TemplateList', () => {
                     headers: { 'X-Total-Count': '1' }
                 });
             }),
-            http.post('*/meals/generate', () => {
+            http.post('*/meals/', () => {
                 return HttpResponse.json({
                     id: generatedMealId,
-                    name: 'Generated Meal',
-                    status: 'Draft',
+                    name: 'Test Template',
+                    status: 'Queued',
                     template_id: 't1',
                     items: [],
+                    user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z'
-                });
+                }, { status: 201 });
             })
         );
 
@@ -218,7 +219,7 @@ describe('TemplateList', () => {
                     headers: { 'X-Total-Count': '1' }
                 });
             }),
-            http.post('*/meals/generate', () => {
+            http.post('*/meals/', () => {
                 return HttpResponse.json(
                     { detail: 'Failed to generate meal' },
                     { status: 500 }
@@ -275,16 +276,17 @@ describe('TemplateList', () => {
                     headers: { 'X-Total-Count': '1' }
                 });
             }),
-            http.post('*/meals/generate', () => {
+            http.post('*/meals/', () => {
                 return HttpResponse.json({
                     id: 'generated-meal-789',
-                    name: 'Generated Meal',
-                    status: 'Draft',
+                    name: 'Test Template',
+                    status: 'Queued',
                     template_id: 't1',
                     items: [],
+                    user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z'
-                });
+                }, { status: 201 });
             })
         );
 

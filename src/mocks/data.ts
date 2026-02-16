@@ -58,9 +58,9 @@ export const meals = [
     {
         id: "m1",
         name: "Weeknight Pasta Dinner",
-        status: "Draft",
+        status: "Queued",
         classification: "Dinner",
-        date: new Date().toISOString().split('T')[0],
+        scheduled_date: new Date().toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 86400000).toISOString(),
@@ -83,9 +83,9 @@ export const meals = [
     {
         id: "m2",
         name: "Italian Feast",
-        status: "Scheduled",
+        status: "Queued",
         classification: "Dinner",
-        date: new Date(Date.now() + 172800000).toISOString().split('T')[0], // 2 days from now
+        scheduled_date: new Date(Date.now() + 172800000).toISOString().split('T')[0], // 2 days from now
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 259200000).toISOString(),
@@ -116,7 +116,7 @@ export const meals = [
         name: "Taco Tuesday",
         status: "Cooked",
         classification: "Dinner",
-        date: new Date(Date.now() - 172800000).toISOString().split('T')[0], // 2 days ago
+        scheduled_date: new Date(Date.now() - 172800000).toISOString().split('T')[0], // 2 days ago
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8", // Admin user
         template_id: null,
         created_at: new Date(Date.now() - 345600000).toISOString(),
@@ -142,7 +142,7 @@ export const meals = [
         name: "Sunday Brunch",
         status: "Cooked",
         classification: "Brunch",
-        date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+        scheduled_date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 172800000).toISOString(),
@@ -165,9 +165,9 @@ export const meals = [
     {
         id: "m5",
         name: "Weekend Brunch Spread",
-        status: "Draft",
+        status: "Queued",
         classification: "Brunch",
-        date: new Date(Date.now() + 518400000).toISOString().split('T')[0], // 6 days from now (next weekend)
+        scheduled_date: new Date(Date.now() + 518400000).toISOString().split('T')[0], // 6 days from now (next weekend)
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         template_id: "mt3", // Generated from template
         created_at: new Date(Date.now() - 43200000).toISOString(),
@@ -195,7 +195,7 @@ export const meals = [
         name: "Quick Breakfast",
         status: "Cooked",
         classification: "Breakfast",
-        date: new Date(Date.now() - 43200000).toISOString().split('T')[0], // Yesterday
+        scheduled_date: new Date(Date.now() - 43200000).toISOString().split('T')[0], // Yesterday
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 129600000).toISOString(),
@@ -212,9 +212,9 @@ export const meals = [
     {
         id: "m7",
         name: "Power Breakfast",
-        status: "Scheduled",
+        status: "Queued",
         classification: "Breakfast",
-        date: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
+        scheduled_date: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 86400000).toISOString(),
@@ -238,9 +238,9 @@ export const meals = [
     {
         id: "m8",
         name: "Office Lunch",
-        status: "Draft",
+        status: "Queued",
         classification: "Lunch",
-        date: new Date().toISOString().split('T')[0],
+        scheduled_date: new Date().toISOString().split('T')[0],
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         template_id: null,
         created_at: new Date(Date.now() - 21600000).toISOString(),
@@ -271,7 +271,7 @@ export const meals = [
         name: "Light Lunch",
         status: "Cooked",
         classification: "Lunch",
-        date: new Date(Date.now() - 259200000).toISOString().split('T')[0], // 3 days ago
+        scheduled_date: new Date(Date.now() - 259200000).toISOString().split('T')[0], // 3 days ago
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 345600000).toISOString(),
@@ -289,9 +289,9 @@ export const meals = [
     {
         id: "m10",
         name: "Afternoon Snack",
-        status: "Draft",
+        status: "Queued",
         classification: "Snack",
-        date: new Date().toISOString().split('T')[0],
+        scheduled_date: new Date().toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: null,
         created_at: new Date(Date.now() - 3600000).toISOString(),
@@ -308,9 +308,9 @@ export const meals = [
     {
         id: "m11",
         name: "Movie Night Snacks",
-        status: "Scheduled",
+        status: "Queued",
         classification: "Snack",
-        date: new Date(Date.now() + 259200000).toISOString().split('T')[0], // 3 days from now
+        scheduled_date: new Date(Date.now() + 259200000).toISOString().split('T')[0], // 3 days from now
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         template_id: null,
         created_at: new Date(Date.now() - 172800000).toISOString(),
@@ -346,9 +346,9 @@ export const meals = [
     {
         id: "m12",
         name: "Dinner Party",
-        status: "Scheduled",
+        status: "Queued",
         classification: "Dinner",
-        date: new Date(Date.now() + 604800000).toISOString().split('T')[0], // 1 week from now
+        scheduled_date: new Date(Date.now() + 604800000).toISOString().split('T')[0], // 1 week from now
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         template_id: "mt4", // Generated from multi-slot template
         created_at: new Date(Date.now() - 432000000).toISOString(),

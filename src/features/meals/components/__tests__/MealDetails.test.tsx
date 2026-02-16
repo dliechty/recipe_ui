@@ -47,9 +47,9 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Special Dinner',
-                    status: 'Scheduled',
+                    status: 'Queued',
                     classification: 'Dinner',
-                    date: '2025-01-01',
+                    scheduled_date: '2025-01-01',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
                     user_id: 'user-123',
@@ -88,7 +88,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Delete Me',
-                    status: 'Draft',
+                    status: 'Queued',
                     user_id: 'user-123',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
@@ -121,9 +121,9 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Old Name',
-                    status: 'Draft',
+                    status: 'Queued',
                     classification: 'Dinner',
-                    date: '2025-01-01',
+                    scheduled_date: '2025-01-01',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
                     user_id: 'user-123',
@@ -135,7 +135,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: body.name,
-                    status: 'Draft',
+                    status: 'Queued',
                     // ... other fields
                 });
             })
@@ -221,7 +221,7 @@ describe('MealDetails', () => {
 
         
 
-                                                                status: 'Draft',
+                                                                status: 'Queued',
 
         
 
@@ -229,7 +229,7 @@ describe('MealDetails', () => {
 
         
 
-                                                                date: currentMealDate,
+                                                                scheduled_date: currentMealDate,
 
         
 
@@ -261,11 +261,11 @@ describe('MealDetails', () => {
 
         
 
-                            const body = await request.json() as { date: string };
+                            const body = await request.json() as { scheduled_date: string };
 
         
 
-                            currentMealDate = body.date;
+                            currentMealDate = body.scheduled_date;
 
         
 
@@ -281,11 +281,11 @@ describe('MealDetails', () => {
 
         
 
-                                                                status: 'Draft',
+                                                                status: 'Queued',
 
         
 
-                                                                date: currentMealDate,
+                                                                scheduled_date: currentMealDate,
 
         
 
@@ -459,9 +459,9 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Unclassified Meal',
-                    status: 'Draft',
+                    status: 'Queued',
                     classification: null,
-                    date: '2025-01-01',
+                    scheduled_date: '2025-01-01',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',
                     user_id: 'user-123',
@@ -495,7 +495,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Generated Meal',
-                    status: 'Draft',
+                    status: 'Queued',
                     classification: 'Dinner',
                     template_id: 't1',
                     created_at: '2024-01-01T00:00:00Z',
@@ -539,7 +539,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Generated Meal',
-                    status: 'Draft',
+                    status: 'Queued',
                     classification: 'Dinner',
                     template_id: 't1',
                     created_at: '2024-01-01T00:00:00Z',
@@ -583,7 +583,7 @@ describe('MealDetails', () => {
                 return HttpResponse.json({
                     id: '1',
                     name: 'Regular Meal',
-                    status: 'Draft',
+                    status: 'Queued',
                     classification: 'Dinner',
                     created_at: '2024-01-01T00:00:00Z',
                     updated_at: '2024-01-01T00:00:00Z',

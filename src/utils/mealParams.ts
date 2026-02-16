@@ -6,7 +6,8 @@ export interface MealFilters {
     status?: MealStatus[];
     classification?: MealClassification[];
     owner?: string[];
-    date?: { gt?: string; lt?: string };
+    scheduled_date?: { gt?: string; lt?: string };
+    is_shopped?: boolean;
     recipe?: string[];
     sort?: string;
 }
@@ -32,11 +33,14 @@ export const mealFiltersToSearchParams = (filters: MealFilters): URLSearchParams
     if (filters.owner?.length) params.set('owner', filters.owner.join(','));
     if (filters.recipe?.length) params.set('recipe', filters.recipe.join(','));
 
-    // Date Range
-    if (filters.date) {
-        if (filters.date.gt) params.set('date_gt', filters.date.gt);
-        if (filters.date.lt) params.set('date_lt', filters.date.lt);
+    // Scheduled Date Range
+    if (filters.scheduled_date) {
+        if (filters.scheduled_date.gt) params.set('scheduled_date_gt', filters.scheduled_date.gt);
+        if (filters.scheduled_date.lt) params.set('scheduled_date_lt', filters.scheduled_date.lt);
     }
+
+    // Shopped status
+    if (filters.is_shopped !== undefined) params.set('is_shopped', filters.is_shopped.toString());
 
     return params;
 };
@@ -63,15 +67,19 @@ export const searchParamsToMealFilters = (params: URLSearchParams): MealFilters 
     const recipe = params.get('recipe');
     if (recipe) filters.recipe = recipe.split(',');
 
-    // Date Range
-    const dateGt = params.get('date_gt');
-    const dateLt = params.get('date_lt');
+    // Scheduled Date Range
+    const dateGt = params.get('scheduled_date_gt');
+    const dateLt = params.get('scheduled_date_lt');
 
     if (dateGt || dateLt) {
-        filters.date = {};
-        if (dateGt) filters.date.gt = dateGt;
-        if (dateLt) filters.date.lt = dateLt;
+        filters.scheduled_date = {};
+        if (dateGt) filters.scheduled_date.gt = dateGt;
+        if (dateLt) filters.scheduled_date.lt = dateLt;
     }
+
+    // Shopped status
+    const isShopped = params.get('is_shopped');
+    if (isShopped !== null) filters.is_shopped = isShopped === 'true';
 
     return filters;
 };

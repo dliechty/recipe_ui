@@ -107,7 +107,7 @@ export function generateMockRecipes(count: number) {
 }
 
 export function generateMockMeals(count: number) {
-    const statuses = ['Draft', 'Scheduled', 'Cooked'];
+    const statuses = ['Queued', 'Cooked', 'Cancelled'];
     const classifications = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Brunch'];
     const meals = [];
 
@@ -123,7 +123,9 @@ export function generateMockMeals(count: number) {
             name: `${classification} Meal ${i}`,
             status: status,
             classification: classification,
-            date: date,
+            scheduled_date: date,
+            is_shopped: idx % 3 === 0,
+            queue_position: idx,
             user_id: "550e8400-e29b-41d4-a716-446655440000",
             template_id: null,
             created_at: new Date(Date.now() - (i * 3600000)).toISOString(),

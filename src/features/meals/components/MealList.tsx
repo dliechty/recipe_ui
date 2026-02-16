@@ -224,7 +224,7 @@ const MealList = () => {
                                         </VStack>
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Scheduled' ? 'blue' : 'gray'}>
+                                        <Badge colorPalette={meal.status === 'Cooked' ? 'green' : meal.status === 'Cancelled' ? 'red' : 'gray'}>
                                             {meal.status}
                                         </Badge>
                                     </Table.Cell>
@@ -233,7 +233,7 @@ const MealList = () => {
                                         <UserDisplay userId={meal.user_id} />
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        {meal.date ? new Date(meal.date).toLocaleDateString() : 'N/A'}
+                                        {meal.scheduled_date ? new Date(meal.scheduled_date).toLocaleDateString() : 'N/A'}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

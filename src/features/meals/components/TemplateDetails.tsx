@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Heading, Text, VStack, HStack, Button, Badge, Spinner, Center, Breadcrumb, Icon, Grid } from '@chakra-ui/react';
 import { FaChevronRight, FaRegCopy, FaEdit, FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import { useMealTemplate, useDeleteMealTemplate, useGenerateMeal } from '../../../hooks/useMeals';
+import { useMealTemplate, useDeleteMealTemplate, useCreateMeal } from '../../../hooks/useMeals';
 import { toaster } from '../../../toaster';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -17,7 +17,7 @@ const TemplateDetails = () => {
     const sourceMeal = location.state?.sourceMeal as { id: string; name: string } | undefined;
     const { data: template, isLoading, error } = useMealTemplate(id || '');
     const deleteTemplate = useDeleteMealTemplate();
-    const generateMeal = useGenerateMeal();
+    const createMeal = useCreateMeal();
     const { user: currentUser } = useAuth();
     const { data: creator } = useUser(template?.user_id);
 
@@ -86,9 +86,14 @@ const TemplateDetails = () => {
         if (!template) return;
         setIsGenerating(true);
         try {
-            const meal = await generateMeal.mutateAsync({
-                templateId: template.id,
-                scheduledDate
+            const meal = await createMeal.mutateAsync({
+                name: template.name,
+                classification: template.classification ?? undefined,
+                scheduled_date: scheduledDate || undefined,
+                template_id: template.id,
+                items: template.slots
+                    .filter(slot => slot.recipe_id)
+                    .map(slot => ({ recipe_id: slot.recipe_id! })),
             });
             toaster.create({
                 title: 'Meal generated successfully',
