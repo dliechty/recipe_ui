@@ -773,93 +773,88 @@ export const handlers = [
         return new HttpResponse(null, { status: 204 });
     }),
 
-    // POST /meals/generate - Generate a meal from a template
-    http.post('*/meals/generate', ({ request }) => {
+    // POST /meals/generate - Generate meal(s) from template(s)
+    // Supports two modes:
+    // 1. Single template: ?template_id=X (query param) - generates one meal from specific template
+    // 2. Batch: JSON body { count, scheduled_dates } - generates multiple meals cycling through all templates
+    http.post('*/meals/generate', async ({ request }) => {
         const url = new URL(request.url);
         const templateId = url.searchParams.get('template_id');
 
-        if (!templateId) {
-            return HttpResponse.json(
-                { detail: 'template_id is required' },
-                { status: 422 }
-            );
-        }
+        // Mode 1: Single template generation via query param
+        if (templateId) {
+            const template = mealTemplateStore.find(t => t.id === templateId);
 
-        const template = mealTemplateStore.find(t => t.id === templateId);
+            if (!template) {
+                return HttpResponse.json(
+                    { detail: 'Template not found' },
+                    { status: 404 }
+                );
+            }
 
-        if (!template) {
-            return HttpResponse.json(
-                { detail: 'Template not found' },
-                { status: 404 }
-            );
-        }
+            // Generate meal items from template slots
+            const items: Meal['items'] = [];
 
-        // Generate meal items from template slots
-        const items: Meal['items'] = [];
+            for (const slot of template.slots) {
+                let recipeId: string | undefined;
 
-        for (const slot of template.slots) {
-            let recipeId: string | undefined;
+                if (slot.strategy === 'Direct' && slot.recipe_id) {
+                    recipeId = slot.recipe_id;
+                } else if (slot.strategy === 'List' && slot.recipe_ids && slot.recipe_ids.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * slot.recipe_ids.length);
+                    recipeId = slot.recipe_ids[randomIndex];
+                } else if (slot.strategy === 'Search') {
+                    if (recipes.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * recipes.length);
+                        recipeId = recipes[randomIndex].core.id;
+                    }
+                }
 
-            if (slot.strategy === 'Direct' && slot.recipe_id) {
-                // Direct strategy: use the specified recipe
-                recipeId = slot.recipe_id;
-            } else if (slot.strategy === 'List' && slot.recipe_ids && slot.recipe_ids.length > 0) {
-                // List strategy: pick a random recipe from the list
-                const randomIndex = Math.floor(Math.random() * slot.recipe_ids.length);
-                recipeId = slot.recipe_ids[randomIndex];
-            } else if (slot.strategy === 'Search') {
-                // Search strategy: pick a random recipe from the store
-                // In a real implementation, this would apply search criteria
-                if (recipes.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * recipes.length);
-                    recipeId = recipes[randomIndex].core.id;
+                if (recipeId) {
+                    items.push({
+                        id: crypto.randomUUID(),
+                        meal_id: "temp",
+                        recipe_id: recipeId,
+                        slot_id: slot.id
+                    });
                 }
             }
 
-            if (recipeId) {
-                items.push({
-                    id: crypto.randomUUID(),
-                    meal_id: "temp", // Will be set after meal creation
-                    recipe_id: recipeId,
-                    slot_id: slot.id
-                });
-            }
+            const newMeal: Meal = {
+                id: crypto.randomUUID(),
+                user_id: "550e8400-e29b-41d4-a716-446655440000",
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                name: template.name,
+                status: MealStatus.QUEUED,
+                classification: template.classification,
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: mealsStore.length,
+                template_id: template.id,
+                items: items
+            };
+
+            newMeal.items.forEach(item => item.meal_id = newMeal.id);
+            mealsStore.push(newMeal);
+            return HttpResponse.json(newMeal, { status: 201 });
         }
 
-        const newMeal: Meal = {
-            id: crypto.randomUUID(),
-            user_id: "550e8400-e29b-41d4-a716-446655440000",
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            name: template.name,
-            status: MealStatus.QUEUED,
-            classification: template.classification,
-            scheduled_date: null,
-            is_shopped: false,
-            queue_position: mealsStore.length,
-            template_id: template.id,
-            items: items
-        };
-
-        // Fix meal_id on items
-        newMeal.items.forEach(item => item.meal_id = newMeal.id);
-
-        mealsStore.push(newMeal);
-        return HttpResponse.json(newMeal, { status: 201 });
-    }),
-
-    // POST /meals/generate
-    http.post('*/meals/generate', async ({ request }) => {
+        // Mode 2: Batch generation from JSON body - cycles through templates
         const body = await request.json() as MealGenerateRequest;
         const count = body.count || 1;
         const scheduledDates = body.scheduled_dates || [];
 
         const generatedMeals: Meal[] = [];
-        const availableTemplates = [...mealTemplateStore];
+        const templateCount = mealTemplateStore.length;
 
-        for (let i = 0; i < count && availableTemplates.length > 0; i++) {
-            const templateIndex = Math.floor(Math.random() * availableTemplates.length);
-            const template = availableTemplates.splice(templateIndex, 1)[0];
+        if (templateCount === 0) {
+            return HttpResponse.json([], { status: 201 });
+        }
+
+        for (let i = 0; i < count; i++) {
+            // Cycle through templates using modulo (allow reuse)
+            const template = mealTemplateStore[i % templateCount];
 
             const items = template.slots.map((slot: { id?: string; recipe_id?: string | null }) => ({
                 id: crypto.randomUUID(),
@@ -963,6 +958,9 @@ export const handlers = [
                     } else if (key === 'name') {
                         valA = (a.name || '').toLowerCase();
                         valB = (b.name || '').toLowerCase();
+                    } else if (key === 'queue_position') {
+                        valA = a.queue_position ?? 0;
+                        valB = b.queue_position ?? 0;
                     }
 
                     if (valA < valB) return desc ? 1 : -1;
