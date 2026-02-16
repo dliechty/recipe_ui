@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack } from '@chakra-ui/react';
 import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -47,18 +47,10 @@ const UpcomingMeals = () => {
         status,
     } = useInfiniteMeals(100, filters);
 
-    const serverMeals = useMemo(() =>
+    const meals = useMemo(() =>
         data?.pages.flatMap((page) => page.meals) || [],
         [data]
     );
-
-    // Optimistic local order: updated immediately on drag, synced from server when idle
-    const [optimisticMeals, setOptimisticMeals] = useState(serverMeals);
-    useEffect(() => {
-        setOptimisticMeals(serverMeals);
-    }, [serverMeals]);
-
-    const meals = optimisticMeals;
 
     // Collect recipe IDs
     const recipeIds = useMemo(() => {
@@ -102,15 +94,13 @@ const UpcomingMeals = () => {
 
         if (oldIndex === -1 || newIndex === -1) return;
 
-        // Calculate new order and apply optimistically
+        // Calculate new order
         const reordered = [...meals];
         const [moved] = reordered.splice(oldIndex, 1);
         reordered.splice(newIndex, 0, moved);
 
-        // Immediately update local state so UI doesn't flicker
-        setOptimisticMeals(reordered);
-
-        // Persist queue_position for all affected meals
+        // Update queue_position for all affected meals
+        // (cache is optimistically updated in useBulkUpdateMeals onMutate)
         const updates = reordered.map((meal, idx) => ({
             id: meal.id,
             requestBody: { queue_position: idx },
