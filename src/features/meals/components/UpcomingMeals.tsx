@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Box, VStack, Text, Button, Icon, Spinner, Center, HStack } from '@chakra-ui/react';
-import { FaPlus, FaMagic } from 'react-icons/fa';
+import { FaPlus, FaMagic, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import {
     DndContext,
@@ -22,6 +22,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { MealStatus, MealGenerateRequest } from '../../../client';
 import MealQueueCard from './MealQueueCard';
 import GenerateMealsModal from './GenerateMealsModal';
+import ShoppingListPanel from './ShoppingListPanel';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const UpcomingMeals = () => {
@@ -30,6 +31,7 @@ const UpcomingMeals = () => {
     const bulkUpdate = useBulkUpdateMeals();
     const generateMeals = useGenerateMeals();
     const [generateModalOpen, setGenerateModalOpen] = useState(false);
+    const [shoppingPanelOpen, setShoppingPanelOpen] = useState(false);
 
     const filters = useMemo(() => ({
         status: [MealStatus.QUEUED],
@@ -131,6 +133,16 @@ const UpcomingMeals = () => {
                         <Icon as={FaMagic} mr={1} /> Generate Meals
                     </Button>
                 </HStack>
+                <Button
+                    onClick={() => setShoppingPanelOpen(true)}
+                    variant="outline"
+                    borderColor="vscode.accent"
+                    color="vscode.accent"
+                    _hover={{ bg: "whiteAlpha.100" }}
+                    size="xs"
+                >
+                    <Icon as={FaShoppingCart} mr={1} /> Shopping List
+                </Button>
             </HStack>
 
             {status === 'pending' && (
@@ -193,6 +205,13 @@ const UpcomingMeals = () => {
                     </SortableContext>
                 </DndContext>
             )}
+
+            <ShoppingListPanel
+                isOpen={shoppingPanelOpen}
+                onClose={() => setShoppingPanelOpen(false)}
+                meals={meals}
+                recipeNames={recipeNames}
+            />
 
             <GenerateMealsModal
                 isOpen={generateModalOpen}
