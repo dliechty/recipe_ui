@@ -16,18 +16,20 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useInfiniteMeals, useBulkUpdateMeals } from '../../../hooks/useMeals';
+import { useInfiniteMeals, useBulkUpdateMeals, useGenerateMeals } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useAuth } from '../../../context/AuthContext';
-import { MealStatus } from '../../../client';
+import { MealStatus, MealGenerateRequest } from '../../../client';
 import MealQueueCard from './MealQueueCard';
+import GenerateMealsModal from './GenerateMealsModal';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const UpcomingMeals = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const bulkUpdate = useBulkUpdateMeals();
-    const [, setGenerateModalOpen] = useState(false);
+    const generateMeals = useGenerateMeals();
+    const [generateModalOpen, setGenerateModalOpen] = useState(false);
 
     const filters = useMemo(() => ({
         status: [MealStatus.QUEUED],
@@ -191,6 +193,17 @@ const UpcomingMeals = () => {
                     </SortableContext>
                 </DndContext>
             )}
+
+            <GenerateMealsModal
+                isOpen={generateModalOpen}
+                onClose={() => setGenerateModalOpen(false)}
+                onGenerate={(request: MealGenerateRequest) => {
+                    generateMeals.mutate(request, {
+                        onSuccess: () => setGenerateModalOpen(false),
+                    });
+                }}
+                isGenerating={generateMeals.isPending}
+            />
         </Box>
     );
 };
