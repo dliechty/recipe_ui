@@ -2,15 +2,15 @@
 
 ## Phase 1: MSW Mock Fixes
 
-- [~] Task 1.1: Write tests for MSW mock sort by queue_position
+- [x] Task 1.1: Write tests for MSW mock sort by queue_position (ae7c332)
   - Test that GET /meals/?sort=queue_position returns meals sorted by queue_position
   - Test that after PUT updates to queue_position, re-fetch returns correct order
 
-- [~] Task 1.2: Fix MSW GET /meals/ sort handler to support queue_position
+- [x] Task 1.2: Fix MSW GET /meals/ sort handler to support queue_position (ae7c332)
   - Add queue_position case to sort handler in handlers.ts
   - Ensure queue_position is treated as numeric sort
 
-- [~] Task 1.3: Fix MSW POST /meals/generate to cycle through templates
+- [x] Task 1.3: Fix MSW POST /meals/generate to cycle through templates (ae7c332)
   - Change splice-based template selection to modulo-based cycling (allow reuse)
   - Ensure requested count is always honored regardless of template count
   - Add test coverage for generating more meals than templates
