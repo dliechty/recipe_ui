@@ -2,97 +2,173 @@
 
 ## Overview
 
-The current meals feature provides solid CRUD functionality for individual meals and templates, but the experience is list-oriented rather than planning-oriented. This track transforms the meal planning experience from a flat list of meals into a guided, calendar-centric workflow that makes weekly meal planning intuitive and efficient.
+The meal planning experience is the core purpose of this application, but the current UI treats meals as a secondary feature behind recipes. This track transforms the meal experience into a queue-based meal planning workflow, making it the primary landing page and navigation destination. Users will manage an ordered queue of upcoming meals, optionally schedule them on a calendar, generate new meals in batches from templates, and produce shopping lists — all within a streamlined, planning-first interface.
 
 ## Problem Statement
 
-Currently, users can create individual meals and assign dates, but there is no unified view that shows a week's worth of meals at a glance. Planning meals for a week requires creating each meal individually and mentally tracking which days are covered. The meal list view, while functional, does not support the "plan my week" workflow that is central to the product vision.
+Currently, the Meals page is a flat, list-based view for individual meal CRUD. The navigation places Recipes first. There is no concept of a meal queue, no batch generation, no shopping-list workflow, and no way to reorder upcoming meals. Users must create meals one at a time and manually track which meals are upcoming versus historic. The meal lifecycle (Draft → Scheduled → Cooked) conflates scheduling with status progression.
 
 ## Goals
 
-1. **Weekly calendar view** - Provide a visual week-at-a-glance view where users can see all planned meals organized by day and classification (breakfast, lunch, dinner, snack).
-2. **Streamlined meal creation from calendar** - Allow users to quickly add meals to specific days directly from the calendar view without navigating away.
-3. **Quick recipe-to-meal flow** - Enable adding a recipe directly to a meal plan from the recipe detail or browse pages.
-4. **Improved shopping list** - Generate a consolidated shopping list from the weekly meal plan, aggregating ingredients across all meals for a given date range.
-5. **Week navigation** - Allow users to navigate between weeks to plan ahead or review past meal plans.
+1. **Meals as the primary experience** — Move the Meals tab to the far-left of the navigation bar. Make `/meals` the default post-login landing page.
+2. **Queue-based upcoming meals view** — The default Meals tab shows an ordered queue of upcoming (Queued) meals as draggable cards, sortable by the user. This replaces the current flat list as the default view.
+3. **Batch meal generation** — Allow users to generate N meals at a time from their templates via the updated `/meals/generate` endpoint, adding them to the queue.
+4. **Meal lifecycle cleanup** — Adopt the updated status enum (`Queued`, `Cooked`, `Cancelled`). Remove `Draft` and `Scheduled` from UI status references. Scheduling is implicit (presence of `scheduled_date`), not a status.
+5. **Shopping workflow** — Surface the `is_shopped` flag on meals. Provide a way to select meals and toggle their shopped status, and generate a shopping list for all queued un-shopped meals.
+6. **Optional calendar view** — Provide a calendar toggle within the upcoming meals view that maps scheduled meals onto a daily/weekly grid (focused on the next 7–10 days) with an easy way to schedule unscheduled meals.
+7. **Meal history** — Move the current list-based meals view to a "History" tab (right of Templates) that shows only Cooked and Cancelled meals for the current user.
+8. **User-scoped views** — Upcoming Meals and History tabs show only the current user's meals. Templates remain global.
 
 ## Non-Goals
 
-- Backend API changes (this track works with the existing API endpoints)
-- Meal template modifications (templates already work well)
+- Backend API changes (the OpenAPI spec has already been updated)
 - Multi-user/family sharing features (future track)
-- Drag-and-drop meal rescheduling (future enhancement)
+- Monthly/yearly calendar views (focus is on daily/weekly for the next 7–10 days)
+- Overhauling the Template creation/editing UI (templates already work well)
+
+## Updated Data Model (from OpenAPI spec)
+
+### Meal Status Enum
+```
+Queued | Cooked | Cancelled
+```
+
+### Meal Schema (key fields)
+| Field | Type | Notes |
+|---|---|---|
+| `status` | MealStatus | Default: `Queued` |
+| `scheduled_date` | datetime \| null | Optional — if set, meal is "scheduled" |
+| `is_shopped` | boolean | Default: `false` |
+| `queue_position` | integer \| null | Ordering within the user's queue |
+
+### New/Updated Endpoints
+| Endpoint | Method | Description |
+|---|---|---|
+| `POST /meals/generate` | POST | Generate N meals from templates (weighted random). Request body: `{ count, scheduled_dates? }`. Returns array of Meal. |
+| `PUT /meals/{meal_id}` | PUT | Update meal — now supports `is_shopped`, `queue_position`, `scheduled_date` fields. |
+| `GET /meals/` | GET | Supports filtering by `status[in]`, `owner[in]`, `is_shopped`, and `scheduled_date` ranges. |
 
 ## User Stories
 
-### US-1: View Weekly Meal Plan
-**As a** home cook, **I want to** see all my meals for a given week in a calendar grid, **so that** I can quickly understand what I'm cooking each day.
+### US-1: Meals as Landing Page
+**As a** home cook, **I want** the app to open on my Meals page after login, **so that** I immediately see what I'm cooking next.
 
 **Acceptance Criteria:**
-- A weekly calendar view shows 7 days (Monday–Sunday) with meals grouped by classification (Breakfast, Lunch, Dinner, Snack).
-- Each meal card shows the meal name and the number of recipes.
+- After login, user lands on `/meals` (not `/recipes`).
+- The navbar shows "Meals" as the leftmost item.
+- The mobile hamburger menu also shows Meals first.
+- Admin non-auth redirect goes to `/meals` instead of `/recipes`.
+
+### US-2: Upcoming Meals Queue
+**As a** home cook, **I want to** see my upcoming meals as an ordered queue of cards, **so that** I can visually plan what I'm cooking next.
+
+**Acceptance Criteria:**
+- The default `/meals` tab ("Upcoming") shows only the current user's `Queued` meals, ordered by `queue_position`.
+- Each meal is a card showing: meal name, classification badge, recipe count, scheduled date (if any), and shopped status indicator.
+- Cards can be reordered via drag-and-drop (`@dnd-kit`), which updates `queue_position` via the API.
+- An empty state is shown when there are no upcoming meals, with a prompt to generate meals.
 - Clicking a meal card navigates to the existing meal detail page.
+
+### US-3: Batch Meal Generation
+**As a** home cook, **I want to** generate multiple meals at once from my templates, **so that** I can quickly fill my upcoming queue without creating meals one-by-one.
+
+**Acceptance Criteria:**
+- A prominent "Generate Meals" button is accessible from the Upcoming tab.
+- Clicking it opens a modal where the user specifies how many meals to generate (e.g., a number input, default 5).
+- Optionally, the user can assign scheduled dates to some or all generated meals.
+- On submit, the app calls `POST /meals/generate` with `{ count, scheduled_dates? }`.
+- Newly generated meals appear at the end of the queue.
+- Success feedback shows how many meals were generated.
+
+### US-4: Meal Lifecycle & Status Transitions
+**As a** home cook, **I want to** mark meals as Cooked or Cancelled, **so that** completed meals move out of my upcoming queue into history.
+
+**Acceptance Criteria:**
+- The status badge on meal cards and the detail page reflects the new statuses: `Queued`, `Cooked`, `Cancelled`.
+- Users can change a meal's status via the existing editable status badge dropdown (updated for new enum values).
+- When a meal is marked `Cooked` or `Cancelled`, it disappears from the Upcoming tab and appears in History.
+- Color coding: Queued = gray/blue, Cooked = green, Cancelled = red/muted.
+
+### US-5: Shopping Workflow
+**As a** home cook, **I want to** see which meals I haven't shopped for and generate a shopping list, **so that** I can efficiently prepare for upcoming meals.
+
+**Acceptance Criteria:**
+- Each meal card in the Upcoming view shows a visual "shopped" indicator (e.g., a shopping bag icon, checked/unchecked).
+- Users can select multiple meals and bulk-toggle the `is_shopped` status.
+- A "Shopping List" button generates an aggregated ingredient list for all queued, un-shopped meals (reusing `IngredientAggregation` patterns).
+- The shopping list supports merged and by-meal view modes.
+- Users can check off individual items while shopping.
+
+### US-6: Calendar View Toggle
+**As a** home cook, **I want to** see my scheduled meals on a calendar, **so that** I can plan my week visually.
+
+**Acceptance Criteria:**
+- A toggle (list/calendar) on the Upcoming tab switches between queue view and calendar view.
+- Calendar view shows a 7-day (or 10-day) daily grid with meals mapped to their `scheduled_date`.
+- Unscheduled meals appear in a sidebar or "unscheduled" area.
+- Users can schedule meals by clicking an empty day slot and selecting from unscheduled meals, or by dragging from the unscheduled area.
+- Week navigation (prev/next/today) is provided.
 - The current day is visually highlighted.
-- Empty slots are clearly indicated, encouraging the user to fill them.
 
-### US-2: Navigate Between Weeks
-**As a** home cook, **I want to** navigate forward and backward between weeks, **so that** I can plan meals ahead of time or review past plans.
-
-**Acceptance Criteria:**
-- Previous/Next week navigation buttons are provided.
-- A "Today" button quickly returns to the current week.
-- The currently displayed week range (e.g., "Feb 16 – Feb 22, 2026") is shown.
-- Navigation updates the URL so the selected week is bookmarkable.
-
-### US-3: Quick-Add Meal from Calendar
-**As a** home cook, **I want to** create a meal directly from an empty slot in the weekly view, **so that** I can plan without navigating to a separate page.
+### US-7: Meal History
+**As a** home cook, **I want to** view my past meals (Cooked and Cancelled), **so that** I can see my cooking history.
 
 **Acceptance Criteria:**
-- Clicking an empty slot (or a "+" button on a day) opens a streamlined meal creation flow.
-- The date and classification are pre-filled based on which slot was clicked.
-- The user can search and select recipes inline.
-- After creation, the new meal appears in the calendar without a full page reload.
+- A "History" tab appears to the right of "Templates" in the MealsPage tab bar.
+- History shows only the current user's meals with status `Cooked` or `Cancelled`.
+- The existing list-based meal view with filters is reused here.
+- Status filters default to showing both Cooked and Cancelled.
+- History is sorted by `updated_at` descending (most recent first).
 
-### US-4: Add Recipe to Meal Plan from Recipe Page
-**As a** home cook, **I want to** add a recipe to my meal plan directly from the recipe detail page, **so that** I don't have to remember recipes and manually add them later.
+## Tab Structure
 
-**Acceptance Criteria:**
-- Recipe detail page and recipe cards show an "Add to Meal Plan" action.
-- Clicking it opens a modal/popover where the user selects a date and classification.
-- A new meal is created (or the recipe is added to an existing meal for that date/classification).
-- The user receives confirmation feedback.
-
-### US-5: Weekly Shopping List
-**As a** home cook, **I want to** generate a shopping list from my weekly meal plan, **so that** I can efficiently shop for all the ingredients I need.
-
-**Acceptance Criteria:**
-- A "Shopping List" button/tab is accessible from the weekly calendar view.
-- The shopping list aggregates all ingredients from all meals in the displayed week.
-- Ingredients with the same name and unit are combined (quantities summed).
-- Users can check off items as they shop.
-- The list can be toggled between "merged" and "by-meal" views (reusing existing IngredientAggregation patterns).
+```
+[ Upcoming ] [ Templates ] [ History ]
+     ^             ^            ^
+  Queue/Calendar   Global    User-scoped
+  (user-scoped)              Cooked/Cancelled
+```
 
 ## Technical Approach
 
+### Updated Client Code
+Run `npm run api:sync` to regenerate the TypeScript client from the updated `openapi.json`. This gives us the new `MealStatus` enum values, `MealGenerateRequest` type, updated `Meal`/`MealCreate`/`MealUpdate` types with `is_shopped`, `queue_position`, and `scheduled_date` fields, and the updated `generate_meals` service method.
+
 ### New Components
-- `WeeklyCalendarView` - Main calendar grid component
-- `WeekNavigation` - Week selector with prev/next/today controls
-- `DayColumn` - Single day in the calendar showing meals by classification
-- `MealSlot` - Individual meal card or empty slot within a day
-- `QuickAddMealModal` - Streamlined modal for creating a meal from calendar
-- `AddToMealPlanModal` - Modal for adding a recipe to a specific day/classification
-- `WeeklyShoppingList` - Shopping list aggregated across the week's meals
+- `UpcomingMeals` — Queue view with draggable meal cards
+- `MealQueueCard` — Individual meal card for the queue (shows name, classification, schedule, shopped status)
+- `GenerateMealsModal` — Modal for batch meal generation (count + optional dates)
+- `ShoppingListPanel` — Shopping list for un-shopped meals (drawer/modal)
+- `CalendarView` — Daily/weekly calendar grid for scheduled meals
+- `CalendarDaySlot` — Single day in the calendar
+- `MealHistoryList` — Filtered list for history tab (wraps existing MealList patterns)
 
 ### Modified Components
-- `MealsPage` - Add a "Weekly" tab alongside existing Meals and Templates tabs
-- Recipe detail/card components - Add "Add to Meal Plan" action
+- `Layout.tsx` — Reorder nav: Meals first, Recipes second
+- `LoginPage.tsx` — Change default redirect from `/recipes` to `/meals`
+- `ProtectedRoute.tsx` — Change admin fallback redirect from `/recipes` to `/meals`
+- `MealsPage.tsx` — Restructure tabs: Upcoming (default) → Templates → History
+- `AppRoutes.tsx` — Update nested routes under `/meals` to support new tab structure
+- `EditableStatusBadge.tsx` — Update status values and colors for new enum
+- `MealFilters.tsx` — Add `is_shopped` filter option
+- `useMeals.ts` — Add hooks for batch generate, queue reorder, and `is_shopped`/`scheduled_date` filter support
+- `mealParams.ts` — Add `is_shopped` and `scheduled_date` filter params
 
 ### Data Flow
-- Use existing `useInfiniteMeals` hook with date range filters to fetch meals for the displayed week.
-- Use existing `useCreateMeal` mutation for quick-add flows.
-- Reuse `IngredientAggregation` logic for the weekly shopping list.
-- Store selected week in URL search params for bookmarkability.
+- Upcoming queue: `useInfiniteMeals` with `status[in]=Queued` and `owner[in]=<currentUserId>`, sorted by `queue_position`.
+- History: `useInfiniteMeals` with `status[in]=Cooked,Cancelled` and `owner[in]=<currentUserId>`, sorted by `-updated_at`.
+- Batch generate: New `useGenerateMeals` hook calling `POST /meals/generate`.
+- Queue reorder: On drag-end, update `queue_position` for affected meals via `PUT /meals/{id}`.
+- Shopping list: Fetch all Queued + un-shopped meals, extract recipe details, aggregate ingredients.
+- Calendar: Same data as upcoming queue, filtered/grouped by `scheduled_date`.
 
 ### Routing
-- `/meals/weekly` - Weekly calendar view (new default tab)
-- `/meals/weekly?week=2026-02-16` - Specific week view
+```
+/meals                → Upcoming tab (queue view, default)
+/meals/templates      → Templates tab (unchanged)
+/meals/history        → History tab (new)
+/meals/new            → Add meal page (unchanged)
+/meals/:id            → Meal detail page (unchanged)
+/meals/templates/new  → Add template page (unchanged)
+/meals/templates/:id  → Template detail page (unchanged)
+```

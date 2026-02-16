@@ -1,8 +1,8 @@
 {
   "track_id": "meal_planning_enhancement_20260215",
   "type": "feature",
-  "status": "new",
+  "status": "specced",
   "created_at": "2026-02-15T12:00:00Z",
-  "updated_at": "2026-02-15T12:00:00Z",
-  "description": "Enhance the meal planning experience to make it the primary, guided experience of the app, with a weekly calendar view, streamlined recipe-to-meal-plan flows, and improved shopping list functionality."
+  "updated_at": "2026-02-15T14:00:00Z",
+  "description": "Enhance the meal planning experience to make it the primary, queue-based experience of the app, with batch generation, drag-and-drop reordering, shopping workflow, optional calendar view, and meal history."
 }

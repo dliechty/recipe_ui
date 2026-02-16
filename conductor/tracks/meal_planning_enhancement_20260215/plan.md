@@ -7,20 +7,20 @@
   - Verify the new types exist: `MealStatus` (Queued/Cooked/Cancelled), `MealGenerateRequest`, updated `Meal`/`MealCreate`/`MealUpdate` with `is_shopped`, `queue_position`, `scheduled_date`
   - Verify the updated `generate_meals` service method signature
 
-- [ ] Task 1.2: Update useMeals hooks for new data model
+- [x] Task 1.2: Update useMeals hooks for new data model `67c076c`
   - Update `useInfiniteMeals` to support `is_shopped` and `scheduled_date` filter params
   - Add `useGenerateMeals` hook calling `POST /meals/generate` with `MealGenerateRequest` body
   - Add `useReorderMeals` hook (batch updates `queue_position` via multiple `PUT /meals/{id}` calls)
   - Add `useBulkUpdateMeals` hook for bulk `is_shopped` toggling
   - Update `MealFilters` type and `mealParams.ts` for new filter fields (`is_shopped`, `scheduled_date`)
 
-- [ ] Task 1.3: Update existing components for new status enum
+- [x] Task 1.3: Update existing components for new status enum `67c076c`
   - Update `EditableStatusBadge` to use `Queued`/`Cooked`/`Cancelled` (remove `Draft`/`Scheduled`)
   - Update `MealFilters` component dropdown options for new statuses
   - Update any hardcoded status references across meal components
   - Update `EditableMealDate` to use `scheduled_date` field name instead of `date`
 
-- [ ] Task 1.4: Write tests for updated hooks and status handling
+- [x] Task 1.4: Write tests for updated hooks and status handling `67c076c`
   - Test `useGenerateMeals` with MSW mock for `POST /meals/generate`
   - Test `useInfiniteMeals` with new filter params
   - Test `EditableStatusBadge` renders new status values with correct colors
