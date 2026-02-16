@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Box, VStack, Text, Button, Icon, Spinner, Center, HStack } from '@chakra-ui/react';
-import { FaPlus, FaMagic, FaShoppingCart } from 'react-icons/fa';
+import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack } from '@chakra-ui/react';
+import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import {
     DndContext,
@@ -23,6 +23,7 @@ import { MealStatus, MealGenerateRequest } from '../../../client';
 import MealQueueCard from './MealQueueCard';
 import GenerateMealsModal from './GenerateMealsModal';
 import ShoppingListPanel from './ShoppingListPanel';
+import CalendarView from './CalendarView';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
 const UpcomingMeals = () => {
@@ -32,6 +33,7 @@ const UpcomingMeals = () => {
     const generateMeals = useGenerateMeals();
     const [generateModalOpen, setGenerateModalOpen] = useState(false);
     const [shoppingPanelOpen, setShoppingPanelOpen] = useState(false);
+    const [viewMode, setViewMode] = useState<'queue' | 'calendar'>('queue');
 
     const filters = useMemo(() => ({
         status: [MealStatus.QUEUED],
@@ -133,16 +135,40 @@ const UpcomingMeals = () => {
                         <Icon as={FaMagic} mr={1} /> Generate Meals
                     </Button>
                 </HStack>
-                <Button
-                    onClick={() => setShoppingPanelOpen(true)}
-                    variant="outline"
-                    borderColor="vscode.accent"
-                    color="vscode.accent"
-                    _hover={{ bg: "whiteAlpha.100" }}
-                    size="xs"
-                >
-                    <Icon as={FaShoppingCart} mr={1} /> Shopping List
-                </Button>
+                <HStack gap={2}>
+                    <IconButton
+                        aria-label="Queue view"
+                        variant={viewMode === 'queue' ? 'solid' : 'ghost'}
+                        bg={viewMode === 'queue' ? 'vscode.button' : undefined}
+                        color={viewMode === 'queue' ? 'white' : 'fg.muted'}
+                        _hover={{ bg: viewMode === 'queue' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
+                        size="xs"
+                        onClick={() => setViewMode('queue')}
+                    >
+                        <FaList />
+                    </IconButton>
+                    <IconButton
+                        aria-label="Calendar view"
+                        variant={viewMode === 'calendar' ? 'solid' : 'ghost'}
+                        bg={viewMode === 'calendar' ? 'vscode.button' : undefined}
+                        color={viewMode === 'calendar' ? 'white' : 'fg.muted'}
+                        _hover={{ bg: viewMode === 'calendar' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
+                        size="xs"
+                        onClick={() => setViewMode('calendar')}
+                    >
+                        <FaCalendarAlt />
+                    </IconButton>
+                    <Button
+                        onClick={() => setShoppingPanelOpen(true)}
+                        variant="outline"
+                        borderColor="vscode.accent"
+                        color="vscode.accent"
+                        _hover={{ bg: "whiteAlpha.100" }}
+                        size="xs"
+                    >
+                        <Icon as={FaShoppingCart} mr={1} /> Shopping List
+                    </Button>
+                </HStack>
             </HStack>
 
             {status === 'pending' && (
@@ -183,7 +209,7 @@ const UpcomingMeals = () => {
                 </Center>
             )}
 
-            {status === 'success' && meals.length > 0 && (
+            {status === 'success' && meals.length > 0 && viewMode === 'queue' && (
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -204,6 +230,10 @@ const UpcomingMeals = () => {
                         </VStack>
                     </SortableContext>
                 </DndContext>
+            )}
+
+            {status === 'success' && meals.length > 0 && viewMode === 'calendar' && (
+                <CalendarView meals={meals} recipeNames={recipeNames} />
             )}
 
             <ShoppingListPanel
