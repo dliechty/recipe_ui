@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack } from '@chakra-ui/react';
 import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -52,7 +52,8 @@ const UpcomingMeals = () => {
         [data]
     );
 
-    // Collect recipe IDs
+    // Collect recipe IDs with stable reference (only changes when actual IDs change)
+    const prevRecipeIdsRef = useRef<string[]>([]);
     const recipeIds = useMemo(() => {
         const ids = new Set<string>();
         meals.forEach(meal => {
@@ -60,7 +61,13 @@ const UpcomingMeals = () => {
                 if (item.recipe_id) ids.add(item.recipe_id);
             });
         });
-        return Array.from(ids);
+        const sorted = Array.from(ids).sort();
+        const prev = prevRecipeIdsRef.current;
+        if (sorted.length === prev.length && sorted.every((id, i) => id === prev[i])) {
+            return prev;
+        }
+        prevRecipeIdsRef.current = sorted;
+        return sorted;
     }, [meals]);
 
     // Fetch recipe names

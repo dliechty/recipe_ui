@@ -90,11 +90,9 @@ const MealQueueCard = ({ meal, recipeNames }: MealQueueCardProps) => {
                         </Text>
                     </HStack>
 
-                    {recipeList.length > 0 && (
-                        <Text fontSize="xs" color="fg.muted" lineClamp={1}>
-                            {recipeList.join(', ')}
-                        </Text>
-                    )}
+                    <Text fontSize="xs" color="fg.muted" lineClamp={1} minH="1.2em">
+                        {recipeList.length > 0 ? recipeList.join(', ') : '\u00A0'}
+                    </Text>
                 </VStack>
             </HStack>
         </Box>
