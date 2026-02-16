@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack } from '@chakra-ui/react';
 import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ import {
     DragEndEvent,
 } from '@dnd-kit/core';
 import {
+    arrayMove,
     SortableContext,
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
@@ -19,7 +20,7 @@ import {
 import { useInfiniteMeals, useBulkUpdateMeals, useGenerateMeals } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useAuth } from '../../../context/AuthContext';
-import { MealStatus, MealGenerateRequest } from '../../../client';
+import { MealStatus, MealGenerateRequest, Meal } from '../../../client';
 import MealQueueCard from './MealQueueCard';
 import GenerateMealsModal from './GenerateMealsModal';
 import ShoppingListPanel from './ShoppingListPanel';
@@ -47,10 +48,22 @@ const UpcomingMeals = () => {
         status,
     } = useInfiniteMeals(100, filters);
 
-    const meals = useMemo(() =>
+    const serverMeals = useMemo(() =>
         data?.pages.flatMap((page) => page.meals) || [],
         [data]
     );
+
+    // Local order state that dnd-kit controls directly.
+    // Syncs from server data, but NOT while a reorder mutation is in-flight.
+    const [localMeals, setLocalMeals] = useState<Meal[]>([]);
+    useEffect(() => {
+        if (!bulkUpdate.isPending) {
+            setLocalMeals(serverMeals);
+        }
+    }, [serverMeals, bulkUpdate.isPending]);
+
+    // Use local order for rendering; fall back to server data if local is empty
+    const meals = localMeals.length > 0 ? localMeals : serverMeals;
 
     // Collect recipe IDs with stable reference (only changes when actual IDs change)
     const prevRecipeIdsRef = useRef<string[]>([]);
@@ -101,13 +114,12 @@ const UpcomingMeals = () => {
 
         if (oldIndex === -1 || newIndex === -1) return;
 
-        // Calculate new order
-        const reordered = [...meals];
-        const [moved] = reordered.splice(oldIndex, 1);
-        reordered.splice(newIndex, 0, moved);
+        // Use arrayMove (same algorithm dnd-kit uses internally) and
+        // update local state immediately so the list stays in place.
+        const reordered = arrayMove(meals, oldIndex, newIndex);
+        setLocalMeals(reordered);
 
-        // Update queue_position for all affected meals
-        // (cache is optimistically updated in useBulkUpdateMeals onMutate)
+        // Persist new queue_position values to the server
         const updates = reordered.map((meal, idx) => ({
             id: meal.id,
             requestBody: { queue_position: idx },

@@ -210,7 +210,7 @@ export const useGenerateMeals = () => {
 
 export const useBulkUpdateMeals = () => {
     const queryClient = useQueryClient();
-    return useMutation<Meal[], Error, Array<{ id: string, requestBody: MealUpdate }>, { previousData: unknown }>({
+    return useMutation<Meal[], Error, Array<{ id: string, requestBody: MealUpdate }>>({
         mutationFn: async (updates) => {
             const results = await Promise.all(
                 updates.map(({ id, requestBody }) =>
@@ -219,47 +219,7 @@ export const useBulkUpdateMeals = () => {
             );
             return results;
         },
-        onMutate: async (updates) => {
-            // Cancel in-flight refetches so they don't overwrite our optimistic update
-            await queryClient.cancelQueries({ queryKey: ['meals', 'infinite'] });
-
-            // Snapshot current cache for rollback
-            const previousData = queryClient.getQueriesData({ queryKey: ['meals', 'infinite'] });
-
-            // Optimistically update all matching infinite meal queries
-            // Build a map of id -> updated fields for fast lookup
-            const updateMap = new Map(updates.map(u => [u.id, u.requestBody]));
-            queryClient.setQueriesData<{ pages: MealsResponse[]; pageParams: unknown[] }>(
-                { queryKey: ['meals', 'infinite'] },
-                (old) => {
-                    if (!old) return old;
-                    return {
-                        ...old,
-                        pages: old.pages.map(page => ({
-                            ...page,
-                            meals: page.meals.map(meal => {
-                                const patch = updateMap.get(meal.id);
-                                if (patch?.queue_position !== undefined) {
-                                    return { ...meal, queue_position: patch.queue_position };
-                                }
-                                return meal;
-                            }).sort((a, b) => (a.queue_position ?? 0) - (b.queue_position ?? 0)),
-                        })),
-                    };
-                }
-            );
-
-            return { previousData };
-        },
-        onError: (_err, _updates, context) => {
-            // Roll back to previous cache state on error
-            if (context?.previousData) {
-                for (const [queryKey, data] of context.previousData as Array<[unknown, unknown]>) {
-                    queryClient.setQueryData(queryKey as string[], data);
-                }
-            }
-        },
-        onSettled: () => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
         },
     });
