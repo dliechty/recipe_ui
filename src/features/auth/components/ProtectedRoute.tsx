@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children, requireAdmin }: ProtectedRouteProps) => {
     }
 
     if (requireAdmin && !user?.is_admin) {
-        return <Navigate to="/recipes" replace />;
+        return <Navigate to="/meals" replace />;
     }
 
     if (user?.is_first_login && location.pathname !== '/change-password') {

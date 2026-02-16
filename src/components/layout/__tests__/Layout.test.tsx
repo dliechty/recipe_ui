@@ -87,6 +87,34 @@ describe('Layout', () => {
         expect(screen.getByText('Child Content')).toBeInTheDocument();
     });
 
+    it('renders Meals before Recipes in desktop nav', () => {
+        mockUseAuth.mockReturnValue({
+            isAuthenticated: true,
+            user: { id: '1', email: 'user@example.com', is_admin: false },
+            logout: vi.fn(),
+        });
+
+        const { container } = renderWithProvider(
+            <MemoryRouter>
+                <Layout>
+                    <div>Child Content</div>
+                </Layout>
+            </MemoryRouter>
+        );
+
+        // Get the desktop nav bar (display: flex on md+)
+        const navBar = container.querySelector('nav');
+        expect(navBar).not.toBeNull();
+
+        const navTexts = Array.from(navBar!.children).map(child => child.textContent);
+        const mealsIndex = navTexts.indexOf('Meals');
+        const recipesIndex = navTexts.indexOf('Recipes');
+
+        expect(mealsIndex).toBeGreaterThanOrEqual(0);
+        expect(recipesIndex).toBeGreaterThanOrEqual(0);
+        expect(mealsIndex).toBeLessThan(recipesIndex);
+    });
+
     it('renders and opens mobile menu', () => {
         mockUseAuth.mockReturnValue({
             isAuthenticated: true,

@@ -4,42 +4,88 @@ import MealsPage from '../MealsPage';
 import { describe, it, expect } from 'vitest';
 
 describe('MealsPage', () => {
-    it('renders tabs and navigates correctly', async () => {
+    it('renders three tabs: Upcoming, Templates, History', () => {
         renderWithProviders(
             <MemoryRouter initialEntries={['/meals']}>
                 <Routes>
                     <Route path="/meals" element={<MealsPage />}>
-                        <Route index element={<div>Meals List Component</div>} />
+                        <Route index element={<div>Upcoming Component</div>} />
                         <Route path="templates" element={<div>Templates List Component</div>} />
+                        <Route path="history" element={<div>History Component</div>} />
                     </Route>
                 </Routes>
             </MemoryRouter>
         );
 
-        // Check if Tabs are rendered
-        expect(screen.getByRole('tab', { name: /Meals/i })).toBeInTheDocument();
+        expect(screen.getByRole('tab', { name: /Upcoming/i })).toBeInTheDocument();
         expect(screen.getByRole('tab', { name: /Templates/i })).toBeInTheDocument();
+        expect(screen.getByRole('tab', { name: /History/i })).toBeInTheDocument();
+    });
 
-        // Check default content (Meals List)
-        expect(screen.getByText('Meals List Component')).toBeInTheDocument();
+    it('shows Upcoming tab content by default', () => {
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals']}>
+                <Routes>
+                    <Route path="/meals" element={<MealsPage />}>
+                        <Route index element={<div>Upcoming Component</div>} />
+                        <Route path="templates" element={<div>Templates List Component</div>} />
+                        <Route path="history" element={<div>History Component</div>} />
+                    </Route>
+                </Routes>
+            </MemoryRouter>
+        );
 
-        // Click Templates tab
-        const templatesTab = screen.getByRole('tab', { name: /Templates/i });
-        fireEvent.click(templatesTab);
+        expect(screen.getByText('Upcoming Component')).toBeInTheDocument();
+    });
 
-        // Wait for navigation
+    it('navigates to Templates tab', async () => {
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals']}>
+                <Routes>
+                    <Route path="/meals" element={<MealsPage />}>
+                        <Route index element={<div>Upcoming Component</div>} />
+                        <Route path="templates" element={<div>Templates List Component</div>} />
+                        <Route path="history" element={<div>History Component</div>} />
+                    </Route>
+                </Routes>
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByRole('tab', { name: /Templates/i }));
+
         await waitFor(() => {
             expect(screen.getByText('Templates List Component')).toBeInTheDocument();
         });
     });
 
-    it('navigates back to meals tab', async () => {
+    it('navigates to History tab', async () => {
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals']}>
+                <Routes>
+                    <Route path="/meals" element={<MealsPage />}>
+                        <Route index element={<div>Upcoming Component</div>} />
+                        <Route path="templates" element={<div>Templates List Component</div>} />
+                        <Route path="history" element={<div>History Component</div>} />
+                    </Route>
+                </Routes>
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByRole('tab', { name: /History/i }));
+
+        await waitFor(() => {
+            expect(screen.getByText('History Component')).toBeInTheDocument();
+        });
+    });
+
+    it('navigates back to Upcoming from Templates', async () => {
         renderWithProviders(
             <MemoryRouter initialEntries={['/meals/templates']}>
                 <Routes>
                     <Route path="/meals" element={<MealsPage />}>
-                        <Route index element={<div>Meals List Component</div>} />
+                        <Route index element={<div>Upcoming Component</div>} />
                         <Route path="templates" element={<div>Templates List Component</div>} />
+                        <Route path="history" element={<div>History Component</div>} />
                     </Route>
                 </Routes>
             </MemoryRouter>
@@ -47,12 +93,26 @@ describe('MealsPage', () => {
 
         expect(screen.getByText('Templates List Component')).toBeInTheDocument();
 
-        // Click Meals tab
-        const mealsTab = screen.getByRole('tab', { name: /^Meals$/i });
-        fireEvent.click(mealsTab);
+        fireEvent.click(screen.getByRole('tab', { name: /Upcoming/i }));
 
         await waitFor(() => {
-            expect(screen.getByText('Meals List Component')).toBeInTheDocument();
+            expect(screen.getByText('Upcoming Component')).toBeInTheDocument();
         });
+    });
+
+    it('shows History tab as active when on /meals/history', () => {
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/history']}>
+                <Routes>
+                    <Route path="/meals" element={<MealsPage />}>
+                        <Route index element={<div>Upcoming Component</div>} />
+                        <Route path="templates" element={<div>Templates List Component</div>} />
+                        <Route path="history" element={<div>History Component</div>} />
+                    </Route>
+                </Routes>
+            </MemoryRouter>
+        );
+
+        expect(screen.getByText('History Component')).toBeInTheDocument();
     });
 });

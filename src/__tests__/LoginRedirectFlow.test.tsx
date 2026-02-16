@@ -16,6 +16,17 @@ vi.mock('../features/recipes/components/RecipeDetails', () => ({
     default: () => <div data-testid="recipe-details">Recipe Details Page</div>
 }));
 
+vi.mock('../features/meals/pages/MealsPage', async () => {
+    const { Outlet } = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+    return {
+        default: () => <div data-testid="meals-page"><Outlet /></div>
+    };
+});
+
+vi.mock('../features/meals/components/MealList', () => ({
+    default: () => <div data-testid="meal-list">Meal List Page</div>
+}));
+
 // Mock the Auth Service
 vi.mock('../client', async () => {
     return {
@@ -83,7 +94,7 @@ describe('Login Redirect Flow', () => {
         }, { timeout: 3000 });
     });
 
-    it('redirects to recipes by default if no prior location', async () => {
+    it('redirects to meals by default if no prior location', async () => {
         // Setup mocks
         // Setup mocks
         vi.mocked(AuthenticationService.loginAuthTokenPost).mockResolvedValue({
@@ -122,9 +133,9 @@ describe('Login Redirect Flow', () => {
 
         fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-        // 3. Verify Redirection to Default
+        // 3. Verify Redirection to Default (now /meals)
         await waitFor(() => {
-            const list = screen.queryByTestId('recipe-list');
+            const list = screen.queryByTestId('meal-list');
             expect(list).toBeInTheDocument();
         }, { timeout: 3000 });
     });

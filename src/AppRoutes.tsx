@@ -115,6 +115,7 @@ const AppRoutes = () => {
                             >
                                 <Route index element={<MealList />} />
                                 <Route path="templates" element={<TemplateList />} />
+                                <Route path="history" element={<MealList />} />
                             </Route>
                             <Route
                                 path="/meals/new"

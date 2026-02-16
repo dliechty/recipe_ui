@@ -59,7 +59,7 @@ describe('LoginPage', () => {
             expect(token).not.toBeNull();
             expect(token).toContain('fake-signature');
             // Check navigation default
-            expect(mockNavigate).toHaveBeenCalledWith('/recipes', { replace: true });
+            expect(mockNavigate).toHaveBeenCalledWith('/meals', { replace: true });
         });
     });
 

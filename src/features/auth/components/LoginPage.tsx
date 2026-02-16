@@ -22,7 +22,7 @@ const LoginPage = () => {
     const location = useLocation();
 
     // safe navigation target
-    const from = location.state?.from?.pathname || "/recipes";
+    const from = location.state?.from?.pathname || "/meals";
 
     useEffect(() => {
         if (isAuthenticated) {

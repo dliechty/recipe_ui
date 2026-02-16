@@ -134,7 +134,7 @@ describe('ProtectedRoute', () => {
         render(
             <MemoryRouter initialEntries={['/admin']}>
                 <Routes>
-                    <Route path="/recipes" element={<div>Recipes Page</div>} />
+                    <Route path="/meals" element={<div>Meals Page</div>} />
                     <Route
                         path="/admin"
                         element={
@@ -147,7 +147,7 @@ describe('ProtectedRoute', () => {
             </MemoryRouter>
         );
 
-        expect(screen.getByText('Recipes Page')).toBeInTheDocument();
+        expect(screen.getByText('Meals Page')).toBeInTheDocument();
         expect(screen.queryByText('Admin Content')).not.toBeInTheDocument();
     });
 
