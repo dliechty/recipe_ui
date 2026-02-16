@@ -9,7 +9,9 @@ export type MealUpdate = {
     name?: (string | null);
     status?: (MealStatus | null);
     classification?: (MealClassification | null);
-    date?: (string | null);
+    scheduled_date?: (string | null);
+    is_shopped?: (boolean | null);
+    queue_position?: (number | null);
     items?: (Array<MealItemBase> | null);
 };
 

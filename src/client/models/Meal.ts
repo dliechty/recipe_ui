@@ -9,7 +9,9 @@ export type Meal = {
     name?: (string | null);
     status?: MealStatus;
     classification?: (MealClassification | null);
-    date?: (string | null);
+    scheduled_date?: (string | null);
+    is_shopped?: boolean;
+    queue_position?: (number | null);
     id: string;
     user_id: string;
     template_id?: (string | null);

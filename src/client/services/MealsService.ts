@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { Meal } from '../models/Meal';
 import type { MealCreate } from '../models/MealCreate';
-import type { MealScheduleRequest } from '../models/MealScheduleRequest';
+import type { MealGenerateRequest } from '../models/MealGenerateRequest';
 import type { MealTemplate } from '../models/MealTemplate';
 import type { MealTemplateCreate } from '../models/MealTemplateCreate';
 import type { MealTemplateUpdate } from '../models/MealTemplateUpdate';
@@ -141,22 +141,21 @@ export class MealsService {
         });
     }
     /**
-     * Generate Meal
-     * @param templateId
+     * Generate Meals
+     * Generate N meals by selecting N templates via weighted random selection.
+     *
+     * Each template is used at most once per generation. Templates that haven't
+     * been used recently are more likely to be selected.
      * @param requestBody
      * @returns Meal Successful Response
      * @throws ApiError
      */
-    public static generateMealMealsGeneratePost(
-        templateId: string,
-        requestBody?: (MealScheduleRequest | null),
-    ): CancelablePromise<Meal> {
+    public static generateMealsMealsGeneratePost(
+        requestBody: MealGenerateRequest,
+    ): CancelablePromise<Array<Meal>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/meals/generate',
-            query: {
-                'template_id': templateId,
-            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -191,12 +190,12 @@ export class MealsService {
      *
      * Operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `in`, `like`.
      *
-     * Filter fields: `id`, `name`, `status`, `classification`, `date`, `created_at`, `updated_at`, `recipe_id`, `owner` (or `created_by`).
+     * Filter fields: `id`, `name`, `status`, `classification`, `scheduled_date`, `is_shopped`, `created_at`, `updated_at`, `recipe_id`, `owner` (or `created_by`).
      *
      * Examples:
      * - `?name[like]=weekly` - Meals with 'weekly' in name
-     * - `?status[eq]=scheduled` - Scheduled meals only
-     * - `?date[gte]=2024-01-01&date[lte]=2024-01-31` - Meals in January 2024
+     * - `?status[eq]=Queued` - Queued meals only
+     * - `?scheduled_date[gte]=2024-01-01&scheduled_date[lte]=2024-01-31` - Meals in January 2024
      * - `?recipe_id[eq]=<uuid>` - Meals containing specific recipe
      * - `?recipe_id[in]=<uuid1>,<uuid2>` - Meals containing any of the specified recipes
      * - `?classification[in]=breakfast,lunch` - Breakfast or lunch meals
@@ -206,7 +205,7 @@ export class MealsService {
      * Returns total count in `X-Total-Count` response header.
      * @param skip Number of records to skip for pagination
      * @param limit Maximum number of records to return (1-1000)
-     * @param sort Comma-separated sort fields. Prefix with '-' for descending order. Valid fields: date, classification, status, created_at, updated_at, name. Default: date descending with unscheduled (null) dates first. Example: '-date,name'
+     * @param sort Comma-separated sort fields. Prefix with '-' for descending order. Valid fields: scheduled_date, classification, status, created_at, updated_at, name, queue_position. Default: scheduled_date descending with unscheduled (null) dates first. Example: '-scheduled_date,name'
      * @returns Meal Successful Response
      * @throws ApiError
      */
