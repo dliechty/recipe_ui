@@ -18,6 +18,7 @@ const AccountPage = React.lazy(() => import('./features/users/AccountPage'));
 const RecipeBoxPage = React.lazy(() => import('./features/recipe-lists/pages/RecipeBoxPage'));
 const MealsPage = React.lazy(() => import('./features/meals/pages/MealsPage'));
 const MealList = React.lazy(() => import('./features/meals/components/MealList'));
+const UpcomingMeals = React.lazy(() => import('./features/meals/components/UpcomingMeals'));
 const TemplateList = React.lazy(() => import('./features/meals/components/TemplateList'));
 const MealDetails = React.lazy(() => import('./features/meals/components/MealDetails'));
 const TemplateDetails = React.lazy(() => import('./features/meals/components/TemplateDetails'));
@@ -113,7 +114,7 @@ const AppRoutes = () => {
                                     </ProtectedRoute>
                                 }
                             >
-                                <Route index element={<MealList />} />
+                                <Route index element={<UpcomingMeals />} />
                                 <Route path="templates" element={<TemplateList />} />
                                 <Route path="history" element={<MealList />} />
                             </Route>

@@ -23,6 +23,10 @@ vi.mock('../features/meals/pages/MealsPage', async () => {
     };
 });
 
+vi.mock('../features/meals/components/UpcomingMeals', () => ({
+    default: () => <div data-testid="upcoming-meals">Upcoming Meals Page</div>
+}));
+
 vi.mock('../features/meals/components/MealList', () => ({
     default: () => <div data-testid="meal-list">Meal List Page</div>
 }));
@@ -133,10 +137,10 @@ describe('Login Redirect Flow', () => {
 
         fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-        // 3. Verify Redirection to Default (now /meals)
+        // 3. Verify Redirection to Default (now /meals → UpcomingMeals)
         await waitFor(() => {
-            const list = screen.queryByTestId('meal-list');
-            expect(list).toBeInTheDocument();
+            const upcoming = screen.queryByTestId('upcoming-meals');
+            expect(upcoming).toBeInTheDocument();
         }, { timeout: 3000 });
     });
 });
