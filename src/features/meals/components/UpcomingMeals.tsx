@@ -54,13 +54,23 @@ const UpcomingMeals = () => {
     );
 
     // Local order state that dnd-kit controls directly.
-    // Syncs from server data, but NOT while a reorder mutation is in-flight.
+    // After a drag reorder, server syncs are blocked until the server data
+    // reflects the new order, preventing stale data from flickering through.
     const [localMeals, setLocalMeals] = useState<Meal[]>([]);
+    const reorderPendingRef = useRef(false);
     useEffect(() => {
-        if (!bulkUpdate.isPending) {
-            setLocalMeals(serverMeals);
+        if (reorderPendingRef.current) {
+            // Only accept server data once it matches the local order
+            const serverIds = serverMeals.map(m => m.id).join(',');
+            const localIds = localMeals.map(m => m.id).join(',');
+            if (serverIds === localIds) {
+                reorderPendingRef.current = false;
+                setLocalMeals(serverMeals);
+            }
+            return;
         }
-    }, [serverMeals, bulkUpdate.isPending]);
+        setLocalMeals(serverMeals);
+    }, [serverMeals]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Use local order for rendering; fall back to server data if local is empty
     const meals = localMeals.length > 0 ? localMeals : serverMeals;
@@ -116,7 +126,9 @@ const UpcomingMeals = () => {
 
         // Use arrayMove (same algorithm dnd-kit uses internally) and
         // update local state immediately so the list stays in place.
+        // Block server syncs until server data catches up.
         const reordered = arrayMove(meals, oldIndex, newIndex);
+        reorderPendingRef.current = true;
         setLocalMeals(reordered);
 
         // Persist new queue_position values to the server
