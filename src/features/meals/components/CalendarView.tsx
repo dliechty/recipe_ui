@@ -1,12 +1,23 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Box, VStack, HStack, Text, IconButton, Button, Badge, Grid, GridItem } from '@chakra-ui/react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { Meal } from '../../../client';
+import {
+    DndContext,
+    DragOverlay,
+    useDraggable,
+    useDroppable,
+    PointerSensor,
+    KeyboardSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import { Meal, MealUpdate } from '../../../client';
 
 interface CalendarViewProps {
     meals: Meal[];
     recipeNames: Record<string, string>;
+    onMealUpdate?: (mealId: string, update: MealUpdate) => void;
 }
 
 const getStartOfWeek = (date: Date): Date => {
@@ -21,9 +32,159 @@ const formatDateHeader = (date: Date): string => {
     return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 };
 
-const CalendarView = ({ meals, recipeNames }: CalendarViewProps) => {
+// --- Sub-components for DnD ---
+
+interface DraggableMealCardProps {
+    meal: Meal;
+    recipeNames: Record<string, string>;
+    onClick: () => void;
+}
+
+const DraggableMealCard = ({ meal, recipeNames, onClick }: DraggableMealCardProps) => {
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+        id: meal.id,
+    });
+
+    return (
+        <Box
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
+            p={1}
+            borderRadius="sm"
+            bg="whiteAlpha.100"
+            cursor="grab"
+            opacity={isDragging ? 0.4 : 1}
+            _hover={{ bg: 'whiteAlpha.200' }}
+            onClick={onClick}
+        >
+            <Text fontSize="xs" fontWeight="medium" color="fg.default" lineClamp={1}>
+                {meal.name || 'Untitled'}
+            </Text>
+            {meal.items?.length > 0 && (
+                <Text fontSize="2xs" color="fg.muted" lineClamp={1}>
+                    {meal.items.map(item => recipeNames[item.recipe_id] || '...').join(', ')}
+                </Text>
+            )}
+            {meal.classification && (
+                <Badge size="sm" colorPalette="blue" fontSize="2xs">
+                    {meal.classification}
+                </Badge>
+            )}
+        </Box>
+    );
+};
+
+interface DroppableDaySlotProps {
+    dateStr: string;
+    isToday: boolean;
+    dayLabel: string;
+    children: React.ReactNode;
+}
+
+const DroppableDaySlot = ({ dateStr, isToday, dayLabel, children }: DroppableDaySlotProps) => {
+    const { setNodeRef, isOver } = useDroppable({
+        id: dateStr,
+    });
+
+    return (
+        <GridItem
+            ref={setNodeRef}
+            data-testid={`calendar-day-${dateStr}`}
+            borderWidth={isOver ? 2 : 1}
+            borderColor={isOver ? 'green.400' : isToday ? 'vscode.accent' : 'border.default'}
+            borderRadius="md"
+            bg={isOver ? 'whiteAlpha.100' : isToday ? 'whiteAlpha.50' : 'bg.surface'}
+            minH="120px"
+            transition="border-color 0.15s, background 0.15s"
+        >
+            <Box
+                px={2}
+                py={1}
+                borderBottomWidth={1}
+                borderColor="border.default"
+                bg={isToday ? 'whiteAlpha.100' : undefined}
+            >
+                <Text
+                    fontSize="xs"
+                    fontWeight={isToday ? 'bold' : 'medium'}
+                    color={isToday ? 'vscode.accent' : 'fg.muted'}
+                >
+                    {dayLabel}
+                </Text>
+            </Box>
+            <VStack p={1} gap={1} align="stretch">
+                {children}
+            </VStack>
+        </GridItem>
+    );
+};
+
+interface DroppableUnscheduledAreaProps {
+    children: React.ReactNode;
+}
+
+const DroppableUnscheduledArea = ({ children }: DroppableUnscheduledAreaProps) => {
+    const { setNodeRef, isOver } = useDroppable({
+        id: 'unscheduled',
+    });
+
+    return (
+        <Box
+            ref={setNodeRef}
+            data-testid="calendar-unscheduled"
+            borderWidth={isOver ? 2 : 1}
+            borderColor={isOver ? 'green.400' : 'border.default'}
+            borderRadius="md"
+            p={3}
+            bg={isOver ? 'whiteAlpha.100' : undefined}
+            transition="border-color 0.15s, background 0.15s"
+        >
+            <Text fontSize="sm" fontWeight="semibold" color="fg.default" mb={2}>
+                Unscheduled
+            </Text>
+            <HStack gap={2} flexWrap="wrap">
+                {children}
+            </HStack>
+        </Box>
+    );
+};
+
+// --- Drag overlay card (simplified visual) ---
+
+const DragOverlayCard = ({ meal }: { meal: Meal }) => (
+    <Box
+        p={2}
+        borderRadius="md"
+        bg="bg.surface"
+        borderWidth={1}
+        borderColor="vscode.accent"
+        boxShadow="lg"
+        opacity={0.9}
+        maxW="200px"
+    >
+        <Text fontSize="xs" fontWeight="medium" color="fg.default" lineClamp={1}>
+            {meal.name || 'Untitled'}
+        </Text>
+        {meal.classification && (
+            <Badge size="sm" colorPalette="blue" fontSize="2xs">
+                {meal.classification}
+            </Badge>
+        )}
+    </Box>
+);
+
+// --- Main component ---
+
+const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) => {
     const navigate = useNavigate();
     const [weekStart, setWeekStart] = useState(() => getStartOfWeek(new Date()));
+    const [activeDragId, setActiveDragId] = useState<string | null>(null);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(KeyboardSensor)
+    );
 
     const weekDays = useMemo(() => {
         const days: Date[] = [];
@@ -50,6 +211,12 @@ const CalendarView = ({ meals, recipeNames }: CalendarViewProps) => {
         return map;
     }, [meals]);
 
+    const mealsById = useMemo(() => {
+        const map = new Map<string, Meal>();
+        meals.forEach(meal => map.set(meal.id, meal));
+        return map;
+    }, [meals]);
+
     const unscheduledMeals = useMemo(() =>
         meals.filter(m => !m.scheduled_date),
         [meals]
@@ -71,137 +238,130 @@ const CalendarView = ({ meals, recipeNames }: CalendarViewProps) => {
         setWeekStart(getStartOfWeek(new Date()));
     };
 
+    const handleDragStart = useCallback((event: { active: { id: string | number } }) => {
+        setActiveDragId(String(event.active.id));
+    }, []);
+
+    const handleDragEnd = useCallback((event: { active: { id: string | number }; over: { id: string | number } | null }) => {
+        setActiveDragId(null);
+
+        const { active, over } = event;
+        if (!over) return;
+
+        const mealId = String(active.id);
+        const targetId = String(over.id);
+        const meal = mealsById.get(mealId);
+        if (!meal) return;
+
+        const currentDate = meal.scheduled_date || null;
+
+        if (targetId === 'unscheduled') {
+            // Dropping on unscheduled area: clear scheduled_date
+            if (currentDate === null) return; // Already unscheduled, no-op
+            onMealUpdate?.(mealId, { scheduled_date: null });
+        } else {
+            // Dropping on a day slot: targetId is a date string
+            if (currentDate === targetId) return; // Same day, no-op
+            onMealUpdate?.(mealId, { scheduled_date: targetId });
+        }
+    }, [mealsById, onMealUpdate]);
+
+    const activeMeal = activeDragId ? mealsById.get(activeDragId) : null;
+
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekEnd.getDate() + 6);
 
     return (
-        <VStack align="stretch" gap={4}>
-            {/* Navigation */}
-            <HStack justifyContent="space-between">
-                <HStack gap={2}>
-                    <IconButton
-                        aria-label="Previous week"
-                        variant="ghost"
-                        size="sm"
-                        color="fg.muted"
-                        _hover={{ color: "fg.default" }}
-                        onClick={handlePrevWeek}
-                    >
-                        <FaChevronLeft />
-                    </IconButton>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        color="vscode.accent"
-                        onClick={handleToday}
-                    >
-                        Today
-                    </Button>
-                    <IconButton
-                        aria-label="Next week"
-                        variant="ghost"
-                        size="sm"
-                        color="fg.muted"
-                        _hover={{ color: "fg.default" }}
-                        onClick={handleNextWeek}
-                    >
-                        <FaChevronRight />
-                    </IconButton>
-                </HStack>
-                <Text fontSize="sm" color="fg.muted">
-                    {weekStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} – {weekEnd.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                </Text>
-            </HStack>
-
-            {/* Week Grid */}
-            <Grid templateColumns={{ base: '1fr', md: 'repeat(7, 1fr)' }} gap={2}>
-                {weekDays.map(day => {
-                    const dateStr = day.toISOString().split('T')[0];
-                    const dayMeals = mealsByDate.get(dateStr) || [];
-                    const isToday = day.getTime() === today.getTime();
-
-                    return (
-                        <GridItem
-                            key={dateStr}
-                            data-testid={`calendar-day-${dateStr}`}
-                            borderWidth={1}
-                            borderColor={isToday ? 'vscode.accent' : 'border.default'}
-                            borderRadius="md"
-                            bg={isToday ? 'whiteAlpha.50' : 'bg.surface'}
-                            minH="120px"
+        <DndContext
+            sensors={sensors}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
+            <VStack align="stretch" gap={4}>
+                {/* Navigation */}
+                <HStack justifyContent="space-between">
+                    <HStack gap={2}>
+                        <IconButton
+                            aria-label="Previous week"
+                            variant="ghost"
+                            size="sm"
+                            color="fg.muted"
+                            _hover={{ color: "fg.default" }}
+                            onClick={handlePrevWeek}
                         >
-                            <Box
-                                px={2}
-                                py={1}
-                                borderBottomWidth={1}
-                                borderColor="border.default"
-                                bg={isToday ? 'whiteAlpha.100' : undefined}
-                            >
-                                <Text
-                                    fontSize="xs"
-                                    fontWeight={isToday ? 'bold' : 'medium'}
-                                    color={isToday ? 'vscode.accent' : 'fg.muted'}
-                                >
-                                    {formatDateHeader(day)}
-                                </Text>
-                            </Box>
-                            <VStack p={1} gap={1} align="stretch">
-                                {dayMeals.map(meal => (
-                                    <Box
-                                        key={meal.id}
-                                        p={1}
-                                        borderRadius="sm"
-                                        bg="whiteAlpha.100"
-                                        cursor="pointer"
-                                        _hover={{ bg: 'whiteAlpha.200' }}
-                                        onClick={() => navigate(`/meals/${meal.id}`)}
-                                    >
-                                        <Text fontSize="xs" fontWeight="medium" color="fg.default" lineClamp={1}>
-                                            {meal.name || 'Untitled'}
-                                        </Text>
-                                        {meal.items?.length > 0 && (
-                                            <Text fontSize="2xs" color="fg.muted" lineClamp={1}>
-                                                {meal.items.map(item => recipeNames[item.recipe_id] || '...').join(', ')}
-                                            </Text>
-                                        )}
-                                        {meal.classification && (
-                                            <Badge size="sm" colorPalette="blue" fontSize="2xs">
-                                                {meal.classification}
-                                            </Badge>
-                                        )}
-                                    </Box>
-                                ))}
-                            </VStack>
-                        </GridItem>
-                    );
-                })}
-            </Grid>
-
-            {/* Unscheduled meals */}
-            {unscheduledMeals.length > 0 && (
-                <Box borderWidth={1} borderColor="border.default" borderRadius="md" p={3}>
-                    <Text fontSize="sm" fontWeight="semibold" color="fg.default" mb={2}>
-                        Unscheduled
-                    </Text>
-                    <HStack gap={2} flexWrap="wrap">
-                        {unscheduledMeals.map(meal => (
-                            <Box
-                                key={meal.id}
-                                px={3}
-                                py={1}
-                                borderRadius="md"
-                                bg="whiteAlpha.100"
-                                cursor="pointer"
-                                _hover={{ bg: 'whiteAlpha.200' }}
-                                onClick={() => navigate(`/meals/${meal.id}`)}
-                            >
-                                <Text fontSize="sm" color="fg.default">{meal.name || 'Untitled'}</Text>
-                            </Box>
-                        ))}
+                            <FaChevronLeft />
+                        </IconButton>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            color="vscode.accent"
+                            onClick={handleToday}
+                        >
+                            Today
+                        </Button>
+                        <IconButton
+                            aria-label="Next week"
+                            variant="ghost"
+                            size="sm"
+                            color="fg.muted"
+                            _hover={{ color: "fg.default" }}
+                            onClick={handleNextWeek}
+                        >
+                            <FaChevronRight />
+                        </IconButton>
                     </HStack>
-                </Box>
-            )}
-        </VStack>
+                    <Text fontSize="sm" color="fg.muted">
+                        {weekStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} – {weekEnd.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </Text>
+                </HStack>
+
+                {/* Week Grid */}
+                <Grid templateColumns={{ base: '1fr', md: 'repeat(7, 1fr)' }} gap={2}>
+                    {weekDays.map(day => {
+                        const dateStr = day.toISOString().split('T')[0];
+                        const dayMeals = mealsByDate.get(dateStr) || [];
+                        const isToday = day.getTime() === today.getTime();
+
+                        return (
+                            <DroppableDaySlot
+                                key={dateStr}
+                                dateStr={dateStr}
+                                isToday={isToday}
+                                dayLabel={formatDateHeader(day)}
+                            >
+                                {dayMeals.map(meal => (
+                                    <DraggableMealCard
+                                        key={meal.id}
+                                        meal={meal}
+                                        recipeNames={recipeNames}
+                                        onClick={() => navigate(`/meals/${meal.id}`)}
+                                    />
+                                ))}
+                            </DroppableDaySlot>
+                        );
+                    })}
+                </Grid>
+
+                {/* Unscheduled meals - always show the droppable area */}
+                <DroppableUnscheduledArea>
+                    {unscheduledMeals.map(meal => (
+                        <DraggableMealCard
+                            key={meal.id}
+                            meal={meal}
+                            recipeNames={recipeNames}
+                            onClick={() => navigate(`/meals/${meal.id}`)}
+                        />
+                    ))}
+                    {unscheduledMeals.length === 0 && (
+                        <Text fontSize="sm" color="fg.muted">Drop meals here to unschedule</Text>
+                    )}
+                </DroppableUnscheduledArea>
+            </VStack>
+
+            <DragOverlay>
+                {activeMeal ? <DragOverlayCard meal={activeMeal} /> : null}
+            </DragOverlay>
+        </DndContext>
     );
 };
 

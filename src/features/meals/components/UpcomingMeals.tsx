@@ -17,7 +17,7 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useInfiniteMeals, useBulkUpdateMeals, useGenerateMeals } from '../../../hooks/useMeals';
+import { useInfiniteMeals, useBulkUpdateMeals, useUpdateMeal, useGenerateMeals } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useAuth } from '../../../context/AuthContext';
 import { MealStatus, MealGenerateRequest, Meal, MealUpdate } from '../../../client';
@@ -33,6 +33,7 @@ const UpcomingMeals = () => {
     const { user } = useAuth();
     const bulkUpdate = useBulkUpdateMeals();
     const bulkStatusUpdate = useBulkUpdateMeals();
+    const updateMeal = useUpdateMeal();
     const generateMeals = useGenerateMeals();
     const [generateModalOpen, setGenerateModalOpen] = useState(false);
     const [shoppingPanelOpen, setShoppingPanelOpen] = useState(false);
@@ -173,6 +174,10 @@ const UpcomingMeals = () => {
         setSelectionMode(false);
         setSelectedIds(new Set());
     }, []);
+
+    const handleMealUpdate = useCallback((mealId: string, requestBody: MealUpdate) => {
+        updateMeal.mutate({ id: mealId, requestBody });
+    }, [updateMeal]);
 
     const handleBulkAction = useCallback((requestBody: MealUpdate) => {
         const updates = Array.from(selectedIds).map(id => ({
@@ -365,7 +370,7 @@ const UpcomingMeals = () => {
             )}
 
             {status === 'success' && meals.length > 0 && viewMode === 'calendar' && (
-                <CalendarView meals={meals} recipeNames={recipeNames} />
+                <CalendarView meals={meals} recipeNames={recipeNames} onMealUpdate={handleMealUpdate} />
             )}
 
             {selectionMode && selectedIds.size > 0 && (

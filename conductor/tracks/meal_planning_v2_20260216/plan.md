@@ -93,7 +93,7 @@
 
 ## Phase 5: Calendar Drag-and-Drop
 
-- [ ] Task 5.1: Write tests for calendar drag-and-drop scheduling
+- [~] Task 5.1: Write tests for calendar drag-and-drop scheduling
   - Test meal cards in day slots are draggable (have drag attributes)
   - Test day slots are valid drop targets
   - Test unscheduled area is a valid drop target
