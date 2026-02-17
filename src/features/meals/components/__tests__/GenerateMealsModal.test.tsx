@@ -27,7 +27,7 @@ describe('GenerateMealsModal', () => {
         expect(input.value).toBe('5');
     });
 
-    it('calls onGenerate with count when submitted', async () => {
+    it('calls onGenerate with count and default template_filter when submitted', async () => {
         const onGenerate = vi.fn();
         renderWithProviders(
             <GenerateMealsModal isOpen={true} onClose={vi.fn()} onGenerate={onGenerate} isGenerating={false} />
@@ -38,7 +38,10 @@ describe('GenerateMealsModal', () => {
 
         fireEvent.click(screen.getByRole('button', { name: /^Generate$/i }));
 
-        expect(onGenerate).toHaveBeenCalledWith({ count: 3 });
+        expect(onGenerate).toHaveBeenCalledWith({
+            count: 3,
+            template_filter: [{ field: 'classification', operator: 'eq', value: 'Dinner' }],
+        });
     });
 
     it('enforces minimum count of 1', () => {
@@ -71,5 +74,60 @@ describe('GenerateMealsModal', () => {
 
         fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
         expect(onClose).toHaveBeenCalled();
+    });
+
+    it('renders classification dropdown defaulting to "Dinner"', () => {
+        renderWithProviders(
+            <GenerateMealsModal isOpen={true} onClose={vi.fn()} onGenerate={vi.fn()} isGenerating={false} />
+        );
+
+        const dropdown = screen.getByLabelText('Classification') as HTMLSelectElement;
+        expect(dropdown).toBeInTheDocument();
+        expect(dropdown.value).toBe('Dinner');
+    });
+
+    it('selecting a classification includes template_filter in generate request', () => {
+        const onGenerate = vi.fn();
+        renderWithProviders(
+            <GenerateMealsModal isOpen={true} onClose={vi.fn()} onGenerate={onGenerate} isGenerating={false} />
+        );
+
+        const dropdown = screen.getByLabelText('Classification');
+        fireEvent.change(dropdown, { target: { value: 'Breakfast' } });
+
+        fireEvent.click(screen.getByRole('button', { name: /^Generate$/i }));
+
+        expect(onGenerate).toHaveBeenCalledWith({
+            count: 5,
+            template_filter: [{ field: 'classification', operator: 'eq', value: 'Breakfast' }],
+        });
+    });
+
+    it('classification resets to "Dinner" when modal is reopened', () => {
+        const { rerender } = renderWithProviders(
+            <GenerateMealsModal isOpen={true} onClose={vi.fn()} onGenerate={vi.fn()} isGenerating={false} />
+        );
+
+        // Change to Lunch
+        const dropdown = screen.getByLabelText('Classification') as HTMLSelectElement;
+        fireEvent.change(dropdown, { target: { value: 'Lunch' } });
+        expect(dropdown.value).toBe('Lunch');
+
+        // Close modal
+        rerender(
+            <ChakraProvider value={system}>
+                <GenerateMealsModal isOpen={false} onClose={vi.fn()} onGenerate={vi.fn()} isGenerating={false} />
+            </ChakraProvider>
+        );
+
+        // Reopen modal
+        rerender(
+            <ChakraProvider value={system}>
+                <GenerateMealsModal isOpen={true} onClose={vi.fn()} onGenerate={vi.fn()} isGenerating={false} />
+            </ChakraProvider>
+        );
+
+        const reopenedDropdown = screen.getByLabelText('Classification') as HTMLSelectElement;
+        expect(reopenedDropdown.value).toBe('Dinner');
     });
 });
