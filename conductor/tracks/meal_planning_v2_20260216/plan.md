@@ -29,7 +29,7 @@
   - Show error text when name is empty on submit attempt
   - Prevent form submission with empty/whitespace-only name
 
-- [ ] Task 2.3: Conductor - User Manual Verification 'Phase 2: Meal Name Validation' (Protocol in workflow.md)
+- [x] Task 2.3: Conductor - User Manual Verification 'Phase 2: Meal Name Validation'
 
 ## Phase 3: Bulk Status Management
 
@@ -58,7 +58,7 @@
   - Clear selection and exit selection mode on success
   - Show success/error toasts
 
-- [ ] Task 3.5: Conductor - User Manual Verification 'Phase 3: Bulk Status Management' (Protocol in workflow.md)
+- [x] Task 3.5: Conductor - User Manual Verification 'Phase 3: Bulk Status Management'
 
 ## Phase 4: Ingredient-Based Shopping List
 
@@ -89,7 +89,7 @@
   - Fetch full Recipe objects (with components/ingredients) for meals' recipe IDs
   - Pass Recipe[] to ShoppingListPanel instead of just recipeNames
 
-- [ ] Task 4.6: Conductor - User Manual Verification 'Phase 4: Ingredient-Based Shopping List' (Protocol in workflow.md)
+- [x] Task 4.6: Conductor - User Manual Verification 'Phase 4: Ingredient-Based Shopping List'
 
 ## Phase 5: Calendar Drag-and-Drop
 
@@ -114,7 +114,7 @@
   - UpcomingMeals passes update handler that calls useUpdateMeal
   - Invalidate meal queries on successful update
 
-- [ ] Task 5.4: Conductor - User Manual Verification 'Phase 5: Calendar Drag-and-Drop' (Protocol in workflow.md)
+- [x] Task 5.4: Conductor - User Manual Verification 'Phase 5: Calendar Drag-and-Drop'
 
 ## Phase 6: Queue Sort by Scheduled Date
 
@@ -131,4 +131,4 @@
   - When sort-by-date is active, client-side sort: unscheduled first (by queue_position), then scheduled by date ascending
   - Disable drag-and-drop when sorting by date (reorder doesn't make sense)
 
-- [ ] Task 6.3: Conductor - User Manual Verification 'Phase 6: Queue Sort by Scheduled Date' (Protocol in workflow.md)
+- [x] Task 6.3: Conductor - User Manual Verification 'Phase 6: Queue Sort by Scheduled Date'

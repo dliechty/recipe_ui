@@ -1,8 +1,8 @@
 {
   "track_id": "meal_planning_v2_20260216",
   "type": "feature",
-  "status": "new",
+  "status": "completed",
   "created_at": "2026-02-16T17:30:00Z",
-  "updated_at": "2026-02-16T17:30:00Z",
+  "updated_at": "2026-02-16T21:00:00Z",
   "description": "Meal planning iteration 2: MSW mock fixes, meal name validation, bulk status management, ingredient-based shopping list, calendar drag-and-drop, queue sort by date"
 }
