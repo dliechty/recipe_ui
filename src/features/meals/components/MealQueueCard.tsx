@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Meal } from '../../../client';
+import { parseLocalDate } from '../../../utils/formatters';
 
 interface MealQueueCardProps {
     meal: Meal;
@@ -102,7 +103,7 @@ const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleS
                             <FaCalendarAlt size={12} />
                             <Text>
                                 {meal.scheduled_date
-                                    ? new Date(meal.scheduled_date).toLocaleDateString()
+                                    ? parseLocalDate(meal.scheduled_date).toLocaleDateString()
                                     : 'Unscheduled'}
                             </Text>
                         </HStack>

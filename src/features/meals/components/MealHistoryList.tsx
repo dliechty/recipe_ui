@@ -7,6 +7,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { MealStatus } from '../../../client';
 import { UserDisplay } from '../../../components/common/UserDisplay';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { parseLocalDate } from '../../../utils/formatters';
 
 const MealHistoryList = () => {
     const navigate = useNavigate();
@@ -135,7 +136,7 @@ const MealHistoryList = () => {
                                         <UserDisplay userId={meal.user_id} />
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        {meal.scheduled_date ? new Date(meal.scheduled_date).toLocaleDateString() : 'N/A'}
+                                        {meal.scheduled_date ? parseLocalDate(meal.scheduled_date).toLocaleDateString() : 'N/A'}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

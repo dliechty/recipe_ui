@@ -9,6 +9,7 @@ import { UserDisplay } from '../../../components/common/UserDisplay';
 import MealFilters from './MealFilters';
 import { mealFiltersToSearchParams, searchParamsToMealFilters } from '../../../utils/mealParams';
 import { themeColors } from '../../../utils/styles';
+import { parseLocalDate } from '../../../utils/formatters';
 
 const MealList = () => {
     const navigate = useNavigate();
@@ -233,7 +234,7 @@ const MealList = () => {
                                         <UserDisplay userId={meal.user_id} />
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        {meal.scheduled_date ? new Date(meal.scheduled_date).toLocaleDateString() : 'N/A'}
+                                        {meal.scheduled_date ? parseLocalDate(meal.scheduled_date).toLocaleDateString() : 'N/A'}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

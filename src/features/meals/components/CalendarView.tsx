@@ -13,6 +13,7 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import { Meal, MealUpdate } from '../../../client';
+import { formatLocalDateString } from '../../../utils/formatters';
 
 interface CalendarViewProps {
     meals: Meal[];
@@ -382,7 +383,7 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate, selectionMode, selecte
                 {/* Week Grid */}
                 <Grid templateColumns={{ base: '1fr', md: 'repeat(7, 1fr)' }} gap={2}>
                     {weekDays.map(day => {
-                        const dateStr = day.toISOString().split('T')[0];
+                        const dateStr = formatLocalDateString(day);
                         const dayMeals = mealsByDate.get(dateStr) || [];
                         const isToday = day.getTime() === today.getTime();
 

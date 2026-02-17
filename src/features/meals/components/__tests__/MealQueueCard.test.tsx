@@ -77,7 +77,7 @@ describe('MealQueueCard', () => {
 
     it('shows scheduled date when present', () => {
         renderWithProviders(<MealQueueCard meal={baseMeal} recipeNames={{}} />);
-        expect(screen.getByText(new Date('2026-03-01').toLocaleDateString())).toBeInTheDocument();
+        expect(screen.getByText(new Date(2026, 2, 1).toLocaleDateString())).toBeInTheDocument();
     });
 
     it('shows "Unscheduled" when no date', () => {

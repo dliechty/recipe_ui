@@ -120,7 +120,7 @@ describe('MealList', () => {
         expect(cells[4]).toHaveTextContent('Test User');
         
         // Date (index 5)
-        expect(cells[5]).toHaveTextContent(new Date('2025-01-01').toLocaleDateString());
+        expect(cells[5]).toHaveTextContent(new Date(2025, 0, 1).toLocaleDateString());
     });
 
     it('shows add meal button', async () => {

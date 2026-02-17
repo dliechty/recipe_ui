@@ -3,6 +3,7 @@ import { Text, Input, IconButton, HStack, Icon, Spinner, Button } from '@chakra-
 import { FaCheck, FaTimes, FaEdit, FaCalendarAlt } from 'react-icons/fa';
 import { useUpdateMeal } from '../../../hooks/useMeals';
 import { toaster } from '../../../toaster';
+import { parseLocalDate } from '../../../utils/formatters';
 
 interface EditableMealDateProps {
     mealId: string;
@@ -58,14 +59,7 @@ const EditableMealDate = ({ mealId, date, canEdit }: EditableMealDateProps) => {
 
     const getDisplayDate = () => {
         if (!date) return 'Set Date';
-        const parts = date.split('-');
-        if (parts.length === 3) {
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10) - 1;
-            const day = parseInt(parts[2], 10);
-            return new Date(year, month, day).toLocaleDateString();
-        }
-        return new Date(date).toLocaleDateString();
+        return parseLocalDate(date).toLocaleDateString();
     };
 
     if (isEditing) {
