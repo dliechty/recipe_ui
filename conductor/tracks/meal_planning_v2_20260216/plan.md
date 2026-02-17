@@ -62,30 +62,30 @@
 
 ## Phase 4: Ingredient-Based Shopping List
 
-- [ ] Task 4.1: Write tests for refactored ShoppingListPanel with ingredient aggregation
+- [x] Task 4.1: Write tests for refactored ShoppingListPanel with ingredient aggregation (2156a03)
   - Test that panel displays aggregated ingredients (not meal names)
   - Test merged view shows unique ingredients with summed quantities
   - Test by-recipe view groups ingredients under recipe names
   - Test checkbox toggles for individual ingredients
   - Test empty state when all meals are shopped
 
-- [ ] Task 4.2: Refactor ShoppingListPanel to display aggregated ingredients
+- [x] Task 4.2: Refactor ShoppingListPanel to display aggregated ingredients (2156a03)
   - Accept Recipe[] data instead of just recipe names
   - Extract ingredients from all recipes across unshopped meals
   - Implement merged view (aggregate by item+unit) and by-recipe view toggle
   - Add interactive checkboxes (client-side state)
   - Reuse aggregation patterns from IngredientAggregation component
 
-- [ ] Task 4.3: Write tests for print-optimized shopping list layout
+- [x] Task 4.3: Write tests for print-optimized shopping list layout (2156a03)
   - Test "Print" button renders and triggers window.print
   - Test print CSS media query hides non-essential UI elements
 
-- [ ] Task 4.4: Implement print-optimized shopping list layout
+- [x] Task 4.4: Implement print-optimized shopping list layout (2156a03)
   - Add "Print" button to ShoppingListPanel header
   - Add @media print CSS: hide header/nav, clean layout, readable font sizes
   - Ensure checked items are visually distinguished in print
 
-- [ ] Task 4.5: Update UpcomingMeals to pass full recipe data to ShoppingListPanel
+- [x] Task 4.5: Update UpcomingMeals to pass full recipe data to ShoppingListPanel (2156a03)
   - Fetch full Recipe objects (with components/ingredients) for meals' recipe IDs
   - Pass Recipe[] to ShoppingListPanel instead of just recipeNames
 
