@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Box, VStack, HStack, Text, IconButton, Button, Badge, Grid, GridItem } from '@chakra-ui/react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaShoppingBag } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import {
     DndContext,
@@ -18,6 +18,9 @@ interface CalendarViewProps {
     meals: Meal[];
     recipeNames: Record<string, string>;
     onMealUpdate?: (mealId: string, update: MealUpdate) => void;
+    selectionMode?: boolean;
+    selectedIds?: Set<string>;
+    onToggleSelect?: (id: string) => void;
 }
 
 const getStartOfWeek = (date: Date): Date => {
@@ -38,25 +41,38 @@ interface DraggableMealCardProps {
     meal: Meal;
     recipeNames: Record<string, string>;
     onClick: () => void;
+    selectionMode?: boolean;
+    isSelected?: boolean;
+    onToggleSelect?: (id: string) => void;
 }
 
-const DraggableMealCard = ({ meal, recipeNames, onClick }: DraggableMealCardProps) => {
+const DraggableMealCard = ({ meal, recipeNames, onClick, selectionMode, isSelected, onToggleSelect }: DraggableMealCardProps) => {
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: meal.id,
+        disabled: !!selectionMode,
     });
+
+    const handleClick = () => {
+        if (selectionMode && onToggleSelect) {
+            onToggleSelect(meal.id);
+        } else {
+            onClick();
+        }
+    };
 
     return (
         <Box
             ref={setNodeRef}
             {...attributes}
-            {...listeners}
+            {...(selectionMode ? {} : listeners)}
             p={1}
             borderRadius="sm"
             bg="whiteAlpha.100"
-            cursor="grab"
+            cursor={selectionMode ? 'pointer' : 'grab'}
             opacity={isDragging ? 0.4 : 1}
             _hover={{ bg: 'whiteAlpha.200' }}
-            onClick={onClick}
+            onClick={handleClick}
+            {...(isSelected ? { borderWidth: 2, borderColor: 'vscode.accent', 'data-selected': 'true' } : {})}
         >
             <Text fontSize="xs" fontWeight="medium" color="fg.default" lineClamp={1}>
                 {meal.name || 'Untitled'}
@@ -66,11 +82,20 @@ const DraggableMealCard = ({ meal, recipeNames, onClick }: DraggableMealCardProp
                     {meal.items.map(item => recipeNames[item.recipe_id] || '...').join(', ')}
                 </Text>
             )}
-            {meal.classification && (
-                <Badge size="sm" colorPalette="blue" fontSize="2xs">
-                    {meal.classification}
-                </Badge>
-            )}
+            <HStack gap={1} align="center">
+                {meal.classification && (
+                    <Badge size="sm" colorPalette="blue" fontSize="2xs">
+                        {meal.classification}
+                    </Badge>
+                )}
+                <Box
+                    as={FaShoppingBag}
+                    boxSize="10px"
+                    color={meal.is_shopped ? 'green.400' : 'fg.muted'}
+                    data-testid={`shopping-icon-${meal.id}`}
+                    flexShrink={0}
+                />
+            </HStack>
         </Box>
     );
 };
@@ -176,7 +201,7 @@ const DragOverlayCard = ({ meal }: { meal: Meal }) => (
 
 // --- Main component ---
 
-const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) => {
+const CalendarView = ({ meals, recipeNames, onMealUpdate, selectionMode, selectedIds, onToggleSelect }: CalendarViewProps) => {
     const navigate = useNavigate();
     const [weekStart, setWeekStart] = useState(() => getStartOfWeek(new Date()));
     const [activeDragId, setActiveDragId] = useState<string | null>(null);
@@ -191,10 +216,12 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
         }
     }, [meals]);
 
-    const sensors = useSensors(
+    const defaultSensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor)
     );
+    const emptySensors = useSensors();
+    const sensors = selectionMode ? emptySensors : defaultSensors;
 
     const weekDays = useMemo(() => {
         const days: Date[] = [];
@@ -372,6 +399,9 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
                                         meal={meal}
                                         recipeNames={recipeNames}
                                         onClick={() => navigate(`/meals/${meal.id}`, { state: { fromView: 'calendar' } })}
+                                        selectionMode={selectionMode}
+                                        isSelected={selectedIds?.has(meal.id)}
+                                        onToggleSelect={onToggleSelect}
                                     />
                                 ))}
                             </DroppableDaySlot>
@@ -387,6 +417,9 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
                             meal={meal}
                             recipeNames={recipeNames}
                             onClick={() => navigate(`/meals/${meal.id}`, { state: { fromView: 'calendar' } })}
+                            selectionMode={selectionMode}
+                            isSelected={selectedIds?.has(meal.id)}
+                            onToggleSelect={onToggleSelect}
                         />
                     ))}
                     {unscheduledMeals.length === 0 && (

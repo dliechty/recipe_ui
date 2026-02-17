@@ -987,4 +987,295 @@ describe('UpcomingMeals', () => {
             expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
         });
     });
+
+    describe('bulk actions remove meals from calendar view', () => {
+        it('meals marked Cooked disappear from calendar view', async () => {
+            let bulkActionDone = false;
+            const meal1 = {
+                id: 'meal-1',
+                name: 'Monday Dinner',
+                status: 'Queued',
+                classification: 'Dinner',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 0,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+            const meal2 = {
+                id: 'meal-2',
+                name: 'Tuesday Lunch',
+                status: 'Queued',
+                classification: 'Lunch',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 1,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+
+            server.use(
+                http.get('*/meals/', ({ request }) => {
+                    const url = new URL(request.url);
+                    const status = url.searchParams.get('status[in]');
+                    if (status?.includes('Queued')) {
+                        if (!bulkActionDone) {
+                            return HttpResponse.json([meal1, meal2], { headers: { 'X-Total-Count': '2' } });
+                        }
+                        // After bulk action, meal-1 is Cooked so only meal-2 remains
+                        return HttpResponse.json([meal2], { headers: { 'X-Total-Count': '1' } });
+                    }
+                    return HttpResponse.json([], { headers: { 'X-Total-Count': '0' } });
+                }),
+                http.put('*/meals/:id', async ({ params, request }) => {
+                    const body = await request.json() as Record<string, unknown>;
+                    bulkActionDone = true;
+                    return HttpResponse.json({
+                        ...meal1,
+                        id: params.id,
+                        status: body.status || 'Queued',
+                    });
+                })
+            );
+
+            renderWithProviders(
+                <MemoryRouter initialEntries={['/meals?view=calendar']}>
+                    <Routes>
+                        <Route path="/meals" element={<UpcomingMeals />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+
+            // Wait for meals to load in calendar view
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+            expect(screen.getByText('Tuesday Lunch')).toBeInTheDocument();
+
+            // Enter selection mode
+            fireEvent.click(screen.getByRole('button', { name: /Select/i }));
+
+            // Click on meal to select it in calendar view
+            fireEvent.click(screen.getByText('Monday Dinner'));
+
+            await waitFor(() => {
+                expect(screen.getAllByText(/1 selected/i).length).toBeGreaterThanOrEqual(1);
+            });
+
+            // Click Mark Cooked
+            fireEvent.click(screen.getByRole('button', { name: /Mark Cooked/i }));
+
+            // Meal should disappear from calendar after refetch
+            await waitFor(() => {
+                expect(screen.queryByText('Monday Dinner')).not.toBeInTheDocument();
+            });
+
+            // The other meal should still be visible
+            expect(screen.getByText('Tuesday Lunch')).toBeInTheDocument();
+        });
+
+        it('meals marked Cancelled disappear from calendar view', async () => {
+            let bulkActionDone = false;
+            const meal1 = {
+                id: 'meal-1',
+                name: 'Wednesday Dinner',
+                status: 'Queued',
+                classification: 'Dinner',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 0,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+            const meal2 = {
+                id: 'meal-2',
+                name: 'Thursday Lunch',
+                status: 'Queued',
+                classification: 'Lunch',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 1,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+
+            server.use(
+                http.get('*/meals/', ({ request }) => {
+                    const url = new URL(request.url);
+                    const status = url.searchParams.get('status[in]');
+                    if (status?.includes('Queued')) {
+                        if (!bulkActionDone) {
+                            return HttpResponse.json([meal1, meal2], { headers: { 'X-Total-Count': '2' } });
+                        }
+                        // After bulk action, meal-1 is Cancelled so only meal-2 remains
+                        return HttpResponse.json([meal2], { headers: { 'X-Total-Count': '1' } });
+                    }
+                    return HttpResponse.json([], { headers: { 'X-Total-Count': '0' } });
+                }),
+                http.put('*/meals/:id', async ({ params, request }) => {
+                    const body = await request.json() as Record<string, unknown>;
+                    bulkActionDone = true;
+                    return HttpResponse.json({
+                        ...meal1,
+                        id: params.id,
+                        status: body.status || 'Queued',
+                    });
+                })
+            );
+
+            renderWithProviders(
+                <MemoryRouter initialEntries={['/meals?view=calendar']}>
+                    <Routes>
+                        <Route path="/meals" element={<UpcomingMeals />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+
+            // Wait for meals to load in calendar view
+            await waitFor(() => {
+                expect(screen.getByText('Wednesday Dinner')).toBeInTheDocument();
+            });
+            expect(screen.getByText('Thursday Lunch')).toBeInTheDocument();
+
+            // Enter selection mode
+            fireEvent.click(screen.getByRole('button', { name: /Select/i }));
+
+            // Click on meal to select it in calendar view
+            fireEvent.click(screen.getByText('Wednesday Dinner'));
+
+            await waitFor(() => {
+                expect(screen.getAllByText(/1 selected/i).length).toBeGreaterThanOrEqual(1);
+            });
+
+            // Click Mark Cancelled
+            fireEvent.click(screen.getByRole('button', { name: /Mark Cancelled/i }));
+
+            // Meal should disappear from calendar after refetch
+            await waitFor(() => {
+                expect(screen.queryByText('Wednesday Dinner')).not.toBeInTheDocument();
+            });
+
+            // The other meal should still be visible
+            expect(screen.getByText('Thursday Lunch')).toBeInTheDocument();
+        });
+
+        it('multiple meals marked Cooked via bulk selection disappear from calendar view', async () => {
+            let bulkActionDone = false;
+            const meal1 = {
+                id: 'meal-1',
+                name: 'Pasta Night',
+                status: 'Queued',
+                classification: 'Dinner',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 0,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+            const meal2 = {
+                id: 'meal-2',
+                name: 'Taco Tuesday',
+                status: 'Queued',
+                classification: 'Dinner',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 1,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+            const meal3 = {
+                id: 'meal-3',
+                name: 'Salad Bowl',
+                status: 'Queued',
+                classification: 'Lunch',
+                scheduled_date: null,
+                is_shopped: false,
+                queue_position: 2,
+                user_id: 'u1',
+                created_at: '2026-01-01T00:00:00Z',
+                updated_at: '2026-01-01T00:00:00Z',
+                items: [],
+            };
+
+            server.use(
+                http.get('*/meals/', ({ request }) => {
+                    const url = new URL(request.url);
+                    const status = url.searchParams.get('status[in]');
+                    if (status?.includes('Queued')) {
+                        if (!bulkActionDone) {
+                            return HttpResponse.json([meal1, meal2, meal3], { headers: { 'X-Total-Count': '3' } });
+                        }
+                        // After bulk action, meal-1 and meal-2 are Cooked, only meal-3 remains
+                        return HttpResponse.json([meal3], { headers: { 'X-Total-Count': '1' } });
+                    }
+                    return HttpResponse.json([], { headers: { 'X-Total-Count': '0' } });
+                }),
+                http.put('*/meals/:id', async ({ params, request }) => {
+                    const body = await request.json() as Record<string, unknown>;
+                    bulkActionDone = true;
+                    return HttpResponse.json({
+                        id: params.id,
+                        name: 'Updated',
+                        status: body.status || 'Queued',
+                        is_shopped: false,
+                        queue_position: 0,
+                        user_id: 'u1',
+                        created_at: '2026-01-01T00:00:00Z',
+                        updated_at: '2026-01-01T00:00:00Z',
+                        items: [],
+                    });
+                })
+            );
+
+            renderWithProviders(
+                <MemoryRouter initialEntries={['/meals?view=calendar']}>
+                    <Routes>
+                        <Route path="/meals" element={<UpcomingMeals />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+
+            // Wait for meals to load
+            await waitFor(() => {
+                expect(screen.getByText('Pasta Night')).toBeInTheDocument();
+            });
+            expect(screen.getByText('Taco Tuesday')).toBeInTheDocument();
+            expect(screen.getByText('Salad Bowl')).toBeInTheDocument();
+
+            // Enter selection mode
+            fireEvent.click(screen.getByRole('button', { name: /Select/i }));
+
+            // Select two meals
+            fireEvent.click(screen.getByText('Pasta Night'));
+            fireEvent.click(screen.getByText('Taco Tuesday'));
+
+            await waitFor(() => {
+                expect(screen.getAllByText(/2 selected/i).length).toBeGreaterThanOrEqual(1);
+            });
+
+            // Click Mark Cooked
+            fireEvent.click(screen.getByRole('button', { name: /Mark Cooked/i }));
+
+            // Both meals should disappear
+            await waitFor(() => {
+                expect(screen.queryByText('Pasta Night')).not.toBeInTheDocument();
+                expect(screen.queryByText('Taco Tuesday')).not.toBeInTheDocument();
+            });
+
+            // Remaining meal should still be visible
+            expect(screen.getByText('Salad Bowl')).toBeInTheDocument();
+        });
+    });
 });

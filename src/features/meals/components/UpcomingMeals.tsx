@@ -401,7 +401,7 @@ const UpcomingMeals = () => {
             )}
 
             {status === 'success' && meals.length > 0 && viewMode === 'calendar' && (
-                <CalendarView meals={meals} recipeNames={recipeNames} onMealUpdate={handleMealUpdate} />
+                <CalendarView meals={meals} recipeNames={recipeNames} onMealUpdate={handleMealUpdate} selectionMode={selectionMode} selectedIds={selectedIds} onToggleSelect={handleToggleSelect} />
             )}
 
             {selectionMode && selectedIds.size > 0 && (

@@ -9,19 +9,21 @@ import { Meal, MealStatus, MealClassification } from '../../../../client';
 // Capture the onDragStart and onDragEnd callbacks from DndContext so we can simulate drag events
 let capturedOnDragStart: ((event: unknown) => void) | null = null;
 let capturedOnDragEnd: ((event: unknown) => void) | null = null;
+let capturedSensors: unknown[] | null = null;
 
 vi.mock('@dnd-kit/core', () => ({
-    DndContext: ({ children, onDragStart, onDragEnd }: { children: React.ReactNode; onDragStart?: (event: unknown) => void; onDragEnd?: (event: unknown) => void }) => {
+    DndContext: ({ children, onDragStart, onDragEnd, sensors }: { children: React.ReactNode; onDragStart?: (event: unknown) => void; onDragEnd?: (event: unknown) => void; sensors?: unknown[] }) => {
         capturedOnDragStart = onDragStart || null;
         capturedOnDragEnd = onDragEnd || null;
+        capturedSensors = sensors || null;
         return <div data-testid="dnd-context">{children}</div>;
     },
     DragOverlay: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="drag-overlay">{children}</div>
     ),
-    useDraggable: ({ id }: { id: string }) => ({
-        attributes: { 'data-draggable-id': id, tabIndex: 0 },
-        listeners: { onPointerDown: vi.fn() },
+    useDraggable: ({ id, disabled }: { id: string; disabled?: boolean }) => ({
+        attributes: disabled ? { tabIndex: 0 } : { 'data-draggable-id': id, tabIndex: 0 },
+        listeners: disabled ? {} : { onPointerDown: vi.fn() },
         setNodeRef: vi.fn(),
         transform: null,
         isDragging: false,
@@ -98,6 +100,7 @@ describe('CalendarView', () => {
     beforeEach(() => {
         capturedOnDragStart = null;
         capturedOnDragEnd = null;
+        capturedSensors = null;
     });
 
     it('renders 7-day grid', () => {
@@ -370,6 +373,165 @@ describe('CalendarView', () => {
             // And should appear in unscheduled area
             const unscheduledArea = screen.getByTestId('calendar-unscheduled');
             expect(unscheduledArea).toHaveTextContent('Today Dinner');
+        });
+    });
+
+    describe('selection mode', () => {
+        it('accepts selectionMode, selectedIds, and onToggleSelect props', () => {
+            const onToggleSelect = vi.fn();
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set(['meal-1'])}
+                    onToggleSelect={onToggleSelect}
+                />
+            );
+            // Should render without errors
+            expect(screen.getByText('Today Dinner')).toBeInTheDocument();
+        });
+
+        it('renders accent border when a meal card is selected', () => {
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set(['meal-1'])}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            // The selected meal card should have the accent border style
+            const mealCard = screen.getByText('Today Dinner').closest('[data-selected]');
+            expect(mealCard).not.toBeNull();
+            expect(mealCard?.getAttribute('data-selected')).toBe('true');
+        });
+
+        it('does not render accent border for unselected meal cards', () => {
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set(['meal-1'])}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            // meal-2 is not selected
+            const mealCard = screen.getByText('Tomorrow Lunch').closest('[data-selected]');
+            expect(mealCard).toBeNull();
+        });
+
+        it('calls onToggleSelect instead of navigate when clicking in selection mode', () => {
+            const onToggleSelect = vi.fn();
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set()}
+                    onToggleSelect={onToggleSelect}
+                />
+            );
+            fireEvent.click(screen.getByText('Today Dinner'));
+            expect(onToggleSelect).toHaveBeenCalledWith('meal-1');
+        });
+
+        it('does not have draggable attributes when selectionMode is true', () => {
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set()}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            // In selection mode, useDraggable is called with disabled:true so data-draggable-id should not be present
+            const draggable1 = screen.getByText('Today Dinner').closest('[data-draggable-id]');
+            expect(draggable1).toBeNull();
+        });
+
+        it('passes empty sensors to DndContext when selectionMode is true', () => {
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set()}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            expect(capturedSensors).toEqual([]);
+        });
+
+        it('has draggable attributes when selectionMode is false', () => {
+            renderWithProviders(
+                <CalendarView
+                    meals={mockMeals}
+                    recipeNames={{}}
+                    selectionMode={false}
+                    selectedIds={new Set()}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            const draggable1 = screen.getByText('Today Dinner').closest('[data-draggable-id]');
+            expect(draggable1).not.toBeNull();
+            expect(draggable1?.getAttribute('data-draggable-id')).toBe('meal-1');
+        });
+    });
+
+    describe('shopping bag icon', () => {
+        const shoppedMeals: Meal[] = [
+            {
+                ...mockMeals[0],
+                is_shopped: true,
+            },
+            {
+                ...mockMeals[1],
+                is_shopped: false,
+            },
+            mockMeals[2],
+        ];
+
+        it('renders green shopping icon when is_shopped is true', () => {
+            renderWithProviders(<CalendarView meals={shoppedMeals} recipeNames={{}} />);
+            const icon = screen.getByTestId('shopping-icon-meal-1');
+            expect(icon).toBeInTheDocument();
+            expect(icon).toHaveStyle({ color: 'var(--chakra-colors-green-400)' });
+        });
+
+        it('renders muted shopping icon when is_shopped is false', () => {
+            renderWithProviders(<CalendarView meals={shoppedMeals} recipeNames={{}} />);
+            const icon = screen.getByTestId('shopping-icon-meal-2');
+            expect(icon).toBeInTheDocument();
+            expect(icon).toHaveStyle({ color: 'var(--chakra-colors-fg-muted)' });
+        });
+
+        it('renders shopping icon in both selection mode and non-selection mode', () => {
+            // Non-selection mode
+            const { unmount } = renderWithProviders(
+                <CalendarView meals={shoppedMeals} recipeNames={{}} />
+            );
+            expect(screen.getByTestId('shopping-icon-meal-1')).toBeInTheDocument();
+            expect(screen.getByTestId('shopping-icon-meal-2')).toBeInTheDocument();
+            expect(screen.getByTestId('shopping-icon-meal-3')).toBeInTheDocument();
+            unmount();
+
+            // Selection mode
+            renderWithProviders(
+                <CalendarView
+                    meals={shoppedMeals}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    selectedIds={new Set()}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            expect(screen.getByTestId('shopping-icon-meal-1')).toBeInTheDocument();
+            expect(screen.getByTestId('shopping-icon-meal-2')).toBeInTheDocument();
+            expect(screen.getByTestId('shopping-icon-meal-3')).toBeInTheDocument();
         });
     });
 });
