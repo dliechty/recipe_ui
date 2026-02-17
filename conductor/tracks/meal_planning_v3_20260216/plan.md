@@ -6,7 +6,7 @@
   - [ ] Add test verifying that a dragged meal card applies optimistic state (stays hidden at old position / visible at new position) after drop, before mutation resolves
   - [ ] Add test verifying no intermediate "snap-back" state between drag end and mutation completion
 
-- [~] Task 1.2: Implement optimistic update for calendar drag-and-drop
+- [x] Task 1.2: Implement optimistic update for calendar drag-and-drop `d203a4c`
   - [ ] In `CalendarView.tsx`, introduce local optimistic state (similar to `UpcomingMeals`'s `localMeals` pattern) that immediately moves the meal to the target date on `handleDragEnd`, before the mutation response arrives
   - [ ] Keep `activeDragId` set (or use a separate pending state) until the optimistic update is applied, so the original card stays hidden
   - [ ] Ensure the `DragOverlay` disappears cleanly when the drop completes
