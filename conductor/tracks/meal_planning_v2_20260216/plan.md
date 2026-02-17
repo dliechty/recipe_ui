@@ -118,14 +118,14 @@
 
 ## Phase 6: Queue Sort by Scheduled Date
 
-- [ ] Task 6.1: Write tests for queue sort toggle
+- [x] Task 6.1: Write tests for queue sort toggle (86ae3ec)
   - Test sort toggle button renders in queue header
   - Test default sort is by queue_position (drag-and-drop order)
   - Test clicking sort toggle switches to date-ascending sort
   - Test unscheduled meals appear at top when sorted by date
   - Test unscheduled meals retain relative order when sorted by date
 
-- [ ] Task 6.2: Implement queue sort toggle in UpcomingMeals
+- [x] Task 6.2: Implement queue sort toggle in UpcomingMeals (86ae3ec)
   - Add sortMode state ('queue_position' | 'scheduled_date')
   - Add sort toggle button in header
   - When sort-by-date is active, client-side sort: unscheduled first (by queue_position), then scheduled by date ascending
