@@ -1,0 +1,8 @@
+{
+  "track_id": "meal_planning_v3_20260216",
+  "type": "mixed",
+  "status": "new",
+  "created_at": "2026-02-16T12:00:00Z",
+  "updated_at": "2026-02-16T12:00:00Z",
+  "description": "Meal Planning UX Iteration 3 - Bug fixes for calendar DnD flicker and view state persistence, plus grouped list view and classification filter in generate modal"
+}
