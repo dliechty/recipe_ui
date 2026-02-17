@@ -338,7 +338,7 @@ describe('UpcomingMeals', () => {
         });
     });
 
-    describe('queue sort toggle', () => {
+    describe('grouped list layout', () => {
         const setupWithMixedDates = () => {
             server.use(
                 http.get('*/meals/', ({ request }) => {
@@ -411,127 +411,71 @@ describe('UpcomingMeals', () => {
             );
         };
 
-        it('renders sort toggle button in queue header', async () => {
-            setupWithMeals();
-
-            await waitFor(() => {
-                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
-            });
-
-            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
-        });
-
-        it('default sort is by queue_position (drag-and-drop order)', async () => {
+        it('renders unscheduled meals under an "Unscheduled" section header', async () => {
             setupWithMixedDates();
 
             await waitFor(() => {
                 expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
             });
 
-            // In default queue_position order: Unscheduled A (0), Late Date Meal (1), Unscheduled B (2), Early Date Meal (3)
-            const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
-            expect(mealNames[0]).toHaveTextContent('Unscheduled A');
-            expect(mealNames[1]).toHaveTextContent('Late Date Meal');
-            expect(mealNames[2]).toHaveTextContent('Unscheduled B');
-            expect(mealNames[3]).toHaveTextContent('Early Date Meal');
+            // Should have an "Unscheduled" section header
+            const unscheduledHeaders = screen.getAllByText('Unscheduled');
+            expect(unscheduledHeaders.length).toBeGreaterThanOrEqual(1);
+            // Both unscheduled meals should be present
+            expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            expect(screen.getByText('Unscheduled B')).toBeInTheDocument();
         });
 
-        it('clicking sort toggle switches to date-ascending sort', async () => {
+        it('renders scheduled meals under a "Scheduled" section header ordered by date ascending', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Early Date Meal')).toBeInTheDocument();
+            });
+
+            // Should have a "Scheduled" section header
+            expect(screen.getByText('Scheduled')).toBeInTheDocument();
+
+            // Scheduled meals should be ordered by date ascending: Early Date Meal (03-01) before Late Date Meal (03-15)
+            const scheduledNames = screen.getAllByText(/Early Date Meal|Late Date Meal/);
+            expect(scheduledNames[0]).toHaveTextContent('Early Date Meal');
+            expect(scheduledNames[1]).toHaveTextContent('Late Date Meal');
+        });
+
+        it('does not render the sort-by button', async () => {
             setupWithMixedDates();
 
             await waitFor(() => {
                 expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
             });
 
-            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
-
-            await waitFor(() => {
-                const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
-                // Unscheduled first (retain relative order), then scheduled by date ascending
-                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
-                expect(mealNames[1]).toHaveTextContent('Unscheduled B');
-                expect(mealNames[2]).toHaveTextContent('Early Date Meal');
-                expect(mealNames[3]).toHaveTextContent('Late Date Meal');
-            });
+            expect(screen.queryByRole('button', { name: /Sort by Date/i })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: /Sort by Position/i })).not.toBeInTheDocument();
         });
 
-        it('unscheduled meals appear at top when sorted by date', async () => {
+        it('shows drag handles for unscheduled meals', async () => {
             setupWithMixedDates();
 
             await waitFor(() => {
                 expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
             });
 
-            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
-
-            await waitFor(() => {
-                const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
-                // Both unscheduled meals should be before both scheduled meals
-                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
-                expect(mealNames[1]).toHaveTextContent('Unscheduled B');
-            });
+            // Unscheduled meals should have drag handles
+            const dragHandles = screen.getAllByLabelText('Drag to reorder');
+            // Should have exactly 2 drag handles (one per unscheduled meal)
+            expect(dragHandles).toHaveLength(2);
         });
 
-        it('unscheduled meals retain relative order when sorted by date', async () => {
+        it('does not show drag handles for scheduled meals', async () => {
             setupWithMixedDates();
 
             await waitFor(() => {
-                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+                expect(screen.getByText('Early Date Meal')).toBeInTheDocument();
             });
 
-            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
-
-            await waitFor(() => {
-                const mealNames = screen.getAllByText(/Unscheduled A|Unscheduled B/);
-                // Unscheduled A (queue_position 0) should come before Unscheduled B (queue_position 2)
-                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
-                expect(mealNames[1]).toHaveTextContent('Unscheduled B');
-            });
-        });
-
-        it('clicking sort toggle again switches back to queue_position sort', async () => {
-            setupWithMixedDates();
-
-            await waitFor(() => {
-                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
-            });
-
-            // Switch to date sort
-            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
-
-            await waitFor(() => {
-                expect(screen.getByRole('button', { name: /Sort by Position/i })).toBeInTheDocument();
-            });
-
-            // Switch back to position sort
-            fireEvent.click(screen.getByRole('button', { name: /Sort by Position/i }));
-
-            await waitFor(() => {
-                const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
-                // Back to original queue_position order
-                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
-                expect(mealNames[1]).toHaveTextContent('Late Date Meal');
-                expect(mealNames[2]).toHaveTextContent('Unscheduled B');
-                expect(mealNames[3]).toHaveTextContent('Early Date Meal');
-            });
-        });
-
-        it('hides drag handles when sorting by date', async () => {
-            setupWithMixedDates();
-
-            await waitFor(() => {
-                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
-            });
-
-            // Drag handles should be visible by default
-            expect(screen.getAllByLabelText('Drag to reorder').length).toBeGreaterThan(0);
-
-            // Switch to date sort
-            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
-
-            await waitFor(() => {
-                expect(screen.queryAllByLabelText('Drag to reorder')).toHaveLength(0);
-            });
+            // Only 2 drag handles for the 2 unscheduled meals, none for the 2 scheduled meals
+            const dragHandles = screen.getAllByLabelText('Drag to reorder');
+            expect(dragHandles).toHaveLength(2);
         });
     });
 
@@ -979,8 +923,8 @@ describe('UpcomingMeals', () => {
                 expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
             });
 
-            // Queue view shows Sort by Date button
-            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+            // Queue view shows the Scheduled section header (queue-specific grouped layout)
+            expect(screen.getByText('Scheduled')).toBeInTheDocument();
             // Calendar view elements should not be present
             expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
         });
@@ -993,8 +937,7 @@ describe('UpcomingMeals', () => {
                 expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
             });
             expect(screen.getByText('Unscheduled')).toBeInTheDocument();
-            // Queue-specific Sort by Date button should not be present
-            expect(screen.queryByRole('button', { name: /Sort by Date/i })).not.toBeInTheDocument();
+            // Calendar view is confirmed by the presence of the "today" button above
         });
 
         it('defaults to queue view when ?view= has invalid value', async () => {
@@ -1004,8 +947,8 @@ describe('UpcomingMeals', () => {
                 expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
             });
 
-            // Should fall back to queue view
-            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+            // Should fall back to queue view - meal card is visible, no calendar "today" button
+            expect(screen.getByText('Scheduled')).toBeInTheDocument();
             expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
         });
 
@@ -1040,7 +983,7 @@ describe('UpcomingMeals', () => {
             await waitFor(() => {
                 expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
             });
-            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+            expect(screen.getByText('Scheduled')).toBeInTheDocument();
             expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
         });
     });
