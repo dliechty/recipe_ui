@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack, Checkbox } from '@chakra-ui/react';
 import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt, FaCheckSquare, FaSortAmountDown } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
     DndContext,
     closestCenter,
@@ -30,6 +30,7 @@ import { toaster } from '../../../toaster';
 
 const UpcomingMeals = () => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { user } = useAuth();
     const bulkUpdate = useBulkUpdateMeals();
     const bulkStatusUpdate = useBulkUpdateMeals();
@@ -37,7 +38,7 @@ const UpcomingMeals = () => {
     const generateMeals = useGenerateMeals();
     const [generateModalOpen, setGenerateModalOpen] = useState(false);
     const [shoppingPanelOpen, setShoppingPanelOpen] = useState(false);
-    const [viewMode, setViewMode] = useState<'queue' | 'calendar'>('queue');
+    const viewMode = searchParams.get('view') === 'calendar' ? 'calendar' : 'queue';
     const [selectionMode, setSelectionMode] = useState(false);
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [sortMode, setSortMode] = useState<'queue_position' | 'scheduled_date'>('queue_position');
@@ -308,7 +309,7 @@ const UpcomingMeals = () => {
                         color={viewMode === 'queue' ? 'white' : 'fg.muted'}
                         _hover={{ bg: viewMode === 'queue' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
                         size="xs"
-                        onClick={() => setViewMode('queue')}
+                        onClick={() => setSearchParams(prev => { prev.delete('view'); return prev; })}
                     >
                         <FaList />
                     </IconButton>
@@ -319,7 +320,7 @@ const UpcomingMeals = () => {
                         color={viewMode === 'calendar' ? 'white' : 'fg.muted'}
                         _hover={{ bg: viewMode === 'calendar' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
                         size="xs"
-                        onClick={() => setViewMode('calendar')}
+                        onClick={() => setSearchParams(prev => { prev.set('view', 'calendar'); return prev; })}
                     >
                         <FaCalendarAlt />
                     </IconButton>

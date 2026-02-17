@@ -15,11 +15,23 @@ vi.mock('../../../../context/AuthContext', () => ({
 // Mock @dnd-kit components since JSDOM doesn't support drag-and-drop
 vi.mock('@dnd-kit/core', () => ({
     DndContext: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DragOverlay: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     closestCenter: vi.fn(),
     KeyboardSensor: vi.fn(),
     PointerSensor: vi.fn(),
     useSensor: vi.fn(),
     useSensors: () => [],
+    useDraggable: () => ({
+        attributes: {},
+        listeners: {},
+        setNodeRef: vi.fn(),
+        transform: null,
+        isDragging: false,
+    }),
+    useDroppable: () => ({
+        setNodeRef: vi.fn(),
+        isOver: false,
+    }),
 }));
 
 vi.mock('@dnd-kit/sortable', () => ({
@@ -976,12 +988,10 @@ describe('UpcomingMeals', () => {
         it('renders calendar view when ?view=calendar is in URL', async () => {
             setupWithMealsAndRoute('/meals?view=calendar');
 
-            await waitFor(() => {
-                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
-            });
-
             // Calendar view shows Today button and Unscheduled section
-            expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+            });
             expect(screen.getByText('Unscheduled')).toBeInTheDocument();
             // Queue-specific Sort by Date button should not be present
             expect(screen.queryByRole('button', { name: /Sort by Date/i })).not.toBeInTheDocument();
@@ -1018,20 +1028,19 @@ describe('UpcomingMeals', () => {
         it('clicking queue view button when in calendar view switches back to queue', async () => {
             setupWithMealsAndRoute('/meals?view=calendar');
 
-            await waitFor(() => {
-                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
-            });
-
             // Should be in calendar view
-            expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+            });
 
             // Click queue view toggle
             fireEvent.click(screen.getByRole('button', { name: /Queue view/i }));
 
-            // Should now show queue view
+            // Should now show queue view with meals loaded
             await waitFor(() => {
-                expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
             });
+            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
             expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
         });
     });
