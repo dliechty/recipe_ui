@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -6,11 +6,13 @@ import { system } from '../../../../theme';
 import CalendarView from '../CalendarView';
 import { Meal, MealStatus, MealClassification } from '../../../../client';
 
-// Capture the onDragEnd callback from DndContext so we can simulate drag events
+// Capture the onDragStart and onDragEnd callbacks from DndContext so we can simulate drag events
+let capturedOnDragStart: ((event: unknown) => void) | null = null;
 let capturedOnDragEnd: ((event: unknown) => void) | null = null;
 
 vi.mock('@dnd-kit/core', () => ({
-    DndContext: ({ children, onDragEnd }: { children: React.ReactNode; onDragEnd?: (event: unknown) => void }) => {
+    DndContext: ({ children, onDragStart, onDragEnd }: { children: React.ReactNode; onDragStart?: (event: unknown) => void; onDragEnd?: (event: unknown) => void }) => {
+        capturedOnDragStart = onDragStart || null;
         capturedOnDragEnd = onDragEnd || null;
         return <div data-testid="dnd-context">{children}</div>;
     },
@@ -94,6 +96,7 @@ const mockMeals: Meal[] = [
 
 describe('CalendarView', () => {
     beforeEach(() => {
+        capturedOnDragStart = null;
         capturedOnDragEnd = null;
     });
 
@@ -282,6 +285,91 @@ describe('CalendarView', () => {
                     over: { id: tomorrowStr },
                 });
             }).not.toThrow();
+        });
+
+        it('optimistically moves meal to new date slot immediately after drop', () => {
+            const onMealUpdate = vi.fn();
+            renderWithProviders(
+                <CalendarView meals={mockMeals} recipeNames={{}} onMealUpdate={onMealUpdate} />
+            );
+
+            // Verify meal-1 starts in today's slot
+            const todaySlot = screen.getByTestId(`calendar-day-${todayStr}`);
+            expect(todaySlot).toHaveTextContent('Today Dinner');
+
+            const tomorrowSlot = screen.getByTestId(`calendar-day-${tomorrowStr}`);
+            // Tomorrow slot should have only Tomorrow Lunch, not Today Dinner
+            expect(tomorrowSlot).not.toHaveTextContent('Today Dinner');
+
+            // Simulate full drag flow: start then end
+            act(() => {
+                capturedOnDragStart!({ active: { id: 'meal-1' } });
+            });
+            act(() => {
+                capturedOnDragEnd!({
+                    active: { id: 'meal-1' },
+                    over: { id: tomorrowStr },
+                });
+            });
+
+            // After drop, meal should optimistically appear in tomorrow's slot
+            // (without waiting for prop changes from server)
+            const tomorrowSlotAfter = screen.getByTestId(`calendar-day-${tomorrowStr}`);
+            expect(tomorrowSlotAfter).toHaveTextContent('Today Dinner');
+        });
+
+        it('removes meal from old slot immediately after drop (no snap-back)', () => {
+            const onMealUpdate = vi.fn();
+            renderWithProviders(
+                <CalendarView meals={mockMeals} recipeNames={{}} onMealUpdate={onMealUpdate} />
+            );
+
+            // Verify meal-1 starts in today's slot
+            const todaySlotBefore = screen.getByTestId(`calendar-day-${todayStr}`);
+            expect(todaySlotBefore).toHaveTextContent('Today Dinner');
+
+            // Simulate full drag flow: start then end
+            act(() => {
+                capturedOnDragStart!({ active: { id: 'meal-1' } });
+            });
+            act(() => {
+                capturedOnDragEnd!({
+                    active: { id: 'meal-1' },
+                    over: { id: tomorrowStr },
+                });
+            });
+
+            // After drop, the meal should NOT appear in the original (today) slot
+            const todaySlotAfter = screen.getByTestId(`calendar-day-${todayStr}`);
+            expect(todaySlotAfter).not.toHaveTextContent('Today Dinner');
+        });
+
+        it('optimistically moves a scheduled meal to unscheduled area after drop', () => {
+            const onMealUpdate = vi.fn();
+            renderWithProviders(
+                <CalendarView meals={mockMeals} recipeNames={{}} onMealUpdate={onMealUpdate} />
+            );
+
+            // Verify meal-1 starts in today's slot
+            expect(screen.getByTestId(`calendar-day-${todayStr}`)).toHaveTextContent('Today Dinner');
+
+            // Simulate dropping meal-1 onto unscheduled area
+            act(() => {
+                capturedOnDragStart!({ active: { id: 'meal-1' } });
+            });
+            act(() => {
+                capturedOnDragEnd!({
+                    active: { id: 'meal-1' },
+                    over: { id: 'unscheduled' },
+                });
+            });
+
+            // After drop, meal should be removed from today's slot
+            expect(screen.getByTestId(`calendar-day-${todayStr}`)).not.toHaveTextContent('Today Dinner');
+
+            // And should appear in unscheduled area
+            const unscheduledArea = screen.getByTestId('calendar-unscheduled');
+            expect(unscheduledArea).toHaveTextContent('Today Dinner');
         });
     });
 });
