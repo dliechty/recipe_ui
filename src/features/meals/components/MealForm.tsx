@@ -48,14 +48,20 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
     const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>(
         initialData?.items?.map(item => item.recipe_id) || []
     );
+    const [nameError, setNameError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!name.trim()) {
+            setNameError('Meal name is required');
+            return;
+        }
+
         const items: MealItemBase[] = selectedRecipeIds.map(recipe_id => ({ recipe_id }));
 
         const mealData: MealCreate = {
-            name: name || null,
+            name: name,
             status,
             classification: classification || null,
             scheduled_date: date || null,
@@ -76,14 +82,20 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                             <Text as="label" mb={2} display="block" fontWeight="bold">Meal Name</Text>
                             <Input
                                 value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={(e) => {
+                                    setName(e.target.value);
+                                    if (nameError) setNameError('');
+                                }}
                                 placeholder="Enter meal name"
                                 bg="vscode.inputBg"
-                                borderColor="border.default"
+                                borderColor={nameError ? 'red.400' : 'border.default'}
                                 color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                _hover={{ borderColor: nameError ? 'red.400' : 'vscode.accent' }}
+                                _focus={{ borderColor: nameError ? 'red.400' : 'vscode.accent', boxShadow: nameError ? '0 0 0 1px var(--chakra-colors-red-400)' : '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
+                            {nameError && (
+                                <Text color="red.400" fontSize="sm" mt={1}>{nameError}</Text>
+                            )}
                         </Box>
 
                         <Box>
