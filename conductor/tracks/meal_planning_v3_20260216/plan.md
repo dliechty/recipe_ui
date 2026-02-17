@@ -37,14 +37,14 @@
 
 ## Phase 3: Grouped Meals List View (EN-1)
 
-- [ ] Task 3.1: Write tests for grouped list layout
+- [x] Task 3.1: Write tests for grouped list layout `272eb8c`
   - [ ] Test that unscheduled meals render in a distinct "Unscheduled" section
   - [ ] Test that scheduled meals render in a distinct "Scheduled" section, ordered by `scheduled_date` ascending
   - [ ] Test that the sort-by button is no longer rendered
   - [ ] Test that drag-and-drop reordering works in the unscheduled section
   - [ ] Test that drag handles are hidden in the scheduled section
 
-- [ ] Task 3.2: Implement grouped list view in UpcomingMeals
+- [x] Task 3.2: Implement grouped list view in UpcomingMeals `f2571ac`
   - [ ] Remove the `sortMode` state and the sort-by toggle button
   - [ ] Split meals into two groups: unscheduled (no `scheduled_date`) and scheduled (has `scheduled_date`)
   - [ ] Render unscheduled group inside `DndContext`/`SortableContext` with drag handles and section header
