@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -106,5 +106,70 @@ describe('MealQueueCard', () => {
         const meal = { ...baseMeal, items: [] };
         renderWithProviders(<MealQueueCard meal={meal} recipeNames={{}} />);
         expect(screen.getByText('0 recipes')).toBeInTheDocument();
+    });
+
+    describe('selection mode', () => {
+        it('shows checkbox when selectionMode is true', () => {
+            renderWithProviders(
+                <MealQueueCard
+                    meal={baseMeal}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    isSelected={false}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            expect(screen.getByRole('checkbox', { name: /Select Sunday Dinner/i })).toBeInTheDocument();
+        });
+
+        it('does not show checkbox when selectionMode is false', () => {
+            renderWithProviders(
+                <MealQueueCard
+                    meal={baseMeal}
+                    recipeNames={{}}
+                    selectionMode={false}
+                    isSelected={false}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+            expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+        });
+
+        it('does not show checkbox when selectionMode prop is not provided', () => {
+            renderWithProviders(<MealQueueCard meal={baseMeal} recipeNames={{}} />);
+            expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+        });
+
+        it('calls onToggleSelect when card is clicked in selection mode', () => {
+            const onToggleSelect = vi.fn();
+            renderWithProviders(
+                <MealQueueCard
+                    meal={baseMeal}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    isSelected={false}
+                    onToggleSelect={onToggleSelect}
+                />
+            );
+
+            // In selection mode, clicking the card toggles selection
+            fireEvent.click(screen.getByText('Sunday Dinner'));
+            expect(onToggleSelect).toHaveBeenCalledWith('meal-1');
+        });
+
+        it('checkbox reflects isSelected state', () => {
+            renderWithProviders(
+                <MealQueueCard
+                    meal={baseMeal}
+                    recipeNames={{}}
+                    selectionMode={true}
+                    isSelected={true}
+                    onToggleSelect={vi.fn()}
+                />
+            );
+
+            const checkbox = screen.getByRole('checkbox', { name: /Select Sunday Dinner/i });
+            expect(checkbox).toBeChecked();
+        });
     });
 });
