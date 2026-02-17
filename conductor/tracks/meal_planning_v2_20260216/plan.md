@@ -33,26 +33,26 @@
 
 ## Phase 3: Bulk Status Management
 
-- [ ] Task 3.1: Write tests for meal selection mode in UpcomingMeals
+- [x] Task 3.1: Write tests for meal selection mode in UpcomingMeals (55ebeba)
   - Test selection toggle button appears
   - Test checkboxes appear on MealQueueCards when selection mode is active
   - Test selecting/deselecting individual meals
   - Test select-all / deselect-all toggle
 
-- [ ] Task 3.2: Implement selection mode in UpcomingMeals and MealQueueCard
+- [x] Task 3.2: Implement selection mode in UpcomingMeals and MealQueueCard (9d9538a)
   - Add selectionMode state and selectedIds Set to UpcomingMeals
   - Pass selection props to MealQueueCard
   - Render checkbox on each card when in selection mode
   - Add select-all toggle in header
 
-- [ ] Task 3.3: Write tests for bulk status action bar
+- [x] Task 3.3: Write tests for bulk status action bar (55ebeba)
   - Test action bar appears when meals are selected
   - Test "Mark Cooked" button triggers bulk update with status Cooked
   - Test "Mark Cancelled" button triggers bulk update with status Cancelled
   - Test "Mark Shopped"/"Mark Unshopped" buttons toggle is_shopped
   - Test selection resets after successful bulk action
 
-- [ ] Task 3.4: Implement bulk status action bar
+- [x] Task 3.4: Implement bulk status action bar (9d9538a)
   - Build floating action bar with status change and shopped toggle buttons
   - Wire buttons to useBulkUpdateMeals hook
   - Clear selection and exit selection mode on success
