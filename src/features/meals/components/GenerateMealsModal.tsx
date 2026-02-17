@@ -10,7 +10,7 @@ import {
     Input,
 } from '@chakra-ui/react';
 import { FaTimes } from 'react-icons/fa';
-import { MealGenerateRequest } from '../../../client';
+import { MealClassification, MealGenerateRequest } from '../../../client';
 
 interface GenerateMealsModalProps {
     isOpen: boolean;
@@ -26,16 +26,21 @@ const GenerateMealsModal = ({
     isGenerating,
 }: GenerateMealsModalProps) => {
     const [count, setCount] = useState(5);
+    const [classification, setClassification] = useState(MealClassification.DINNER);
 
     useEffect(() => {
         if (isOpen) {
             setCount(5);
+            setClassification(MealClassification.DINNER);
         }
     }, [isOpen]);
 
     const handleConfirm = () => {
         const finalCount = Math.max(1, count);
-        onGenerate({ count: finalCount });
+        onGenerate({
+            count: finalCount,
+            template_filter: [{ field: 'classification', operator: 'eq', value: classification }],
+        });
     };
 
     if (!isOpen) return null;
@@ -94,6 +99,34 @@ const GenerateMealsModal = ({
                     <Text color="fg.default">
                         Generate meals randomly from your templates. Each meal will be added to your queue.
                     </Text>
+
+                    <Box>
+                        {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
+                        <Box as="label" htmlFor="meal-classification" mb={2} fontSize="sm" fontWeight="medium" display="block" color="fg.default">
+                            Classification
+                        </Box>
+                        <select
+                            id="meal-classification"
+                            value={classification}
+                            onChange={(e) => setClassification(e.target.value as MealClassification)}
+                            disabled={isGenerating}
+                            style={{
+                                backgroundColor: 'var(--chakra-colors-vscode-input-bg, #1e1e1e)',
+                                borderWidth: '1px',
+                                borderStyle: 'solid',
+                                borderColor: 'var(--chakra-colors-border-default, #3e3e3e)',
+                                color: 'var(--chakra-colors-fg-default, #cccccc)',
+                                borderRadius: 'var(--chakra-radii-md, 6px)',
+                                padding: '8px 12px',
+                                fontSize: '14px',
+                                width: '200px',
+                            }}
+                        >
+                            {Object.values(MealClassification).map(c => (
+                                <option key={c} value={c}>{c}</option>
+                            ))}
+                        </select>
+                    </Box>
 
                     <Box>
                         {/* @ts-expect-error - htmlFor is valid for label but Box types don't infer it */}
