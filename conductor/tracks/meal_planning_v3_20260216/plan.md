@@ -15,21 +15,21 @@
 
 ## Phase 2: View State Persistence (BF-2)
 
-- [ ] Task 2.1: Write tests for view mode URL persistence
+- [x] Task 2.1: Write tests for view mode URL persistence `fd4b569`
   - [ ] Test that `UpcomingMeals` reads `?view=calendar` from URL and renders calendar view
   - [ ] Test that `UpcomingMeals` defaults to `queue` when no `?view=` param is present
   - [ ] Test that clicking the calendar/queue toggle buttons updates the URL search param
 
-- [ ] Task 2.2: Implement view mode as URL search parameter
+- [x] Task 2.2: Implement view mode as URL search parameter `3eb2741`
   - [ ] In `UpcomingMeals.tsx`, replace `useState<'queue' | 'calendar'>` with `useSearchParams` to read/write `?view=` parameter
   - [ ] Update the view toggle buttons to set the search param instead of local state
   - [ ] Default to `'queue'` when param is absent or invalid
 
-- [ ] Task 2.3: Write tests for breadcrumb navigation preserving view mode
+- [x] Task 2.3: Write tests for breadcrumb navigation preserving view mode `68d826a`
   - [ ] Test that the breadcrumb link in `MealDetails` includes `?view=calendar` when the user navigated from the calendar view
   - [ ] Test that the breadcrumb link defaults to `/meals` (no param) when navigated from the queue view
 
-- [ ] Task 2.4: Update MealDetails breadcrumb to preserve view mode
+- [x] Task 2.4: Update MealDetails breadcrumb to preserve view mode `438faba`
   - [ ] In `CalendarView.tsx`, pass `?view=calendar` in the navigation link when clicking a meal card (via route search params or state)
   - [ ] In `MealDetails.tsx`, read the originating view mode from search params or location state and include it in the breadcrumb link back to `/meals`
 
