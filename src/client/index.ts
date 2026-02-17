@@ -49,6 +49,7 @@ export type { RecipeListUpdate } from './models/RecipeListUpdate';
 export type { RecipeNutrition } from './models/RecipeNutrition';
 export type { RecipeTimes } from './models/RecipeTimes';
 export type { SearchCriterion } from './models/SearchCriterion';
+export type { TemplateFilter } from './models/TemplateFilter';
 export type { Token } from './models/Token';
 export { UnitSystem } from './models/UnitSystem';
 export type { User } from './models/User';
