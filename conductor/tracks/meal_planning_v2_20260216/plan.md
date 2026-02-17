@@ -93,7 +93,7 @@
 
 ## Phase 5: Calendar Drag-and-Drop
 
-- [~] Task 5.1: Write tests for calendar drag-and-drop scheduling
+- [x] Task 5.1: Write tests for calendar drag-and-drop scheduling (8acab0f)
   - Test meal cards in day slots are draggable (have drag attributes)
   - Test day slots are valid drop targets
   - Test unscheduled area is a valid drop target
@@ -101,7 +101,7 @@
   - Test dropping an unscheduled meal onto a day schedules it
   - Test dropping a scheduled meal on unscheduled area clears scheduled_date
 
-- [ ] Task 5.2: Implement calendar drag-and-drop with @dnd-kit
+- [x] Task 5.2: Implement calendar drag-and-drop with @dnd-kit (8acab0f)
   - Wrap CalendarView with DndContext
   - Make meal cards draggable with useDraggable
   - Make day GridItems droppable with useDroppable
@@ -109,7 +109,7 @@
   - On drag end, determine target date and call meal update mutation
   - Add visual feedback: drag overlay, drop target highlight
 
-- [ ] Task 5.3: Wire calendar drag-and-drop to meal update API
+- [x] Task 5.3: Wire calendar drag-and-drop to meal update API (8acab0f)
   - Accept onMealUpdate callback prop in CalendarView
   - UpcomingMeals passes update handler that calls useUpdateMeal
   - Invalidate meal queries on successful update
