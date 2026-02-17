@@ -371,7 +371,7 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
                                         key={meal.id}
                                         meal={meal}
                                         recipeNames={recipeNames}
-                                        onClick={() => navigate(`/meals/${meal.id}`)}
+                                        onClick={() => navigate(`/meals/${meal.id}`, { state: { fromView: 'calendar' } })}
                                     />
                                 ))}
                             </DroppableDaySlot>
@@ -386,7 +386,7 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
                             key={meal.id}
                             meal={meal}
                             recipeNames={recipeNames}
-                            onClick={() => navigate(`/meals/${meal.id}`)}
+                            onClick={() => navigate(`/meals/${meal.id}`, { state: { fromView: 'calendar' } })}
                         />
                     ))}
                     {unscheduledMeals.length === 0 && (

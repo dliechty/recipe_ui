@@ -36,6 +36,8 @@ const MealDetails = () => {
     const location = useLocation();
     const sourceTemplate = location.state?.sourceTemplate as { id: string; name: string } | undefined;
     const fromTemplateList = location.state?.fromTemplateList as boolean | undefined;
+    const fromView = location.state?.fromView as string | undefined;
+    const mealsBackLink = fromView === 'calendar' ? '/meals?view=calendar' : '/meals';
 
     // Fetch meal
     const { data: meal, isLoading, error } = useMeal(id || '');
@@ -145,7 +147,7 @@ const MealDetails = () => {
                         <>
                             <Breadcrumb.Item>
                                 <Breadcrumb.Link asChild color="vscode.accent" _hover={{ textDecoration: 'underline' }}>
-                                    <RouterLink to="/meals">Meals</RouterLink>
+                                    <RouterLink to={mealsBackLink}>Meals</RouterLink>
                                 </Breadcrumb.Link>
                             </Breadcrumb.Item>
                             <Breadcrumb.Separator>
