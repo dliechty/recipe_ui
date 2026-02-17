@@ -19,12 +19,12 @@
 
 ## Phase 2: Meal Name Validation
 
-- [ ] Task 2.1: Write tests for meal name required validation
+- [x] Task 2.1: Write tests for meal name required validation (8aee057)
   - Test that form does not submit when name is empty
   - Test that validation error message appears on empty name submission
   - Test that form submits successfully with a non-empty name
 
-- [ ] Task 2.2: Implement meal name required validation in MealForm
+- [x] Task 2.2: Implement meal name required validation in MealForm (6a0b3c6)
   - Add validation state for name field
   - Show error text when name is empty on submit attempt
   - Prevent form submission with empty/whitespace-only name
