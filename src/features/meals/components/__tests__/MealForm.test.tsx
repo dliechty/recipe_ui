@@ -199,4 +199,56 @@ describe('MealForm', () => {
 
     // "trims whitespace" test removed as logic is now inside RecipeSearchSelector or handled by array passing
     // "shows all status/classification options" kept implicitly or can be kept.
+
+    it('does not submit when name is empty', async () => {
+        const mockOnSubmit = vi.fn();
+        renderWithProviders(<MealForm onSubmit={mockOnSubmit} isLoading={false} />);
+
+        const submitButton = screen.getByRole('button', { name: /Save Meal/i });
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(mockOnSubmit).not.toHaveBeenCalled();
+        });
+    });
+
+    it('shows validation error message when name is empty on submit', async () => {
+        const mockOnSubmit = vi.fn();
+        renderWithProviders(<MealForm onSubmit={mockOnSubmit} isLoading={false} />);
+
+        const submitButton = screen.getByRole('button', { name: /Save Meal/i });
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('Meal name is required')).toBeInTheDocument();
+        });
+    });
+
+    it('clears validation error and submits when name is provided', async () => {
+        const mockOnSubmit = vi.fn();
+        renderWithProviders(<MealForm onSubmit={mockOnSubmit} isLoading={false} />);
+
+        // Submit with empty name to trigger error
+        const submitButton = screen.getByRole('button', { name: /Save Meal/i });
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(screen.getByText('Meal name is required')).toBeInTheDocument();
+        });
+
+        // Type a name - error should clear
+        const nameInput = screen.getByPlaceholderText('Enter meal name');
+        fireEvent.change(nameInput, { target: { value: 'My Meal' } });
+
+        expect(screen.queryByText('Meal name is required')).not.toBeInTheDocument();
+
+        // Submit again - should succeed
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(mockOnSubmit).toHaveBeenCalledWith(
+                expect.objectContaining({ name: 'My Meal' })
+            );
+        });
+    });
 });
