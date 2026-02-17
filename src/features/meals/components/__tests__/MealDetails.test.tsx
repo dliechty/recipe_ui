@@ -610,4 +610,72 @@ describe('MealDetails', () => {
         expect(screen.getByRole('link', { name: 'Meals' })).toHaveAttribute('href', '/meals');
         expect(screen.queryByRole('link', { name: 'Templates' })).not.toBeInTheDocument();
     });
+
+    it('breadcrumb includes ?view=calendar when navigated from calendar view', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Calendar Meal',
+                    status: 'Queued',
+                    classification: 'Dinner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            })
+        );
+
+        const locationState = { fromView: 'calendar' };
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={[{ pathname: '/meals/1', state: locationState }]}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Calendar Meal' })).toBeInTheDocument();
+        });
+
+        // Breadcrumb link should include ?view=calendar
+        const mealsLink = screen.getByRole('link', { name: 'Meals' });
+        expect(mealsLink).toHaveAttribute('href', '/meals?view=calendar');
+    });
+
+    it('breadcrumb defaults to /meals when navigated from queue view (no fromView state)', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Queue Meal',
+                    status: 'Queued',
+                    classification: 'Dinner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    user_id: 'user-123',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Queue Meal' })).toBeInTheDocument();
+        });
+
+        // Breadcrumb link should be plain /meals (no query param)
+        const mealsLink = screen.getByRole('link', { name: 'Meals' });
+        expect(mealsLink).toHaveAttribute('href', '/meals');
+    });
 });
