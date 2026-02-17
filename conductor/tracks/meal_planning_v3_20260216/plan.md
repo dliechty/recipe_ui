@@ -55,12 +55,12 @@
 
 ## Phase 4: Classification Filter in Generate Meals Modal (EN-2)
 
-- [ ] Task 4.1: Write tests for classification filter in GenerateMealsModal
+- [x] Task 4.1: Write tests for classification filter in GenerateMealsModal `3832f15`
   - [ ] Test that the modal renders a classification dropdown defaulting to "Dinner"
   - [ ] Test that selecting a different classification includes the correct `template_filter` in the generate request
   - [ ] Test that the classification resets to "Dinner" when the modal is reopened
 
-- [ ] Task 4.2: Implement classification filter in GenerateMealsModal
+- [x] Task 4.2: Implement classification filter in GenerateMealsModal `cc5802d`
   - [ ] Add a `classification` state to `GenerateMealsModal` defaulting to `MealClassification.DINNER`
   - [ ] Add a styled `<select>` dropdown (consistent with the dark theme) populated from the `MealClassification` enum values
   - [ ] In `handleConfirm`, build the `template_filter` array: `[{ field: 'classification', operator: 'eq', value: classification }]`
