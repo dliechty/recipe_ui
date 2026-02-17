@@ -337,7 +337,7 @@ const ShoppingListPanel = ({ isOpen, onClose, meals, recipes }: ShoppingListPane
                                             <List.Root gap={1}>
                                                 {recipe.components.map((comp, i) => (
                                                     <Box key={i}>
-                                                        {comp.ingredients.map((ing) => {
+                                                        {comp.ingredients?.map((ing) => {
                                                             const key = `${ing.item.toLowerCase().trim()}::${ing.unit.toLowerCase().trim()}`;
                                                             return renderIngredientLine(
                                                                 ing.item, ing.unit, ing.quantity, key
