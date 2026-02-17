@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack } from '@chakra-ui/react';
-import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt } from 'react-icons/fa';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack, Checkbox } from '@chakra-ui/react';
+import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt, FaCheckSquare } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import {
     DndContext,
@@ -20,21 +20,25 @@ import {
 import { useInfiniteMeals, useBulkUpdateMeals, useGenerateMeals } from '../../../hooks/useMeals';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useAuth } from '../../../context/AuthContext';
-import { MealStatus, MealGenerateRequest, Meal } from '../../../client';
+import { MealStatus, MealGenerateRequest, Meal, MealUpdate } from '../../../client';
 import MealQueueCard from './MealQueueCard';
 import GenerateMealsModal from './GenerateMealsModal';
 import ShoppingListPanel from './ShoppingListPanel';
 import CalendarView from './CalendarView';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { toaster } from '../../../toaster';
 
 const UpcomingMeals = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const bulkUpdate = useBulkUpdateMeals();
+    const bulkStatusUpdate = useBulkUpdateMeals();
     const generateMeals = useGenerateMeals();
     const [generateModalOpen, setGenerateModalOpen] = useState(false);
     const [shoppingPanelOpen, setShoppingPanelOpen] = useState(false);
     const [viewMode, setViewMode] = useState<'queue' | 'calendar'>('queue');
+    const [selectionMode, setSelectionMode] = useState(false);
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
     const filters = useMemo(() => ({
         status: [MealStatus.QUEUED],
@@ -140,6 +144,56 @@ const UpcomingMeals = () => {
         bulkUpdate.mutate(updates);
     };
 
+    const handleToggleSelect = useCallback((id: string) => {
+        setSelectedIds(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
+    }, []);
+
+    const handleSelectAll = useCallback(() => {
+        if (selectedIds.size === meals.length) {
+            setSelectedIds(new Set());
+        } else {
+            setSelectedIds(new Set(meals.map(m => m.id)));
+        }
+    }, [meals, selectedIds.size]);
+
+    const handleExitSelectionMode = useCallback(() => {
+        setSelectionMode(false);
+        setSelectedIds(new Set());
+    }, []);
+
+    const handleBulkAction = useCallback((requestBody: MealUpdate) => {
+        const updates = Array.from(selectedIds).map(id => ({
+            id,
+            requestBody,
+        }));
+        bulkStatusUpdate.mutate(updates, {
+            onSuccess: () => {
+                toaster.create({
+                    title: 'Success',
+                    description: `Updated ${updates.length} meal${updates.length === 1 ? '' : 's'} successfully.`,
+                    type: 'success',
+                });
+                setSelectedIds(new Set());
+                setSelectionMode(false);
+            },
+            onError: (error) => {
+                toaster.create({
+                    title: 'Error',
+                    description: error.message || 'Failed to update meals.',
+                    type: 'error',
+                });
+            },
+        });
+    }, [selectedIds, bulkStatusUpdate]);
+
     if (status === 'error') {
         return <ErrorAlert title="Failed to load meals" description={error?.message || "An unexpected error occurred."} />;
     }
@@ -168,6 +222,44 @@ const UpcomingMeals = () => {
                     </Button>
                 </HStack>
                 <HStack gap={2}>
+                    {!selectionMode && meals.length > 0 && (
+                        <Button
+                            onClick={() => setSelectionMode(true)}
+                            variant="outline"
+                            borderColor="vscode.accent"
+                            color="vscode.accent"
+                            _hover={{ bg: "whiteAlpha.100" }}
+                            size="xs"
+                        >
+                            <Icon as={FaCheckSquare} mr={1} /> Select
+                        </Button>
+                    )}
+                    {selectionMode && (
+                        <>
+                            <Checkbox.Root
+                                checked={meals.length > 0 && selectedIds.size === meals.length}
+                                onCheckedChange={handleSelectAll}
+                                aria-label="Select all"
+                            >
+                                <Checkbox.HiddenInput />
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                            </Checkbox.Root>
+                            <Text color="fg.muted" fontSize="sm">
+                                {selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select all'}
+                            </Text>
+                            <Button
+                                onClick={handleExitSelectionMode}
+                                variant="ghost"
+                                color="fg.muted"
+                                _hover={{ bg: "whiteAlpha.100" }}
+                                size="xs"
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    )}
                     <IconButton
                         aria-label="Queue view"
                         variant={viewMode === 'queue' ? 'solid' : 'ghost'}
@@ -257,6 +349,9 @@ const UpcomingMeals = () => {
                                     key={meal.id}
                                     meal={meal}
                                     recipeNames={recipeNames}
+                                    selectionMode={selectionMode}
+                                    isSelected={selectedIds.has(meal.id)}
+                                    onToggleSelect={handleToggleSelect}
                                 />
                             ))}
                         </VStack>
@@ -266,6 +361,70 @@ const UpcomingMeals = () => {
 
             {status === 'success' && meals.length > 0 && viewMode === 'calendar' && (
                 <CalendarView meals={meals} recipeNames={recipeNames} />
+            )}
+
+            {selectionMode && selectedIds.size > 0 && (
+                <Box
+                    position="fixed"
+                    bottom={4}
+                    left="50%"
+                    transform="translateX(-50%)"
+                    bg="bg.surface"
+                    borderWidth={1}
+                    borderColor="vscode.accent"
+                    borderRadius="lg"
+                    p={3}
+                    zIndex={100}
+                    boxShadow="lg"
+                >
+                    <HStack gap={2} flexWrap="wrap" justifyContent="center">
+                        <Text color="fg.muted" fontSize="sm" fontWeight="semibold">
+                            {selectedIds.size} selected
+                        </Text>
+                        <Button
+                            onClick={() => handleBulkAction({ status: MealStatus.COOKED })}
+                            bg="green.600"
+                            color="white"
+                            _hover={{ bg: "green.500" }}
+                            size="xs"
+                            loading={bulkStatusUpdate.isPending}
+                        >
+                            Mark Cooked
+                        </Button>
+                        <Button
+                            onClick={() => handleBulkAction({ status: MealStatus.CANCELLED })}
+                            bg="red.600"
+                            color="white"
+                            _hover={{ bg: "red.500" }}
+                            size="xs"
+                            loading={bulkStatusUpdate.isPending}
+                        >
+                            Mark Cancelled
+                        </Button>
+                        <Button
+                            onClick={() => handleBulkAction({ is_shopped: true })}
+                            variant="outline"
+                            borderColor="green.400"
+                            color="green.400"
+                            _hover={{ bg: "whiteAlpha.100" }}
+                            size="xs"
+                            loading={bulkStatusUpdate.isPending}
+                        >
+                            Mark Shopped
+                        </Button>
+                        <Button
+                            onClick={() => handleBulkAction({ is_shopped: false })}
+                            variant="outline"
+                            borderColor="fg.muted"
+                            color="fg.muted"
+                            _hover={{ bg: "whiteAlpha.100" }}
+                            size="xs"
+                            loading={bulkStatusUpdate.isPending}
+                        >
+                            Mark Unshopped
+                        </Button>
+                    </HStack>
+                </Box>
             )}
 
             <ShoppingListPanel

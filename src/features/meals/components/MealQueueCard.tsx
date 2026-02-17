@@ -1,4 +1,4 @@
-import { Box, HStack, VStack, Text, Badge, IconButton } from '@chakra-ui/react';
+import { Box, HStack, VStack, Text, Badge, IconButton, Checkbox } from '@chakra-ui/react';
 import { FaGripVertical, FaShoppingBag, FaCalendarAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useSortable } from '@dnd-kit/sortable';
@@ -8,9 +8,12 @@ import { Meal } from '../../../client';
 interface MealQueueCardProps {
     meal: Meal;
     recipeNames: Record<string, string>;
+    selectionMode?: boolean;
+    isSelected?: boolean;
+    onToggleSelect?: (id: string) => void;
 }
 
-const MealQueueCard = ({ meal, recipeNames }: MealQueueCardProps) => {
+const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleSelect }: MealQueueCardProps) => {
     const navigate = useNavigate();
     const {
         attributes,
@@ -30,33 +33,56 @@ const MealQueueCard = ({ meal, recipeNames }: MealQueueCardProps) => {
 
     const recipeList = meal.items?.map(item => recipeNames[item.recipe_id]).filter(Boolean) || [];
 
+    const handleClick = () => {
+        if (selectionMode && onToggleSelect) {
+            onToggleSelect(meal.id);
+        } else {
+            navigate(`/meals/${meal.id}`);
+        }
+    };
+
     return (
         <Box
             ref={setNodeRef}
             style={style}
             bg="bg.surface"
             borderWidth={1}
-            borderColor={isDragging ? 'vscode.accent' : 'border.default'}
+            borderColor={isSelected ? 'vscode.accent' : isDragging ? 'vscode.accent' : 'border.default'}
             borderRadius="lg"
             p={4}
             cursor="pointer"
             _hover={{ borderColor: 'vscode.accent', bg: 'bg.muted' }}
-            onClick={() => navigate(`/meals/${meal.id}`)}
+            onClick={handleClick}
         >
             <HStack gap={3} align="start">
-                <IconButton
-                    aria-label="Drag to reorder"
-                    variant="ghost"
-                    cursor="grab"
-                    color="fg.muted"
-                    size="sm"
-                    onClick={(e) => e.stopPropagation()}
-                    {...attributes}
-                    {...listeners}
-                    _active={{ cursor: 'grabbing' }}
-                >
-                    <FaGripVertical />
-                </IconButton>
+                {selectionMode ? (
+                    <Checkbox.Root
+                        checked={!!isSelected}
+                        onCheckedChange={() => onToggleSelect?.(meal.id)}
+                        aria-label={`Select ${meal.name || 'Untitled'}`}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        mt={1}
+                    >
+                        <Checkbox.HiddenInput />
+                        <Checkbox.Control>
+                            <Checkbox.Indicator />
+                        </Checkbox.Control>
+                    </Checkbox.Root>
+                ) : (
+                    <IconButton
+                        aria-label="Drag to reorder"
+                        variant="ghost"
+                        cursor="grab"
+                        color="fg.muted"
+                        size="sm"
+                        onClick={(e) => e.stopPropagation()}
+                        {...attributes}
+                        {...listeners}
+                        _active={{ cursor: 'grabbing' }}
+                    >
+                        <FaGripVertical />
+                    </IconButton>
+                )}
 
                 <VStack align="start" flex={1} gap={1}>
                     <HStack gap={2} flexWrap="wrap">
