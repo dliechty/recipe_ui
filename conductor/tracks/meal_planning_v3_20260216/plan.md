@@ -2,11 +2,11 @@
 
 ## Phase 1: Calendar Drag-and-Drop Flicker Fix (BF-1)
 
-- [~] Task 1.1: Write tests for calendar DnD flicker fix
+- [x] Task 1.1: Write tests for calendar DnD flicker fix `a06dbdd`
   - [ ] Add test verifying that a dragged meal card applies optimistic state (stays hidden at old position / visible at new position) after drop, before mutation resolves
   - [ ] Add test verifying no intermediate "snap-back" state between drag end and mutation completion
 
-- [ ] Task 1.2: Implement optimistic update for calendar drag-and-drop
+- [~] Task 1.2: Implement optimistic update for calendar drag-and-drop
   - [ ] In `CalendarView.tsx`, introduce local optimistic state (similar to `UpcomingMeals`'s `localMeals` pattern) that immediately moves the meal to the target date on `handleDragEnd`, before the mutation response arrives
   - [ ] Keep `activeDragId` set (or use a separate pending state) until the optimistic update is applied, so the original card stays hidden
   - [ ] Ensure the `DragOverlay` disappears cleanly when the drop completes

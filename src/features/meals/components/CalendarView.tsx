@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Box, VStack, HStack, Text, IconButton, Button, Badge, Grid, GridItem } from '@chakra-ui/react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -180,6 +180,16 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
     const navigate = useNavigate();
     const [weekStart, setWeekStart] = useState(() => getStartOfWeek(new Date()));
     const [activeDragId, setActiveDragId] = useState<string | null>(null);
+    const [pendingMoves, setPendingMoves] = useState<Map<string, string | null>>(new Map());
+    const prevMealsRef = useRef(meals);
+
+    // Clear pending moves when meals prop changes (server data arrived)
+    useEffect(() => {
+        if (prevMealsRef.current !== meals) {
+            prevMealsRef.current = meals;
+            setPendingMoves(new Map());
+        }
+    }, [meals]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -199,9 +209,20 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // Apply optimistic overrides to meals
+    const optimisticMeals = useMemo(() => {
+        if (pendingMoves.size === 0) return meals;
+        return meals.map(meal => {
+            if (pendingMoves.has(meal.id)) {
+                return { ...meal, scheduled_date: pendingMoves.get(meal.id) ?? null };
+            }
+            return meal;
+        });
+    }, [meals, pendingMoves]);
+
     const mealsByDate = useMemo(() => {
         const map = new Map<string, Meal[]>();
-        meals.forEach(meal => {
+        optimisticMeals.forEach(meal => {
             if (meal.scheduled_date) {
                 const existing = map.get(meal.scheduled_date) || [];
                 existing.push(meal);
@@ -209,17 +230,17 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
             }
         });
         return map;
-    }, [meals]);
+    }, [optimisticMeals]);
 
     const mealsById = useMemo(() => {
         const map = new Map<string, Meal>();
-        meals.forEach(meal => map.set(meal.id, meal));
+        optimisticMeals.forEach(meal => map.set(meal.id, meal));
         return map;
-    }, [meals]);
+    }, [optimisticMeals]);
 
     const unscheduledMeals = useMemo(() =>
-        meals.filter(m => !m.scheduled_date),
-        [meals]
+        optimisticMeals.filter(m => !m.scheduled_date),
+        [optimisticMeals]
     );
 
     const handlePrevWeek = () => {
@@ -243,25 +264,41 @@ const CalendarView = ({ meals, recipeNames, onMealUpdate }: CalendarViewProps) =
     }, []);
 
     const handleDragEnd = useCallback((event: { active: { id: string | number }; over: { id: string | number } | null }) => {
-        setActiveDragId(null);
-
         const { active, over } = event;
-        if (!over) return;
+        if (!over) {
+            setActiveDragId(null);
+            return;
+        }
 
         const mealId = String(active.id);
         const targetId = String(over.id);
         const meal = mealsById.get(mealId);
-        if (!meal) return;
+        if (!meal) {
+            setActiveDragId(null);
+            return;
+        }
 
         const currentDate = meal.scheduled_date || null;
 
         if (targetId === 'unscheduled') {
             // Dropping on unscheduled area: clear scheduled_date
-            if (currentDate === null) return; // Already unscheduled, no-op
+            if (currentDate === null) {
+                setActiveDragId(null);
+                return; // Already unscheduled, no-op
+            }
+            // Apply optimistic move FIRST, then clear drag state, then notify parent
+            setPendingMoves(prev => new Map(prev).set(mealId, null));
+            setActiveDragId(null);
             onMealUpdate?.(mealId, { scheduled_date: null });
         } else {
             // Dropping on a day slot: targetId is a date string
-            if (currentDate === targetId) return; // Same day, no-op
+            if (currentDate === targetId) {
+                setActiveDragId(null);
+                return; // Same day, no-op
+            }
+            // Apply optimistic move FIRST, then clear drag state, then notify parent
+            setPendingMoves(prev => new Map(prev).set(mealId, targetId));
+            setActiveDragId(null);
             onMealUpdate?.(mealId, { scheduled_date: targetId });
         }
     }, [mealsById, onMealUpdate]);
