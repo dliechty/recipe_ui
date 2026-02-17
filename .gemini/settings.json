@@ -14,5 +14,14 @@
       "run_shell_command(touch)",
       "run_shell_command(mkdir)"
     ]
+  },
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    }
   }
 }
