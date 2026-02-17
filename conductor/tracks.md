@@ -11,3 +11,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## [x] Track: Meal Planning Iteration 2
 *Link: [./conductor/tracks/meal_planning_v2_20260216/](./conductor/tracks/meal_planning_v2_20260216/)*
+
+---
+
+## [x] Track: Meal Planning UX Iteration 3 — Bug Fixes & Enhancements
+*Link: [./conductor/tracks/meal_planning_v3_20260216/](./conductor/tracks/meal_planning_v3_20260216/)*
