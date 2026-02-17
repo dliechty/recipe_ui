@@ -104,13 +104,18 @@ const UpcomingMeals = () => {
         { enabled: recipeIds.length > 0 }
     );
 
+    const recipes = useMemo(() =>
+        recipesData?.pages.flatMap(p => p.recipes) || [],
+        [recipesData]
+    );
+
     const recipeNames = useMemo(() => {
         const map: Record<string, string> = {};
-        recipesData?.pages.flatMap(p => p.recipes).forEach(r => {
+        recipes.forEach(r => {
             map[r.core.id] = r.core.name;
         });
         return map;
-    }, [recipesData]);
+    }, [recipes]);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -431,7 +436,7 @@ const UpcomingMeals = () => {
                 isOpen={shoppingPanelOpen}
                 onClose={() => setShoppingPanelOpen(false)}
                 meals={meals}
-                recipeNames={recipeNames}
+                recipes={recipes}
             />
 
             <GenerateMealsModal
