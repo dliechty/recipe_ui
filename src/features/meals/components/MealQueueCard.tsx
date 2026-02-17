@@ -11,9 +11,10 @@ interface MealQueueCardProps {
     selectionMode?: boolean;
     isSelected?: boolean;
     onToggleSelect?: (id: string) => void;
+    hideDragHandle?: boolean;
 }
 
-const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleSelect }: MealQueueCardProps) => {
+const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleSelect, hideDragHandle }: MealQueueCardProps) => {
     const navigate = useNavigate();
     const {
         attributes,
@@ -68,7 +69,7 @@ const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleS
                             <Checkbox.Indicator />
                         </Checkbox.Control>
                     </Checkbox.Root>
-                ) : (
+                ) : !hideDragHandle ? (
                     <IconButton
                         aria-label="Drag to reorder"
                         variant="ghost"
@@ -82,7 +83,7 @@ const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleS
                     >
                         <FaGripVertical />
                     </IconButton>
-                )}
+                ) : null}
 
                 <VStack align="start" flex={1} gap={1}>
                     <HStack gap={2} flexWrap="wrap">

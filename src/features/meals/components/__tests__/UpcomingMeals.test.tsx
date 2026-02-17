@@ -326,6 +326,203 @@ describe('UpcomingMeals', () => {
         });
     });
 
+    describe('queue sort toggle', () => {
+        const setupWithMixedDates = () => {
+            server.use(
+                http.get('*/meals/', ({ request }) => {
+                    const url = new URL(request.url);
+                    const status = url.searchParams.get('status[in]');
+                    if (status?.includes('Queued')) {
+                        return HttpResponse.json([
+                            {
+                                id: 'meal-1',
+                                name: 'Unscheduled A',
+                                status: 'Queued',
+                                classification: 'Dinner',
+                                scheduled_date: null,
+                                is_shopped: false,
+                                queue_position: 0,
+                                user_id: 'u1',
+                                created_at: '2026-01-01T00:00:00Z',
+                                updated_at: '2026-01-01T00:00:00Z',
+                                items: [],
+                            },
+                            {
+                                id: 'meal-2',
+                                name: 'Late Date Meal',
+                                status: 'Queued',
+                                classification: 'Lunch',
+                                scheduled_date: '2026-03-15',
+                                is_shopped: false,
+                                queue_position: 1,
+                                user_id: 'u1',
+                                created_at: '2026-01-01T00:00:00Z',
+                                updated_at: '2026-01-01T00:00:00Z',
+                                items: [],
+                            },
+                            {
+                                id: 'meal-3',
+                                name: 'Unscheduled B',
+                                status: 'Queued',
+                                classification: 'Dinner',
+                                scheduled_date: null,
+                                is_shopped: false,
+                                queue_position: 2,
+                                user_id: 'u1',
+                                created_at: '2026-01-01T00:00:00Z',
+                                updated_at: '2026-01-01T00:00:00Z',
+                                items: [],
+                            },
+                            {
+                                id: 'meal-4',
+                                name: 'Early Date Meal',
+                                status: 'Queued',
+                                classification: 'Lunch',
+                                scheduled_date: '2026-03-01',
+                                is_shopped: false,
+                                queue_position: 3,
+                                user_id: 'u1',
+                                created_at: '2026-01-01T00:00:00Z',
+                                updated_at: '2026-01-01T00:00:00Z',
+                                items: [],
+                            },
+                        ], { headers: { 'X-Total-Count': '4' } });
+                    }
+                    return HttpResponse.json([], { headers: { 'X-Total-Count': '0' } });
+                })
+            );
+
+            renderWithProviders(
+                <MemoryRouter>
+                    <UpcomingMeals />
+                </MemoryRouter>
+            );
+        };
+
+        it('renders sort toggle button in queue header', async () => {
+            setupWithMeals();
+
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+
+            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+        });
+
+        it('default sort is by queue_position (drag-and-drop order)', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            });
+
+            // In default queue_position order: Unscheduled A (0), Late Date Meal (1), Unscheduled B (2), Early Date Meal (3)
+            const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
+            expect(mealNames[0]).toHaveTextContent('Unscheduled A');
+            expect(mealNames[1]).toHaveTextContent('Late Date Meal');
+            expect(mealNames[2]).toHaveTextContent('Unscheduled B');
+            expect(mealNames[3]).toHaveTextContent('Early Date Meal');
+        });
+
+        it('clicking sort toggle switches to date-ascending sort', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            });
+
+            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
+
+            await waitFor(() => {
+                const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
+                // Unscheduled first (retain relative order), then scheduled by date ascending
+                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
+                expect(mealNames[1]).toHaveTextContent('Unscheduled B');
+                expect(mealNames[2]).toHaveTextContent('Early Date Meal');
+                expect(mealNames[3]).toHaveTextContent('Late Date Meal');
+            });
+        });
+
+        it('unscheduled meals appear at top when sorted by date', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            });
+
+            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
+
+            await waitFor(() => {
+                const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
+                // Both unscheduled meals should be before both scheduled meals
+                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
+                expect(mealNames[1]).toHaveTextContent('Unscheduled B');
+            });
+        });
+
+        it('unscheduled meals retain relative order when sorted by date', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            });
+
+            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
+
+            await waitFor(() => {
+                const mealNames = screen.getAllByText(/Unscheduled A|Unscheduled B/);
+                // Unscheduled A (queue_position 0) should come before Unscheduled B (queue_position 2)
+                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
+                expect(mealNames[1]).toHaveTextContent('Unscheduled B');
+            });
+        });
+
+        it('clicking sort toggle again switches back to queue_position sort', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            });
+
+            // Switch to date sort
+            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
+
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: /Sort by Position/i })).toBeInTheDocument();
+            });
+
+            // Switch back to position sort
+            fireEvent.click(screen.getByRole('button', { name: /Sort by Position/i }));
+
+            await waitFor(() => {
+                const mealNames = screen.getAllByText(/Unscheduled A|Late Date Meal|Unscheduled B|Early Date Meal/);
+                // Back to original queue_position order
+                expect(mealNames[0]).toHaveTextContent('Unscheduled A');
+                expect(mealNames[1]).toHaveTextContent('Late Date Meal');
+                expect(mealNames[2]).toHaveTextContent('Unscheduled B');
+                expect(mealNames[3]).toHaveTextContent('Early Date Meal');
+            });
+        });
+
+        it('hides drag handles when sorting by date', async () => {
+            setupWithMixedDates();
+
+            await waitFor(() => {
+                expect(screen.getByText('Unscheduled A')).toBeInTheDocument();
+            });
+
+            // Drag handles should be visible by default
+            expect(screen.getAllByLabelText('Drag to reorder').length).toBeGreaterThan(0);
+
+            // Switch to date sort
+            fireEvent.click(screen.getByRole('button', { name: /Sort by Date/i }));
+
+            await waitFor(() => {
+                expect(screen.queryAllByLabelText('Drag to reorder')).toHaveLength(0);
+            });
+        });
+    });
+
     describe('bulk status action bar', () => {
         it('shows action bar when meals are selected', async () => {
             setupWithMeals();

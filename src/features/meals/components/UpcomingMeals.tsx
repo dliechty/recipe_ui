@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, VStack, Text, Button, Icon, IconButton, Spinner, Center, HStack, Checkbox } from '@chakra-ui/react';
-import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt, FaCheckSquare } from 'react-icons/fa';
+import { FaPlus, FaMagic, FaShoppingCart, FaList, FaCalendarAlt, FaCheckSquare, FaSortAmountDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import {
     DndContext,
@@ -40,6 +40,7 @@ const UpcomingMeals = () => {
     const [viewMode, setViewMode] = useState<'queue' | 'calendar'>('queue');
     const [selectionMode, setSelectionMode] = useState(false);
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const [sortMode, setSortMode] = useState<'queue_position' | 'scheduled_date'>('queue_position');
 
     const filters = useMemo(() => ({
         status: [MealStatus.QUEUED],
@@ -79,6 +80,22 @@ const UpcomingMeals = () => {
 
     // Use local order for rendering; fall back to server data if local is empty
     const meals = localMeals.length > 0 ? localMeals : serverMeals;
+
+    // Client-side sort for date mode: unscheduled first (by queue_position), then scheduled by date ascending
+    const sortedMeals = useMemo(() => {
+        if (sortMode !== 'scheduled_date') return meals;
+
+        const unscheduled = meals.filter(m => !m.scheduled_date);
+        const scheduled = meals.filter(m => m.scheduled_date);
+
+        scheduled.sort((a, b) => {
+            const dateA = a.scheduled_date || '';
+            const dateB = b.scheduled_date || '';
+            return dateA.localeCompare(dateB);
+        });
+
+        return [...unscheduled, ...scheduled];
+    }, [meals, sortMode]);
 
     // Collect recipe IDs with stable reference (only changes when actual IDs change)
     const prevRecipeIdsRef = useRef<string[]>([]);
@@ -270,6 +287,20 @@ const UpcomingMeals = () => {
                             </Button>
                         </>
                     )}
+                    {viewMode === 'queue' && meals.length > 0 && (
+                        <Button
+                            onClick={() => setSortMode(prev => prev === 'queue_position' ? 'scheduled_date' : 'queue_position')}
+                            variant={sortMode === 'scheduled_date' ? 'solid' : 'outline'}
+                            bg={sortMode === 'scheduled_date' ? 'vscode.button' : undefined}
+                            borderColor="vscode.accent"
+                            color={sortMode === 'scheduled_date' ? 'white' : 'vscode.accent'}
+                            _hover={{ bg: sortMode === 'scheduled_date' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
+                            size="xs"
+                        >
+                            <Icon as={FaSortAmountDown} mr={1} />
+                            {sortMode === 'scheduled_date' ? 'Sort by Position' : 'Sort by Date'}
+                        </Button>
+                    )}
                     <IconButton
                         aria-label="Queue view"
                         variant={viewMode === 'queue' ? 'solid' : 'ghost'}
@@ -343,18 +374,18 @@ const UpcomingMeals = () => {
                 </Center>
             )}
 
-            {status === 'success' && meals.length > 0 && viewMode === 'queue' && (
+            {status === 'success' && meals.length > 0 && viewMode === 'queue' && sortMode === 'queue_position' && (
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}
                 >
                     <SortableContext
-                        items={meals.map(m => m.id)}
+                        items={sortedMeals.map(m => m.id)}
                         strategy={verticalListSortingStrategy}
                     >
                         <VStack gap={3} align="stretch">
-                            {meals.map((meal) => (
+                            {sortedMeals.map((meal) => (
                                 <MealQueueCard
                                     key={meal.id}
                                     meal={meal}
@@ -367,6 +398,22 @@ const UpcomingMeals = () => {
                         </VStack>
                     </SortableContext>
                 </DndContext>
+            )}
+
+            {status === 'success' && meals.length > 0 && viewMode === 'queue' && sortMode === 'scheduled_date' && (
+                <VStack gap={3} align="stretch">
+                    {sortedMeals.map((meal) => (
+                        <MealQueueCard
+                            key={meal.id}
+                            meal={meal}
+                            recipeNames={recipeNames}
+                            selectionMode={selectionMode}
+                            isSelected={selectedIds.has(meal.id)}
+                            onToggleSelect={handleToggleSelect}
+                            hideDragHandle
+                        />
+                    ))}
+                </VStack>
             )}
 
             {status === 'success' && meals.length > 0 && viewMode === 'calendar' && (
