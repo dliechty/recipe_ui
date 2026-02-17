@@ -1,5 +1,5 @@
 import { renderWithProviders, screen, waitFor, fireEvent } from '../../../../test-utils';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import UpcomingMeals from '../UpcomingMeals';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
@@ -921,6 +921,118 @@ describe('UpcomingMeals', () => {
             await waitFor(() => {
                 expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
             });
+        });
+    });
+
+    describe('view mode URL persistence', () => {
+        const setupWithMealsAndRoute = (initialPath: string) => {
+            server.use(
+                http.get('*/meals/', ({ request }) => {
+                    const url = new URL(request.url);
+                    const status = url.searchParams.get('status[in]');
+                    if (status?.includes('Queued')) {
+                        return HttpResponse.json([
+                            {
+                                id: 'meal-1',
+                                name: 'Monday Dinner',
+                                status: 'Queued',
+                                classification: 'Dinner',
+                                scheduled_date: '2026-03-01',
+                                is_shopped: false,
+                                queue_position: 0,
+                                user_id: 'u1',
+                                created_at: '2026-01-01T00:00:00Z',
+                                updated_at: '2026-01-01T00:00:00Z',
+                                items: [],
+                            },
+                        ], { headers: { 'X-Total-Count': '1' } });
+                    }
+                    return HttpResponse.json([], { headers: { 'X-Total-Count': '0' } });
+                })
+            );
+
+            renderWithProviders(
+                <MemoryRouter initialEntries={[initialPath]}>
+                    <Routes>
+                        <Route path="/meals" element={<UpcomingMeals />} />
+                    </Routes>
+                </MemoryRouter>
+            );
+        };
+
+        it('defaults to queue view when no ?view= param is present', async () => {
+            setupWithMealsAndRoute('/meals');
+
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+
+            // Queue view shows Sort by Date button
+            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+            // Calendar view elements should not be present
+            expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
+        });
+
+        it('renders calendar view when ?view=calendar is in URL', async () => {
+            setupWithMealsAndRoute('/meals?view=calendar');
+
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+
+            // Calendar view shows Today button and Unscheduled section
+            expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+            expect(screen.getByText('Unscheduled')).toBeInTheDocument();
+            // Queue-specific Sort by Date button should not be present
+            expect(screen.queryByRole('button', { name: /Sort by Date/i })).not.toBeInTheDocument();
+        });
+
+        it('defaults to queue view when ?view= has invalid value', async () => {
+            setupWithMealsAndRoute('/meals?view=invalid');
+
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+
+            // Should fall back to queue view
+            expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
+        });
+
+        it('clicking calendar view button updates URL to ?view=calendar', async () => {
+            setupWithMealsAndRoute('/meals');
+
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+
+            // Click calendar view toggle
+            fireEvent.click(screen.getByRole('button', { name: /Calendar view/i }));
+
+            // Should now show calendar view
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+            });
+        });
+
+        it('clicking queue view button when in calendar view switches back to queue', async () => {
+            setupWithMealsAndRoute('/meals?view=calendar');
+
+            await waitFor(() => {
+                expect(screen.getByText('Monday Dinner')).toBeInTheDocument();
+            });
+
+            // Should be in calendar view
+            expect(screen.getByRole('button', { name: /today/i })).toBeInTheDocument();
+
+            // Click queue view toggle
+            fireEvent.click(screen.getByRole('button', { name: /Queue view/i }));
+
+            // Should now show queue view
+            await waitFor(() => {
+                expect(screen.getByRole('button', { name: /Sort by Date/i })).toBeInTheDocument();
+            });
+            expect(screen.queryByRole('button', { name: /today/i })).not.toBeInTheDocument();
         });
     });
 });
