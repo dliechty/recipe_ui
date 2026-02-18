@@ -95,24 +95,24 @@
 
 ---
 
-## Phase 4: Navbar Operating Mode Indicator
+## Phase 4: Navbar Operating Mode Indicator [checkpoint: 8bd96ff]
 
-- [ ] Task: Write failing tests for `AdminModeIndicator` component
-    - [ ] Test: renders nothing for non-admin users
-    - [ ] Test: renders nothing for admin in default mode
-    - [ ] Test: renders amber "Admin Mode" badge when `adminModeActive`
-    - [ ] Test: renders cyan "Acting as: {name}" badge when impersonating
-    - [ ] Test: badge links to `/admin`
+- [x] Task: Write failing tests for `AdminModeIndicator` component [8bd96ff]
+    - [x] Test: renders nothing for non-admin users
+    - [x] Test: renders nothing for admin in default mode
+    - [x] Test: renders amber "Admin Mode" badge when `adminModeActive`
+    - [x] Test: renders cyan "Acting as: {name}" badge when impersonating
+    - [x] Test: badge links to `/admin`
 
-- [ ] Task: Create `src/features/admin/components/AdminModeIndicator.tsx`
-    - [ ] Read `adminModeActive` and `impersonatedUserId` from `useAdminMode()`
-    - [ ] Render amber pill ("Admin Mode") in admin mode
-    - [ ] Render cyan pill ("Acting as: {user name}") in impersonation mode; resolve user name from user list
-    - [ ] Wrap pill in React Router `<Link to="/admin">`
-    - [ ] Return `null` for non-admins and default mode
+- [x] Task: Create `src/features/admin/components/AdminModeIndicator.tsx` [8bd96ff]
+    - [x] Read `adminModeActive` and `impersonatedUserId` from `useAdminMode()`
+    - [x] Render amber pill ("Admin Mode") in admin mode
+    - [x] Render cyan pill ("Acting as: {user name}") in impersonation mode; resolve user name from user list
+    - [x] Wrap pill in React Router `<Link to="/admin">`
+    - [x] Return `null` for non-admins and default mode
 
-- [ ] Task: Integrate `AdminModeIndicator` into app layout/navbar
-    - [ ] Locate the shared layout/navbar component in `src/components/`
-    - [ ] Render `<AdminModeIndicator />` in the navbar alongside existing controls
+- [x] Task: Integrate `AdminModeIndicator` into app layout/navbar [8bd96ff]
+    - [x] Locate the shared layout/navbar component in `src/components/`
+    - [x] Render `<AdminModeIndicator />` in the navbar alongside existing controls
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Navbar Operating Mode Indicator' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Navbar Operating Mode Indicator' (Protocol in workflow.md)
