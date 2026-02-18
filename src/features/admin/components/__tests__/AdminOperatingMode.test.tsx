@@ -7,7 +7,15 @@ const mockSetAdminMode = vi.fn();
 const mockSetImpersonatedUser = vi.fn();
 const mockClearMode = vi.fn();
 
-const defaultAdminMode = {
+interface MockAdminMode {
+    adminModeActive: boolean;
+    impersonatedUserId: string | null;
+    setAdminMode: typeof mockSetAdminMode;
+    setImpersonatedUser: typeof mockSetImpersonatedUser;
+    clearMode: typeof mockClearMode;
+}
+
+const defaultAdminMode: MockAdminMode = {
     adminModeActive: false,
     impersonatedUserId: null,
     setAdminMode: mockSetAdminMode,
@@ -20,7 +28,7 @@ vi.mock('../../../../context/AdminModeContext', () => ({
 }));
 
 // We need to be able to change mockAdminMode between tests
-let mockAdminMode = { ...defaultAdminMode };
+let mockAdminMode: MockAdminMode = { ...defaultAdminMode };
 
 // Mock useUsers hook
 const mockNonAdminUser = {
@@ -28,7 +36,6 @@ const mockNonAdminUser = {
     email: 'alice@example.com',
     first_name: 'Alice',
     last_name: 'Smith',
-    is_active: true,
     is_admin: false,
 };
 
@@ -37,7 +44,6 @@ const mockAdminUser = {
     email: 'bob@example.com',
     first_name: 'Bob',
     last_name: 'Jones',
-    is_active: true,
     is_admin: true,
 };
 

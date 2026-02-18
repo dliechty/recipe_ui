@@ -1,14 +1,7 @@
-import { Container, Tabs } from '@chakra-ui/react'; // Adjust tabs import if needed for Chakra v3
+import { Container, Tabs } from '@chakra-ui/react';
 import AdminPendingRequests from '../components/AdminPendingRequests';
 import AdminUserManagement from '../components/AdminUserManagement.tsx';
-
-// Ensure Chakra v3 Tabs usage is correct. 
-// Assuming Tabs.Root, Tabs.List, Tabs.Trigger, Tabs.Content pattern effectively or Tabs, TabList, Tab, TabPanels, TabPanel
-// Checking standard Chakra usage. Since I don't have docs, I will assume standard v2-like or check theme.
-// Let's use standard v2 for now and fix if errors. 
-// Wait, "recipe_ui" uses "@chakra-ui/react": "^3.30.0". 
-// I'll check if I can find Tabs usage in other files.
-// I'll search for Tabs.
+import AdminOperatingMode from '../components/AdminOperatingMode';
 
 const AdminDashboard = () => {
     return (
@@ -35,12 +28,25 @@ const AdminDashboard = () => {
                     >
                         Pending Requests
                     </Tabs.Trigger>
+                    <Tabs.Trigger
+                        value="operating-mode"
+                        px={4}
+                        py={2}
+                        borderBottomWidth="2px"
+                        borderBottomColor="transparent"
+                        _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
+                    >
+                        Operating Mode
+                    </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="users">
                     <AdminUserManagement />
                 </Tabs.Content>
                 <Tabs.Content value="pending">
                     <AdminPendingRequests />
+                </Tabs.Content>
+                <Tabs.Content value="operating-mode">
+                    <AdminOperatingMode />
                 </Tabs.Content>
             </Tabs.Root>
         </Container>

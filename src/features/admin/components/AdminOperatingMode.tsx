@@ -22,8 +22,8 @@ const AdminOperatingMode = () => {
     const { data: allUsers, isLoading } = useUsers();
     const [selectedUserId, setSelectedUserId] = useState<string>('');
 
-    // Filter to only active non-admin users
-    const nonAdminUsers = (allUsers ?? []).filter(u => u.is_active && !u.is_admin);
+    // Filter to only non-admin users (UserPublic doesn't have is_active field)
+    const nonAdminUsers = (allUsers ?? []).filter(u => !u.is_admin);
 
     // Find impersonated user's name
     const impersonatedUser = impersonatedUserId
@@ -42,10 +42,6 @@ const AdminOperatingMode = () => {
     } else {
         currentModeLabel = 'User (default)';
     }
-
-    const handleAdminToggle = () => {
-        setAdminMode(!adminModeActive);
-    };
 
     const handleStartImpersonating = () => {
         if (selectedUserId) {
