@@ -34,7 +34,7 @@
 
 ---
 
-## Phase 2: `canEdit` Logic Update
+## Phase 2: `canEdit` Logic Update [checkpoint: 89c470a]
 
 - [x] Task: Write failing tests for `computeCanEdit` utility [d7989d4]
     - [x] Test: owner in default mode → `true`
