@@ -129,7 +129,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ token, isAuthenticated, user, login, logout, refreshUser }}>
-            <HeaderInjector user={user} />
             {children}
         </AuthContext.Provider>
     );

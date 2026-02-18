@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 
 const STORAGE_KEY_ADMIN_MODE = 'admin_mode_active';
@@ -26,9 +26,16 @@ export const AdminModeProvider = ({ children }: { children: ReactNode }) => {
         return localStorage.getItem(STORAGE_KEY_IMPERSONATED_USER) ?? null;
     });
 
-    // Auto-clear state when user logs out (user becomes null)
+    // Track whether a user has ever been loaded in this session, to distinguish
+    // "initial page load (user is null while fetching)" from "actual logout".
+    const hadUser = useRef(false);
+
+    // Auto-clear state only on actual logout (user transitions from non-null → null).
     useEffect(() => {
-        if (!user) {
+        if (user) {
+            hadUser.current = true;
+        } else if (hadUser.current) {
+            hadUser.current = false;
             setAdminModeActive(false);
             setImpersonatedUserId(null);
             localStorage.removeItem(STORAGE_KEY_ADMIN_MODE);
