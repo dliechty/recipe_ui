@@ -10,9 +10,16 @@ vi.mock('../../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeContext - default mode
+const mockUseAdminMode = vi.fn();
+vi.mock('../../../../context/AdminModeContext', () => ({
+    useAdminMode: () => mockUseAdminMode(),
+}));
+
 describe('MealDetails', () => {
     beforeEach(() => {
         mockUseAuth.mockReturnValue({ user: { id: 'user-123', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
         // Mock user endpoint
         server.use(
             http.get('*/users/:id', () => {
@@ -677,5 +684,138 @@ describe('MealDetails', () => {
         // Breadcrumb link should be plain /meals (no query param)
         const mealsLink = screen.getByRole('link', { name: 'Meals' });
         expect(mealsLink).toHaveAttribute('href', '/meals');
+    });
+
+    // Admin mode / impersonation canEdit tests
+    it('hides delete button for admin in default mode viewing another user meal', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Other User Meal',
+                    status: 'Queued',
+                    user_id: 'user-owner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Other User Meal' })).toBeInTheDocument();
+        });
+
+        expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
+    });
+
+    it('shows delete button for admin in admin mode', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: true, impersonatedUserId: null });
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Admin Mode Meal',
+                    status: 'Queued',
+                    user_id: 'user-owner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Admin Mode Meal' })).toBeInTheDocument();
+        });
+
+        expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
+    });
+
+    it('shows delete button when admin impersonates meal owner', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-owner' });
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Impersonated Meal',
+                    status: 'Queued',
+                    user_id: 'user-owner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Impersonated Meal' })).toBeInTheDocument();
+        });
+
+        expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
+    });
+
+    it('hides delete button when admin impersonates a non-owner of the meal', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-different' });
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Non-Owner Meal',
+                    status: 'Queued',
+                    user_id: 'user-owner',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Non-Owner Meal' })).toBeInTheDocument();
+        });
+
+        expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
     });
 });

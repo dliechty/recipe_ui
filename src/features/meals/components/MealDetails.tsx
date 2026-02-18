@@ -19,7 +19,9 @@ import { useMeal, useDeleteMeal, useMealTemplate } from '../../../hooks/useMeals
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
+import { useAdminMode } from '../../../context/AdminModeContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { computeCanEdit } from '../../../utils/computeCanEdit';
 import { formatDuration } from '../../../utils/formatters';
 import { MealStatus } from '../../../client';
 import ExpandableRecipeCard from './ExpandableRecipeCard';
@@ -63,11 +65,18 @@ const MealDetails = () => {
     );
     const recipes = recipesData?.pages.flatMap(p => p.recipes) || [];
 
+    const { adminModeActive, impersonatedUserId } = useAdminMode();
     const [isDeleting, setIsDeleting] = useState(false);
     const [allExpanded, setAllExpanded] = useState(false);
     const [isRecipeModalOpen, setIsRecipeModalOpen] = useState(false);
 
-    const canEdit = currentUser?.is_admin || (currentUser?.id && meal?.user_id && currentUser.id === meal.user_id);
+    const canEdit = computeCanEdit({
+        currentUserId: currentUser?.id,
+        resourceOwnerId: meal?.user_id,
+        isAdmin: currentUser?.is_admin,
+        adminModeActive,
+        impersonatedUserId,
+    });
 
     if (isLoading) {
         return (
