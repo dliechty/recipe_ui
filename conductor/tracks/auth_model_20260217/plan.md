@@ -69,7 +69,7 @@
 
 ---
 
-## Phase 3: Admin Page — Operating Mode Section
+## Phase 3: Admin Page — Operating Mode Section [checkpoint: 80d2cb0]
 
 - [x] Task: Write failing tests for `AdminOperatingMode` component [f95b7c6]
     - [x] Test: renders "Current mode: User (default)" in default state
