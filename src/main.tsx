@@ -1,5 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { AuthProvider } from './context/AuthContext'
+import { AdminModeProvider } from './context/AdminModeContext'
 import { OpenAPI } from './client'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
@@ -48,7 +49,9 @@ enableMocking().then(() => {
         <ChakraProvider value={system}>
           <ErrorBoundary>
             <AuthProvider>
+              <AdminModeProvider>
               <App />
+              </AdminModeProvider>
               <Toaster toaster={toaster}>
                 {(toast) => (
                   <Box
