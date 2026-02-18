@@ -71,27 +71,27 @@
 
 ## Phase 3: Admin Page — Operating Mode Section
 
-- [ ] Task: Write failing tests for `AdminOperatingMode` component
-    - [ ] Test: renders "Current mode: User (default)" in default state
-    - [ ] Test: enabling admin mode toggle calls `setAdminMode(true)` and shows "Current mode: Admin"
-    - [ ] Test: disabling admin mode toggle calls `setAdminMode(false)`
-    - [ ] Test: impersonation dropdown lists only non-admin active users
-    - [ ] Test: clicking "Start Impersonating" calls `setImpersonatedUser(uuid)` and shows "Current mode: Impersonating — {name}"
-    - [ ] Test: clicking "Stop Impersonating" calls `clearMode()`
-    - [ ] Test: admin mode toggle is disabled while impersonation is active
+- [x] Task: Write failing tests for `AdminOperatingMode` component [f95b7c6]
+    - [x] Test: renders "Current mode: User (default)" in default state
+    - [x] Test: enabling admin mode toggle calls `setAdminMode(true)` and shows "Current mode: Admin"
+    - [x] Test: disabling admin mode toggle calls `setAdminMode(false)`
+    - [x] Test: impersonation dropdown lists only non-admin active users
+    - [x] Test: clicking "Start Impersonating" calls `setImpersonatedUser(uuid)` and shows "Current mode: Impersonating — {name}"
+    - [x] Test: clicking "Stop Impersonating" calls `clearMode()`
+    - [x] Test: admin mode toggle is disabled while impersonation is active
 
-- [ ] Task: Create `src/features/admin/components/AdminOperatingMode.tsx`
-    - [ ] Admin Mode section with toggle switch and descriptive note
-    - [ ] Impersonation section with searchable Chakra Select/combobox, "Start Impersonating" and "Stop Impersonating" controls
-    - [ ] Mode summary display
-    - [ ] Fetch active users list (reuse existing user list query); filter out admins from dropdown
-    - [ ] Wire up to `useAdminMode()` context
+- [x] Task: Create `src/features/admin/components/AdminOperatingMode.tsx` [f95b7c6]
+    - [x] Admin Mode section with toggle switch and descriptive note
+    - [x] Impersonation section with searchable Chakra Select/combobox, "Start Impersonating" and "Stop Impersonating" controls
+    - [x] Mode summary display
+    - [x] Fetch active users list (reuse existing user list query); filter out admins from dropdown
+    - [x] Wire up to `useAdminMode()` context
 
-- [ ] Task: Integrate `AdminOperatingMode` into `AdminDashboard.tsx`
-    - [ ] Add new "Operating Mode" tab alongside existing tabs
-    - [ ] Render `AdminOperatingMode` in the tab panel
+- [x] Task: Integrate `AdminOperatingMode` into `AdminDashboard.tsx` [eaea339]
+    - [x] Add new "Operating Mode" tab alongside existing tabs
+    - [x] Render `AdminOperatingMode` in the tab panel
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Admin Page — Operating Mode Section' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Admin Page — Operating Mode Section' (Protocol in workflow.md)
 
 ---
 
