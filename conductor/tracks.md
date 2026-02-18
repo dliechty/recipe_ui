@@ -21,3 +21,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## [x] Track: Meal Calendar Selection & Status Improvements
 *Link: [./conductor/tracks/meal_calendar_selection_20260217/](./conductor/tracks/meal_calendar_selection_20260217/)*
+
+---
+
+## [ ] Track: UI Authorization Model Alignment
+*Link: [./conductor/tracks/auth_model_20260217/](./conductor/tracks/auth_model_20260217/)*
