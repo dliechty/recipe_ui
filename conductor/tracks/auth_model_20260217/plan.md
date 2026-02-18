@@ -57,9 +57,9 @@
     - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
     - [x] Update or add component tests covering admin mode and impersonation cases
 
-- [ ] Task: Update `TemplateDetails.tsx` canEdit logic
-    - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
-    - [ ] Update or add component tests covering admin mode and impersonation cases
+- [x] Task: Update `TemplateDetails.tsx` canEdit logic [9bab709]
+    - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
+    - [x] Update or add component tests covering admin mode and impersonation cases
 
 - [ ] Task: Update `CommentItem.tsx` canEdit logic
     - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
