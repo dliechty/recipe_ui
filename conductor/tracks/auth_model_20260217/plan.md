@@ -36,18 +36,18 @@
 
 ## Phase 2: `canEdit` Logic Update
 
-- [ ] Task: Write failing tests for `computeCanEdit` utility
-    - [ ] Test: owner in default mode → `true`
-    - [ ] Test: non-owner, non-admin, default mode → `false`
-    - [ ] Test: admin in default mode viewing another user's resource → `false`
-    - [ ] Test: admin in admin mode viewing another user's resource → `true`
-    - [ ] Test: admin impersonating owner of resource → `true`
-    - [ ] Test: admin impersonating non-owner of resource → `false`
-    - [ ] Test: admin mode + impersonation both set → impersonation takes precedence
+- [x] Task: Write failing tests for `computeCanEdit` utility [d7989d4]
+    - [x] Test: owner in default mode → `true`
+    - [x] Test: non-owner, non-admin, default mode → `false`
+    - [x] Test: admin in default mode viewing another user's resource → `false`
+    - [x] Test: admin in admin mode viewing another user's resource → `true`
+    - [x] Test: admin impersonating owner of resource → `true`
+    - [x] Test: admin impersonating non-owner of resource → `false`
+    - [x] Test: admin mode + impersonation both set → impersonation takes precedence
 
-- [ ] Task: Create `src/utils/computeCanEdit.ts`
-    - [ ] Define and export `computeCanEdit` function with typed params
-    - [ ] Implement logic per spec FR-3
+- [x] Task: Create `src/utils/computeCanEdit.ts` [d7989d4]
+    - [x] Define and export `computeCanEdit` function with typed params
+    - [x] Implement logic per spec FR-3
 
 - [ ] Task: Update `RecipeDetails.tsx` canEdit logic
     - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
