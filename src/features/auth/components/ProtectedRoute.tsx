@@ -15,11 +15,17 @@ const ProtectedRoute = ({ children, requireAdmin }: ProtectedRouteProps) => {
         return <Navigate to="/" state={{ from: location }} replace />;
     }
 
-    if (requireAdmin && !user?.is_admin) {
+    // User object is fetched asynchronously after the token is verified.
+    // Don't make requireAdmin or is_first_login decisions until it has loaded.
+    if (user === null) {
+        return null;
+    }
+
+    if (requireAdmin && !user.is_admin) {
         return <Navigate to="/meals" replace />;
     }
 
-    if (user?.is_first_login && location.pathname !== '/change-password') {
+    if (user.is_first_login && location.pathname !== '/change-password') {
         return <Navigate to="/change-password" replace />;
     }
 

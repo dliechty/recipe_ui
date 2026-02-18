@@ -39,7 +39,9 @@ export const useInfiniteMeals = (limit: number = 20, filters: MealFilters = {}) 
                 ? await OpenAPI.TOKEN({ method: 'GET', url: '/meals/' })
                 : OpenAPI.TOKEN;
 
-            const headers: Record<string, string> = {};
+            // Include any custom headers set by HeaderInjector (e.g., X-Act-As-User, X-Admin-Mode)
+            const customHeaders = typeof OpenAPI.HEADERS !== 'function' ? OpenAPI.HEADERS : undefined;
+            const headers: Record<string, string> = { ...(customHeaders ?? {}) };
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
@@ -135,7 +137,9 @@ export const useInfiniteMealTemplates = (limit: number = 20, filters: TemplateFi
                 ? await OpenAPI.TOKEN({ method: 'GET', url: '/meals/templates' })
                 : OpenAPI.TOKEN;
 
-            const headers: Record<string, string> = {};
+            // Include any custom headers set by HeaderInjector (e.g., X-Act-As-User, X-Admin-Mode)
+            const customHeaders = typeof OpenAPI.HEADERS !== 'function' ? OpenAPI.HEADERS : undefined;
+            const headers: Record<string, string> = { ...(customHeaders ?? {}) };
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }

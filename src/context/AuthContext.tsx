@@ -47,7 +47,13 @@ export function HeaderInjector({ user }: { user: UserPublic | null }) {
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+    const [token, setToken] = useState<string | null>(() => {
+        const stored = localStorage.getItem('token');
+        // Set synchronously so React Query hooks don't fire unauthenticated
+        // requests before the useEffect below has a chance to run.
+        if (stored) OpenAPI.TOKEN = stored;
+        return stored;
+    });
     const [user, setUser] = useState<UserPublic | null>(null);
     const isAuthenticated = !!token;
 
