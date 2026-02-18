@@ -3,6 +3,7 @@ import { Box, Flex, HStack, Button, Menu, IconButton } from '@chakra-ui/react';
 import { FiMenu } from 'react-icons/fi';
 import { Link as NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import AdminModeIndicator from '../../features/admin/components/AdminModeIndicator';
 
 
 interface NavItemProps {
@@ -108,6 +109,7 @@ const Layout = ({ children }: LayoutProps) => {
                         </HStack>
                         <Flex alignItems={'center'}>
                             <HStack gap={4} mr={4} display={{ base: 'none', md: 'flex' }}>
+                                <AdminModeIndicator />
                                 {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
                                 <NavItem to="/recipe-box">Recipe Box</NavItem>
                                 <NavItem to="/account">Account</NavItem>

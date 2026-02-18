@@ -13,6 +13,11 @@ vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeIndicator to avoid needing AdminModeProvider in these tests
+vi.mock('../../../features/admin/components/AdminModeIndicator', () => ({
+    default: () => null,
+}));
+
 const renderWithProvider = (ui: React.ReactNode) => {
     return render(
         <ChakraProvider value={system}>

@@ -7,6 +7,11 @@ import { AuthenticationService } from '../client';
 import { ChakraProvider } from '@chakra-ui/react';
 import { system } from '../theme';
 
+// Mock AdminModeIndicator to avoid needing AdminModeProvider in these tests
+vi.mock('../features/admin/components/AdminModeIndicator', () => ({
+    default: () => null,
+}));
+
 // Mock the lazy loaded components to identify them easily
 vi.mock('../features/recipes/components/RecipeList', () => ({
     default: () => <div data-testid="recipe-list">Recipe List Page</div>
