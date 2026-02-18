@@ -65,7 +65,7 @@
     - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
     - [x] Update or add component tests covering admin mode and impersonation cases
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: canEdit Logic Update' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: canEdit Logic Update' (Protocol in workflow.md)
 
 ---
 
