@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { OpenAPI, AuthenticationService, UserPublic } from '../client';
+import { AdminModeContext } from './AdminModeContext';
 
 interface AuthContextType {
     token: string | null;
@@ -13,6 +14,37 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+/**
+ * Inner component that reads AdminModeContext and sets OpenAPI.HEADERS reactively.
+ * Gracefully handles the case where AdminModeProvider is not present (returns null context).
+ * Exported for testing purposes.
+ */
+export function HeaderInjector({ user }: { user: UserPublic | null }) {
+    const adminModeCtx = useContext(AdminModeContext);
+    const adminModeActive = adminModeCtx?.adminModeActive ?? false;
+    const impersonatedUserId = adminModeCtx?.impersonatedUserId ?? null;
+
+    useEffect(() => {
+        if (!user?.is_admin) {
+            // Non-admin or no admin mode context: clear any custom headers
+            OpenAPI.HEADERS = undefined;
+            return;
+        }
+
+        if (impersonatedUserId) {
+            // Impersonation takes precedence over admin mode
+            OpenAPI.HEADERS = { 'X-Act-As-User': impersonatedUserId };
+        } else if (adminModeActive) {
+            OpenAPI.HEADERS = { 'X-Admin-Mode': 'true' };
+        } else {
+            // Default mode: no custom headers
+            OpenAPI.HEADERS = undefined;
+        }
+    }, [user, adminModeActive, impersonatedUserId]);
+
+    return null;
+}
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
@@ -95,6 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ token, isAuthenticated, user, login, logout, refreshUser }}>
+            <HeaderInjector user={user} />
             {children}
         </AuthContext.Provider>
     );

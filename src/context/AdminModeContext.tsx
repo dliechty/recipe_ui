@@ -12,7 +12,8 @@ interface AdminModeContextType {
     clearMode: () => void;
 }
 
-const AdminModeContext = createContext<AdminModeContextType | null>(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AdminModeContext = createContext<AdminModeContextType | null>(null);
 
 export const AdminModeProvider = ({ children }: { children: ReactNode }) => {
     const { user } = useAuth();
