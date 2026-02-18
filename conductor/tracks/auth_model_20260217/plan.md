@@ -49,9 +49,9 @@
     - [x] Define and export `computeCanEdit` function with typed params
     - [x] Implement logic per spec FR-3
 
-- [ ] Task: Update `RecipeDetails.tsx` canEdit logic
-    - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
-    - [ ] Update or add component tests covering admin mode and impersonation cases
+- [x] Task: Update `RecipeDetails.tsx` canEdit logic [4471764]
+    - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
+    - [x] Update or add component tests covering admin mode and impersonation cases
 
 - [ ] Task: Update `MealDetails.tsx` canEdit logic
     - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
