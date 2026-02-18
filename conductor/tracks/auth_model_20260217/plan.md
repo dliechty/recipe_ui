@@ -53,9 +53,9 @@
     - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
     - [x] Update or add component tests covering admin mode and impersonation cases
 
-- [ ] Task: Update `MealDetails.tsx` canEdit logic
-    - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
-    - [ ] Update or add component tests covering admin mode and impersonation cases
+- [x] Task: Update `MealDetails.tsx` canEdit logic [db1dab0]
+    - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
+    - [x] Update or add component tests covering admin mode and impersonation cases
 
 - [ ] Task: Update `TemplateDetails.tsx` canEdit logic
     - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
