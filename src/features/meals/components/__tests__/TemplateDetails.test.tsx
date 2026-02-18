@@ -12,6 +12,12 @@ vi.mock('../../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeContext - default mode
+const mockUseAdminMode = vi.fn();
+vi.mock('../../../../context/AdminModeContext', () => ({
+    useAdminMode: () => mockUseAdminMode(),
+}));
+
 vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual('react-router-dom');
     return {
@@ -28,7 +34,8 @@ vi.mock('../../../../toaster', () => ({
 
 describe('TemplateDetails', () => {
     beforeEach(() => {
-        mockUseAuth.mockReturnValue({ user: { id: 'user-123' } });
+        mockUseAuth.mockReturnValue({ user: { id: 'user-123', is_admin: false } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
         mockNavigate.mockClear();
         vi.mocked(toaster.create).mockClear();
     });
@@ -281,5 +288,138 @@ describe('TemplateDetails', () => {
         });
 
         expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    // canEdit / admin mode / impersonation tests
+    it('hides edit and delete buttons for admin in default mode viewing another user template', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
+
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Other User Template',
+                    user_id: 'user-owner',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Other User Template' })).toBeInTheDocument();
+        });
+
+        expect(screen.queryByRole('button', { name: /^Edit$/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
+    });
+
+    it('shows edit and delete buttons for admin in admin mode', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: true, impersonatedUserId: null });
+
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Admin Mode Template',
+                    user_id: 'user-owner',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Admin Mode Template' })).toBeInTheDocument();
+        });
+
+        expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
+    });
+
+    it('shows edit and delete buttons when admin impersonates the template owner', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-owner' });
+
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Impersonated Template',
+                    user_id: 'user-owner',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Impersonated Template' })).toBeInTheDocument();
+        });
+
+        expect(screen.getByRole('button', { name: /Edit/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument();
+    });
+
+    it('hides edit and delete when admin impersonates a non-owner of the template', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-different' });
+
+        server.use(
+            http.get('*/meals/templates/:id', () => {
+                return HttpResponse.json({
+                    id: 't1',
+                    name: 'Non-Owner Template',
+                    user_id: 'user-owner',
+                    slots: [],
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z'
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/templates/t1']}>
+                <Routes>
+                    <Route path="/meals/templates/:id" element={<TemplateDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Non-Owner Template' })).toBeInTheDocument();
+        });
+
+        expect(screen.queryByRole('button', { name: /^Edit$/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
     });
 });

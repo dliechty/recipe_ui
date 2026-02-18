@@ -6,7 +6,9 @@ import { useMealTemplate, useDeleteMealTemplate, useCreateMeal } from '../../../
 import { toaster } from '../../../toaster';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
+import { useAdminMode } from '../../../context/AdminModeContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { computeCanEdit } from '../../../utils/computeCanEdit';
 import TemplateSlotCard from './TemplateSlotCard';
 import GenerateMealModal from './GenerateMealModal';
 
@@ -19,6 +21,7 @@ const TemplateDetails = () => {
     const deleteTemplate = useDeleteMealTemplate();
     const createMeal = useCreateMeal();
     const { user: currentUser } = useAuth();
+    const { adminModeActive, impersonatedUserId } = useAdminMode();
     const { data: creator } = useUser(template?.user_id);
 
     const [isDeleting, setIsDeleting] = useState(false);
@@ -47,7 +50,13 @@ const TemplateDetails = () => {
         }
     }, [expandedSlotIds, id]);
 
-    const canEdit = currentUser?.is_admin || (currentUser?.id && template?.user_id && currentUser.id === template.user_id);
+    const canEdit = computeCanEdit({
+        currentUserId: currentUser?.id,
+        resourceOwnerId: template?.user_id,
+        isAdmin: currentUser?.is_admin,
+        adminModeActive,
+        impersonatedUserId,
+    });
 
     if (isLoading) {
         return (
