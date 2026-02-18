@@ -5,7 +5,9 @@ import { Box, HStack, Text, Button, Icon } from '@chakra-ui/react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 import { useAuth } from '../../../../context/AuthContext';
+import { useAdminMode } from '../../../../context/AdminModeContext';
 import { useUpdateComment, useDeleteComment } from '../../../../hooks/useComments';
+import { computeCanEdit } from '../../../../utils/computeCanEdit';
 import CommentForm from './CommentForm';
 
 import { Comment } from '../../../../client';
@@ -18,11 +20,18 @@ interface CommentItemProps {
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, recipeId }) => {
     const { user } = useAuth();
+    const { adminModeActive, impersonatedUserId } = useAdminMode();
     const [isEditing, setIsEditing] = useState(false);
     const updateComment = useUpdateComment(recipeId);
     const deleteComment = useDeleteComment(recipeId);
 
-    const canEdit = user?.is_admin || (user?.id === comment.user_id);
+    const canEdit = computeCanEdit({
+        currentUserId: user?.id,
+        resourceOwnerId: comment.user_id,
+        isAdmin: user?.is_admin,
+        adminModeActive,
+        impersonatedUserId,
+    });
 
     const handleUpdate = async (text: string) => {
         await updateComment.mutateAsync({ commentId: comment.id, data: { text } });

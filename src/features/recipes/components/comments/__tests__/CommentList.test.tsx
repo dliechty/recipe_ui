@@ -11,6 +11,12 @@ vi.mock('../../../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeContext - default mode
+const mockUseAdminMode = vi.fn();
+vi.mock('../../../../../context/AdminModeContext', () => ({
+    useAdminMode: () => mockUseAdminMode(),
+}));
+
 // Mock Toaster
 vi.mock('../../../../../toaster', () => ({
     toaster: {
@@ -21,6 +27,7 @@ vi.mock('../../../../../toaster', () => ({
 describe('CommentList', () => {
     beforeEach(() => {
         mockUseAuth.mockReturnValue({ user: { id: 'user-1', is_admin: false, first_name: 'Test', last_name: 'User' } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
     });
 
     it('renders comments and allows adding a comment', async () => {
@@ -126,8 +133,9 @@ describe('CommentList', () => {
         });
     });
 
-    it('allows deleting a comment if admin', async () => {
+    it('allows deleting a comment if admin in admin mode', async () => {
         mockUseAuth.mockReturnValue({ user: { id: 'admin-user', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: true, impersonatedUserId: null });
 
         let comments = [
             {
@@ -169,6 +177,93 @@ describe('CommentList', () => {
         });
     });
 
+    it('hides edit/delete buttons for admin in default mode viewing another user comment', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-user', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
 
+        server.use(
+            http.get('*/recipes/:recipe_id/comments', () => {
+                return HttpResponse.json([
+                    {
+                        id: 'c1',
+                        recipe_id: 'r1',
+                        user_id: 'user-2',
+                        user: { first_name: 'Other', last_name: 'User' },
+                        text: 'Default mode comment',
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    }
+                ]);
+            })
+        );
 
+        renderWithProviders(<CommentList recipeId="r1" />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Default mode comment')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByLabelText('Edit comment')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Delete comment')).not.toBeInTheDocument();
+    });
+
+    it('shows edit/delete buttons when admin impersonates the comment owner', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-user', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-2' });
+
+        server.use(
+            http.get('*/recipes/:recipe_id/comments', () => {
+                return HttpResponse.json([
+                    {
+                        id: 'c1',
+                        recipe_id: 'r1',
+                        user_id: 'user-2',
+                        user: { first_name: 'Other', last_name: 'User' },
+                        text: 'Impersonated comment',
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    }
+                ]);
+            })
+        );
+
+        renderWithProviders(<CommentList recipeId="r1" />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Impersonated comment')).toBeInTheDocument();
+        });
+
+        expect(screen.getByLabelText('Edit comment')).toBeInTheDocument();
+        expect(screen.getByLabelText('Delete comment')).toBeInTheDocument();
+    });
+
+    it('hides edit/delete buttons when admin impersonates a non-owner of the comment', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-user', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-different' });
+
+        server.use(
+            http.get('*/recipes/:recipe_id/comments', () => {
+                return HttpResponse.json([
+                    {
+                        id: 'c1',
+                        recipe_id: 'r1',
+                        user_id: 'user-2',
+                        user: { first_name: 'Other', last_name: 'User' },
+                        text: 'Non-owner comment',
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    }
+                ]);
+            })
+        );
+
+        renderWithProviders(<CommentList recipeId="r1" />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Non-owner comment')).toBeInTheDocument();
+        });
+
+        expect(screen.queryByLabelText('Edit comment')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Delete comment')).not.toBeInTheDocument();
+    });
 });
