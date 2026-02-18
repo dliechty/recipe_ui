@@ -61,9 +61,9 @@
     - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
     - [x] Update or add component tests covering admin mode and impersonation cases
 
-- [ ] Task: Update `CommentItem.tsx` canEdit logic
-    - [ ] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
-    - [ ] Update or add component tests covering admin mode and impersonation cases
+- [x] Task: Update `CommentItem.tsx` canEdit logic [9989689]
+    - [x] Replace inline `canEdit` expression with `computeCanEdit` using `useAdminMode()`
+    - [x] Update or add component tests covering admin mode and impersonation cases
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: canEdit Logic Update' (Protocol in workflow.md)
 
