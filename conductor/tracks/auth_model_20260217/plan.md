@@ -95,7 +95,7 @@
 
 ---
 
-## Phase 4: Navbar Operating Mode Indicator [checkpoint: 8bd96ff]
+## Phase 4: Navbar Operating Mode Indicator [checkpoint: 96b1a26]
 
 - [x] Task: Write failing tests for `AdminModeIndicator` component [8bd96ff]
     - [x] Test: renders nothing for non-admin users
