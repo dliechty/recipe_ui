@@ -96,10 +96,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [token, fetchUser]);
 
     const login = useCallback((newToken: string) => {
+        OpenAPI.TOKEN = newToken;
         setToken(newToken);
     }, []);
 
     const logout = useCallback(() => {
+        OpenAPI.TOKEN = undefined;
         setToken(null);
     }, []);
 
