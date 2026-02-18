@@ -10,9 +10,16 @@ vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeContext - default mode
+const mockUseAdminMode = vi.fn();
+vi.mock('../../../context/AdminModeContext', () => ({
+    useAdminMode: () => mockUseAdminMode(),
+}));
+
 describe('RecipeDetails Breadcrumb Persistence', () => {
     beforeEach(() => {
         mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: false } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
         server.use(
             http.get('*/recipes/1', () => {
                 return HttpResponse.json({

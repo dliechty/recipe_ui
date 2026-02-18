@@ -11,12 +11,19 @@ vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeContext - default mode
+const mockUseAdminMode = vi.fn();
+vi.mock('../../../context/AdminModeContext', () => ({
+    useAdminMode: () => mockUseAdminMode(),
+}));
+
 const OWNER_ID = "550e8400-e29b-41d4-a716-446655440000";
 
 describe('RecipeDetails Delete Functionality', () => {
     beforeEach(() => {
         // Default to owner
         mockUseAuth.mockReturnValue({ user: { id: OWNER_ID, is_admin: false } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
     });
 
     it('shows delete button for owner (Recipe 2 - No Variants)', async () => {

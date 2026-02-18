@@ -11,9 +11,16 @@ vi.mock('../../../context/AuthContext', () => ({
     useAuth: () => mockUseAuth(),
 }));
 
+// Mock AdminModeContext - default to default mode (no admin mode, no impersonation)
+const mockUseAdminMode = vi.fn();
+vi.mock('../../../context/AdminModeContext', () => ({
+    useAdminMode: () => mockUseAdminMode(),
+}));
+
 describe('RecipeDetails', () => {
     beforeEach(() => {
         mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: false } }); // Default: random user
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null }); // Default: default mode
     });
 
     it('renders recipe details from API', async () => {
@@ -303,8 +310,29 @@ describe('RecipeDetails', () => {
     });
 
     // Access Control Tests
-    it('shows edit and create variant buttons for admin user', async () => {
+    it('hides edit button for admin user in default mode (not their recipe)', async () => {
         mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/1']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Chicken Pasta 1')[0]).toBeInTheDocument();
+        });
+
+        expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Create Variant/i })).toBeInTheDocument();
+    });
+
+    it('shows edit button for admin user in admin mode', async () => {
+        mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: true, impersonatedUserId: null });
 
         renderWithProviders(
             <MemoryRouter initialEntries={['/recipes/1']}>
@@ -325,6 +353,74 @@ describe('RecipeDetails', () => {
 
         // Verify order: create variant first
         expect(createVariantButton.compareDocumentPosition(editButton)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it('shows edit button for admin impersonating the recipe owner', async () => {
+        server.use(
+            http.get('*/recipes/:id', () => {
+                return HttpResponse.json({
+                    id: 1,
+                    core: {
+                        name: 'Impersonated Recipe',
+                        owner_id: 'user-owner',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: []
+                });
+            })
+        );
+
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-owner' });
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/1']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Impersonated Recipe')[0]).toBeInTheDocument();
+        });
+
+        expect(screen.getByRole('button', { name: /Edit Recipe/i })).toBeInTheDocument();
+    });
+
+    it('hides edit button for admin impersonating a non-owner of the recipe', async () => {
+        server.use(
+            http.get('*/recipes/:id', () => {
+                return HttpResponse.json({
+                    id: 1,
+                    core: {
+                        name: 'Other User Recipe',
+                        owner_id: 'user-owner',
+                    },
+                    times: {},
+                    instructions: [],
+                    components: []
+                });
+            })
+        );
+
+        mockUseAuth.mockReturnValue({ user: { id: 'admin-999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: 'user-different' });
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/recipes/1']}>
+                <Routes>
+                    <Route path="/recipes/:id" element={<RecipeDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getAllByText('Other User Recipe')[0]).toBeInTheDocument();
+        });
+
+        expect(screen.queryByRole('button', { name: /Edit Recipe/i })).not.toBeInTheDocument();
     });
 
     it('shows edit and create variant buttons for recipe owner', async () => {
@@ -584,11 +680,12 @@ describe('RecipeDetails', () => {
 
     it('displays Create Variant button and navigates correctly', async () => {
         // Mock implementation is handled at top level for this file usually
-        // But here we want to verify navigation. 
+        // But here we want to verify navigation.
         // We will mock the hook return value via our existing mock setup if accessible or add a new spy.
 
         // For now, let's just verify the button exists when user has permission.
         mockUseAuth.mockReturnValue({ user: { id: '999', is_admin: true } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: true, impersonatedUserId: null });
 
         renderWithProviders(
             <MemoryRouter initialEntries={['/recipes/1']}>

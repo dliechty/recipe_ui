@@ -23,8 +23,10 @@ import { FaCheckCircle, FaEdit, FaChevronRight, FaRegCopy, FaRegSquare, FaTrash 
 import { useRecipe, useDeleteRecipe } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
+import { useAdminMode } from '../../../context/AdminModeContext';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 import { formatQuantity, formatDuration, formatDietName } from '../../../utils/formatters';
+import { computeCanEdit } from '../../../utils/computeCanEdit';
 import CommentList from './comments/CommentList';
 import { UnitSystem } from '../../../client';
 import AddToListButton from '../../recipe-lists/components/AddToListButton';
@@ -62,6 +64,7 @@ const RecipeDetails = () => {
     const { data: parentRecipe } = useRecipe(recipe?.parent_recipe_id || '');
     const { data: user } = useUser(recipe?.core.owner_id);
     const { user: currentUser } = useAuth();
+    const { adminModeActive, impersonatedUserId } = useAdminMode();
 
     if (error) {
         return (
@@ -109,7 +112,13 @@ const RecipeDetails = () => {
     };
 
     const userDisplayName = getUserDisplayName();
-    const canEdit = currentUser?.is_admin || (currentUser?.id && recipe?.core.owner_id && currentUser.id === recipe.core.owner_id);
+    const canEdit = computeCanEdit({
+        currentUserId: currentUser?.id,
+        resourceOwnerId: recipe?.core.owner_id,
+        isAdmin: currentUser?.is_admin,
+        adminModeActive,
+        impersonatedUserId,
+    });
 
     return (
         <Container maxW="container.xl" pt={2} pb={8}>
