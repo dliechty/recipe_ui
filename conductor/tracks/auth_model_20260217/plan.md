@@ -1,6 +1,6 @@
 # Plan: UI Authorization Model Alignment
 
-## Phase 1: Admin Mode State Management & Header Injection
+## Phase 1: Admin Mode State Management & Header Injection [checkpoint: 0eff106]
 
 - [x] Task: Write failing tests for `AdminModeContext` [f29829e]
     - [x] Test: default state is `{ adminModeActive: false, impersonatedUserId: null }`
