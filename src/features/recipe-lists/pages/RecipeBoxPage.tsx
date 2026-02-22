@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import {
     Box,
     Button,
@@ -23,6 +23,8 @@ import { RecipeList } from '../../../client';
 import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
 
+const SnakeGame = lazy(() => import('../components/SnakeGame'));
+
 const RecipeBoxPage = () => {
     const { user } = useAuth();
     const { data: lists, isLoading, error } = useRecipeLists();
@@ -36,6 +38,7 @@ const RecipeBoxPage = () => {
     const [newListDescription, setNewListDescription] = useState('');
     const [editingListId, setEditingListId] = useState<string | null>(null);
     const [editFormData, setEditFormData] = useState<{ name: string; description: string }>({ name: '', description: '' });
+    const [showSnake, setShowSnake] = useState(false);
 
     // Filter lists to show only the current user's lists
     const userLists = lists?.filter(list => list.user_id === user?.id) || [];
@@ -144,10 +147,25 @@ const RecipeBoxPage = () => {
     }
 
     return (
+        <>
+        {showSnake && (
+            <Suspense fallback={null}>
+                <SnakeGame onClose={() => setShowSnake(false)} />
+            </Suspense>
+        )}
         <Container maxW="container.xl" py={8}>
             <VStack align="stretch" gap={6}>
                 <HStack justify="space-between" align="center">
-                    <Heading size="xl" color="fg.default">Recipe Box</Heading>
+                    <Heading
+                        size="xl"
+                        color="fg.default"
+                        cursor="pointer"
+                        _hover={{ color: 'green.400' }}
+                        transition="color 0.2s"
+                        onClick={() => setShowSnake(true)}
+                    >
+                        Recipe Box
+                    </Heading>
                     <Button
                         onClick={() => setIsCreating(true)}
                         bg="vscode.button"
@@ -373,6 +391,7 @@ const RecipeBoxPage = () => {
                 )}
             </VStack>
         </Container>
+        </>
     );
 };
 
