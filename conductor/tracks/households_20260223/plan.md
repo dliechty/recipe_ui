@@ -76,29 +76,29 @@
     - [x] Implement `useDisabledTemplates`, `useDisableTemplate`, `useEnableTemplate`
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Household React Query Hooks' (Protocol in workflow.md)
 
-## Phase 4: Navbar Household Drawer
+## Phase 4: Navbar Household Drawer [checkpoint: 0cc54f4]
 
-- [ ] Task: Write tests for HouseholdDrawer component
-    - [ ] Test drawer opens on icon button click
-    - [ ] Test lists user's households with active one highlighted
-    - [ ] Test "Personal" option switches to no household
-    - [ ] Test clicking a household switches active household
-    - [ ] Test "Set as Primary" toggle works
-    - [ ] Test "Create Household" button opens create dialog
-    - [ ] Test "Manage Households" link navigates to Account page
-- [ ] Task: Implement HouseholdDrawer component
-    - [ ] Create `src/features/households/components/HouseholdDrawer.tsx`
-    - [ ] Implement drawer with household list, personal option, primary toggle, quick actions
-    - [ ] Style for dark theme
-- [ ] Task: Write tests for navbar household icon button
-    - [ ] Test icon button renders with household name when active
-    - [ ] Test icon button renders with "Personal" indicator when no household
-    - [ ] Test icon button is visible on both desktop and mobile layouts
-- [ ] Task: Integrate HouseholdDrawer into Layout navbar
-    - [ ] Add household icon button to `Layout.tsx` (both desktop and mobile)
-    - [ ] Position before AdminModeIndicator on right side
-    - [ ] Connect to HouseholdDrawer open/close state
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Navbar Household Drawer' (Protocol in workflow.md)
+- [x] Task: Write tests for HouseholdDrawer component [0cc54f4]
+    - [x] Test drawer opens on icon button click
+    - [x] Test lists user's households with active one highlighted
+    - [x] Test "Personal" option switches to no household
+    - [x] Test clicking a household switches active household
+    - [x] Test "Set as Primary" toggle works
+    - [x] Test "Create Household" button opens create dialog
+    - [x] Test "Manage Households" link navigates to Account page
+- [x] Task: Implement HouseholdDrawer component [0cc54f4]
+    - [x] Create `src/features/households/components/HouseholdDrawer.tsx`
+    - [x] Implement drawer with household list, personal option, primary toggle, quick actions
+    - [x] Style for dark theme
+- [x] Task: Write tests for navbar household icon button [0cc54f4]
+    - [x] Test icon button renders with household name when active
+    - [x] Test icon button renders with "Personal" indicator when no household
+    - [x] Test icon button is visible on both desktop and mobile layouts
+- [x] Task: Integrate HouseholdDrawer into Layout navbar [0cc54f4]
+    - [x] Add household icon button to `Layout.tsx` (both desktop and mobile)
+    - [x] Position before AdminModeIndicator on right side
+    - [x] Connect to HouseholdDrawer open/close state
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Navbar Household Drawer' (Protocol in workflow.md)
 
 ## Phase 5: Account Page — Household Management
 
