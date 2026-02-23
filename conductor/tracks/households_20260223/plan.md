@@ -1,22 +1,22 @@
 # Plan: Household Support
 
-## Phase 1: API Client Regeneration
+## Phase 1: API Client Regeneration [checkpoint: 35963b5]
 
-- [ ] Task: Regenerate TypeScript client from updated OpenAPI spec
-    - [ ] Run `npm run api:sync` to regenerate `src/client/` from `openapi.json`
-    - [ ] Verify household types are exported (`Household`, `HouseholdCreate`, `HouseholdUpdate`, `HouseholdMember`, `PrimaryHouseholdUpdate`, etc.)
-    - [ ] Verify household service methods are generated (`HouseholdsService`)
-    - [ ] Verify `Meal` type includes `household_id` field
-    - [ ] Verify `MealUpdate` type includes `household_id` field
-- [ ] Task: Create MSW handlers for household endpoints
-    - [ ] Add household mock data (2-3 households with members) to `src/mocks/`
-    - [ ] Implement handlers for household CRUD: `POST /households`, `GET /households`, `GET /households/:id`, `PATCH /households/:id`, `DELETE /households/:id`
-    - [ ] Implement handlers for membership: `POST /households/:id/join`, `DELETE /households/:id/leave`, `GET /households/:id/members`, `DELETE /households/:id/members/:userId`
-    - [ ] Implement handler for primary household: `PATCH /users/me/primary-household`
-    - [ ] Implement handlers for disabled templates: `GET /households/:id/disabled-templates`, `POST /households/:id/disabled-templates`, `DELETE /households/:id/disabled-templates/:templateId`
-    - [ ] Ensure mock meal data includes `household_id` field on some meals
-    - [ ] Ensure `GET /meals` handler respects the `X-Active-Household` header (filters meals by household_id when present, returns personal meals when absent)
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: API Client Regeneration' (Protocol in workflow.md)
+- [x] Task: Regenerate TypeScript client from updated OpenAPI spec [35963b5]
+    - [x] Run `npm run api:sync` to regenerate `src/client/` from `openapi.json`
+    - [x] Verify household types are exported (`Household`, `HouseholdCreate`, `HouseholdUpdate`, `HouseholdMember`, `PrimaryHouseholdUpdate`, etc.)
+    - [x] Verify household service methods are generated (`HouseholdsService`)
+    - [x] Verify `Meal` type includes `household_id` field
+    - [x] Verify `MealUpdate` type includes `household_id` field
+- [x] Task: Create MSW handlers for household endpoints [35963b5]
+    - [x] Add household mock data (2-3 households with members) to `src/mocks/`
+    - [x] Implement handlers for household CRUD: `POST /households`, `GET /households`, `GET /households/:id`, `PATCH /households/:id`, `DELETE /households/:id`
+    - [x] Implement handlers for membership: `POST /households/:id/join`, `DELETE /households/:id/leave`, `GET /households/:id/members`, `DELETE /households/:id/members/:userId`
+    - [x] Implement handler for primary household: `PATCH /users/me/primary-household`
+    - [x] Implement handlers for disabled templates: `GET /households/:id/disabled-templates`, `POST /households/:id/disabled-templates`, `DELETE /households/:id/disabled-templates/:templateId`
+    - [x] Ensure mock meal data includes `household_id` field on some meals
+    - [x] Ensure `GET /meals` handler respects the `X-Active-Household` header (filters meals by household_id when present, returns personal meals when absent)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: API Client Regeneration' (Protocol in workflow.md)
 
 ## Phase 2: Household Context & Header Injection
 
