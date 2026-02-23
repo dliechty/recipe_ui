@@ -49,32 +49,32 @@
     - [x] Verify data refetches when household changes
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Household Context & Header Injection' (Protocol in workflow.md)
 
-## Phase 3: Household React Query Hooks
+## Phase 3: Household React Query Hooks [checkpoint: 2b2484e]
 
-- [ ] Task: Write tests for household CRUD hooks
-    - [ ] Test `useHouseholds` fetches household list
-    - [ ] Test `useHousehold` fetches single household
-    - [ ] Test `useCreateHousehold` creates and invalidates cache
-    - [ ] Test `useUpdateHousehold` renames and invalidates cache
-    - [ ] Test `useDeleteHousehold` deletes and invalidates cache
-- [ ] Task: Implement household CRUD hooks
-    - [ ] Create `src/hooks/useHouseholds.ts`
-    - [ ] Implement `useHouseholds`, `useHousehold`, `useCreateHousehold`, `useUpdateHousehold`, `useDeleteHousehold`
-- [ ] Task: Write tests for membership hooks
-    - [ ] Test `useJoinHousehold` joins and invalidates cache
-    - [ ] Test `useLeaveHousehold` leaves and invalidates cache
-    - [ ] Test `useHouseholdMembers` fetches member list
-    - [ ] Test `useRemoveHouseholdMember` removes member and invalidates cache
-    - [ ] Test `useSetPrimaryHousehold` sets/clears primary and invalidates cache
-- [ ] Task: Implement membership hooks
-    - [ ] Implement `useJoinHousehold`, `useLeaveHousehold`, `useHouseholdMembers`, `useRemoveHouseholdMember`, `useSetPrimaryHousehold`
-- [ ] Task: Write tests for disabled template hooks
-    - [ ] Test `useDisabledTemplates` fetches disabled template list for a household
-    - [ ] Test `useDisableTemplate` disables and invalidates cache
-    - [ ] Test `useEnableTemplate` re-enables and invalidates cache
-- [ ] Task: Implement disabled template hooks
-    - [ ] Implement `useDisabledTemplates`, `useDisableTemplate`, `useEnableTemplate`
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Household React Query Hooks' (Protocol in workflow.md)
+- [x] Task: Write tests for household CRUD hooks [2b2484e]
+    - [x] Test `useHouseholds` fetches household list
+    - [x] Test `useHousehold` fetches single household
+    - [x] Test `useCreateHousehold` creates and invalidates cache
+    - [x] Test `useUpdateHousehold` renames and invalidates cache
+    - [x] Test `useDeleteHousehold` deletes and invalidates cache
+- [x] Task: Implement household CRUD hooks [2b2484e]
+    - [x] Create `src/hooks/useHouseholds.ts`
+    - [x] Implement `useHouseholds`, `useHousehold`, `useCreateHousehold`, `useUpdateHousehold`, `useDeleteHousehold`
+- [x] Task: Write tests for membership hooks [2b2484e]
+    - [x] Test `useJoinHousehold` joins and invalidates cache
+    - [x] Test `useLeaveHousehold` leaves and invalidates cache
+    - [x] Test `useHouseholdMembers` fetches member list
+    - [x] Test `useRemoveHouseholdMember` removes member and invalidates cache
+    - [x] Test `useSetPrimaryHousehold` sets/clears primary and invalidates cache
+- [x] Task: Implement membership hooks [2b2484e]
+    - [x] Implement `useJoinHousehold`, `useLeaveHousehold`, `useHouseholdMembers`, `useRemoveHouseholdMember`, `useSetPrimaryHousehold`
+- [x] Task: Write tests for disabled template hooks [2b2484e]
+    - [x] Test `useDisabledTemplates` fetches disabled template list for a household
+    - [x] Test `useDisableTemplate` disables and invalidates cache
+    - [x] Test `useEnableTemplate` re-enables and invalidates cache
+- [x] Task: Implement disabled template hooks [2b2484e]
+    - [x] Implement `useDisabledTemplates`, `useDisableTemplate`, `useEnableTemplate`
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Household React Query Hooks' (Protocol in workflow.md)
 
 ## Phase 4: Navbar Household Drawer
 
