@@ -1,9 +1,11 @@
-import React from 'react';
-import { Box, Flex, HStack, Button, Menu, IconButton } from '@chakra-ui/react';
-import { FiMenu } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { Box, Flex, HStack, Button, Menu, IconButton, Text } from '@chakra-ui/react';
+import { FiMenu, FiHome, FiUser } from 'react-icons/fi';
 import { Link as NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useHouseholdContext } from '../../context/HouseholdContext';
 import AdminModeIndicator from '../../features/admin/components/AdminModeIndicator';
+import HouseholdDrawer from '../../features/households/components/HouseholdDrawer';
 
 
 interface NavItemProps {
@@ -51,6 +53,12 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
     const { isAuthenticated, user, logout } = useAuth();
+    const { activeHouseholdId, households } = useHouseholdContext();
+    const [isHouseholdDrawerOpen, setIsHouseholdDrawerOpen] = useState(false);
+
+    const activeHousehold = households.find(h => h.id === activeHouseholdId) ?? null;
+    const householdLabel = activeHousehold ? activeHousehold.name : 'Personal';
+    const HouseholdIcon = activeHousehold ? FiHome : FiUser;
 
     return (
         <Box minH="100vh" bg="bg.canvas" color="fg.default">
@@ -109,6 +117,26 @@ const Layout = ({ children }: LayoutProps) => {
                         </HStack>
                         <Flex alignItems={'center'}>
                             <HStack gap={4} mr={4} display={{ base: 'none', md: 'flex' }}>
+                                {/* Household selector button — before AdminModeIndicator */}
+                                <IconButton
+                                    data-testid="household-nav-button"
+                                    aria-label="Open household selector"
+                                    variant="ghost"
+                                    color="fg.default"
+                                    _hover={{ bg: 'whiteAlpha.200' }}
+                                    _active={{ bg: 'whiteAlpha.300' }}
+                                    size="sm"
+                                    onClick={() => setIsHouseholdDrawerOpen(true)}
+                                    minW="auto"
+                                    px={2}
+                                >
+                                    <HStack gap={1}>
+                                        <HouseholdIcon />
+                                        <Text fontSize="sm" maxW="120px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                                            {householdLabel}
+                                        </Text>
+                                    </HStack>
+                                </IconButton>
                                 <AdminModeIndicator />
                                 {user?.is_admin && <NavItem to="/admin">Admin</NavItem>}
                                 <NavItem to="/recipe-box">Recipe Box</NavItem>
@@ -124,6 +152,20 @@ const Layout = ({ children }: LayoutProps) => {
                                     Logout
                                 </Button>
                             </HStack>
+                            {/* Mobile household button */}
+                            <Box display={{ base: 'flex', md: 'none' }} mr={2}>
+                                <IconButton
+                                    data-testid="household-nav-button"
+                                    aria-label="Open household selector"
+                                    variant="ghost"
+                                    color="fg.default"
+                                    _hover={{ bg: 'whiteAlpha.200' }}
+                                    size="sm"
+                                    onClick={() => setIsHouseholdDrawerOpen(true)}
+                                >
+                                    <HouseholdIcon />
+                                </IconButton>
+                            </Box>
                         </Flex>
                     </Flex>
                 </Box>
@@ -131,6 +173,12 @@ const Layout = ({ children }: LayoutProps) => {
             <Box p={4}>
                 {children}
             </Box>
+
+            {/* Household Drawer */}
+            <HouseholdDrawer
+                isOpen={isHouseholdDrawerOpen}
+                onClose={() => setIsHouseholdDrawerOpen(false)}
+            />
         </Box>
     );
 };

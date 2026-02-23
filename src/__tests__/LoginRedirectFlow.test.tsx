@@ -12,6 +12,21 @@ vi.mock('../features/admin/components/AdminModeIndicator', () => ({
     default: () => null,
 }));
 
+// Mock HouseholdContext to avoid needing HouseholdProvider in these tests
+vi.mock('../context/HouseholdContext', () => ({
+    useHouseholdContext: () => ({
+        activeHouseholdId: null,
+        setActiveHousehold: vi.fn(),
+        primaryHouseholdId: null,
+        households: [],
+    }),
+}));
+
+// Mock HouseholdDrawer to avoid needing HouseholdContext setup
+vi.mock('../features/households/components/HouseholdDrawer', () => ({
+    default: () => null,
+}));
+
 // Mock the lazy loaded components to identify them easily
 vi.mock('../features/recipes/components/RecipeList', () => ({
     default: () => <div data-testid="recipe-list">Recipe List Page</div>
