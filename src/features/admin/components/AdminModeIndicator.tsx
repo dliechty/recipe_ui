@@ -36,7 +36,7 @@ const AdminModeIndicator = () => {
     }
 
     return (
-        <Link to="/admin">
+        <Link to="/admin?tab=operating-mode">
             <Badge
                 colorPalette={colorPalette}
                 variant="subtle"

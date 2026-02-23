@@ -136,14 +136,14 @@ describe('AdminModeIndicator', () => {
         });
     });
 
-    test('badge links to /admin', async () => {
+    test('badge links to /admin?tab=operating-mode', async () => {
         mockUser = adminUser;
         mockAdminMode = { ...defaultAdminMode, adminModeActive: true };
         renderIndicator();
 
         await waitFor(() => {
             const link = screen.getByRole('link');
-            expect(link).toHaveAttribute('href', '/admin');
+            expect(link).toHaveAttribute('href', '/admin?tab=operating-mode');
         });
     });
 });

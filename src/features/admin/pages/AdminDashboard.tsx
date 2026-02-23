@@ -1,12 +1,24 @@
 import { Container, Tabs } from '@chakra-ui/react';
+import { useSearchParams } from 'react-router-dom';
 import AdminPendingRequests from '../components/AdminPendingRequests';
 import AdminUserManagement from '../components/AdminUserManagement.tsx';
 import AdminOperatingMode from '../components/AdminOperatingMode';
 
+const VALID_TABS = ['users', 'pending', 'operating-mode'] as const;
+type TabValue = typeof VALID_TABS[number];
+
 const AdminDashboard = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab');
+    const activeTab: TabValue = VALID_TABS.includes(tabParam as TabValue) ? (tabParam as TabValue) : 'users';
+
+    const handleTabChange = ({ value }: { value: string }) => {
+        setSearchParams(value === 'users' ? {} : { tab: value }, { replace: true });
+    };
+
     return (
         <Container maxW="container.xl" py={8}>
-            <Tabs.Root defaultValue="users">
+            <Tabs.Root value={activeTab} onValueChange={handleTabChange}>
                 <Tabs.List borderBottomWidth="1px" borderColor="border.default" mb={6}>
                     <Tabs.Trigger
                         value="users"
