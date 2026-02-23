@@ -18,36 +18,36 @@
     - [x] Ensure `GET /meals` handler respects the `X-Active-Household` header (filters meals by household_id when present, returns personal meals when absent)
 - [x] Task: Conductor - User Manual Verification 'Phase 1: API Client Regeneration' (Protocol in workflow.md)
 
-## Phase 2: Household Context & Header Injection
+## Phase 2: Household Context & Header Injection [checkpoint: 891aaaa]
 
-- [ ] Task: Write tests for HouseholdContext
-    - [ ] Test `activeHouseholdId` state management (set, clear, persist to localStorage)
-    - [ ] Test auto-activation of primary household on initialization
-    - [ ] Test state reset on logout (user transitions from non-null to null)
-    - [ ] Test state reset when impersonation changes
-- [ ] Task: Implement HouseholdContext
-    - [ ] Create `src/context/HouseholdContext.tsx` with `activeHouseholdId`, `setActiveHousehold`, `primaryHouseholdId`, and `households` state
-    - [ ] Persist `activeHouseholdId` to localStorage
-    - [ ] Auto-set active household to primary on login/init
-    - [ ] Clear active household on logout and on impersonation change
-    - [ ] Export `useHouseholdContext` hook for consuming the context
-- [ ] Task: Write tests for HeaderInjector household header merging
-    - [ ] Test `X-Active-Household` header set when household is active
-    - [ ] Test no `X-Active-Household` header when household is null
-    - [ ] Test header merging: `X-Active-Household` + `X-Admin-Mode`
-    - [ ] Test header merging: `X-Active-Household` + `X-Act-As-User`
-    - [ ] Test header merging: admin mode only (no household header)
-- [ ] Task: Implement HeaderInjector updates for household header merging
-    - [ ] Modify `HeaderInjector` in `AuthContext.tsx` to read from `HouseholdContext`
-    - [ ] Merge `X-Active-Household` with existing admin/impersonation headers
-    - [ ] Ensure header is omitted when `activeHouseholdId` is null
-- [ ] Task: Wire HouseholdProvider into the app provider stack
-    - [ ] Add `HouseholdProvider` to `main.tsx` between `AdminModeProvider` and `App`
-    - [ ] Pass admin mode context values to enable impersonation awareness
-- [ ] Task: Update meal React Query cache keys to include activeHouseholdId
-    - [ ] Add `activeHouseholdId` to query keys in `useInfiniteMeals`, `useMeal`, `useInfiniteMealTemplates`, `useMealTemplate`
-    - [ ] Verify data refetches when household changes
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Household Context & Header Injection' (Protocol in workflow.md)
+- [x] Task: Write tests for HouseholdContext [891aaaa]
+    - [x] Test `activeHouseholdId` state management (set, clear, persist to localStorage)
+    - [x] Test auto-activation of primary household on initialization
+    - [x] Test state reset on logout (user transitions from non-null to null)
+    - [x] Test state reset when impersonation changes
+- [x] Task: Implement HouseholdContext [891aaaa]
+    - [x] Create `src/context/HouseholdContext.tsx` with `activeHouseholdId`, `setActiveHousehold`, `primaryHouseholdId`, and `households` state
+    - [x] Persist `activeHouseholdId` to localStorage
+    - [x] Auto-set active household to primary on login/init
+    - [x] Clear active household on logout and on impersonation change
+    - [x] Export `useHouseholdContext` hook for consuming the context
+- [x] Task: Write tests for HeaderInjector household header merging [891aaaa]
+    - [x] Test `X-Active-Household` header set when household is active
+    - [x] Test no `X-Active-Household` header when household is null
+    - [x] Test header merging: `X-Active-Household` + `X-Admin-Mode`
+    - [x] Test header merging: `X-Active-Household` + `X-Act-As-User`
+    - [x] Test header merging: admin mode only (no household header)
+- [x] Task: Implement HeaderInjector updates for household header merging [891aaaa]
+    - [x] Modify `HeaderInjector` in `AuthContext.tsx` to read from `HouseholdContext`
+    - [x] Merge `X-Active-Household` with existing admin/impersonation headers
+    - [x] Ensure header is omitted when `activeHouseholdId` is null
+- [x] Task: Wire HouseholdProvider into the app provider stack [891aaaa]
+    - [x] Add `HouseholdProvider` to `main.tsx` between `AdminModeProvider` and `App`
+    - [x] Pass admin mode context values to enable impersonation awareness
+- [x] Task: Update meal React Query cache keys to include activeHouseholdId [891aaaa]
+    - [x] Add `activeHouseholdId` to query keys in `useInfiniteMeals`, `useMeal`, `useInfiniteMealTemplates`, `useMealTemplate`
+    - [x] Verify data refetches when household changes
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Household Context & Header Injection' (Protocol in workflow.md)
 
 ## Phase 3: Household React Query Hooks
 
