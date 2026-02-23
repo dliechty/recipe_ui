@@ -1,6 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { AuthProvider } from './context/AuthContext'
 import { AdminModeProvider } from './context/AdminModeContext'
+import { HouseholdProvider } from './context/HouseholdContext'
 import { OpenAPI } from './client'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
@@ -50,7 +51,9 @@ enableMocking().then(() => {
           <ErrorBoundary>
             <AuthProvider>
               <AdminModeProvider>
+              <HouseholdProvider>
               <App />
+              </HouseholdProvider>
               </AdminModeProvider>
               <Toaster toaster={toaster}>
                 {(toast) => (

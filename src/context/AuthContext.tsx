@@ -3,6 +3,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { OpenAPI, AuthenticationService, UserPublic } from '../client';
 import { AdminModeContext } from './AdminModeContext';
+import { HouseholdContext } from './HouseholdContext';
 
 interface AuthContextType {
     token: string | null;
@@ -25,23 +26,35 @@ export function HeaderInjector({ user }: { user: UserPublic | null }) {
     const adminModeActive = adminModeCtx?.adminModeActive ?? false;
     const impersonatedUserId = adminModeCtx?.impersonatedUserId ?? null;
 
+    const householdCtx = useContext(HouseholdContext);
+    const activeHouseholdId = householdCtx?.activeHouseholdId ?? null;
+
     useEffect(() => {
-        if (!user?.is_admin) {
-            // Non-admin or no admin mode context: clear any custom headers
-            OpenAPI.HEADERS = undefined;
-            return;
+        // Build admin/impersonation headers (admin users only)
+        const adminHeaders: Record<string, string> = {};
+        if (user?.is_admin) {
+            if (impersonatedUserId) {
+                // Impersonation takes precedence over admin mode
+                adminHeaders['X-Act-As-User'] = impersonatedUserId;
+            } else if (adminModeActive) {
+                adminHeaders['X-Admin-Mode'] = 'true';
+            }
         }
 
-        if (impersonatedUserId) {
-            // Impersonation takes precedence over admin mode
-            OpenAPI.HEADERS = { 'X-Act-As-User': impersonatedUserId };
-        } else if (adminModeActive) {
-            OpenAPI.HEADERS = { 'X-Admin-Mode': 'true' };
-        } else {
-            // Default mode: no custom headers
-            OpenAPI.HEADERS = undefined;
+        // Build household header (all users)
+        const householdHeaders: Record<string, string> = {};
+        if (activeHouseholdId) {
+            householdHeaders['X-Active-Household'] = activeHouseholdId;
         }
-    }, [user, adminModeActive, impersonatedUserId]);
+
+        const merged = { ...adminHeaders, ...householdHeaders };
+
+        if (Object.keys(merged).length === 0) {
+            OpenAPI.HEADERS = undefined;
+        } else {
+            OpenAPI.HEADERS = merged;
+        }
+    }, [user, adminModeActive, impersonatedUserId, activeHouseholdId]);
 
     return null;
 }

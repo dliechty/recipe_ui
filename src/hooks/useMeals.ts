@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { MealsService, Meal, MealCreate, MealUpdate, MealGenerateRequest, MealTemplate, MealTemplateCreate, MealTemplateUpdate, OpenAPI } from '../client';
 import { MealFilters, TemplateFilters } from '../utils/mealParams';
+import { useContext } from 'react';
+import { HouseholdContext } from '../context/HouseholdContext';
 import axios from 'axios';
 
 interface MealsResponse {
@@ -9,8 +11,11 @@ interface MealsResponse {
 }
 
 export const useInfiniteMeals = (limit: number = 20, filters: MealFilters = {}) => {
+    const householdCtx = useContext(HouseholdContext);
+    const activeHouseholdId = householdCtx?.activeHouseholdId ?? null;
+
     return useInfiniteQuery<MealsResponse>({
-        queryKey: ['meals', 'infinite', limit, filters],
+        queryKey: ['meals', 'infinite', limit, filters, activeHouseholdId],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             const skip = (page - 1) * limit;
@@ -66,8 +71,11 @@ export const useInfiniteMeals = (limit: number = 20, filters: MealFilters = {}) 
 };
 
 export const useMeal = (id: string) => {
+    const householdCtx = useContext(HouseholdContext);
+    const activeHouseholdId = householdCtx?.activeHouseholdId ?? null;
+
     return useQuery<Meal>({
-        queryKey: ['meals', id],
+        queryKey: ['meals', id, activeHouseholdId],
         queryFn: () => MealsService.getMealMealsMealIdGet(id),
         enabled: !!id,
     });
@@ -110,8 +118,11 @@ interface TemplatesResponse {
 }
 
 export const useInfiniteMealTemplates = (limit: number = 20, filters: TemplateFilters = {}) => {
+    const householdCtx = useContext(HouseholdContext);
+    const activeHouseholdId = householdCtx?.activeHouseholdId ?? null;
+
     return useInfiniteQuery<TemplatesResponse>({
-        queryKey: ['meal-templates', 'infinite', limit, filters],
+        queryKey: ['meal-templates', 'infinite', limit, filters, activeHouseholdId],
         queryFn: async ({ pageParam = 1 }) => {
             const page = pageParam as number;
             const skip = (page - 1) * limit;
@@ -164,8 +175,11 @@ export const useInfiniteMealTemplates = (limit: number = 20, filters: TemplateFi
 };
 
 export const useMealTemplate = (id: string) => {
+    const householdCtx = useContext(HouseholdContext);
+    const activeHouseholdId = householdCtx?.activeHouseholdId ?? null;
+
     return useQuery<MealTemplate>({
-        queryKey: ['meal-templates', id],
+        queryKey: ['meal-templates', id, activeHouseholdId],
         queryFn: () => MealsService.getMealTemplateMealsTemplatesTemplateIdGet(id),
         enabled: !!id,
     });
