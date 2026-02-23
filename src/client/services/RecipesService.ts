@@ -16,15 +16,26 @@ export class RecipesService {
      * Create Recipe
      * Create a new recipe for the currently authenticated user.
      * @param requestBody
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Recipe Successful Response
      * @throws ApiError
      */
     public static createRecipeRecipesPost(
         requestBody: RecipeCreate,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/recipes/',
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -55,6 +66,9 @@ export class RecipesService {
      * @param skip Number of records to skip for pagination
      * @param limit Maximum number of records to return (1-1000)
      * @param sort Comma-separated sort fields. Prefix with '-' for descending order. Valid fields: name, calories, total_time_minutes, difficulty, category, cuisine, prep_time_minutes, cook_time_minutes, active_time_minutes, yield_amount, protein, created_at, updated_at. Example: '-created_at,name'
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Recipe Successful Response
      * @throws ApiError
      */
@@ -62,10 +76,18 @@ export class RecipesService {
         skip?: number,
         limit: number = 100,
         sort?: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Array<Recipe>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/recipes/',
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
             query: {
                 'skip': skip,
                 'limit': limit,
@@ -80,17 +102,28 @@ export class RecipesService {
      * Get Meta Values
      * Retrieve unique values for a specific field for metadata usage.
      * @param field
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns any Successful Response
      * @throws ApiError
      */
     public static getMetaValuesRecipesMetaFieldGet(
         field: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Array<any>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/recipes/meta/{field}',
             path: {
                 'field': field,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             errors: {
                 422: `Validation Error`,
@@ -113,6 +146,9 @@ export class RecipesService {
      * @param recipeId
      * @param scale Scale factor for ingredient quantities (must be > 0)
      * @param units Convert ingredient units to 'metric' (ml, g, cm) or 'imperial' (cups, oz, inches)
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Recipe Successful Response
      * @throws ApiError
      */
@@ -120,12 +156,20 @@ export class RecipesService {
         recipeId: string,
         scale?: (number | null),
         units?: (UnitSystem | null),
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/recipes/{recipe_id}',
             path: {
                 'recipe_id': recipeId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             query: {
                 'scale': scale,
@@ -141,18 +185,29 @@ export class RecipesService {
      * Update a recipe. Only the owner of the recipe can perform this action.
      * @param recipeId
      * @param requestBody
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Recipe Successful Response
      * @throws ApiError
      */
     public static updateRecipeRecipesRecipeIdPut(
         recipeId: string,
         requestBody: RecipeCreate,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/recipes/{recipe_id}',
             path: {
                 'recipe_id': recipeId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -165,17 +220,28 @@ export class RecipesService {
      * Delete Recipe
      * Delete a recipe. Only the owner of the recipe can perform this action.
      * @param recipeId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Recipe Successful Response
      * @throws ApiError
      */
     public static deleteRecipeRecipesRecipeIdDelete(
         recipeId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Recipe> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/recipes/{recipe_id}',
             path: {
                 'recipe_id': recipeId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             errors: {
                 422: `Validation Error`,
@@ -187,18 +253,29 @@ export class RecipesService {
      * Add a comment to a recipe.
      * @param recipeId
      * @param requestBody
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Comment Successful Response
      * @throws ApiError
      */
     public static createCommentRecipesRecipeIdCommentsPost(
         recipeId: string,
         requestBody: CommentCreate,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Comment> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/recipes/{recipe_id}/comments',
             path: {
                 'recipe_id': recipeId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -213,6 +290,9 @@ export class RecipesService {
      * @param recipeId
      * @param skip Number of records to skip for pagination
      * @param limit Maximum number of records to return (1-1000)
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Comment Successful Response
      * @throws ApiError
      */
@@ -220,12 +300,20 @@ export class RecipesService {
         recipeId: string,
         skip?: number,
         limit: number = 100,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Array<Comment>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/recipes/{recipe_id}/comments',
             path: {
                 'recipe_id': recipeId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             query: {
                 'skip': skip,
@@ -238,10 +326,13 @@ export class RecipesService {
     }
     /**
      * Update Comment
-     * Update a comment. Only the author of the comment or an admin can update it.
+     * Update a comment. Only the author of the comment or an admin in admin mode can update it.
      * @param recipeId
      * @param commentId
      * @param requestBody
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns Comment Successful Response
      * @throws ApiError
      */
@@ -249,6 +340,9 @@ export class RecipesService {
         recipeId: string,
         commentId: string,
         requestBody: CommentUpdate,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<Comment> {
         return __request(OpenAPI, {
             method: 'PUT',
@@ -256,6 +350,11 @@ export class RecipesService {
             path: {
                 'recipe_id': recipeId,
                 'comment_id': commentId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -266,15 +365,21 @@ export class RecipesService {
     }
     /**
      * Delete Comment
-     * Delete a comment. Only the author of the comment or an admin can delete it.
+     * Delete a comment. Only the author of the comment or an admin in admin mode can delete it.
      * @param recipeId
      * @param commentId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
      * @returns void
      * @throws ApiError
      */
     public static deleteCommentRecipesRecipeIdCommentsCommentIdDelete(
         recipeId: string,
         commentId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
@@ -282,6 +387,11 @@ export class RecipesService {
             path: {
                 'recipe_id': recipeId,
                 'comment_id': commentId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
             },
             errors: {
                 422: `Validation Error`,

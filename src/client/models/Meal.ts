@@ -15,6 +15,7 @@ export type Meal = {
     id: string;
     user_id: string;
     template_id?: (string | null);
+    household_id?: (string | null);
     created_at: string;
     updated_at: string;
     items: Array<MealItem>;

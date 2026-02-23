@@ -2,35 +2,35 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Meal } from '../models/Meal';
-import type { MealCreate } from '../models/MealCreate';
-import type { MealGenerateRequest } from '../models/MealGenerateRequest';
-import type { MealTemplate } from '../models/MealTemplate';
-import type { MealTemplateCreate } from '../models/MealTemplateCreate';
-import type { MealTemplateUpdate } from '../models/MealTemplateUpdate';
-import type { MealUpdate } from '../models/MealUpdate';
+import type { Household } from '../models/Household';
+import type { HouseholdCreate } from '../models/HouseholdCreate';
+import type { HouseholdMember } from '../models/HouseholdMember';
+import type { HouseholdTemplateExclusion } from '../models/HouseholdTemplateExclusion';
+import type { HouseholdTemplateExclusionCreate } from '../models/HouseholdTemplateExclusionCreate';
+import type { HouseholdUpdate } from '../models/HouseholdUpdate';
+import type { PrimaryHouseholdUpdate } from '../models/PrimaryHouseholdUpdate';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class MealsService {
+export class HouseholdsService {
     /**
-     * Create Meal Template
+     * Create Household
      * @param requestBody
      * @param xAdminMode
      * @param xActAsUser
      * @param xActiveHousehold
-     * @returns MealTemplate Successful Response
+     * @returns Household Successful Response
      * @throws ApiError
      */
-    public static createMealTemplateMealsTemplatesPost(
-        requestBody: MealTemplateCreate,
+    public static createHouseholdHouseholdsPost(
+        requestBody: HouseholdCreate,
         xAdminMode?: (string | null),
         xActAsUser?: (string | null),
         xActiveHousehold?: (string | null),
-    ): CancelablePromise<MealTemplate> {
+    ): CancelablePromise<Household> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/meals/templates',
+            url: '/households',
             headers: {
                 'X-Admin-Mode': xAdminMode,
                 'X-Act-As-User': xActAsUser,
@@ -44,45 +44,25 @@ export class MealsService {
         });
     }
     /**
-     * Get Meal Templates
-     * Retrieve a list of meal templates with optional filtering and sorting.
-     *
-     * **Filtering:** Use bracket notation `field[operator]=value` for filters.
-     *
-     * Operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `in`, `like`.
-     *
-     * Filter fields: `id`, `name`, `classification`, `created_at`, `updated_at`, `num_slots` (or `slots`), `recipe_id`, `owner` (or `created_by`).
-     *
-     * Examples:
-     * - `?name[like]=weekly` - Templates with 'weekly' in name
-     * - `?classification[eq]=dinner` - Dinner templates only
-     * - `?num_slots[gte]=3` - Templates with 3+ slots
-     * - `?recipe_id[eq]=<uuid>` - Templates containing specific recipe
-     * - `?recipe_id[in]=<uuid1>,<uuid2>` - Templates containing any of the specified recipes
-     *
-     * **Sorting:** Use the `sort` parameter with comma-separated fields. Prefix with `-` for descending.
-     *
-     * Returns total count in `X-Total-Count` response header.
+     * List Households
      * @param skip Number of records to skip for pagination
      * @param limit Maximum number of records to return (1-1000)
-     * @param sort Comma-separated sort fields. Prefix with '-' for descending order. Valid fields: name, classification, created_at, updated_at. Example: 'name,-created_at'
      * @param xAdminMode
      * @param xActAsUser
      * @param xActiveHousehold
-     * @returns MealTemplate Successful Response
+     * @returns Household Successful Response
      * @throws ApiError
      */
-    public static getMealTemplatesMealsTemplatesGet(
+    public static listHouseholdsHouseholdsGet(
         skip?: number,
         limit: number = 100,
-        sort?: string,
         xAdminMode?: (string | null),
         xActAsUser?: (string | null),
         xActiveHousehold?: (string | null),
-    ): CancelablePromise<Array<MealTemplate>> {
+    ): CancelablePromise<Array<Household>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/meals/templates',
+            url: '/households',
             headers: {
                 'X-Admin-Mode': xAdminMode,
                 'X-Act-As-User': xActAsUser,
@@ -91,7 +71,6 @@ export class MealsService {
             query: {
                 'skip': skip,
                 'limit': limit,
-                'sort': sort,
             },
             errors: {
                 422: `Validation Error`,
@@ -99,25 +78,25 @@ export class MealsService {
         });
     }
     /**
-     * Get Meal Template
-     * @param templateId
+     * Get Household
+     * @param householdId
      * @param xAdminMode
      * @param xActAsUser
      * @param xActiveHousehold
-     * @returns MealTemplate Successful Response
+     * @returns Household Successful Response
      * @throws ApiError
      */
-    public static getMealTemplateMealsTemplatesTemplateIdGet(
-        templateId: string,
+    public static getHouseholdHouseholdsHouseholdIdGet(
+        householdId: string,
         xAdminMode?: (string | null),
         xActAsUser?: (string | null),
         xActiveHousehold?: (string | null),
-    ): CancelablePromise<MealTemplate> {
+    ): CancelablePromise<Household> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/meals/templates/{template_id}',
+            url: '/households/{household_id}',
             path: {
-                'template_id': templateId,
+                'household_id': householdId,
             },
             headers: {
                 'X-Admin-Mode': xAdminMode,
@@ -130,27 +109,27 @@ export class MealsService {
         });
     }
     /**
-     * Update Meal Template
-     * @param templateId
+     * Update Household
+     * @param householdId
      * @param requestBody
      * @param xAdminMode
      * @param xActAsUser
      * @param xActiveHousehold
-     * @returns MealTemplate Successful Response
+     * @returns Household Successful Response
      * @throws ApiError
      */
-    public static updateMealTemplateMealsTemplatesTemplateIdPut(
-        templateId: string,
-        requestBody: MealTemplateUpdate,
+    public static updateHouseholdHouseholdsHouseholdIdPatch(
+        householdId: string,
+        requestBody: HouseholdUpdate,
         xAdminMode?: (string | null),
         xActAsUser?: (string | null),
         xActiveHousehold?: (string | null),
-    ): CancelablePromise<MealTemplate> {
+    ): CancelablePromise<Household> {
         return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/meals/templates/{template_id}',
+            method: 'PATCH',
+            url: '/households/{household_id}',
             path: {
-                'template_id': templateId,
+                'household_id': householdId,
             },
             headers: {
                 'X-Admin-Mode': xAdminMode,
@@ -165,7 +144,232 @@ export class MealsService {
         });
     }
     /**
-     * Delete Meal Template
+     * Delete Household
+     * @param householdId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns void
+     * @throws ApiError
+     */
+    public static deleteHouseholdHouseholdsHouseholdIdDelete(
+        householdId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/households/{household_id}',
+            path: {
+                'household_id': householdId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Join Household
+     * @param householdId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns HouseholdMember Successful Response
+     * @throws ApiError
+     */
+    public static joinHouseholdHouseholdsHouseholdIdJoinPost(
+        householdId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<HouseholdMember> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/households/{household_id}/join',
+            path: {
+                'household_id': householdId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Leave Household
+     * @param householdId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns void
+     * @throws ApiError
+     */
+    public static leaveHouseholdHouseholdsHouseholdIdLeaveDelete(
+        householdId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/households/{household_id}/leave',
+            path: {
+                'household_id': householdId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * List Members
+     * @param householdId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns HouseholdMember Successful Response
+     * @throws ApiError
+     */
+    public static listMembersHouseholdsHouseholdIdMembersGet(
+        householdId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<Array<HouseholdMember>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/households/{household_id}/members',
+            path: {
+                'household_id': householdId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Remove Member
+     * @param householdId
+     * @param userId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns void
+     * @throws ApiError
+     */
+    public static removeMemberHouseholdsHouseholdIdMembersUserIdDelete(
+        householdId: string,
+        userId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/households/{household_id}/members/{user_id}',
+            path: {
+                'household_id': householdId,
+                'user_id': userId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * List Disabled Templates
+     * @param householdId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns HouseholdTemplateExclusion Successful Response
+     * @throws ApiError
+     */
+    public static listDisabledTemplatesHouseholdsHouseholdIdDisabledTemplatesGet(
+        householdId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<Array<HouseholdTemplateExclusion>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/households/{household_id}/disabled-templates',
+            path: {
+                'household_id': householdId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Disable Template
+     * @param householdId
+     * @param requestBody
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns HouseholdTemplateExclusion Successful Response
+     * @throws ApiError
+     */
+    public static disableTemplateHouseholdsHouseholdIdDisabledTemplatesPost(
+        householdId: string,
+        requestBody: HouseholdTemplateExclusionCreate,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<HouseholdTemplateExclusion> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/households/{household_id}/disabled-templates',
+            path: {
+                'household_id': householdId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Enable Template
+     * @param householdId
      * @param templateId
      * @param xAdminMode
      * @param xActAsUser
@@ -173,7 +377,8 @@ export class MealsService {
      * @returns void
      * @throws ApiError
      */
-    public static deleteMealTemplateMealsTemplatesTemplateIdDelete(
+    public static enableTemplateHouseholdsHouseholdIdDisabledTemplatesTemplateIdDelete(
+        householdId: string,
         templateId: string,
         xAdminMode?: (string | null),
         xActAsUser?: (string | null),
@@ -181,8 +386,9 @@ export class MealsService {
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/meals/templates/{template_id}',
+            url: '/households/{household_id}/disabled-templates/{template_id}',
             path: {
+                'household_id': householdId,
                 'template_id': templateId,
             },
             headers: {
@@ -196,27 +402,23 @@ export class MealsService {
         });
     }
     /**
-     * Generate Meals
-     * Generate N meals by selecting N templates via weighted random selection.
-     *
-     * Each template is used at most once per generation. Templates that haven't
-     * been used recently are more likely to be selected.
+     * Set Primary Household
      * @param requestBody
      * @param xAdminMode
      * @param xActAsUser
      * @param xActiveHousehold
-     * @returns Meal Successful Response
+     * @returns any Successful Response
      * @throws ApiError
      */
-    public static generateMealsMealsGeneratePost(
-        requestBody: MealGenerateRequest,
+    public static setPrimaryHouseholdUsersMePrimaryHouseholdPatch(
+        requestBody: PrimaryHouseholdUpdate,
         xAdminMode?: (string | null),
         xActAsUser?: (string | null),
         xActiveHousehold?: (string | null),
-    ): CancelablePromise<Array<Meal>> {
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/meals/generate',
+            method: 'PATCH',
+            url: '/users/me/primary-household',
             headers: {
                 'X-Admin-Mode': xAdminMode,
                 'X-Act-As-User': xActAsUser,
@@ -224,189 +426,6 @@ export class MealsService {
             },
             body: requestBody,
             mediaType: 'application/json',
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-    /**
-     * Create Meal
-     * @param requestBody
-     * @param xAdminMode
-     * @param xActAsUser
-     * @param xActiveHousehold
-     * @returns Meal Successful Response
-     * @throws ApiError
-     */
-    public static createMealMealsPost(
-        requestBody: MealCreate,
-        xAdminMode?: (string | null),
-        xActAsUser?: (string | null),
-        xActiveHousehold?: (string | null),
-    ): CancelablePromise<Meal> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/meals/',
-            headers: {
-                'X-Admin-Mode': xAdminMode,
-                'X-Act-As-User': xActAsUser,
-                'X-Active-Household': xActiveHousehold,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-    /**
-     * Get Meals
-     * Retrieve a list of meals with optional filtering and sorting.
-     *
-     * **Filtering:** Use bracket notation `field[operator]=value` for filters.
-     *
-     * Operators: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `in`, `like`.
-     *
-     * Filter fields: `id`, `name`, `status`, `classification`, `scheduled_date`, `is_shopped`, `created_at`, `updated_at`, `recipe_id`, `owner` (or `created_by`).
-     *
-     * Examples:
-     * - `?name[like]=weekly` - Meals with 'weekly' in name
-     * - `?status[eq]=Queued` - Queued meals only
-     * - `?scheduled_date[gte]=2024-01-01&scheduled_date[lte]=2024-01-31` - Meals in January 2024
-     * - `?recipe_id[eq]=<uuid>` - Meals containing specific recipe
-     * - `?recipe_id[in]=<uuid1>,<uuid2>` - Meals containing any of the specified recipes
-     * - `?classification[in]=breakfast,lunch` - Breakfast or lunch meals
-     *
-     * **Sorting:** Use the `sort` parameter with comma-separated fields. Prefix with `-` for descending.
-     *
-     * Returns total count in `X-Total-Count` response header.
-     * @param skip Number of records to skip for pagination
-     * @param limit Maximum number of records to return (1-1000)
-     * @param sort Comma-separated sort fields. Prefix with '-' for descending order. Valid fields: scheduled_date, classification, status, created_at, updated_at, name, queue_position. Default: scheduled_date descending with unscheduled (null) dates first. Example: '-scheduled_date,name'
-     * @param xAdminMode
-     * @param xActAsUser
-     * @param xActiveHousehold
-     * @returns Meal Successful Response
-     * @throws ApiError
-     */
-    public static getMealsMealsGet(
-        skip?: number,
-        limit: number = 100,
-        sort?: string,
-        xAdminMode?: (string | null),
-        xActAsUser?: (string | null),
-        xActiveHousehold?: (string | null),
-    ): CancelablePromise<Array<Meal>> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/meals/',
-            headers: {
-                'X-Admin-Mode': xAdminMode,
-                'X-Act-As-User': xActAsUser,
-                'X-Active-Household': xActiveHousehold,
-            },
-            query: {
-                'skip': skip,
-                'limit': limit,
-                'sort': sort,
-            },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-    /**
-     * Get Meal
-     * @param mealId
-     * @param xAdminMode
-     * @param xActAsUser
-     * @param xActiveHousehold
-     * @returns Meal Successful Response
-     * @throws ApiError
-     */
-    public static getMealMealsMealIdGet(
-        mealId: string,
-        xAdminMode?: (string | null),
-        xActAsUser?: (string | null),
-        xActiveHousehold?: (string | null),
-    ): CancelablePromise<Meal> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/meals/{meal_id}',
-            path: {
-                'meal_id': mealId,
-            },
-            headers: {
-                'X-Admin-Mode': xAdminMode,
-                'X-Act-As-User': xActAsUser,
-                'X-Active-Household': xActiveHousehold,
-            },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-    /**
-     * Update Meal
-     * @param mealId
-     * @param requestBody
-     * @param xAdminMode
-     * @param xActAsUser
-     * @param xActiveHousehold
-     * @returns Meal Successful Response
-     * @throws ApiError
-     */
-    public static updateMealMealsMealIdPut(
-        mealId: string,
-        requestBody: MealUpdate,
-        xAdminMode?: (string | null),
-        xActAsUser?: (string | null),
-        xActiveHousehold?: (string | null),
-    ): CancelablePromise<Meal> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/meals/{meal_id}',
-            path: {
-                'meal_id': mealId,
-            },
-            headers: {
-                'X-Admin-Mode': xAdminMode,
-                'X-Act-As-User': xActAsUser,
-                'X-Active-Household': xActiveHousehold,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-    /**
-     * Delete Meal
-     * @param mealId
-     * @param xAdminMode
-     * @param xActAsUser
-     * @param xActiveHousehold
-     * @returns void
-     * @throws ApiError
-     */
-    public static deleteMealMealsMealIdDelete(
-        mealId: string,
-        xAdminMode?: (string | null),
-        xActAsUser?: (string | null),
-        xActiveHousehold?: (string | null),
-    ): CancelablePromise<void> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/meals/{meal_id}',
-            path: {
-                'meal_id': mealId,
-            },
-            headers: {
-                'X-Admin-Mode': xAdminMode,
-                'X-Act-As-User': xActAsUser,
-                'X-Active-Household': xActiveHousehold,
-            },
             errors: {
                 422: `Validation Error`,
             },

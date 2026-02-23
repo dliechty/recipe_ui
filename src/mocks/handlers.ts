@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { recipes as initialRecipes, users, comments as initialComments, meals as initialMeals, mealTemplates as initialMealTemplates } from './data';
-import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealGenerateRequest, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient, RecipeList, RecipeListCreate, RecipeListUpdate, RecipeListItem, RecipeListAddRecipe } from '../client';
+import { recipes as initialRecipes, users, comments as initialComments, meals as initialMeals, mealTemplates as initialMealTemplates, households as initialHouseholds, householdMembers as initialHouseholdMembers, householdTemplateExclusions as initialHouseholdTemplateExclusions } from './data';
+import { Recipe, RecipeCreate, Comment, CommentCreate, CommentUpdate, Meal, MealCreate, MealUpdate, MealGenerateRequest, MealStatus, MealTemplate, MealTemplateCreate, MealTemplateUpdate, Component, RecipeIngredient, RecipeList, RecipeListCreate, RecipeListUpdate, RecipeListItem, RecipeListAddRecipe, Household, HouseholdCreate, HouseholdUpdate, HouseholdMember, HouseholdTemplateExclusion, HouseholdTemplateExclusionCreate, PrimaryHouseholdUpdate } from '../client';
 
 // We'll use an in-memory store for the session to allow mutations (POST/PUT) during tests
 const recipes: Recipe[] = [...initialRecipes] as unknown as Recipe[];
@@ -13,7 +13,20 @@ const mealsStore: Meal[] = [...initialMeals] as unknown as Meal[];
 const mealTemplateStore: MealTemplate[] = [...initialMealTemplates] as unknown as MealTemplate[];
 const recipeListsStore: RecipeList[] = [];
 
+// Household stores
+type StoredHousehold = Household;
+type StoredHouseholdMember = Omit<HouseholdMember, 'user'> & { household_id: string };
+type StoredHouseholdTemplateExclusion = HouseholdTemplateExclusion;
 
+const householdsStore: StoredHousehold[] = [...initialHouseholds] as unknown as StoredHousehold[];
+const householdMembersStore: StoredHouseholdMember[] = [...initialHouseholdMembers] as unknown as StoredHouseholdMember[];
+const householdTemplateExclusionsStore: StoredHouseholdTemplateExclusion[] = [...initialHouseholdTemplateExclusions];
+
+// Track primary household per user (userId -> householdId | null)
+const userPrimaryHousehold: Record<string, string | null> = {
+    "550e8400-e29b-41d4-a716-446655440000": "hh1",
+    "6ba7b810-9dad-11d1-80b4-00c04fd430c8": "hh2"
+};
 
 export const resetStore = () => {
     recipes.length = 0;
@@ -28,8 +41,14 @@ export const resetStore = () => {
     mealTemplateStore.length = 0;
     mealTemplateStore.push(...initialMealTemplates as unknown as MealTemplate[]);
     recipeListsStore.length = 0;
-
-
+    householdsStore.length = 0;
+    householdsStore.push(...initialHouseholds as unknown as StoredHousehold[]);
+    householdMembersStore.length = 0;
+    householdMembersStore.push(...initialHouseholdMembers as unknown as StoredHouseholdMember[]);
+    householdTemplateExclusionsStore.length = 0;
+    householdTemplateExclusionsStore.push(...initialHouseholdTemplateExclusions);
+    userPrimaryHousehold["550e8400-e29b-41d4-a716-446655440000"] = "hh1";
+    userPrimaryHousehold["6ba7b810-9dad-11d1-80b4-00c04fd430c8"] = "hh2";
 };
 
 
@@ -903,7 +922,18 @@ export const handlers = [
         const dateLt = url.searchParams.get('scheduled_date[lt]');
         const isShoppedParam = url.searchParams.get('is_shopped[eq]');
 
+        // Filter by X-Active-Household header:
+        // - If header is present: return meals that belong to that household (household_id matches)
+        // - If header is absent: return personal meals (no household_id / household_id is null)
+        const activeHousehold = request.headers.get('X-Active-Household');
+
         let filteredMeals = [...mealsStore];
+
+        if (activeHousehold) {
+            filteredMeals = filteredMeals.filter(m => (m as unknown as { household_id?: string | null }).household_id === activeHousehold);
+        } else {
+            filteredMeals = filteredMeals.filter(m => !(m as unknown as { household_id?: string | null }).household_id);
+        }
 
         if (nameLike) {
             const lowerName = nameLike.toLowerCase();
@@ -1063,6 +1093,367 @@ export const handlers = [
         }
 
         mealsStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // --- HOUSEHOLDS ---
+
+    // POST /households
+    http.post('*/households', async ({ request }) => {
+        const body = await request.json() as HouseholdCreate;
+        const authHeader = request.headers.get('Authorization');
+
+        let userId = "550e8400-e29b-41d4-a716-446655440000";
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                }
+            } catch { /* ignore */ }
+        }
+
+        const newHousehold: StoredHousehold = {
+            id: crypto.randomUUID(),
+            name: body.name,
+            created_by: userId,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+        householdsStore.push(newHousehold);
+
+        // Auto-join creator as primary member
+        const newMember: StoredHouseholdMember = {
+            id: crypto.randomUUID(),
+            household_id: newHousehold.id,
+            user_id: userId,
+            is_primary: true,
+            joined_at: new Date().toISOString()
+        };
+        householdMembersStore.push(newMember);
+
+        return HttpResponse.json(newHousehold, { status: 201 });
+    }),
+
+    // GET /households
+    http.get('*/households', ({ request }) => {
+        const url = new URL(request.url);
+        const skip = Number(url.searchParams.get('skip') || '0');
+        const limit = Number(url.searchParams.get('limit') || '100');
+
+        const authHeader = request.headers.get('Authorization');
+        let userId = "550e8400-e29b-41d4-a716-446655440000";
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                }
+            } catch { /* ignore */ }
+        }
+
+        // Return households where the user is a member
+        const userHouseholdIds = householdMembersStore
+            .filter(m => m.user_id === userId)
+            .map(m => m.household_id);
+        const userHouseholds = householdsStore.filter(h => userHouseholdIds.includes(h.id));
+        const paginated = userHouseholds.slice(skip, skip + limit);
+
+        return HttpResponse.json(paginated, {
+            headers: {
+                'X-Total-Count': userHouseholds.length.toString(),
+                'Access-Control-Expose-Headers': 'X-Total-Count'
+            }
+        });
+    }),
+
+    // GET /households/:household_id
+    http.get('*/households/:household_id', ({ params }) => {
+        const { household_id } = params;
+        const household = householdsStore.find(h => h.id === household_id);
+
+        if (!household) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        return HttpResponse.json(household);
+    }),
+
+    // PATCH /households/:household_id
+    http.patch('*/households/:household_id', async ({ request, params }) => {
+        const { household_id } = params;
+        const body = await request.json() as HouseholdUpdate;
+
+        const index = householdsStore.findIndex(h => h.id === household_id);
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const updatedHousehold: StoredHousehold = {
+            ...householdsStore[index],
+            ...(body.name !== undefined && body.name !== null ? { name: body.name } : {}),
+            updated_at: new Date().toISOString()
+        };
+        householdsStore[index] = updatedHousehold;
+
+        return HttpResponse.json(updatedHousehold);
+    }),
+
+    // DELETE /households/:household_id
+    http.delete('*/households/:household_id', ({ params }) => {
+        const { household_id } = params;
+        const index = householdsStore.findIndex(h => h.id === household_id);
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        householdsStore.splice(index, 1);
+        // Also remove all members and exclusions for this household
+        const memberIndices = householdMembersStore
+            .map((m, i) => m.household_id === household_id ? i : -1)
+            .filter(i => i >= 0)
+            .reverse();
+        memberIndices.forEach(i => householdMembersStore.splice(i, 1));
+
+        const exclusionIndices = householdTemplateExclusionsStore
+            .map((e, i) => e.household_id === household_id ? i : -1)
+            .filter(i => i >= 0)
+            .reverse();
+        exclusionIndices.forEach(i => householdTemplateExclusionsStore.splice(i, 1));
+
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // POST /households/:household_id/join
+    http.post('*/households/:household_id/join', ({ request, params }) => {
+        const { household_id } = params;
+        const authHeader = request.headers.get('Authorization');
+
+        let userId = "550e8400-e29b-41d4-a716-446655440000";
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                }
+            } catch { /* ignore */ }
+        }
+
+        const household = householdsStore.find(h => h.id === household_id);
+        if (!household) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        // Check if already a member
+        const existingMember = householdMembersStore.find(
+            m => m.household_id === household_id && m.user_id === userId
+        );
+        if (existingMember) {
+            return HttpResponse.json({ detail: 'Already a member of this household' }, { status: 409 });
+        }
+
+        const newMember: StoredHouseholdMember = {
+            id: crypto.randomUUID(),
+            household_id: String(household_id),
+            user_id: userId,
+            is_primary: false,
+            joined_at: new Date().toISOString()
+        };
+        householdMembersStore.push(newMember);
+
+        // Enrich with user data for response
+        const user = usersStore.find(u => u.id === userId);
+        const enrichedMember: HouseholdMember = {
+            id: newMember.id,
+            user_id: newMember.user_id,
+            is_primary: newMember.is_primary,
+            joined_at: newMember.joined_at,
+            user: user ? {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                is_admin: user.is_admin
+            } : { id: userId, email: '', first_name: '', last_name: '' }
+        };
+
+        return HttpResponse.json(enrichedMember, { status: 201 });
+    }),
+
+    // DELETE /households/:household_id/leave
+    http.delete('*/households/:household_id/leave', ({ request, params }) => {
+        const { household_id } = params;
+        const authHeader = request.headers.get('Authorization');
+
+        let userId = "550e8400-e29b-41d4-a716-446655440000";
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                }
+            } catch { /* ignore */ }
+        }
+
+        const index = householdMembersStore.findIndex(
+            m => m.household_id === household_id && m.user_id === userId
+        );
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        householdMembersStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // GET /households/:household_id/members
+    http.get('*/households/:household_id/members', ({ params }) => {
+        const { household_id } = params;
+        const household = householdsStore.find(h => h.id === household_id);
+
+        if (!household) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const members = householdMembersStore.filter(m => m.household_id === household_id);
+
+        // Enrich with user data
+        const enrichedMembers: HouseholdMember[] = members.map(m => {
+            const user = usersStore.find(u => u.id === m.user_id);
+            return {
+                id: m.id,
+                user_id: m.user_id,
+                is_primary: m.is_primary,
+                joined_at: m.joined_at,
+                user: user ? {
+                    id: user.id,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    is_admin: user.is_admin
+                } : { id: m.user_id, email: '', first_name: '', last_name: '' }
+            };
+        });
+
+        return HttpResponse.json(enrichedMembers);
+    }),
+
+    // DELETE /households/:household_id/members/:user_id
+    http.delete('*/households/:household_id/members/:user_id', ({ params }) => {
+        const { household_id, user_id } = params;
+        const index = householdMembersStore.findIndex(
+            m => m.household_id === household_id && m.user_id === user_id
+        );
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        householdMembersStore.splice(index, 1);
+        return new HttpResponse(null, { status: 204 });
+    }),
+
+    // PATCH /users/me/primary-household
+    http.patch('*/users/me/primary-household', async ({ request }) => {
+        const body = await request.json() as PrimaryHouseholdUpdate;
+        const authHeader = request.headers.get('Authorization');
+
+        let userId = "550e8400-e29b-41d4-a716-446655440000";
+        if (authHeader) {
+            try {
+                const token = authHeader.split(' ')[1];
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.sub) userId = payload.sub;
+                }
+            } catch { /* ignore */ }
+        }
+
+        // If household_id is provided, verify user is a member
+        if (body.household_id) {
+            const isMember = householdMembersStore.some(
+                m => m.household_id === body.household_id && m.user_id === userId
+            );
+            if (!isMember) {
+                return HttpResponse.json({ detail: 'Not a member of this household' }, { status: 403 });
+            }
+        }
+
+        // Update is_primary flags for this user's memberships
+        householdMembersStore.forEach(m => {
+            if (m.user_id === userId) {
+                m.is_primary = body.household_id ? m.household_id === body.household_id : false;
+            }
+        });
+
+        userPrimaryHousehold[userId] = body.household_id ?? null;
+
+        return HttpResponse.json({ message: 'Primary household updated' });
+    }),
+
+    // GET /households/:household_id/disabled-templates
+    http.get('*/households/:household_id/disabled-templates', ({ params }) => {
+        const { household_id } = params;
+        const household = householdsStore.find(h => h.id === household_id);
+
+        if (!household) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const exclusions = householdTemplateExclusionsStore.filter(e => e.household_id === household_id);
+        return HttpResponse.json(exclusions);
+    }),
+
+    // POST /households/:household_id/disabled-templates
+    http.post('*/households/:household_id/disabled-templates', async ({ request, params }) => {
+        const { household_id } = params;
+        const body = await request.json() as HouseholdTemplateExclusionCreate;
+
+        const household = householdsStore.find(h => h.id === household_id);
+        if (!household) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        // Check if already disabled
+        const existing = householdTemplateExclusionsStore.find(
+            e => e.household_id === household_id && e.template_id === body.template_id
+        );
+        if (existing) {
+            return HttpResponse.json({ detail: 'Template already disabled for this household' }, { status: 409 });
+        }
+
+        const newExclusion: StoredHouseholdTemplateExclusion = {
+            id: crypto.randomUUID(),
+            household_id: String(household_id),
+            template_id: body.template_id
+        };
+        householdTemplateExclusionsStore.push(newExclusion);
+
+        return HttpResponse.json(newExclusion, { status: 201 });
+    }),
+
+    // DELETE /households/:household_id/disabled-templates/:template_id
+    http.delete('*/households/:household_id/disabled-templates/:template_id', ({ params }) => {
+        const { household_id, template_id } = params;
+        const index = householdTemplateExclusionsStore.findIndex(
+            e => e.household_id === household_id && e.template_id === template_id
+        );
+
+        if (index === -1) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        householdTemplateExclusionsStore.splice(index, 1);
         return new HttpResponse(null, { status: 204 });
     }),
 

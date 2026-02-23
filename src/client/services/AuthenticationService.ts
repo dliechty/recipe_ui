@@ -16,6 +16,34 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class AuthenticationService {
     /**
+     * Get Context Debug
+     * Returns the resolved AuthContext for the current request.
+     * Used for testing and debugging the authorization model.
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static getContextDebugAuthContextGet(
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/auth/context',
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
      * Get User Name
      * Get user public information (name) by ID.
      * @param userId

@@ -13,5 +13,6 @@ export type MealUpdate = {
     is_shopped?: (boolean | null);
     queue_position?: (number | null);
     items?: (Array<MealItemBase> | null);
+    household_id?: (string | null);
 };
 

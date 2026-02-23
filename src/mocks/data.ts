@@ -22,6 +22,67 @@ export const users = [
 
 import { generateMockRecipes, generateMockMeals, generateMockMealTemplates } from './data-generator';
 
+// Household mock data
+export const households = [
+    {
+        id: "hh1",
+        name: "Smith Family",
+        created_by: "550e8400-e29b-41d4-a716-446655440000",
+        created_at: new Date(Date.now() - 2592000000).toISOString(), // 30 days ago
+        updated_at: new Date(Date.now() - 2592000000).toISOString()
+    },
+    {
+        id: "hh2",
+        name: "Johnson Household",
+        created_by: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        created_at: new Date(Date.now() - 1296000000).toISOString(), // 15 days ago
+        updated_at: new Date(Date.now() - 1296000000).toISOString()
+    },
+    {
+        id: "hh3",
+        name: "Weekend Cooking Club",
+        created_by: "550e8400-e29b-41d4-a716-446655440000",
+        created_at: new Date(Date.now() - 604800000).toISOString(), // 7 days ago
+        updated_at: new Date(Date.now() - 604800000).toISOString()
+    }
+];
+
+export const householdMembers = [
+    // Smith Family members
+    {
+        id: "hm1",
+        household_id: "hh1",
+        user_id: "550e8400-e29b-41d4-a716-446655440000",
+        is_primary: true,
+        joined_at: new Date(Date.now() - 2592000000).toISOString()
+    },
+    {
+        id: "hm2",
+        household_id: "hh1",
+        user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        is_primary: false,
+        joined_at: new Date(Date.now() - 2505600000).toISOString() // 29 days ago
+    },
+    // Johnson Household members
+    {
+        id: "hm3",
+        household_id: "hh2",
+        user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        is_primary: true,
+        joined_at: new Date(Date.now() - 1296000000).toISOString()
+    },
+    // Weekend Cooking Club members
+    {
+        id: "hm4",
+        household_id: "hh3",
+        user_id: "550e8400-e29b-41d4-a716-446655440000",
+        is_primary: false,
+        joined_at: new Date(Date.now() - 604800000).toISOString()
+    }
+];
+
+export const householdTemplateExclusions: { id: string; household_id: string; template_id: string }[] = [];
+
 // Generate 120 mock recipes for testing infinite scroll (updated)
 export const recipes = generateMockRecipes(120);
 
@@ -62,6 +123,7 @@ export const meals = [
         classification: "Dinner",
         scheduled_date: new Date().toISOString().split('T')[0],
         user_id: "550e8400-e29b-41d4-a716-446655440000",
+        household_id: "hh1",
         template_id: null,
         created_at: new Date(Date.now() - 86400000).toISOString(),
         updated_at: new Date(Date.now() - 86400000).toISOString(),
@@ -87,6 +149,7 @@ export const meals = [
         classification: "Dinner",
         scheduled_date: new Date(Date.now() + 172800000).toISOString().split('T')[0], // 2 days from now
         user_id: "550e8400-e29b-41d4-a716-446655440000",
+        household_id: "hh1",
         template_id: null,
         created_at: new Date(Date.now() - 259200000).toISOString(),
         updated_at: new Date(Date.now() - 86400000).toISOString(),
@@ -118,6 +181,7 @@ export const meals = [
         classification: "Dinner",
         scheduled_date: new Date(Date.now() - 172800000).toISOString().split('T')[0], // 2 days ago
         user_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8", // Admin user
+        household_id: "hh2",
         template_id: null,
         created_at: new Date(Date.now() - 345600000).toISOString(),
         updated_at: new Date(Date.now() - 172800000).toISOString(),
@@ -350,6 +414,7 @@ export const meals = [
         classification: "Dinner",
         scheduled_date: new Date(Date.now() + 604800000).toISOString().split('T')[0], // 1 week from now
         user_id: "550e8400-e29b-41d4-a716-446655440000",
+        household_id: "hh3",
         template_id: "mt4", // Generated from multi-slot template
         created_at: new Date(Date.now() - 432000000).toISOString(),
         updated_at: new Date(Date.now() - 86400000).toISOString(),
