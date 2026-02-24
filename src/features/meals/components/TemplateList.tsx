@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Box, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton, Text } from '@chakra-ui/react';
+import { Badge, Box, HStack, Spinner, Center, Container, Button, Icon, Table, VStack, IconButton, Text } from '@chakra-ui/react';
 import { FaPlus, FaUtensils } from 'react-icons/fa';
 import { useInfiniteMealTemplates, useCreateMeal } from '../../../hooks/useMeals';
 import type { MealTemplate } from '../../../client';
@@ -11,15 +11,41 @@ import GenerateMealModal from './GenerateMealModal';
 import TemplateFilters from './TemplateFilters';
 import { searchParamsToTemplateFilters, templateFiltersToSearchParams } from '../../../utils/mealParams';
 import { themeColors } from '../../../utils/styles';
+import { useHouseholdContext } from '../../../context/HouseholdContext';
+import { useDisabledTemplates, useDisableTemplate, useEnableTemplate } from '../../../hooks/useHouseholds';
 
 const TemplateList = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const { activeHouseholdId } = useHouseholdContext();
+
     const createMeal = useCreateMeal();
     const [generatingTemplateId, setGeneratingTemplateId] = useState<string | null>(null);
     const [selectedTemplate, setSelectedTemplate] = useState<MealTemplate | null>(null);
     const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+
+    // Disabled templates for active household
+    const { data: disabledExclusions } = useDisabledTemplates(activeHouseholdId ?? '');
+    const disableTemplate = useDisableTemplate();
+    const enableTemplate = useEnableTemplate();
+
+    const disabledTemplateIds = useMemo(() => {
+        if (!activeHouseholdId || !disabledExclusions) return new Set<string>();
+        return new Set(disabledExclusions.map((e) => e.template_id));
+    }, [activeHouseholdId, disabledExclusions]);
+
+    const handleDisableTemplate = (templateId: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!activeHouseholdId) return;
+        disableTemplate.mutate({ householdId: activeHouseholdId, requestBody: { template_id: templateId } });
+    };
+
+    const handleEnableTemplate = (templateId: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!activeHouseholdId) return;
+        enableTemplate.mutate({ householdId: activeHouseholdId, templateId });
+    };
 
     // Parse filters from URL
     const filters = useMemo(() => {
@@ -232,7 +258,12 @@ const TemplateList = () => {
                                     _hover={{ bg: "bg.muted" }}
                                 >
                                     <Table.Cell borderColor="border.default" fontWeight="medium">
-                                        {template.name}
+                                        <HStack gap={2}>
+                                            <span>{template.name}</span>
+                                            {activeHouseholdId && disabledTemplateIds.has(template.id) && (
+                                                <Badge colorScheme="red" variant="subtle" size="sm">Disabled</Badge>
+                                            )}
+                                        </HStack>
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">{template.classification}</Table.Cell>
                                     <Table.Cell borderColor="border.default">
@@ -245,18 +276,43 @@ const TemplateList = () => {
                                         {new Date(template.created_at).toLocaleDateString()}
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">
-                                        <IconButton
-                                            aria-label="Generate Meal"
-                                            title="Generate Meal"
-                                            size="xs"
-                                            bg="button.success"
-                                            color="white"
-                                            _hover={{ bg: "button.successHover" }}
-                                            onClick={(e) => handleGenerateClick(template, e)}
-                                            loading={generatingTemplateId === template.id}
-                                        >
-                                            <Icon as={FaUtensils} />
-                                        </IconButton>
+                                        <HStack gap={1}>
+                                            <IconButton
+                                                aria-label="Generate Meal"
+                                                title="Generate Meal"
+                                                size="xs"
+                                                bg="button.success"
+                                                color="white"
+                                                _hover={{ bg: "button.successHover" }}
+                                                onClick={(e) => handleGenerateClick(template, e)}
+                                                loading={generatingTemplateId === template.id}
+                                            >
+                                                <Icon as={FaUtensils} />
+                                            </IconButton>
+                                            {activeHouseholdId && (
+                                                disabledTemplateIds.has(template.id) ? (
+                                                    <Button
+                                                        size="xs"
+                                                        variant="outline"
+                                                        colorScheme="green"
+                                                        onClick={(e) => handleEnableTemplate(template.id, e)}
+                                                        aria-label="Enable"
+                                                    >
+                                                        Enable
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        size="xs"
+                                                        variant="outline"
+                                                        colorScheme="red"
+                                                        onClick={(e) => handleDisableTemplate(template.id, e)}
+                                                        aria-label="Disable"
+                                                    >
+                                                        Disable
+                                                    </Button>
+                                                )
+                                            )}
+                                        </HStack>
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

@@ -9,6 +9,11 @@ vi.mock('../../../../context/AuthContext', () => ({
     useAuth: () => ({ token: 'mock-token' }),
 }));
 
+vi.mock('../../../../context/HouseholdContext', () => ({
+    HouseholdContext: { _currentValue: null },
+    useHouseholdContext: () => ({ activeHouseholdId: null, setActiveHousehold: vi.fn(), primaryHouseholdId: null, households: [] }),
+}));
+
 describe('TemplateList Infinite Scroll', () => {
     let observerCallback: (entries: IntersectionObserverEntry[]) => void;
     const observeMock = vi.fn();

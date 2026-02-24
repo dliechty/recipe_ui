@@ -26,6 +26,11 @@ vi.mock('../../../../toaster', () => ({
     },
 }));
 
+vi.mock('../../../../context/HouseholdContext', () => ({
+    HouseholdContext: { _currentValue: null },
+    useHouseholdContext: () => ({ activeHouseholdId: null, setActiveHousehold: vi.fn(), primaryHouseholdId: null, households: [] }),
+}));
+
 describe('TemplateList', () => {
     const observeMock = vi.fn();
     const disconnectMock = vi.fn();
