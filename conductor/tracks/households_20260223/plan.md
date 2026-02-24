@@ -100,7 +100,7 @@
     - [x] Connect to HouseholdDrawer open/close state
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Navbar Household Drawer' (Protocol in workflow.md)
 
-## Phase 5: Account Page — Household Management
+## Phase 5: Account Page — Household Management [checkpoint: 2c35b0f]
 
 - [x] Task: Write tests for AccountHouseholdSection component [10d7da7]
     - [x] Test displays list of user's households with name, member count, role, primary status
@@ -118,7 +118,7 @@
     - [x] Implement member management sub-section
 - [x] Task: Integrate household section into AccountPage [10d7da7]
     - [x] Add `AccountHouseholdSection` to `AccountPage.tsx` below existing profile section
-- [~] Task: Conductor - User Manual Verification 'Phase 5: Account Page — Household Management' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Account Page — Household Management' (Protocol in workflow.md) [2c35b0f]
 
 ## Phase 6: Meal Details — Household Display & Reassignment
 
