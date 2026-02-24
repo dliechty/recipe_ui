@@ -102,23 +102,23 @@
 
 ## Phase 5: Account Page — Household Management
 
-- [ ] Task: Write tests for AccountHouseholdSection component
-    - [ ] Test displays list of user's households with name, member count, role, primary status
-    - [ ] Test "Set as Primary" / "Unset as Primary" toggle
-    - [ ] Test "Leave" action with confirmation dialog
-    - [ ] Test "Rename" inline edit (creator only)
-    - [ ] Test "Delete" action with confirmation dialog (creator only)
-    - [ ] Test "Manage Members" expansion shows member list with remove action
-    - [ ] Test "Create Household" dialog
-    - [ ] Test "Join Household" flow
-- [ ] Task: Implement AccountHouseholdSection component
-    - [ ] Create `src/features/households/components/AccountHouseholdSection.tsx`
-    - [ ] Implement household list with all management actions
-    - [ ] Implement create and join household dialogs
-    - [ ] Implement member management sub-section
-- [ ] Task: Integrate household section into AccountPage
-    - [ ] Add `AccountHouseholdSection` to `AccountPage.tsx` below existing profile section
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Account Page — Household Management' (Protocol in workflow.md)
+- [x] Task: Write tests for AccountHouseholdSection component [10d7da7]
+    - [x] Test displays list of user's households with name, member count, role, primary status
+    - [x] Test "Set as Primary" / "Unset as Primary" toggle
+    - [x] Test "Leave" action with confirmation dialog
+    - [x] Test "Rename" inline edit (creator only)
+    - [x] Test "Delete" action with confirmation dialog (creator only)
+    - [x] Test "Manage Members" expansion shows member list with remove action
+    - [x] Test "Create Household" dialog
+    - [x] Test "Join Household" flow
+- [x] Task: Implement AccountHouseholdSection component [10d7da7]
+    - [x] Create `src/features/households/components/AccountHouseholdSection.tsx`
+    - [x] Implement household list with all management actions
+    - [x] Implement create and join household dialogs
+    - [x] Implement member management sub-section
+- [x] Task: Integrate household section into AccountPage [10d7da7]
+    - [x] Add `AccountHouseholdSection` to `AccountPage.tsx` below existing profile section
+- [~] Task: Conductor - User Manual Verification 'Phase 5: Account Page — Household Management' (Protocol in workflow.md)
 
 ## Phase 6: Meal Details — Household Display & Reassignment
 
