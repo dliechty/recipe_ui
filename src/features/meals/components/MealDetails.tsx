@@ -15,7 +15,8 @@ import {
     Grid
 } from '@chakra-ui/react';
 import { FaChevronRight, FaRegCopy, FaChevronDown, FaChevronUp, FaPlus, FaFileAlt } from 'react-icons/fa';
-import { useMeal, useDeleteMeal, useMealTemplate } from '../../../hooks/useMeals';
+import { useMeal, useDeleteMeal, useMealTemplate, useUpdateMeal } from '../../../hooks/useMeals';
+import { useHouseholds } from '../../../hooks/useHouseholds';
 import { useInfiniteRecipes } from '../../../hooks/useRecipes';
 import { useUser } from '../../../hooks/useUsers';
 import { useAuth } from '../../../context/AuthContext';
@@ -44,7 +45,11 @@ const MealDetails = () => {
     // Fetch meal
     const { data: meal, isLoading, error } = useMeal(id || '');
     const deleteMeal = useDeleteMeal();
+    const updateMeal = useUpdateMeal();
     const { user: currentUser } = useAuth();
+
+    // Fetch households for reassignment dropdown
+    const { data: households = [] } = useHouseholds();
 
     // Fetch creator
     const { data: creator } = useUser(meal?.user_id);
@@ -116,6 +121,14 @@ const MealDetails = () => {
         if (creator.first_name && creator.last_name) return `${creator.first_name} ${creator.last_name}`;
         if (creator.first_name) return creator.first_name;
         return creator.email || 'Unknown';
+    };
+
+    const handleHouseholdChange = (value: string) => {
+        if (!meal) return;
+        updateMeal.mutate({
+            id: meal.id,
+            requestBody: { household_id: value || null },
+        });
     };
 
     const totalMinutes = recipes.reduce((sum, r) => sum + (r.times?.total_time_minutes || 0), 0);
@@ -279,6 +292,31 @@ const MealDetails = () => {
                             <>
                                 <Text fontWeight="bold" color="fg.muted" fontSize="sm">Created By:</Text>
                                 <Text fontSize="sm">{getCreatorName()}</Text>
+                            </>
+                        )}
+
+                        {(canEdit || !!meal.household_id) && (
+                            <>
+                                <Text fontWeight="bold" color="fg.muted" fontSize="sm">Household:</Text>
+                                <Box>
+                                    {canEdit ? (
+                                        <select
+                                            data-testid="household-reassign-select"
+                                            value={meal.household_id || ''}
+                                            onChange={(e) => handleHouseholdChange(e.target.value)}
+                                            style={{ background: '#3c3c3c', color: '#d4d4d4', border: '1px solid #454545', borderRadius: '4px', padding: '2px 6px', fontSize: '14px' }}
+                                        >
+                                            <option value="">Personal</option>
+                                            {households.map(h => (
+                                                <option key={h.id} value={h.id}>{h.name}</option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <Text fontSize="sm">
+                                            {households.find(h => h.id === meal.household_id)?.name || meal.household_id}
+                                        </Text>
+                                    )}
+                                </Box>
                             </>
                         )}
 

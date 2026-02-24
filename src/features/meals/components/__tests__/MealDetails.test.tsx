@@ -16,10 +16,27 @@ vi.mock('../../../../context/AdminModeContext', () => ({
     useAdminMode: () => mockUseAdminMode(),
 }));
 
+// Mock HouseholdContext
+vi.mock('../../../../context/HouseholdContext', () => ({
+    HouseholdContext: { _currentValue: null },
+    useHouseholdContext: () => ({ activeHouseholdId: null, setActiveHousehold: vi.fn(), primaryHouseholdId: null, households: [] }),
+}));
+
+// Mock useHouseholds hook
+const mockUseHouseholds = vi.fn();
+vi.mock('../../../../hooks/useHouseholds', () => ({
+    useHouseholds: () => mockUseHouseholds(),
+}));
+
 describe('MealDetails', () => {
     beforeEach(() => {
         mockUseAuth.mockReturnValue({ user: { id: 'user-123', is_admin: true } });
         mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
+        mockUseHouseholds.mockReturnValue({
+            data: [
+                { id: 'hh-1', name: 'Smith Family', created_by: 'user-123', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' }
+            ]
+        });
         // Mock user endpoint
         server.use(
             http.get('*/users/:id', () => {
@@ -817,5 +834,284 @@ describe('MealDetails', () => {
         });
 
         expect(screen.queryByRole('button', { name: /Delete/i })).not.toBeInTheDocument();
+    });
+
+    // Phase 6: Household display and reassignment tests
+
+    it('shows household name when meal has a household_id', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Household Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: 'hh-1',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Household Meal' })).toBeInTheDocument();
+        });
+
+        // Household label and name should be shown
+        expect(screen.getByText('Household:')).toBeInTheDocument();
+        // Since canEdit is true (user is creator), it shows a dropdown — the household name appears as an option
+        const select = screen.getByTestId('household-reassign-select') as HTMLSelectElement;
+        expect(select).toBeInTheDocument();
+        expect(select.value).toBe('hh-1');
+    });
+
+    it('shows "Personal" option when meal has no household_id and user is creator', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Personal Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: null,
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Personal Meal' })).toBeInTheDocument();
+        });
+
+        // Reassignment dropdown should be visible with "Personal" selected
+        const select = screen.getByTestId('household-reassign-select') as HTMLSelectElement;
+        expect(select).toBeInTheDocument();
+        expect(select.value).toBe('');
+    });
+
+    it('shows household reassignment dropdown for meal creator', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Creator Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: null,
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Creator Meal' })).toBeInTheDocument();
+        });
+
+        expect(screen.getByTestId('household-reassign-select')).toBeInTheDocument();
+    });
+
+    it('hides household reassignment dropdown for non-creators', async () => {
+        // Non-creator: different user_id, not admin mode
+        mockUseAuth.mockReturnValue({ user: { id: 'other-user', is_admin: false } });
+        mockUseAdminMode.mockReturnValue({ adminModeActive: false, impersonatedUserId: null });
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Other User Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: 'hh-1',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Other User Meal' })).toBeInTheDocument();
+        });
+
+        // Dropdown should NOT be visible
+        expect(screen.queryByTestId('household-reassign-select')).not.toBeInTheDocument();
+        // But household name should be shown as text (since household_id exists)
+        expect(screen.getByText('Smith Family')).toBeInTheDocument();
+    });
+
+    it('shows Personal option and list of households in dropdown', async () => {
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Dropdown Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: null,
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Dropdown Meal' })).toBeInTheDocument();
+        });
+
+        const select = screen.getByTestId('household-reassign-select') as HTMLSelectElement;
+        const options = Array.from(select.options).map(o => ({ value: o.value, text: o.text }));
+        expect(options).toContainEqual({ value: '', text: 'Personal' });
+        expect(options).toContainEqual({ value: 'hh-1', text: 'Smith Family' });
+    });
+
+    it('calls useUpdateMeal with household_id when selecting a household', async () => {
+        let capturedBody: Record<string, unknown> | null = null;
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Reassign Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: null,
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            }),
+            http.put('*/meals/1', async ({ request }) => {
+                capturedBody = await request.json() as Record<string, unknown>;
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Reassign Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: 'hh-1',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Reassign Meal' })).toBeInTheDocument();
+        });
+
+        const select = screen.getByTestId('household-reassign-select');
+        fireEvent.change(select, { target: { value: 'hh-1' } });
+
+        await waitFor(() => {
+            expect(capturedBody).not.toBeNull();
+            expect(capturedBody).toMatchObject({ household_id: 'hh-1' });
+        });
+    });
+
+    it('calls useUpdateMeal with household_id null when selecting Personal', async () => {
+        let capturedBody: Record<string, unknown> | null = null;
+
+        server.use(
+            http.get('*/meals/:id', () => {
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Unassign Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: 'hh-1',
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            }),
+            http.put('*/meals/1', async ({ request }) => {
+                capturedBody = await request.json() as Record<string, unknown>;
+                return HttpResponse.json({
+                    id: '1',
+                    name: 'Unassign Meal',
+                    status: 'Queued',
+                    user_id: 'user-123',
+                    household_id: null,
+                    created_at: '2024-01-01T00:00:00Z',
+                    updated_at: '2024-01-01T00:00:00Z',
+                    items: []
+                });
+            })
+        );
+
+        renderWithProviders(
+            <MemoryRouter initialEntries={['/meals/1']}>
+                <Routes>
+                    <Route path="/meals/:id" element={<MealDetails />} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { name: 'Unassign Meal' })).toBeInTheDocument();
+        });
+
+        const select = screen.getByTestId('household-reassign-select');
+        fireEvent.change(select, { target: { value: '' } });
+
+        await waitFor(() => {
+            expect(capturedBody).not.toBeNull();
+            expect(capturedBody).toMatchObject({ household_id: null });
+        });
     });
 });
