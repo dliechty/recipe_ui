@@ -103,4 +103,30 @@ describe('AccountPage', () => {
         expect(screen.getByText('Account Type')).toBeInTheDocument();
         expect(screen.getByText('User')).toBeInTheDocument();
     });
+
+    it('renders the My Households section from AccountHouseholdSection', () => {
+        vi.spyOn(AuthContext, 'useAuth').mockReturnValue({
+            user: {
+                id: '456',
+                email: 'user@example.com',
+                first_name: 'Regular',
+                last_name: 'User',
+                is_admin: false,
+                is_first_login: false
+            },
+            token: 'valid-token',
+            isAuthenticated: true,
+            login: vi.fn(),
+            logout: vi.fn(),
+            refreshUser: vi.fn(),
+        });
+
+        renderWithProviders(
+            <MemoryRouter>
+                <AccountPage />
+            </MemoryRouter>
+        );
+
+        expect(screen.getByText('My Households')).toBeInTheDocument();
+    });
 });
