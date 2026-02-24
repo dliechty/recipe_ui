@@ -15,6 +15,7 @@ import { useAuth } from '../../context/AuthContext';
 import { AuthenticationService, UserUpdate } from '../../client';
 import { toaster } from '../../toaster';
 import { FaEdit } from 'react-icons/fa';
+import AccountHouseholdSection from '../households/components/AccountHouseholdSection';
 
 const AccountPage = () => {
     const { user, refreshUser } = useAuth();
@@ -191,8 +192,10 @@ const AccountPage = () => {
                         )}
                     </HStack>
                 </VStack>
-            </Box >
-        </Container >
+            </Box>
+
+            <AccountHouseholdSection />
+        </Container>
     );
 };
 

@@ -13,6 +13,28 @@ vi.mock('../../../../toaster', () => ({
     },
 }));
 
+// Mock household hooks (needed by AccountHouseholdSection rendered inside AccountPage)
+vi.mock('../../../hooks/useHouseholds', () => ({
+    useHouseholds: () => ({ data: [], isLoading: false }),
+    useHouseholdMembers: () => ({ data: [], isLoading: false }),
+    useCreateHousehold: () => ({ mutate: vi.fn(), isPending: false }),
+    useUpdateHousehold: () => ({ mutate: vi.fn(), isPending: false }),
+    useDeleteHousehold: () => ({ mutate: vi.fn(), isPending: false }),
+    useJoinHousehold: () => ({ mutate: vi.fn(), isPending: false }),
+    useLeaveHousehold: () => ({ mutate: vi.fn(), isPending: false }),
+    useRemoveHouseholdMember: () => ({ mutate: vi.fn(), isPending: false }),
+    useSetPrimaryHousehold: () => ({ mutate: vi.fn(), isPending: false }),
+}));
+
+vi.mock('../../../context/HouseholdContext', () => ({
+    useHouseholdContext: () => ({
+        activeHouseholdId: null,
+        setActiveHousehold: vi.fn(),
+        primaryHouseholdId: null,
+        households: [],
+    }),
+}));
+
 // Mock useNavigate
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
