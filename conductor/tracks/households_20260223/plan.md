@@ -138,17 +138,17 @@
 
 ## Phase 7: Meal Templates — Disabled Template Indicator
 
-- [ ] Task: Write tests for disabled template indicators
-    - [ ] Test disabled badge shown on templates disabled for active household
-    - [ ] Test no disabled indicators when in personal mode
-    - [ ] Test toggle to disable a template for active household
-    - [ ] Test toggle to re-enable a template for active household
-- [ ] Task: Implement disabled template indicators on template list
-    - [ ] Modify template list component to fetch disabled templates when household is active
-    - [ ] Add visual indicator (badge/muted styling) for disabled templates
-    - [ ] Add disable/enable toggle button per template
-    - [ ] Hide indicators when no household is active
-- [ ] Task: Conductor - User Manual Verification 'Phase 7: Meal Templates — Disabled Template Indicator' (Protocol in workflow.md)
+- [x] Task: Write tests for disabled template indicators [b8d6ad4]
+    - [x] Test disabled badge shown on templates disabled for active household
+    - [x] Test no disabled indicators when in personal mode
+    - [x] Test toggle to disable a template for active household
+    - [x] Test toggle to re-enable a template for active household
+- [x] Task: Implement disabled template indicators on template list [42cfcf3]
+    - [x] Modify template list component to fetch disabled templates when household is active
+    - [x] Add visual indicator (badge/muted styling) for disabled templates
+    - [x] Add disable/enable toggle button per template
+    - [x] Hide indicators when no household is active
+- [~] Task: Conductor - User Manual Verification 'Phase 7: Meal Templates — Disabled Template Indicator' (Protocol in workflow.md)
 
 ## Phase 8: Admin Dashboard — Households Tab
 
