@@ -120,21 +120,21 @@
     - [x] Add `AccountHouseholdSection` to `AccountPage.tsx` below existing profile section
 - [x] Task: Conductor - User Manual Verification 'Phase 5: Account Page — Household Management' (Protocol in workflow.md) [2c35b0f]
 
-## Phase 6: Meal Details — Household Display & Reassignment
+## Phase 6: Meal Details — Household Display & Reassignment [checkpoint: 71d9d95]
 
-- [ ] Task: Write tests for household display in MealDetails
-    - [ ] Test household name shown when meal has `household_id`
-    - [ ] Test "Personal" or no indicator when meal has no household
-    - [ ] Test household reassignment dropdown visible for meal creator
-    - [ ] Test reassignment dropdown hidden for non-creators
-    - [ ] Test moving meal to a different household
-    - [ ] Test removing meal from household (set to personal)
-    - [ ] Test assigning personal meal to a household
-- [ ] Task: Implement household display and reassignment in MealDetails
-    - [ ] Add household name to metadata grid in `MealDetails.tsx`
-    - [ ] Add household reassignment control (dropdown) for meal creator
-    - [ ] Use `useUpdateMeal` with `household_id` field for reassignment
-- [ ] Task: Conductor - User Manual Verification 'Phase 6: Meal Details — Household Display & Reassignment' (Protocol in workflow.md)
+- [x] Task: Write tests for household display in MealDetails [abd5aff]
+    - [x] Test household name shown when meal has `household_id`
+    - [x] Test "Personal" or no indicator when meal has no household
+    - [x] Test household reassignment dropdown visible for meal creator
+    - [x] Test reassignment dropdown hidden for non-creators
+    - [x] Test moving meal to a different household
+    - [x] Test removing meal from household (set to personal)
+    - [x] Test assigning personal meal to a household
+- [x] Task: Implement household display and reassignment in MealDetails [abd5aff]
+    - [x] Add household name to metadata grid in `MealDetails.tsx`
+    - [x] Add household reassignment control (dropdown) for meal creator
+    - [x] Use `useUpdateMeal` with `household_id` field for reassignment
+- [x] Task: Conductor - User Manual Verification 'Phase 6: Meal Details — Household Display & Reassignment' (Protocol in workflow.md) [71d9d95]
 
 ## Phase 7: Meal Templates — Disabled Template Indicator
 
