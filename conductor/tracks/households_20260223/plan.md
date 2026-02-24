@@ -136,7 +136,7 @@
     - [x] Use `useUpdateMeal` with `household_id` field for reassignment
 - [x] Task: Conductor - User Manual Verification 'Phase 6: Meal Details — Household Display & Reassignment' (Protocol in workflow.md) [71d9d95]
 
-## Phase 7: Meal Templates — Disabled Template Indicator
+## Phase 7: Meal Templates — Disabled Template Indicator [checkpoint: c4771cf]
 
 - [x] Task: Write tests for disabled template indicators [b8d6ad4]
     - [x] Test disabled badge shown on templates disabled for active household
@@ -148,7 +148,7 @@
     - [x] Add visual indicator (badge/muted styling) for disabled templates
     - [x] Add disable/enable toggle button per template
     - [x] Hide indicators when no household is active
-- [~] Task: Conductor - User Manual Verification 'Phase 7: Meal Templates — Disabled Template Indicator' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 7: Meal Templates — Disabled Template Indicator' (Protocol in workflow.md) [c4771cf]
 
 ## Phase 8: Admin Dashboard — Households Tab
 
