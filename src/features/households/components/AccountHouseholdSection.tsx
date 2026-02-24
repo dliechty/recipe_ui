@@ -130,7 +130,7 @@ const HouseholdRow = ({
     return (
         <Box
             data-testid={`household-row-${household.id}`}
-            bg="bg.subtle"
+            bg="bg.muted"
             borderRadius="md"
             borderWidth={1}
             borderColor="border.default"
@@ -391,7 +391,15 @@ const AccountHouseholdSection = () => {
 
     return (
         <>
-            <Box mt={6}>
+            <Box
+                mt={6}
+                p={8}
+                borderWidth={1}
+                borderColor="border.default"
+                borderRadius="lg"
+                boxShadow="lg"
+                bg="bg.surface"
+            >
                 <HStack justify="space-between" align="center" mb={4}>
                     <Heading size="md" color="fg.default">
                         My Households
