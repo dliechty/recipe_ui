@@ -170,23 +170,23 @@
 
 ## Phase 9: Admin Operating Mode — Household Compatibility
 
-- [ ] Task: Write tests for impersonation + household interaction
-    - [ ] Test household data refetches when impersonated user changes
-    - [ ] Test household drawer shows impersonated user's households
-    - [ ] Test active household resets when entering impersonation mode
-    - [ ] Test active household resets when exiting impersonation mode
-    - [ ] Test household query keys include `impersonatedUserId`
-- [ ] Task: Implement impersonation-aware household state management
-    - [ ] Ensure HouseholdContext re-fetches households when `impersonatedUserId` changes
-    - [ ] Reset `activeHouseholdId` on impersonation change
-    - [ ] Include `impersonatedUserId` in household query cache keys
-- [ ] Task: Write tests for admin mode + household header combinations
-    - [ ] Test admin browsing a household sends `X-Admin-Mode` + `X-Active-Household`
-    - [ ] Test impersonation with household sends `X-Act-As-User` + `X-Active-Household`
-    - [ ] Test switching between admin/impersonation/default modes preserves correct headers
-- [ ] Task: Verify end-to-end header combinations work correctly
-    - [ ] Integration test: admin mode + household selection + meal list fetch
-    - [ ] Integration test: impersonation + household selection + meal list fetch
+- [x] Task: Write tests for impersonation + household interaction [e028f57]
+    - [x] Test household data refetches when impersonated user changes
+    - [x] Test household drawer shows impersonated user's households
+    - [x] Test active household resets when entering impersonation mode
+    - [x] Test active household resets when exiting impersonation mode
+    - [x] Test household query keys include `impersonatedUserId`
+- [~] Task: Implement impersonation-aware household state management
+    - [x] Ensure HouseholdContext re-fetches households when `impersonatedUserId` changes
+    - [x] Reset `activeHouseholdId` on impersonation change
+    - [x] Include `impersonatedUserId` in household query cache keys
+- [~] Task: Write tests for admin mode + household header combinations
+    - [x] Test admin browsing a household sends `X-Admin-Mode` + `X-Active-Household`
+    - [x] Test impersonation with household sends `X-Act-As-User` + `X-Active-Household`
+    - [x] Test switching between admin/impersonation/default modes preserves correct headers
+- [~] Task: Verify end-to-end header combinations work correctly
+    - [x] Integration test: admin mode + household selection + meal list fetch
+    - [x] Integration test: impersonation + household selection + meal list fetch
 - [ ] Task: Conductor - User Manual Verification 'Phase 9: Admin Operating Mode — Household Compatibility' (Protocol in workflow.md)
 
 ## Phase 10: Onboarding Prompt
