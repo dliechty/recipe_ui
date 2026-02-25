@@ -189,7 +189,7 @@
     - [x] Integration test: impersonation + household selection + meal list fetch
 - [x] Task: Conductor - User Manual Verification 'Phase 9: Admin Operating Mode — Household Compatibility' (Protocol in workflow.md)
 
-## Phase 10: Onboarding Prompt
+## Phase 10: Onboarding Prompt [checkpoint: 56c6d73]
 
 - [x] Task: Write tests for HouseholdOnboardingPrompt component [59462e8]
     - [x] Test prompt appears on Meals page for users with no households
