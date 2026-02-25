@@ -1,5 +1,6 @@
 import { Container, Tabs, Box } from '@chakra-ui/react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import HouseholdOnboardingPrompt from '../../households/components/HouseholdOnboardingPrompt';
 
 const MealsPage = () => {
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ const MealsPage = () => {
 
     return (
         <Container maxW="container.xl" py={8}>
+            <HouseholdOnboardingPrompt />
 
             <Tabs.Root value={currentTab} onValueChange={(e) => handleTabChange(e.value)}>
                 <Tabs.List borderBottomWidth="1px" borderColor="border.default" mb={6}>

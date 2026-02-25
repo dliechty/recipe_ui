@@ -1,7 +1,28 @@
 import { renderWithProviders, screen, waitFor, fireEvent } from '../../../../test-utils';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import MealsPage from '../MealsPage';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// Mock HouseholdContext used by HouseholdOnboardingPrompt
+vi.mock('../../../../context/HouseholdContext', () => ({
+    useHouseholdContext: () => ({
+        activeHouseholdId: null,
+        setActiveHousehold: vi.fn(),
+        primaryHouseholdId: null,
+        households: [],
+    }),
+}));
+
+vi.mock('../../../../hooks/useHouseholds', () => ({
+    useCreateHousehold: () => ({
+        mutate: vi.fn(),
+        isPending: false,
+    }),
+    useJoinHousehold: () => ({
+        mutate: vi.fn(),
+        isPending: false,
+    }),
+}));
 
 describe('MealsPage', () => {
     it('renders three tabs: Upcoming, Templates, History', () => {
