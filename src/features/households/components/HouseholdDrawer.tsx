@@ -102,7 +102,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                 {/* Active household indicator */}
                                 <Box
                                     data-testid="active-household-indicator"
-                                    bg="bg.subtle"
+                                    bg="bg.muted"
                                     borderRadius="md"
                                     px={3}
                                     py={2}
@@ -217,11 +217,13 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                                                     checked={isPrimary}
                                                                     onCheckedChange={() => handleTogglePrimary(household.id)}
                                                                     size="sm"
-                                                                    colorPalette="yellow"
                                                                 >
                                                                     <Switch.HiddenInput />
-                                                                    <Switch.Control>
-                                                                        <Switch.Thumb />
+                                                                    <Switch.Control
+                                                                        bg={isPrimary ? 'yellow.500' : 'vscode.secondaryButton'}
+                                                                        _checked={{ bg: 'yellow.500' }}
+                                                                    >
+                                                                        <Switch.Thumb bg="white" />
                                                                     </Switch.Control>
                                                                 </Switch.Root>
                                                             </Box>

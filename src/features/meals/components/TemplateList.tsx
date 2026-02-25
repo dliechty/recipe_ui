@@ -261,7 +261,7 @@ const TemplateList = () => {
                                         <HStack gap={2}>
                                             <span>{template.name}</span>
                                             {activeHouseholdId && disabledTemplateIds.has(template.id) && (
-                                                <Badge colorScheme="red" variant="subtle" size="sm">Disabled</Badge>
+                                                <Badge bg="vscode.errorBg" color="vscode.errorText" borderColor="vscode.errorBorder" borderWidth={1} size="sm">Disabled</Badge>
                                             )}
                                         </HStack>
                                     </Table.Cell>
@@ -294,7 +294,9 @@ const TemplateList = () => {
                                                     <Button
                                                         size="xs"
                                                         variant="outline"
-                                                        colorScheme="green"
+                                                        borderColor="vscode.successBorder"
+                                                        color="vscode.successText"
+                                                        _hover={{ bg: 'vscode.successBg' }}
                                                         onClick={(e) => handleEnableTemplate(template.id, e)}
                                                         aria-label="Enable"
                                                     >
@@ -304,7 +306,9 @@ const TemplateList = () => {
                                                     <Button
                                                         size="xs"
                                                         variant="outline"
-                                                        colorScheme="red"
+                                                        borderColor="vscode.errorBorder"
+                                                        color="vscode.errorText"
+                                                        _hover={{ bg: 'vscode.errorBg' }}
                                                         onClick={(e) => handleDisableTemplate(template.id, e)}
                                                         aria-label="Disable"
                                                     >
