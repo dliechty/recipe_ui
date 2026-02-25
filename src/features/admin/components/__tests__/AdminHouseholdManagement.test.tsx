@@ -19,11 +19,13 @@ interface MockHouseholdMembersMap {
 let mockHouseholds: Household[] = [];
 let mockMembersMap: MockHouseholdMembersMap = {};
 
+const mockUseHouseholds = vi.fn();
+
 vi.mock('../../../../hooks/useHouseholds', () => ({
-    useHouseholds: () => ({
-        data: mockHouseholds,
-        isLoading: false,
-    }),
+    useHouseholds: (options?: { adminMode?: boolean }) => {
+        mockUseHouseholds(options);
+        return { data: mockHouseholds, isLoading: false };
+    },
     useHouseholdMembers: (id: string) => ({
         data: mockMembersMap[id] ?? [],
         isLoading: false,
@@ -317,5 +319,8 @@ describe('AdminHouseholdManagement', () => {
 
         expect(screen.getByTestId('household-row-hh1')).toBeInTheDocument();
         expect(screen.getByTestId('household-row-hh2')).toBeInTheDocument();
+
+        // Verify useHouseholds was called with adminMode: true so all households are fetched
+        expect(mockUseHouseholds).toHaveBeenCalledWith({ adminMode: true });
     });
 });

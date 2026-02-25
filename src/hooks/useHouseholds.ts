@@ -16,14 +16,16 @@ import { AdminModeContext } from '../context/AdminModeContext';
 // CRUD hooks
 // ---------------------------------------------------------------------------
 
-/** List the current user's households (or all households in admin-impersonation mode). */
-export const useHouseholds = () => {
+/** List the current user's households (or all households in admin-impersonation mode).
+ *  Pass `{ adminMode: true }` to explicitly send X-Admin-Mode: true (e.g. from the admin dashboard). */
+export const useHouseholds = (options?: { adminMode?: boolean }) => {
     const adminModeCtx = useContext(AdminModeContext);
     const impersonatedUserId = adminModeCtx?.impersonatedUserId ?? null;
+    const xAdminMode = options?.adminMode ? 'true' : undefined;
 
     return useQuery<Household[]>({
-        queryKey: ['households', impersonatedUserId],
-        queryFn: () => HouseholdsService.listHouseholdsHouseholdsGet(),
+        queryKey: ['households', impersonatedUserId, options?.adminMode ?? false],
+        queryFn: () => HouseholdsService.listHouseholdsHouseholdsGet(undefined, 100, xAdminMode),
     });
 };
 

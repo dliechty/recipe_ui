@@ -203,7 +203,7 @@ const AdminHouseholdRow = ({ household, onDelete, onRename }: AdminHouseholdRowP
 // ---------------------------------------------------------------------------
 
 const AdminHouseholdManagement = () => {
-    const { data: households = [] } = useHouseholds();
+    const { data: households = [] } = useHouseholds({ adminMode: true });
     const { mutate: createHousehold, isPending: isCreating } = useCreateHousehold();
     const { mutate: updateHousehold } = useUpdateHousehold();
     const { mutate: deleteHousehold } = useDeleteHousehold();
