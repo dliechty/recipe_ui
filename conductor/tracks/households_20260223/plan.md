@@ -152,21 +152,21 @@
 
 ## Phase 8: Admin Dashboard — Households Tab
 
-- [ ] Task: Write tests for AdminHouseholdManagement component
-    - [ ] Test displays table of all households (name, creator, member count, created date)
-    - [ ] Test "View Members" shows member list with remove action
-    - [ ] Test "Rename" inline edit
-    - [ ] Test "Delete" with confirmation dialog
-    - [ ] Test "Create Household" button
-    - [ ] Test uses admin mode headers to fetch all households
-- [ ] Task: Implement AdminHouseholdManagement component
-    - [ ] Create `src/features/admin/components/AdminHouseholdManagement.tsx`
-    - [ ] Implement table with all household management actions
-    - [ ] Ensure admin mode header is active for all operations
-- [ ] Task: Integrate Households tab into AdminDashboard
-    - [ ] Add fourth tab "Households" to `AdminDashboard.tsx`
-    - [ ] Wire up `AdminHouseholdManagement` component
-- [ ] Task: Conductor - User Manual Verification 'Phase 8: Admin Dashboard — Households Tab' (Protocol in workflow.md)
+- [x] Task: Write tests for AdminHouseholdManagement component [6c8704c]
+    - [x] Test displays table of all households (name, creator, member count, created date)
+    - [x] Test "View Members" shows member list with remove action
+    - [x] Test "Rename" inline edit
+    - [x] Test "Delete" with confirmation dialog
+    - [x] Test "Create Household" button
+    - [x] Test uses admin mode headers to fetch all households
+- [x] Task: Implement AdminHouseholdManagement component [065df0b]
+    - [x] Create `src/features/admin/components/AdminHouseholdManagement.tsx`
+    - [x] Implement table with all household management actions
+    - [x] Ensure admin mode header is active for all operations
+- [x] Task: Integrate Households tab into AdminDashboard [065df0b]
+    - [x] Add fourth tab "Households" to `AdminDashboard.tsx`
+    - [x] Wire up `AdminHouseholdManagement` component
+- [~] Task: Conductor - User Manual Verification 'Phase 8: Admin Dashboard — Households Tab' (Protocol in workflow.md)
 
 ## Phase 9: Admin Operating Mode — Household Compatibility
 
