@@ -238,4 +238,44 @@ describe('HouseholdDrawer', () => {
             expect(screen.getByTestId('active-household-indicator')).toHaveTextContent('Personal');
         });
     });
+
+    test('shows impersonated user households when context provides them', async () => {
+        // Simulate impersonated user's households being provided via HouseholdContext
+        const impersonatedHousehold1: Household = {
+            id: 'imp-hh-1',
+            name: 'Impersonated Family',
+            created_by: 'imp-user',
+            created_at: '2024-01-01T00:00:00Z',
+            updated_at: '2024-01-01T00:00:00Z',
+        };
+        const impersonatedHousehold2: Household = {
+            id: 'imp-hh-2',
+            name: 'Impersonated Vacation',
+            created_by: 'imp-user',
+            created_at: '2024-01-02T00:00:00Z',
+            updated_at: '2024-01-02T00:00:00Z',
+        };
+
+        mockHouseholdCtx = {
+            activeHouseholdId: 'imp-hh-1',
+            setActiveHousehold: mockSetActiveHousehold,
+            primaryHouseholdId: null,
+            households: [impersonatedHousehold1, impersonatedHousehold2],
+        };
+
+        renderDrawer(true);
+
+        await waitFor(() => {
+            // "Impersonated Family" appears both in the active indicator and in the household list
+            expect(screen.getAllByText('Impersonated Family').length).toBeGreaterThan(0);
+            expect(screen.getByText('Impersonated Vacation')).toBeInTheDocument();
+        });
+
+        // The original households should NOT appear
+        expect(screen.queryByText('Smith Family')).not.toBeInTheDocument();
+        expect(screen.queryByText('Weekend House')).not.toBeInTheDocument();
+
+        // Active household indicator shows the impersonated user's household
+        expect(screen.getByTestId('active-household-indicator')).toHaveTextContent('Impersonated Family');
+    });
 });

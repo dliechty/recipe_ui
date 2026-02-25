@@ -280,6 +280,193 @@ describe('HouseholdContext', () => {
         });
     });
 
+    it('clears active household when entering impersonation mode (null -> userId)', async () => {
+        localStorage.setItem(STORAGE_KEY, 'hh1');
+
+        mockUseAuth.mockReturnValue({
+            user: { id: 'admin-id', is_admin: true },
+            isAuthenticated: true,
+        });
+        mockListHouseholds.mockResolvedValue(mockHouseholds);
+        mockListMembers.mockResolvedValue([
+            { id: 'm1', user_id: 'admin-id', user: { id: 'admin-id' }, is_primary: true, joined_at: '' },
+        ]);
+
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(null)}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('activeHouseholdId').textContent).toBe('hh1');
+            expect(screen.getByTestId('householdCount').textContent).toBe('2');
+        });
+
+        // Enter impersonation mode — impersonated user has different households
+        const impersonatedHouseholds = [
+            { id: 'hh3', name: 'Impersonated Household', created_by: 'target-user', created_at: '', updated_at: '' },
+        ];
+        mockListHouseholds.mockResolvedValue(impersonatedHouseholds);
+        mockListMembers.mockResolvedValue([]);
+
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue('target-user')}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('activeHouseholdId').textContent).toBe('null');
+            expect(screen.getByTestId('primaryHouseholdId').textContent).toBe('null');
+        });
+
+        // localStorage should be cleared
+        expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+
+        // The impersonated user's households should be loaded
+        await waitFor(() => {
+            expect(screen.getByTestId('householdCount').textContent).toBe('1');
+        });
+    });
+
+    it('clears active household when exiting impersonation mode (userId -> null)', async () => {
+        mockUseAuth.mockReturnValue({
+            user: { id: 'admin-id', is_admin: true },
+            isAuthenticated: true,
+        });
+
+        // Impersonated user's households
+        const impersonatedHouseholds = [
+            { id: 'hh3', name: 'Impersonated Household', created_by: 'target-user', created_at: '', updated_at: '' },
+        ];
+        mockListHouseholds.mockResolvedValue(impersonatedHouseholds);
+        mockListMembers.mockResolvedValue([]);
+
+        // Start already impersonating
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue('target-user')}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('householdCount').textContent).toBe('1');
+        });
+
+        // Set active household to the impersonated user's household
+        act(() => {
+            screen.getByText('setActive-hh2').click();
+        });
+        expect(screen.getByTestId('activeHouseholdId').textContent).toBe('hh2');
+
+        // Exit impersonation — admin's own households reload
+        mockListHouseholds.mockResolvedValue(mockHouseholds);
+        mockListMembers.mockResolvedValue([
+            { id: 'm1', user_id: 'admin-id', user: { id: 'admin-id' }, is_primary: false, joined_at: '' },
+        ]);
+
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(null)}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        // Active household should be cleared on exit
+        await waitFor(() => {
+            expect(screen.getByTestId('activeHouseholdId').textContent).toBe('null');
+        });
+
+        // localStorage should be cleared
+        expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+
+        // Admin's own households should be reloaded
+        await waitFor(() => {
+            expect(screen.getByTestId('householdCount').textContent).toBe('2');
+        });
+    });
+
+    it('refetches households when impersonated user changes', async () => {
+        mockUseAuth.mockReturnValue({
+            user: { id: 'admin-id', is_admin: true },
+            isAuthenticated: true,
+        });
+        mockListHouseholds.mockResolvedValue(mockHouseholds);
+        mockListMembers.mockResolvedValue([
+            { id: 'm1', user_id: 'admin-id', user: { id: 'admin-id' }, is_primary: false, joined_at: '' },
+        ]);
+
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(null)}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('householdCount').textContent).toBe('2');
+        });
+
+        // Record call count after initial fetch
+        const callCountAfterInit = mockListHouseholds.mock.calls.length;
+
+        // Switch to impersonating user-A
+        const userAHouseholds = [
+            { id: 'hhA', name: 'User A Home', created_by: 'user-a', created_at: '', updated_at: '' },
+        ];
+        mockListHouseholds.mockResolvedValue(userAHouseholds);
+        mockListMembers.mockResolvedValue([]);
+
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue('user-a')}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('householdCount').textContent).toBe('1');
+        });
+
+        // Verify a new fetch was triggered
+        expect(mockListHouseholds.mock.calls.length).toBeGreaterThan(callCountAfterInit);
+
+        const callCountAfterUserA = mockListHouseholds.mock.calls.length;
+
+        // Switch to impersonating user-B
+        const userBHouseholds = [
+            { id: 'hhB1', name: 'User B Home', created_by: 'user-b', created_at: '', updated_at: '' },
+            { id: 'hhB2', name: 'User B Vacation', created_by: 'user-b', created_at: '', updated_at: '' },
+            { id: 'hhB3', name: 'User B Cabin', created_by: 'user-b', created_at: '', updated_at: '' },
+        ];
+        mockListHouseholds.mockResolvedValue(userBHouseholds);
+
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue('user-b')}>
+                <HouseholdProvider>
+                    <TestConsumer />
+                </HouseholdProvider>
+            </AdminModeContext.Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('householdCount').textContent).toBe('3');
+        });
+
+        // Verify another fetch was triggered
+        expect(mockListHouseholds.mock.calls.length).toBeGreaterThan(callCountAfterUserA);
+    });
+
     it('useHouseholdContext throws when used outside provider', () => {
         // Suppress the expected React error boundary output
         const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
