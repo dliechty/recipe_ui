@@ -191,18 +191,18 @@
 
 ## Phase 10: Onboarding Prompt
 
-- [ ] Task: Write tests for HouseholdOnboardingPrompt component
-    - [ ] Test prompt appears on Meals page for users with no households
-    - [ ] Test prompt does not appear for users already in a household
-    - [ ] Test "Create a Household" opens create dialog
-    - [ ] Test "Join a Household" opens join flow
-    - [ ] Test "Maybe Later" dismisses permanently (persisted in localStorage)
-    - [ ] Test prompt does not reappear after dismissal
-- [ ] Task: Implement HouseholdOnboardingPrompt component
-    - [ ] Create `src/features/households/components/HouseholdOnboardingPrompt.tsx`
-    - [ ] Implement dismissible banner/modal with create, join, and dismiss actions
-    - [ ] Persist dismissal state in localStorage
-- [ ] Task: Integrate onboarding prompt into MealsPage
-    - [ ] Add `HouseholdOnboardingPrompt` to MealsPage (or its Outlet layout)
-    - [ ] Conditionally render based on user household membership and dismissal state
-- [ ] Task: Conductor - User Manual Verification 'Phase 10: Onboarding Prompt' (Protocol in workflow.md)
+- [x] Task: Write tests for HouseholdOnboardingPrompt component [59462e8]
+    - [x] Test prompt appears on Meals page for users with no households
+    - [x] Test prompt does not appear for users already in a household
+    - [x] Test "Create a Household" opens create dialog
+    - [x] Test "Join a Household" opens join flow
+    - [x] Test "Maybe Later" dismisses permanently (persisted in localStorage)
+    - [x] Test prompt does not reappear after dismissal
+- [x] Task: Implement HouseholdOnboardingPrompt component [ad805a0]
+    - [x] Create `src/features/households/components/HouseholdOnboardingPrompt.tsx`
+    - [x] Implement dismissible banner/modal with create, join, and dismiss actions
+    - [x] Persist dismissal state in localStorage
+- [x] Task: Integrate onboarding prompt into MealsPage [8019f13]
+    - [x] Add `HouseholdOnboardingPrompt` to MealsPage (or its Outlet layout)
+    - [x] Conditionally render based on user household membership and dismissal state
+- [~] Task: Conductor - User Manual Verification 'Phase 10: Onboarding Prompt' (Protocol in workflow.md)
