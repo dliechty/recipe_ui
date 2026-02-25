@@ -168,7 +168,7 @@
     - [x] Wire up `AdminHouseholdManagement` component
 - [x] Task: Conductor - User Manual Verification 'Phase 8: Admin Dashboard — Households Tab' (Protocol in workflow.md)
 
-## Phase 9: Admin Operating Mode — Household Compatibility
+## Phase 9: Admin Operating Mode — Household Compatibility [checkpoint: 65831af]
 
 - [x] Task: Write tests for impersonation + household interaction [e028f57]
     - [x] Test household data refetches when impersonated user changes
