@@ -205,4 +205,4 @@
 - [x] Task: Integrate onboarding prompt into MealsPage [8019f13]
     - [x] Add `HouseholdOnboardingPrompt` to MealsPage (or its Outlet layout)
     - [x] Conditionally render based on user household membership and dismissal state
-- [~] Task: Conductor - User Manual Verification 'Phase 10: Onboarding Prompt' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 10: Onboarding Prompt' (Protocol in workflow.md)
