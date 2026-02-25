@@ -187,7 +187,7 @@
 - [x] Task: Verify end-to-end header combinations work correctly [1d17673]
     - [x] Integration test: admin mode + household selection + meal list fetch
     - [x] Integration test: impersonation + household selection + meal list fetch
-- [ ] Task: Conductor - User Manual Verification 'Phase 9: Admin Operating Mode — Household Compatibility' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 9: Admin Operating Mode — Household Compatibility' (Protocol in workflow.md)
 
 ## Phase 10: Onboarding Prompt
 
