@@ -29,5 +29,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Household Support
+## [x] Track: Household Support
 *Link: [./conductor/tracks/households_20260223/](./conductor/tracks/households_20260223/)*
