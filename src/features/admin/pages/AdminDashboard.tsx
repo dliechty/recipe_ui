@@ -3,8 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import AdminPendingRequests from '../components/AdminPendingRequests';
 import AdminUserManagement from '../components/AdminUserManagement.tsx';
 import AdminOperatingMode from '../components/AdminOperatingMode';
+import AdminHouseholdManagement from '../components/AdminHouseholdManagement';
 
-const VALID_TABS = ['users', 'pending', 'operating-mode'] as const;
+const VALID_TABS = ['users', 'pending', 'operating-mode', 'households'] as const;
 type TabValue = typeof VALID_TABS[number];
 
 const AdminDashboard = () => {
@@ -50,6 +51,16 @@ const AdminDashboard = () => {
                     >
                         Operating Mode
                     </Tabs.Trigger>
+                    <Tabs.Trigger
+                        value="households"
+                        px={4}
+                        py={2}
+                        borderBottomWidth="2px"
+                        borderBottomColor="transparent"
+                        _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
+                    >
+                        Households
+                    </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="users">
                     <AdminUserManagement />
@@ -59,6 +70,9 @@ const AdminDashboard = () => {
                 </Tabs.Content>
                 <Tabs.Content value="operating-mode">
                     <AdminOperatingMode />
+                </Tabs.Content>
+                <Tabs.Content value="households">
+                    <AdminHouseholdManagement />
                 </Tabs.Content>
             </Tabs.Root>
         </Container>
