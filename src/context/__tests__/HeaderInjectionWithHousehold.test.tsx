@@ -181,4 +181,216 @@ describe('Header Injection with Household support', () => {
         expect(headers?.['X-Admin-Mode']).toBeUndefined();
         expect(headers?.['X-Act-As-User']).toBeUndefined();
     });
+
+    // --- Dynamic mode switching tests ---
+
+    it('switching from admin mode to impersonation updates headers correctly', async () => {
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(true, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-100')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        // Verify admin mode + household headers
+        let headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Admin-Mode']).toBe('true');
+        expect(headers?.['X-Active-Household']).toBe('hh-100');
+        expect(headers?.['X-Act-As-User']).toBeUndefined();
+
+        // Switch to impersonation mode
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, 'impersonated-user-1')}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-100')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Act-As-User']).toBe('impersonated-user-1');
+        expect(headers?.['X-Active-Household']).toBe('hh-100');
+        expect(headers?.['X-Admin-Mode']).toBeUndefined();
+    });
+
+    it('switching from impersonation to default mode clears admin headers but keeps household', async () => {
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, 'impersonated-user-1')}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-200')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        let headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Act-As-User']).toBe('impersonated-user-1');
+        expect(headers?.['X-Active-Household']).toBe('hh-200');
+
+        // Switch to default mode (no admin, no impersonation)
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-200')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Active-Household']).toBe('hh-200');
+        expect(headers?.['X-Admin-Mode']).toBeUndefined();
+        expect(headers?.['X-Act-As-User']).toBeUndefined();
+    });
+
+    it('switching from default mode to admin mode adds X-Admin-Mode header', async () => {
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-300')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        let headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Active-Household']).toBe('hh-300');
+        expect(headers?.['X-Admin-Mode']).toBeUndefined();
+
+        // Switch to admin mode
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(true, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-300')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Admin-Mode']).toBe('true');
+        expect(headers?.['X-Active-Household']).toBe('hh-300');
+    });
+
+    it('switching household while in admin mode updates only X-Active-Household', async () => {
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(true, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-old')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        let headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Admin-Mode']).toBe('true');
+        expect(headers?.['X-Active-Household']).toBe('hh-old');
+
+        // Switch household
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(true, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-new')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Admin-Mode']).toBe('true');
+        expect(headers?.['X-Active-Household']).toBe('hh-new');
+    });
+
+    it('clearing household while impersonating removes only X-Active-Household', async () => {
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, 'user-abc')}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-999')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        let headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Act-As-User']).toBe('user-abc');
+        expect(headers?.['X-Active-Household']).toBe('hh-999');
+
+        // Clear household
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, 'user-abc')}>
+                <HouseholdContext.Provider value={makeHouseholdValue(null)}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers?.['X-Act-As-User']).toBe('user-abc');
+        expect(headers?.['X-Active-Household']).toBeUndefined();
+    });
+
+    it('full cycle: default -> admin -> impersonation -> default preserves correct headers', async () => {
+        // Start in default mode with a household
+        const { rerender } = render(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-cycle')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+
+        await act(async () => {});
+        let headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers).toEqual({ 'X-Active-Household': 'hh-cycle' });
+
+        // Switch to admin mode
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(true, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-cycle')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+        await act(async () => {});
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers).toEqual({ 'X-Admin-Mode': 'true', 'X-Active-Household': 'hh-cycle' });
+
+        // Switch to impersonation
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, 'target-user')}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-cycle')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+        await act(async () => {});
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers).toEqual({ 'X-Act-As-User': 'target-user', 'X-Active-Household': 'hh-cycle' });
+
+        // Switch back to default
+        rerender(
+            <AdminModeContext.Provider value={makeAdminModeValue(false, null)}>
+                <HouseholdContext.Provider value={makeHouseholdValue('hh-cycle')}>
+                    <HeaderInjector user={adminUser} />
+                </HouseholdContext.Provider>
+            </AdminModeContext.Provider>
+        );
+        await act(async () => {});
+        headers = OpenAPI.HEADERS as Record<string, string> | undefined;
+        expect(headers).toEqual({ 'X-Active-Household': 'hh-cycle' });
+    });
 });
