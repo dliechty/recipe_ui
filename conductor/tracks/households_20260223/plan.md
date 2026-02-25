@@ -166,7 +166,7 @@
 - [x] Task: Integrate Households tab into AdminDashboard [065df0b]
     - [x] Add fourth tab "Households" to `AdminDashboard.tsx`
     - [x] Wire up `AdminHouseholdManagement` component
-- [~] Task: Conductor - User Manual Verification 'Phase 8: Admin Dashboard — Households Tab' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 8: Admin Dashboard — Households Tab' (Protocol in workflow.md)
 
 ## Phase 9: Admin Operating Mode — Household Compatibility
 
