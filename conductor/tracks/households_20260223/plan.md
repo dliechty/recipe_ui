@@ -150,7 +150,7 @@
     - [x] Hide indicators when no household is active
 - [x] Task: Conductor - User Manual Verification 'Phase 7: Meal Templates — Disabled Template Indicator' (Protocol in workflow.md) [c4771cf]
 
-## Phase 8: Admin Dashboard — Households Tab
+## Phase 8: Admin Dashboard — Households Tab [checkpoint: 980fdfc]
 
 - [x] Task: Write tests for AdminHouseholdManagement component [6c8704c]
     - [x] Test displays table of all households (name, creator, member count, created date)
