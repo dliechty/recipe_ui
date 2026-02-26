@@ -12,6 +12,14 @@ import {
 } from '../client';
 import { AdminModeContext } from '../context/AdminModeContext';
 
+/** Custom event dispatched after any household mutation succeeds so that
+ *  listeners (e.g. HouseholdContext) can refetch their data. */
+export const HOUSEHOLD_DATA_CHANGED_EVENT = 'household-data-changed';
+
+function dispatchHouseholdChanged() {
+    window.dispatchEvent(new Event(HOUSEHOLD_DATA_CHANGED_EVENT));
+}
+
 // ---------------------------------------------------------------------------
 // CRUD hooks
 // ---------------------------------------------------------------------------
@@ -48,6 +56,7 @@ export const useCreateHousehold = () => {
         mutationFn: (requestBody) => HouseholdsService.createHouseholdHouseholdsPost(requestBody),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
+            dispatchHouseholdChanged();
         },
     });
 };
@@ -61,6 +70,7 @@ export const useUpdateHousehold = () => {
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
             queryClient.invalidateQueries({ queryKey: ['households', variables.id] });
+            dispatchHouseholdChanged();
         },
     });
 };
@@ -72,6 +82,7 @@ export const useDeleteHousehold = () => {
         mutationFn: (id) => HouseholdsService.deleteHouseholdHouseholdsHouseholdIdDelete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
+            dispatchHouseholdChanged();
         },
     });
 };
@@ -89,6 +100,7 @@ export const useJoinHousehold = () => {
         onSuccess: (_data, householdId) => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
             queryClient.invalidateQueries({ queryKey: ['household-members', householdId] });
+            dispatchHouseholdChanged();
         },
     });
 };
@@ -102,6 +114,7 @@ export const useLeaveHousehold = () => {
         onSuccess: (_data, householdId) => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
             queryClient.invalidateQueries({ queryKey: ['household-members', householdId] });
+            dispatchHouseholdChanged();
         },
     });
 };
@@ -127,6 +140,7 @@ export const useRemoveHouseholdMember = () => {
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
             queryClient.invalidateQueries({ queryKey: ['household-members', variables.householdId] });
+            dispatchHouseholdChanged();
         },
     });
 };
@@ -140,6 +154,7 @@ export const useSetPrimaryHousehold = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['households'] });
             queryClient.invalidateQueries({ queryKey: ['household-members'] });
+            dispatchHouseholdChanged();
         },
     });
 };

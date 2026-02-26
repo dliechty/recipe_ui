@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useRef, ReactNode, useC
 import { useAuth } from './AuthContext';
 import { AdminModeContext } from './AdminModeContext';
 import { HouseholdsService, Household } from '../client';
+import { HOUSEHOLD_DATA_CHANGED_EVENT } from '../hooks/useHouseholds';
 
 const STORAGE_KEY_ACTIVE_HOUSEHOLD = 'active_household_id';
 
@@ -67,7 +68,17 @@ export const HouseholdProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [impersonatedUserId]);
 
-    // Fetch households when user/impersonation context changes
+    // Counter bumped by the custom event to trigger a refetch
+    const [fetchVersion, setFetchVersion] = useState(0);
+
+    // Listen for household-data-changed events from mutation hooks
+    useEffect(() => {
+        const handler = () => setFetchVersion(v => v + 1);
+        window.addEventListener(HOUSEHOLD_DATA_CHANGED_EVENT, handler);
+        return () => window.removeEventListener(HOUSEHOLD_DATA_CHANGED_EVENT, handler);
+    }, []);
+
+    // Fetch households when user/impersonation context changes or when mutations signal a change
     useEffect(() => {
         if (!user) {
             setHouseholds([]);
@@ -146,9 +157,9 @@ export const HouseholdProvider = ({ children }: { children: ReactNode }) => {
         return () => {
             cancelled = true;
         };
-    // Re-fetch when user or impersonation context changes
+    // Re-fetch when user or impersonation context changes, or when a mutation signals a change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user?.id, impersonatedUserId]);
+    }, [user?.id, impersonatedUserId, fetchVersion]);
 
     return (
         <HouseholdContext.Provider
