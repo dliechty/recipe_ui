@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
     Box,
     Button,
@@ -15,8 +15,10 @@ import {
     useUpdateHousehold,
     useDeleteHousehold,
     useRemoveHouseholdMember,
+    useAddHouseholdMember,
 } from '../../../hooks/useHouseholds';
-import { Household, HouseholdMember } from '../../../client';
+import { useUsers } from '../../../hooks/useUsers';
+import { Household, HouseholdMember, UserPublic } from '../../../client';
 
 // ---------------------------------------------------------------------------
 // Sub-component: member list
@@ -24,11 +26,39 @@ import { Household, HouseholdMember } from '../../../client';
 
 const AdminMemberList = ({
     household,
+    allUsers,
 }: {
     household: Household;
+    allUsers: UserPublic[];
 }) => {
     const { data: members = [] } = useHouseholdMembers(household.id);
     const { mutate: removeMember } = useRemoveHouseholdMember();
+    const { mutate: addMember, isPending: isAdding } = useAddHouseholdMember();
+    const [searchValue, setSearchValue] = useState('');
+
+    const memberUserIds = useMemo(
+        () => new Set(members.map((m) => m.user_id)),
+        [members],
+    );
+
+    const filteredUsers = useMemo(() => {
+        if (!searchValue.trim()) return [];
+        const query = searchValue.toLowerCase();
+        return allUsers
+            .filter((u) => !memberUserIds.has(u.id))
+            .filter((u) => {
+                const name = `${u.first_name ?? ''} ${u.last_name ?? ''}`.trim().toLowerCase();
+                return name.includes(query) || u.email.toLowerCase().includes(query);
+            })
+            .slice(0, 5);
+    }, [allUsers, memberUserIds, searchValue]);
+
+    const handleAddMember = (userId: string) => {
+        addMember(
+            { householdId: household.id, userId },
+            { onSuccess: () => setSearchValue('') },
+        );
+    };
 
     return (
         <Box data-testid={`member-list-${household.id}`} mt={3} pl={4}>
@@ -62,6 +92,78 @@ const AdminMemberList = ({
                     );
                 })}
             </VStack>
+
+            {/* Add member */}
+            <Box mt={3}>
+                <Text fontSize="xs" color="fg.muted" mb={1} textTransform="uppercase" letterSpacing="wider">
+                    Add Member
+                </Text>
+                <Input
+                    data-testid={`add-member-search-${household.id}`}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder="Search users by name or email"
+                    size="sm"
+                    bg="vscode.inputBg"
+                    borderColor="border.default"
+                    color="fg.default"
+                    _hover={{ borderColor: 'vscode.accent' }}
+                    _focus={{
+                        borderColor: 'vscode.accent',
+                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
+                    }}
+                    disabled={isAdding}
+                />
+                {filteredUsers.length > 0 && (
+                    <VStack
+                        align="stretch"
+                        gap={0}
+                        mt={1}
+                        borderWidth={1}
+                        borderColor="border.default"
+                        borderRadius="md"
+                        overflow="hidden"
+                    >
+                        {filteredUsers.map((user) => {
+                            const name = `${user.first_name ?? ''} ${user.last_name ?? ''}`.trim();
+                            return (
+                                <HStack
+                                    key={user.id}
+                                    data-testid={`add-member-option-${household.id}-${user.id}`}
+                                    justify="space-between"
+                                    align="center"
+                                    px={3}
+                                    py={2}
+                                    bg="bg.muted"
+                                    _hover={{ bg: 'whiteAlpha.100' }}
+                                    cursor="pointer"
+                                    onClick={() => handleAddMember(user.id)}
+                                >
+                                    <VStack align="start" gap={0}>
+                                        {name && (
+                                            <Text fontSize="sm" color="fg.default">{name}</Text>
+                                        )}
+                                        <Text fontSize="xs" color="fg.muted">{user.email}</Text>
+                                    </VStack>
+                                    <Button
+                                        size="2xs"
+                                        bg="vscode.button"
+                                        color="white"
+                                        _hover={{ bg: 'vscode.buttonHover' }}
+                                        disabled={isAdding}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleAddMember(user.id);
+                                        }}
+                                    >
+                                        Add
+                                    </Button>
+                                </HStack>
+                            );
+                        })}
+                    </VStack>
+                )}
+            </Box>
         </Box>
     );
 };
@@ -72,11 +174,12 @@ const AdminMemberList = ({
 
 interface AdminHouseholdRowProps {
     household: Household;
+    allUsers: UserPublic[];
     onDelete: (id: string) => void;
     onRename: (id: string, name: string) => void;
 }
 
-const AdminHouseholdRow = ({ household, onDelete, onRename }: AdminHouseholdRowProps) => {
+const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHouseholdRowProps) => {
     const { data: members = [] } = useHouseholdMembers(household.id);
     const [showMembers, setShowMembers] = useState(false);
     const [renameValue, setRenameValue] = useState(household.name);
@@ -192,7 +295,7 @@ const AdminHouseholdRow = ({ household, onDelete, onRename }: AdminHouseholdRowP
 
             {/* Expanded member list */}
             {showMembers && (
-                <AdminMemberList household={household} />
+                <AdminMemberList household={household} allUsers={allUsers} />
             )}
         </Box>
     );
@@ -204,6 +307,7 @@ const AdminHouseholdRow = ({ household, onDelete, onRename }: AdminHouseholdRowP
 
 const AdminHouseholdManagement = () => {
     const { data: households = [] } = useHouseholds({ adminMode: true });
+    const { data: allUsers = [] } = useUsers();
     const { mutate: createHousehold, isPending: isCreating } = useCreateHousehold();
     const { mutate: updateHousehold } = useUpdateHousehold();
     const { mutate: deleteHousehold } = useDeleteHousehold();
@@ -275,6 +379,7 @@ const AdminHouseholdManagement = () => {
                             <AdminHouseholdRow
                                 key={household.id}
                                 household={household}
+                                allUsers={allUsers}
                                 onDelete={handleDeleteClick}
                                 onRename={handleRename}
                             />

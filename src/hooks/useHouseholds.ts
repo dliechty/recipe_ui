@@ -145,6 +145,20 @@ export const useRemoveHouseholdMember = () => {
     });
 };
 
+/** Add a user to a household (admin). */
+export const useAddHouseholdMember = () => {
+    const queryClient = useQueryClient();
+    return useMutation<HouseholdMember, Error, { householdId: string; userId: string }>({
+        mutationFn: ({ householdId, userId }) =>
+            HouseholdsService.addMemberHouseholdsHouseholdIdMembersUserIdPost(householdId, userId, 'true'),
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['households'] });
+            queryClient.invalidateQueries({ queryKey: ['household-members', variables.householdId] });
+            dispatchHouseholdChanged();
+        },
+    });
+};
+
 /** Set or clear the current user's primary household. */
 export const useSetPrimaryHousehold = () => {
     const queryClient = useQueryClient();

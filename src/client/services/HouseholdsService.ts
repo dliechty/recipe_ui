@@ -268,6 +268,41 @@ export class HouseholdsService {
         });
     }
     /**
+     * Add Member
+     * Add a user to a household. Requires admin mode.
+     * @param householdId
+     * @param userId
+     * @param xAdminMode
+     * @param xActAsUser
+     * @param xActiveHousehold
+     * @returns HouseholdMember Successful Response
+     * @throws ApiError
+     */
+    public static addMemberHouseholdsHouseholdIdMembersUserIdPost(
+        householdId: string,
+        userId: string,
+        xAdminMode?: (string | null),
+        xActAsUser?: (string | null),
+        xActiveHousehold?: (string | null),
+    ): CancelablePromise<HouseholdMember> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/households/{household_id}/members/{user_id}',
+            path: {
+                'household_id': householdId,
+                'user_id': userId,
+            },
+            headers: {
+                'X-Admin-Mode': xAdminMode,
+                'X-Act-As-User': xActAsUser,
+                'X-Active-Household': xActiveHousehold,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
      * Remove Member
      * @param householdId
      * @param userId

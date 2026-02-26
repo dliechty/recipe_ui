@@ -1347,6 +1347,48 @@ export const handlers = [
         return HttpResponse.json(enrichedMembers);
     }),
 
+    // POST /households/:household_id/members/:user_id  (admin add member)
+    http.post('*/households/:household_id/members/:user_id', ({ params }) => {
+        const { household_id, user_id } = params;
+        const household = householdsStore.find(h => h.id === household_id);
+        if (!household) {
+            return new HttpResponse(null, { status: 404 });
+        }
+
+        const alreadyMember = householdMembersStore.some(
+            m => m.household_id === household_id && m.user_id === user_id
+        );
+        if (alreadyMember) {
+            return HttpResponse.json({ detail: 'User is already a member' }, { status: 400 });
+        }
+
+        const newMember = {
+            id: `mem-${Date.now()}`,
+            household_id: household_id as string,
+            user_id: user_id as string,
+            is_primary: false,
+            joined_at: new Date().toISOString(),
+        };
+        householdMembersStore.push(newMember);
+
+        const user = usersStore.find(u => u.id === user_id);
+        const enriched: HouseholdMember = {
+            id: newMember.id,
+            user_id: newMember.user_id,
+            is_primary: newMember.is_primary,
+            joined_at: newMember.joined_at,
+            user: user ? {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                is_admin: user.is_admin
+            } : { id: newMember.user_id, email: '', first_name: '', last_name: '' }
+        };
+
+        return HttpResponse.json(enriched, { status: 201 });
+    }),
+
     // DELETE /households/:household_id/members/:user_id
     http.delete('*/households/:household_id/members/:user_id', ({ params }) => {
         const { household_id, user_id } = params;

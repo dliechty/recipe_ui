@@ -11,6 +11,7 @@ const mockCreateMutate = vi.fn();
 const mockUpdateMutate = vi.fn();
 const mockDeleteMutate = vi.fn();
 const mockRemoveMemberMutate = vi.fn();
+const mockAddMemberMutate = vi.fn();
 
 interface MockHouseholdMembersMap {
     [householdId: string]: HouseholdMember[];
@@ -18,6 +19,7 @@ interface MockHouseholdMembersMap {
 
 let mockHouseholds: Household[] = [];
 let mockMembersMap: MockHouseholdMembersMap = {};
+let mockAllUsers: UserPublic[] = [];
 
 const mockUseHouseholds = vi.fn();
 
@@ -45,6 +47,17 @@ vi.mock('../../../../hooks/useHouseholds', () => ({
     useRemoveHouseholdMember: () => ({
         mutate: mockRemoveMemberMutate,
         isPending: false,
+    }),
+    useAddHouseholdMember: () => ({
+        mutate: mockAddMemberMutate,
+        isPending: false,
+    }),
+}));
+
+vi.mock('../../../../hooks/useUsers', () => ({
+    useUsers: () => ({
+        data: mockAllUsers,
+        isLoading: false,
     }),
 }));
 
@@ -135,6 +148,11 @@ describe('AdminHouseholdManagement', () => {
             hh1: [member1hh1, member2hh1],
             hh2: [member2hh2],
         };
+        mockAllUsers = [
+            mockUserData['user-1'],
+            mockUserData['user-2'],
+            { id: 'user-3', email: 'charlie@example.com', first_name: 'Charlie', last_name: 'Brown' },
+        ];
     });
 
     // -------------------------------------------------------------------------
@@ -322,5 +340,54 @@ describe('AdminHouseholdManagement', () => {
 
         // Verify useHouseholds was called with adminMode: true so all households are fetched
         expect(mockUseHouseholds).toHaveBeenCalledWith({ adminMode: true });
+    });
+
+    // -------------------------------------------------------------------------
+    // Add member
+    // -------------------------------------------------------------------------
+
+    test('shows add member search and calls useAddHouseholdMember when a user is selected', async () => {
+        renderComponent();
+
+        // Expand members for hh2 (which only has user-2)
+        fireEvent.click(screen.getByTestId('view-members-btn-hh2'));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('member-list-hh2')).toBeInTheDocument();
+        });
+
+        // Search for a user not yet in hh2
+        const searchInput = screen.getByTestId('add-member-search-hh2');
+        fireEvent.change(searchInput, { target: { value: 'alice' } });
+
+        // Alice should appear as an option (she's not in hh2)
+        await waitFor(() => {
+            expect(screen.getByTestId('add-member-option-hh2-user-1')).toBeInTheDocument();
+        });
+
+        // Click the Add button
+        fireEvent.click(screen.getByTestId('add-member-option-hh2-user-1'));
+
+        expect(mockAddMemberMutate).toHaveBeenCalledWith(
+            { householdId: 'hh2', userId: 'user-1' },
+            expect.any(Object),
+        );
+    });
+
+    test('does not show existing members in add member search results', async () => {
+        renderComponent();
+
+        // Expand members for hh2 (which has user-2 / Bob)
+        fireEvent.click(screen.getByTestId('view-members-btn-hh2'));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('member-list-hh2')).toBeInTheDocument();
+        });
+
+        // Search for "bob" — should not appear since Bob is already a member
+        const searchInput = screen.getByTestId('add-member-search-hh2');
+        fireEvent.change(searchInput, { target: { value: 'bob' } });
+
+        expect(screen.queryByTestId('add-member-option-hh2-user-2')).not.toBeInTheDocument();
     });
 });
