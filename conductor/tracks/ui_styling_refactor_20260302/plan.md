@@ -8,15 +8,15 @@
     - [x] Test that no semantic category has gaps (every status has fg/bg/border variants)
     - [x] Run tests and confirm they fail (Red Phase)
 
-- [ ] Task: Expand semantic tokens in theme.ts
-    - [ ] Add `button.text` token mapped to white
-    - [ ] Add `status.warning`, `status.warningBg`, `status.warningBorder` semantic tokens
-    - [ ] Add `link.default`, `link.hover` tokens
-    - [ ] Add `danger.fg`, `danger.bg`, `danger.bgHover` tokens
-    - [ ] Add `success.fg`, `success.bg`, `success.bgHover` tokens
-    - [ ] Add `info.fg`, `info.bg` tokens
-    - [ ] Add badge-level tokens for role/status indicators (e.g., `badge.admin`, `badge.member`, `badge.pending`)
-    - [ ] Run tests and confirm they pass (Green Phase)
+- [x] Task: Expand semantic tokens in theme.ts [61dece3]
+    - [x] Add `button.text` token mapped to white
+    - [x] Add `status.warning`, `status.warningBg`, `status.warningBorder` semantic tokens
+    - [x] Add `link.default`, `link.hover` tokens
+    - [x] Add `danger.fg`, `danger.bg`, `danger.bgHover` tokens
+    - [x] Add `success.fg`, `success.bg`, `success.bgHover` tokens
+    - [x] Add `info.fg`, `info.bg` tokens
+    - [x] Add badge-level tokens for role/status indicators (e.g., `badge.admin`, `badge.member`, `badge.pending`)
+    - [x] Run tests and confirm they pass (Green Phase)
 
 - [ ] Task: Write tests for single source of truth between theme.ts and styles.ts
     - [ ] Test that styles.ts themeColors values match theme.ts token values
