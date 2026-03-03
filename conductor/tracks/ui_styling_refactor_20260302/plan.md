@@ -42,7 +42,7 @@
     - [ ] Test that button style utilities (primary, danger, success, secondary) export correct token references
     - [ ] Run tests and confirm they fail (Red Phase)
 
-- [~] Task: Implement shared style utilities in styles.ts
+- [x] Task: Implement shared style utilities in styles.ts [95858e9]
     - [ ] Create `inputStyles` object with bg, borderColor, _hover, _focus properties using semantic tokens
     - [ ] Create `focusRingStyles` for the common focus ring pattern
     - [ ] Create `buttonStyles.primary`, `buttonStyles.danger`, `buttonStyles.success`, `buttonStyles.secondary` objects
@@ -50,7 +50,7 @@
     - [ ] Export `scrollbarStyles` if not already exported
     - [ ] Run tests and confirm they pass (Green Phase)
 
-- [ ] Task: Migrate components to use shared input styles
+- [~] Task: Migrate components to use shared input styles
     - [ ] Replace all local `const inputStyles` definitions across filter components with import from styles.ts
     - [ ] Replace all inline `_focus={{ borderColor: 'vscode.accent', boxShadow: '...' }}` patterns (25+ instances) with shared utility
     - [ ] Replace `fontSize="0.875rem"` in RecipeList.tsx with `"sm"` token
