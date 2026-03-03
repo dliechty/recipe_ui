@@ -236,45 +236,61 @@ describe("styles.ts themeColors single source of truth", () => {
     );
 
     it("styles.ts imports color values from theme.ts (not hard-coded)", () => {
-      // Extract just the themeColors object from the source
-      const themeColorsMatch = stylesSource.match(
+      // If themeColors is defined as an object literal, check for hard-coded hex values.
+      // If it's a simple assignment from an import (e.g., `= vsCodeColors`), that's already derived.
+      const themeColorsObjectMatch = stylesSource.match(
         /export\s+const\s+themeColors\s*=\s*\{([\s\S]*?)\}\s*as\s+const/,
       );
-      expect(
-        themeColorsMatch,
-        "Should find themeColors declaration in styles.ts",
-      ).toBeTruthy();
 
-      const themeColorsBody = themeColorsMatch![1];
+      if (themeColorsObjectMatch) {
+        const themeColorsBody = themeColorsObjectMatch[1];
 
-      // Check for hard-coded hex values like '#1e1e1e' or "#1e1e1e"
-      const hexPattern = /['"]#[0-9a-fA-F]{3,8}['"]/g;
-      const hexMatches = themeColorsBody.match(hexPattern) || [];
+        // Check for hard-coded hex values like '#1e1e1e' or "#1e1e1e"
+        const hexPattern = /['"]#[0-9a-fA-F]{3,8}['"]/g;
+        const hexMatches = themeColorsBody.match(hexPattern) || [];
 
-      expect(
-        hexMatches.length,
-        `themeColors should not contain hard-coded hex values, but found: ${hexMatches.join(", ")}. ` +
-          `Values should be derived from theme.ts tokens.`,
-      ).toBe(0);
+        expect(
+          hexMatches.length,
+          `themeColors should not contain hard-coded hex values, but found: ${hexMatches.join(", ")}. ` +
+            `Values should be derived from theme.ts tokens.`,
+        ).toBe(0);
+      } else {
+        // themeColors is not an object literal — verify it's assigned from an imported value
+        const derivedPattern =
+          /export\s+const\s+themeColors\s*=\s*[a-zA-Z_]\w*/;
+        expect(
+          derivedPattern.test(stylesSource),
+          "themeColors should be derived from an imported value",
+        ).toBe(true);
+      }
     });
 
     it("styles.ts imports color values from theme.ts (not hard-coded rgba)", () => {
-      const themeColorsMatch = stylesSource.match(
+      const themeColorsObjectMatch = stylesSource.match(
         /export\s+const\s+themeColors\s*=\s*\{([\s\S]*?)\}\s*as\s+const/,
       );
-      expect(themeColorsMatch).toBeTruthy();
 
-      const themeColorsBody = themeColorsMatch![1];
+      if (themeColorsObjectMatch) {
+        const themeColorsBody = themeColorsObjectMatch[1];
 
-      // Check for hard-coded rgba values
-      const rgbaPattern = /['"]rgba\([^)]+\)['"]/g;
-      const rgbaMatches = themeColorsBody.match(rgbaPattern) || [];
+        // Check for hard-coded rgba values
+        const rgbaPattern = /['"]rgba\([^)]+\)['"]/g;
+        const rgbaMatches = themeColorsBody.match(rgbaPattern) || [];
 
-      expect(
-        rgbaMatches.length,
-        `themeColors should not contain hard-coded rgba values, but found: ${rgbaMatches.join(", ")}. ` +
-          `Values should be derived from theme.ts tokens.`,
-      ).toBe(0);
+        expect(
+          rgbaMatches.length,
+          `themeColors should not contain hard-coded rgba values, but found: ${rgbaMatches.join(", ")}. ` +
+            `Values should be derived from theme.ts tokens.`,
+        ).toBe(0);
+      } else {
+        // themeColors is not an object literal — it's derived, so no hard-coded rgba possible
+        const derivedPattern =
+          /export\s+const\s+themeColors\s*=\s*[a-zA-Z_]\w*/;
+        expect(
+          derivedPattern.test(stylesSource),
+          "themeColors should be derived from an imported value",
+        ).toBe(true);
+      }
     });
 
     it("styles.ts imports from theme.ts", () => {

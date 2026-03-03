@@ -1,44 +1,93 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
 
+/**
+ * Raw VS Code-inspired color values — the single source of truth for all color definitions.
+ * Imported by styles.ts (for non-Chakra components like react-select) and used below
+ * to define Chakra UI design tokens.
+ */
+export const vsCodeColors = {
+    // Core colors
+    bg: "#1e1e1e",
+    surface: "#252526",
+    border: "#454545",
+    text: "#d4d4d4",
+    textMuted: "#a0a0a0",
+    accent: "#007acc",
+    button: "#0e639c",
+    buttonHover: "#1177bb",
+    buttonText: "#ffffff",
+    inputBg: "#3c3c3c",
+    // Status colors (dark theme friendly)
+    errorBg: "#4a1515",
+    errorText: "#f8b4b4",
+    errorBorder: "#7f1d1d",
+    successBg: "#14532d",
+    successText: "#86efac",
+    successBorder: "#166534",
+    warningBg: "#713f12",
+    warningText: "#fde68a",
+    warningBorder: "#854d0e",
+    // Button variants
+    dangerButton: "#b91c1c",
+    dangerButtonHover: "#991b1b",
+    successButton: "#15803d",
+    successButtonHover: "#166534",
+    secondaryButton: "#4b5563",
+    secondaryButtonHover: "#374151",
+    // Info
+    infoBg: "#1e3a5f",
+    // Badge
+    badgeAdmin: "#007acc",
+    badgeMember: "#15803d",
+    badgePending: "#854d0e",
+    // Overlay
+    backdrop: "rgba(0, 0, 0, 0.6)",
+    // Shadows
+    menuShadow: "rgba(0, 0, 0, 0.4)",
+} as const;
+
 const config = defineConfig({
     theme: {
         tokens: {
             colors: {
                 vscode: {
-                    bg: { value: "#1e1e1e" },
-                    surface: { value: "#252526" },
-                    border: { value: "#454545" },
-                    text: { value: "#d4d4d4" },
-                    textMuted: { value: "#a0a0a0" },
-                    accent: { value: "#007acc" },
-                    button: { value: "#0e639c" },
-                    buttonHover: { value: "#1177bb" },
-                    inputBg: { value: "#3c3c3c" },
+                    bg: { value: vsCodeColors.bg },
+                    surface: { value: vsCodeColors.surface },
+                    border: { value: vsCodeColors.border },
+                    text: { value: vsCodeColors.text },
+                    textMuted: { value: vsCodeColors.textMuted },
+                    accent: { value: vsCodeColors.accent },
+                    button: { value: vsCodeColors.button },
+                    buttonHover: { value: vsCodeColors.buttonHover },
+                    buttonText: { value: vsCodeColors.buttonText },
+                    inputBg: { value: vsCodeColors.inputBg },
                     // Status colors (dark theme friendly)
-                    errorBg: { value: "#4a1515" },
-                    errorText: { value: "#f8b4b4" },
-                    errorBorder: { value: "#7f1d1d" },
-                    successBg: { value: "#14532d" },
-                    successText: { value: "#86efac" },
-                    successBorder: { value: "#166534" },
-                    warningBg: { value: "#713f12" },
-                    warningText: { value: "#fde68a" },
-                    warningBorder: { value: "#854d0e" },
+                    errorBg: { value: vsCodeColors.errorBg },
+                    errorText: { value: vsCodeColors.errorText },
+                    errorBorder: { value: vsCodeColors.errorBorder },
+                    successBg: { value: vsCodeColors.successBg },
+                    successText: { value: vsCodeColors.successText },
+                    successBorder: { value: vsCodeColors.successBorder },
+                    warningBg: { value: vsCodeColors.warningBg },
+                    warningText: { value: vsCodeColors.warningText },
+                    warningBorder: { value: vsCodeColors.warningBorder },
                     // Button variants
-                    dangerButton: { value: "#b91c1c" },
-                    dangerButtonHover: { value: "#991b1b" },
-                    successButton: { value: "#15803d" },
-                    successButtonHover: { value: "#166534" },
-                    secondaryButton: { value: "#4b5563" },
-                    secondaryButtonHover: { value: "#374151" },
+                    dangerButton: { value: vsCodeColors.dangerButton },
+                    dangerButtonHover: { value: vsCodeColors.dangerButtonHover },
+                    successButton: { value: vsCodeColors.successButton },
+                    successButtonHover: { value: vsCodeColors.successButtonHover },
+                    secondaryButton: { value: vsCodeColors.secondaryButton },
+                    secondaryButtonHover: { value: vsCodeColors.secondaryButtonHover },
                     // Info
-                    infoBg: { value: "#1e3a5f" },
+                    infoBg: { value: vsCodeColors.infoBg },
                     // Badge
-                    badgeAdmin: { value: "#007acc" },
-                    badgeMember: { value: "#15803d" },
-                    badgePending: { value: "#854d0e" },
+                    badgeAdmin: { value: vsCodeColors.badgeAdmin },
+                    badgeMember: { value: vsCodeColors.badgeMember },
+                    badgePending: { value: vsCodeColors.badgePending },
                     // Overlay
-                    backdrop: { value: "rgba(0, 0, 0, 0.6)" },
+                    backdrop: { value: vsCodeColors.backdrop },
+                    // Shadows
+                    menuShadow: { value: vsCodeColors.menuShadow },
                 },
             },
         },
@@ -78,7 +127,7 @@ const config = defineConfig({
                     dangerHover: { value: "{colors.vscode.dangerButtonHover}" },
                     success: { value: "{colors.vscode.successButton}" },
                     successHover: { value: "{colors.vscode.successButtonHover}" },
-                    text: { value: "#ffffff" },
+                    text: { value: "{colors.vscode.buttonText}" },
                 },
                 // Link semantic tokens
                 link: {

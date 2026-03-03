@@ -1,37 +1,11 @@
 import type { StylesConfig, CSSObjectWithLabel } from 'react-select';
+import { vsCodeColors } from '../theme';
 
 /**
  * Centralized theme color constants for use in non-Chakra components (e.g., react-select).
- * These values mirror the theme tokens defined in src/theme.ts.
+ * Derived from the vsCodeColors source of truth exported by src/theme.ts.
  */
-export const themeColors = {
-    // Core colors
-    bg: '#1e1e1e',
-    surface: '#252526',
-    border: '#454545',
-    text: '#d4d4d4',
-    textMuted: '#a0a0a0',
-    accent: '#007acc',
-    button: '#0e639c',
-    buttonHover: '#1177bb',
-    inputBg: '#3c3c3c',
-    // Status colors
-    errorBg: '#4a1515',
-    errorText: '#f8b4b4',
-    errorBorder: '#7f1d1d',
-    successBg: '#14532d',
-    successText: '#86efac',
-    successBorder: '#166534',
-    // Button variants
-    dangerButton: '#b91c1c',
-    dangerButtonHover: '#991b1b',
-    successButton: '#15803d',
-    successButtonHover: '#166534',
-    secondaryButton: '#4b5563',
-    secondaryButtonHover: '#374151',
-    // Overlay
-    backdrop: 'rgba(0, 0, 0, 0.6)',
-} as const;
+export const themeColors = vsCodeColors;
 
 /**
  * CSS variable for scrollbar styling in dark theme
@@ -103,7 +77,7 @@ export function createSelectStyles<Option, IsMulti extends boolean = false>(
             zIndex: menuZIndex,
             border: `1px solid ${themeColors.border}`,
             marginTop: '2px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.4)'
+            boxShadow: `0 4px 6px -1px ${themeColors.menuShadow}`
         } as CSSObjectWithLabel),
         ...(usePortal && {
             menuPortal: (provided) => ({
@@ -118,7 +92,7 @@ export function createSelectStyles<Option, IsMulti extends boolean = false>(
                 : state.isFocused
                     ? themeColors.border
                     : 'transparent',
-            color: state.isSelected ? 'white' : themeColors.text,
+            color: state.isSelected ? themeColors.buttonText : themeColors.text,
             cursor: 'pointer',
             fontSize,
             ':active': {
@@ -131,14 +105,14 @@ export function createSelectStyles<Option, IsMulti extends boolean = false>(
         } as CSSObjectWithLabel),
         multiValueLabel: (provided) => ({
             ...provided,
-            color: '#ffffff',
+            color: themeColors.buttonText,
         } as CSSObjectWithLabel),
         multiValueRemove: (provided) => ({
             ...provided,
-            color: '#ffffff',
+            color: themeColors.buttonText,
             ':hover': {
                 backgroundColor: themeColors.buttonHover,
-                color: '#ffffff',
+                color: themeColors.buttonText,
             },
         } as CSSObjectWithLabel),
         input: (provided) => ({
