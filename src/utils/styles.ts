@@ -31,6 +31,74 @@ export const nativeSelectOptionsCss = {
     }
 } as const;
 
+/**
+ * Common focus ring styles for hover and focus states.
+ * Use this to add consistent focus ring behavior to any Chakra component.
+ */
+export const focusRingStyles = {
+    _hover: { borderColor: 'vscode.accent' },
+    _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
+} as const;
+
+/**
+ * Shared input styles for Chakra UI input components (Input, Textarea, Select, etc.).
+ * Replaces local `const inputStyles` definitions across filter and form components.
+ */
+export const inputStyles = {
+    bg: "vscode.inputBg",
+    borderColor: "border.default",
+    color: "fg.default",
+    ...focusRingStyles,
+} as const;
+
+/**
+ * Shared button style variants using semantic tokens.
+ * Use with spread: `<Button {...buttonStyles.primary}>`.
+ */
+export const buttonStyles = {
+    primary: {
+        bg: "button.primary",
+        _hover: { bg: "button.primaryHover" },
+        color: "button.text",
+    },
+    danger: {
+        bg: "button.danger",
+        _hover: { bg: "button.dangerHover" },
+        color: "button.text",
+    },
+    success: {
+        bg: "button.success",
+        _hover: { bg: "button.successHover" },
+        color: "button.text",
+    },
+    secondary: {
+        bg: "button.secondary",
+        _hover: { bg: "button.secondaryHover" },
+        color: "button.text",
+    },
+} as const;
+
+/**
+ * Custom scrollbar styling for dark theme containers.
+ */
+export const scrollbarStyles = {
+    '&::-webkit-scrollbar': {
+        width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+        background: 'transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        backgroundColor: themeColors.border,
+        borderRadius: '4px',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+        backgroundColor: themeColors.textMuted,
+    },
+    scrollbarWidth: 'thin' as const,
+    scrollbarColor: `${themeColors.border} transparent`,
+} as const;
+
 interface SelectStylesOptions {
     /** Minimum height of the control (default: '40px') */
     minHeight?: string;
