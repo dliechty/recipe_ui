@@ -31,6 +31,12 @@ const config = defineConfig({
                     successButtonHover: { value: "#166534" },
                     secondaryButton: { value: "#4b5563" },
                     secondaryButtonHover: { value: "#374151" },
+                    // Info
+                    infoBg: { value: "#1e3a5f" },
+                    // Badge
+                    badgeAdmin: { value: "#007acc" },
+                    badgeMember: { value: "#15803d" },
+                    badgePending: { value: "#854d0e" },
                     // Overlay
                     backdrop: { value: "rgba(0, 0, 0, 0.6)" },
                 },
@@ -72,6 +78,35 @@ const config = defineConfig({
                     dangerHover: { value: "{colors.vscode.dangerButtonHover}" },
                     success: { value: "{colors.vscode.successButton}" },
                     successHover: { value: "{colors.vscode.successButtonHover}" },
+                    text: { value: "#ffffff" },
+                },
+                // Link semantic tokens
+                link: {
+                    default: { value: "{colors.vscode.accent}" },
+                    hover: { value: "{colors.vscode.buttonHover}" },
+                },
+                // Danger semantic tokens
+                danger: {
+                    fg: { value: "{colors.vscode.errorText}" },
+                    bg: { value: "{colors.vscode.dangerButton}" },
+                    bgHover: { value: "{colors.vscode.dangerButtonHover}" },
+                },
+                // Success semantic tokens
+                success: {
+                    fg: { value: "{colors.vscode.successText}" },
+                    bg: { value: "{colors.vscode.successButton}" },
+                    bgHover: { value: "{colors.vscode.successButtonHover}" },
+                },
+                // Info semantic tokens
+                info: {
+                    fg: { value: "{colors.vscode.accent}" },
+                    bg: { value: "{colors.vscode.infoBg}" },
+                },
+                // Badge semantic tokens
+                badge: {
+                    admin: { value: "{colors.vscode.badgeAdmin}" },
+                    member: { value: "{colors.vscode.badgeMember}" },
+                    pending: { value: "{colors.vscode.badgePending}" },
                 },
                 // Overlay semantic tokens
                 overlay: {
