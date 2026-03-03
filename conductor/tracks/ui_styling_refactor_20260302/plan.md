@@ -62,7 +62,7 @@
     - [ ] Verify all native `<select>` elements across the codebase use consistent styling
     - [ ] Run full test suite to verify no regressions
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Shared Style Utilities' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Shared Style Utilities' (Protocol in workflow.md)
 
 ## Phase 3: Component Color Migration [FR-1.3, FR-1.4, FR-3]
 
