@@ -56,7 +56,7 @@
     - [ ] Replace `fontSize="0.875rem"` in RecipeList.tsx with `"sm"` token
     - [ ] Run full test suite to verify no regressions
 
-- [~] Task: Migrate native select elements to use shared styles
+- [x] Task: Migrate native select elements to use shared styles [e231875]
     - [ ] Fix MealDetails.tsx:307 hard-coded hex colors on native `<select>` to use nativeSelectStyles
     - [ ] Fix GenerateMealsModal.tsx CSS variable fallbacks to use correct theme values
     - [ ] Verify all native `<select>` elements across the codebase use consistent styling
