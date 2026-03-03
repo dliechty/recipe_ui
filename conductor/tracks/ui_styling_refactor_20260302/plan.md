@@ -2,11 +2,11 @@
 
 ## Phase 1: Theme Token System Completion [FR-1]
 
-- [ ] Task: Write tests for expanded semantic token system
-    - [ ] Create test file for theme token validation
-    - [ ] Test that all new semantic tokens (button.text, status.warning*, link.*, danger.*, success.*, info.*, badge.*) resolve to valid color values
-    - [ ] Test that no semantic category has gaps (every status has fg/bg/border variants)
-    - [ ] Run tests and confirm they fail (Red Phase)
+- [x] Task: Write tests for expanded semantic token system [0eeb6e5]
+    - [x] Create test file for theme token validation
+    - [x] Test that all new semantic tokens (button.text, status.warning*, link.*, danger.*, success.*, info.*, badge.*) resolve to valid color values
+    - [x] Test that no semantic category has gaps (every status has fg/bg/border variants)
+    - [x] Run tests and confirm they fail (Red Phase)
 
 - [ ] Task: Expand semantic tokens in theme.ts
     - [ ] Add `button.text` token mapped to white
