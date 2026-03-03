@@ -31,7 +31,7 @@
     - [x] Run tests and confirm they pass (Green Phase)
     - [x] Run `npm run lint` and `npx tsc --noEmit` to verify no regressions
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Theme Token System Completion' (Protocol in workflow.md)
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Theme Token System Completion' (Protocol in workflow.md)
 
 ## Phase 2: Shared Style Utilities [FR-2]
 
