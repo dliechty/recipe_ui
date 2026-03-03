@@ -18,10 +18,10 @@
     - [x] Add badge-level tokens for role/status indicators (e.g., `badge.admin`, `badge.member`, `badge.pending`)
     - [x] Run tests and confirm they pass (Green Phase)
 
-- [ ] Task: Write tests for single source of truth between theme.ts and styles.ts
-    - [ ] Test that styles.ts themeColors values match theme.ts token values
-    - [ ] Test that styles.ts does not contain independent hex definitions
-    - [ ] Run tests and confirm they fail (Red Phase)
+- [x] Task: Write tests for single source of truth between theme.ts and styles.ts [f011141]
+    - [x] Test that styles.ts themeColors values match theme.ts token values
+    - [x] Test that styles.ts does not contain independent hex definitions
+    - [x] Run tests and confirm they fail (Red Phase)
 
 - [ ] Task: Eliminate duplicate color definitions in styles.ts
     - [ ] Refactor `themeColors` in styles.ts to derive values from theme.ts tokens or a shared constants file
