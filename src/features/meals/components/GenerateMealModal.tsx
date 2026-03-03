@@ -10,6 +10,7 @@ import {
     Input
 } from '@chakra-ui/react';
 import { FaTimes } from 'react-icons/fa';
+import { inputStyles } from '../../../utils/styles';
 
 interface GenerateMealModalProps {
     isOpen: boolean;
@@ -105,12 +106,8 @@ const GenerateMealModal = ({
                             value={selectedDate} 
                             onChange={(e) => setSelectedDate(e.target.value)}
                             disabled={isGenerating}
-                            bg="vscode.inputBg"
-                            borderColor="border.default"
-                            color="fg.default"
+                            {...inputStyles}
                             css={{ colorScheme: 'dark' }}
-                            _hover={{ borderColor: 'vscode.accent' }}
-                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                         />
                         <Text fontSize="xs" color="fg.muted" mt={1}>
                             Leave blank to create without a scheduled date.

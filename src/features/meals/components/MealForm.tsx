@@ -12,7 +12,7 @@ import {
 import Select from 'react-select';
 import { MealCreate, MealStatus, MealClassification, MealItemBase } from '../../../client';
 import RecipeSearchSelector from './RecipeSearchSelector';
-import { selectStyles } from '../../../utils/styles';
+import { selectStyles, inputStyles } from '../../../utils/styles';
 
 interface MealFormProps {
     onSubmit: (data: MealCreate) => void;
@@ -137,13 +137,8 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 type="date"
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                colorScheme="dark"
+                                {...inputStyles}
                                 css={{ colorScheme: 'dark' }}
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                         </Box>
                     </SimpleGrid>

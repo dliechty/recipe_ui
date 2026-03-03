@@ -11,6 +11,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { AuthenticationService } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -82,11 +83,7 @@ const LoginPage = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 required
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box w="full">
@@ -99,11 +96,7 @@ const LoginPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
                                 required
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Button

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus, FaGripVertical } from 'react-icons/fa';
 import { InstructionCreate } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 import {
     DndContext,
     closestCenter,
@@ -97,11 +98,7 @@ const SortableInstructionRow = ({
                     placeholder={`Step ${index + 1}`}
                     value={instruction.text}
                     onChange={(e) => handleInstructionChange(index, e.target.value)}
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    {...inputStyles}
                     rows={2}
                     resize="vertical"
                 />

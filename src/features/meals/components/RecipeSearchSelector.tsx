@@ -18,6 +18,7 @@ import RecipeMultiSelect from '../../recipes/components/RecipeMultiSelect';
 import DebouncedInput from '../../../components/common/DebouncedInput';
 import { formatDuration } from '../../../utils/formatters';
 import { Recipe } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 
 interface RecipeSearchSelectorProps {
     selectedRecipeIds: string[];
@@ -107,14 +108,6 @@ const RecipeSearchSelector = ({ selectedRecipeIds, onChange }: RecipeSearchSelec
     };
 
     const hasActiveFilters = Object.keys(filters).some(k => k !== 'sort' && !!filters[k as keyof RecipeFilters]);
-
-    const inputStyles = {
-        bg: "vscode.inputBg",
-        borderColor: "border.default",
-        color: "fg.default",
-        _hover: { borderColor: 'vscode.accent' },
-        _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }
-    };
 
     return (
         <VStack align="stretch" gap={4}>

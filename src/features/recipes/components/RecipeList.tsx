@@ -202,7 +202,7 @@ const RecipeList = () => {
                                 bg={themeColors.inputBg}
                                 borderColor={themeColors.border}
                                 borderWidth="1px"
-                                fontSize="0.875rem"
+                                fontSize="sm"
                                 color={themeColors.text}
                                 _hover={{ borderColor: themeColors.accent }}
                                 _focus={{ borderColor: themeColors.accent, boxShadow: `0 0 0 1px ${themeColors.accent}`, outline: 'none' }}
@@ -227,7 +227,7 @@ const RecipeList = () => {
                                 bg={themeColors.inputBg}
                                 borderColor={themeColors.border}
                                 borderWidth="1px"
-                                fontSize="0.875rem"
+                                fontSize="sm"
                                 color={themeColors.text}
                                 _hover={{ borderColor: themeColors.accent }}
                                 _focus={{ borderColor: themeColors.accent, boxShadow: `0 0 0 1px ${themeColors.accent}`, outline: 'none' }}

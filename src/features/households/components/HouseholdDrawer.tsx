@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { FiHome, FiUser } from 'react-icons/fi';
 import { useHouseholdContext } from '../../../context/HouseholdContext';
 import { useSetPrimaryHousehold, useCreateHousehold } from '../../../hooks/useHouseholds';
+import { inputStyles } from '../../../utils/styles';
 
 interface HouseholdDrawerProps {
     isOpen: boolean;
@@ -331,11 +332,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                     value={newHouseholdName}
                                     onChange={(e) => setNewHouseholdName(e.target.value)}
                                     placeholder="e.g. Smith Family"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                    {...inputStyles}
                                     disabled={isCreating}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') handleCreateSubmit();

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { AuthenticationService, ApiError } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 import { toaster } from '../../../toaster';
 
 const RequestAccountPage = () => {
@@ -85,11 +86,7 @@ const RequestAccountPage = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 required
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box w="full">
@@ -102,11 +99,7 @@ const RequestAccountPage = () => {
                                 onChange={(e) => setFirstName(e.target.value)}
                                 placeholder="First Name"
                                 required
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box w="full">
@@ -119,11 +112,7 @@ const RequestAccountPage = () => {
                                 onChange={(e) => setLastName(e.target.value)}
                                 placeholder="Last Name"
                                 required
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Button

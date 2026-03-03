@@ -17,6 +17,7 @@ import { useUsers } from '../../../hooks/useUsers';
 import RecipeMultiSelect from '../../recipes/components/RecipeMultiSelect';
 import DebouncedInput from '../../../components/common/DebouncedInput';
 import RecipeFilterModal from './RecipeFilterModal';
+import { inputStyles } from '../../../utils/styles';
 
 interface TemplateFiltersProps {
     filters: TemplateFiltersType;
@@ -65,14 +66,7 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
 
     const { data: users } = useUsers();
 
-    const inputStyles = {
-        bg: "vscode.inputBg",
-        borderColor: "border.default",
-        color: "fg.default",
-        _hover: { borderColor: 'vscode.accent' },
-        _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
-        css: { colorScheme: 'dark' }
-    };
+    const localInputStyles = { ...inputStyles, css: { colorScheme: 'dark' } };
 
     const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
         if (key === 'sort') return false;
@@ -95,7 +89,7 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
                             size="sm"
                             value={localFilters.name || ''}
                             onChange={(value) => handleChange('name', value)}
-                            {...inputStyles}
+                            {...localInputStyles}
                         />
                     </Box>
 
@@ -158,7 +152,7 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
                                         size="xs"
                                         value={localFilters.num_slots?.gte || ''}
                                         onChange={(val) => handleChange('num_slots', { ...localFilters.num_slots, gte: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -167,7 +161,7 @@ const TemplateFilters: React.FC<TemplateFiltersProps> = ({ filters, onFilterChan
                                         size="xs"
                                         value={localFilters.num_slots?.lte || ''}
                                         onChange={(val) => handleChange('num_slots', { ...localFilters.num_slots, lte: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>

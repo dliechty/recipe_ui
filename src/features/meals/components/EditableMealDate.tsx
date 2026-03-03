@@ -4,6 +4,7 @@ import { FaCheck, FaTimes, FaEdit, FaCalendarAlt } from 'react-icons/fa';
 import { useUpdateMeal } from '../../../hooks/useMeals';
 import { toaster } from '../../../toaster';
 import { parseLocalDate } from '../../../utils/formatters';
+import { inputStyles } from '../../../utils/styles';
 
 interface EditableMealDateProps {
     mealId: string;
@@ -73,11 +74,7 @@ const EditableMealDate = ({ mealId, date, canEdit }: EditableMealDateProps) => {
                     autoFocus
                     size="sm"
                     width="auto"
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    {...inputStyles}
                     css={{ colorScheme: 'dark' }}
                 />
                 <IconButton

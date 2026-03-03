@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { FaTimes } from 'react-icons/fa';
 import { MealClassification, MealGenerateRequest } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 
 interface GenerateMealsModalProps {
     isOpen: boolean;
@@ -141,11 +142,7 @@ const GenerateMealsModal = ({
                             value={count}
                             onChange={(e) => setCount(parseInt(e.target.value) || 0)}
                             disabled={isGenerating}
-                            bg="vscode.inputBg"
-                            borderColor="border.default"
-                            color="fg.default"
-                            _hover={{ borderColor: 'vscode.accent' }}
-                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            {...inputStyles}
                             w="120px"
                         />
                         <Text fontSize="xs" color="fg.muted" mt={1}>

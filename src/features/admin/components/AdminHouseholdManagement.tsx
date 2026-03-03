@@ -19,6 +19,7 @@ import {
 } from '../../../hooks/useHouseholds';
 import { useUsers } from '../../../hooks/useUsers';
 import { Household, HouseholdMember, UserPublic } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 
 // ---------------------------------------------------------------------------
 // Sub-component: member list
@@ -104,14 +105,7 @@ const AdminMemberList = ({
                     onChange={(e) => setSearchValue(e.target.value)}
                     placeholder="Search users by name or email"
                     size="sm"
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{
-                        borderColor: 'vscode.accent',
-                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                    }}
+                    {...inputStyles}
                     disabled={isAdding}
                 />
                 {filteredUsers.length > 0 && (
@@ -241,14 +235,7 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                     value={renameValue}
                     onChange={(e) => setRenameValue(e.target.value)}
                     size="sm"
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{
-                        borderColor: 'vscode.accent',
-                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                    }}
+                    {...inputStyles}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') handleRenameSubmit();
                     }}
@@ -514,14 +501,7 @@ const AdminHouseholdManagement = () => {
                                     value={newHouseholdName}
                                     onChange={(e) => setNewHouseholdName(e.target.value)}
                                     placeholder="e.g. Smith Family"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{
-                                        borderColor: 'vscode.accent',
-                                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                                    }}
+                                    {...inputStyles}
                                     disabled={isCreating}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') handleCreateSubmit();

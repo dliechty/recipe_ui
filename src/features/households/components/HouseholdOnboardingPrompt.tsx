@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useHouseholdContext } from '../../../context/HouseholdContext';
 import { useCreateHousehold, useJoinHousehold } from '../../../hooks/useHouseholds';
+import { inputStyles } from '../../../utils/styles';
 
 const STORAGE_KEY = 'household_onboarding_dismissed';
 
@@ -182,14 +183,7 @@ const HouseholdOnboardingPrompt = () => {
                                     value={newHouseholdName}
                                     onChange={(e) => setNewHouseholdName(e.target.value)}
                                     placeholder="e.g. Smith Family"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{
-                                        borderColor: 'vscode.accent',
-                                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                                    }}
+                                    {...inputStyles}
                                     disabled={isCreating}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') handleCreateSubmit();
@@ -291,14 +285,7 @@ const HouseholdOnboardingPrompt = () => {
                                     value={joinHouseholdId}
                                     onChange={(e) => setJoinHouseholdId(e.target.value)}
                                     placeholder="Enter household ID"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{
-                                        borderColor: 'vscode.accent',
-                                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                                    }}
+                                    {...inputStyles}
                                     disabled={isJoining}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') handleJoinSubmit();

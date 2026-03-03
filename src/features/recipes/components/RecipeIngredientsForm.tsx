@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { FaTrash, FaPlus, FaGripVertical } from 'react-icons/fa';
 import { RecipeIngredientCreate } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 import {
     DndContext,
     closestCenter,
@@ -107,11 +108,7 @@ const SortableIngredientRow = ({
                     placeholder="Ingredient"
                     value={ingredient.ingredient_name}
                     onChange={(e) => handleIngredientChange(componentIndex, index, 'ingredient_name', e.target.value)}
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    {...inputStyles}
                 />
             </Box>
             <Box flex={1}>
@@ -120,11 +117,7 @@ const SortableIngredientRow = ({
                     placeholder="Qty"
                     value={ingredient.quantity}
                     onChange={(e) => handleIngredientChange(componentIndex, index, 'quantity', e.target.value)}
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    {...inputStyles}
                 />
             </Box>
             <Box flex={1}>
@@ -133,11 +126,7 @@ const SortableIngredientRow = ({
                     placeholder="Unit"
                     value={ingredient.unit}
                     onChange={(e) => handleIngredientChange(componentIndex, index, 'unit', e.target.value)}
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    {...inputStyles}
                 />
             </Box>
             <Box flex={2}>
@@ -146,11 +135,7 @@ const SortableIngredientRow = ({
                     placeholder="Notes (optional)"
                     value={ingredient.notes || ''}
                     onChange={(e) => handleIngredientChange(componentIndex, index, 'notes', e.target.value)}
-                    bg="vscode.inputBg"
-                    borderColor="border.default"
-                    color="fg.default"
-                    _hover={{ borderColor: 'vscode.accent' }}
-                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                    {...inputStyles}
                 />
             </Box>
             <Tooltip.Root>
@@ -219,11 +204,7 @@ const RecipeIngredientsForm = ({
                                     placeholder="Component Name (e.g., Main, Sauce)"
                                     fontWeight="bold"
                                     maxW="300px"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                    {...inputStyles}
                                 />
                             )}
                             {components.length > 1 && component.name !== 'Main' && (

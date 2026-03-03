@@ -22,7 +22,7 @@ import { useRecipeMeta } from '../../recipes/hooks/useRecipeMeta';
 import RecipeMultiSelect from '../../recipes/components/RecipeMultiSelect';
 import DebouncedInput from '../../../components/common/DebouncedInput';
 import { formatDuration } from '../../../utils/formatters';
-import { nativeSelectOptionsCss } from '../../../utils/styles';
+import { nativeSelectOptionsCss, inputStyles } from '../../../utils/styles';
 
 interface TemplateFormProps {
     onSubmit: (data: MealTemplateCreate) => void;
@@ -42,16 +42,8 @@ const strategyConfig = {
     [MealTemplateSlotStrategy.SEARCH]: { icon: FaSearch, color: 'orange', label: 'Search' },
 };
 
-// Common input styling
-const inputStyles = {
-    bg: "vscode.inputBg",
-    borderColor: "border.default",
-    color: "fg.default",
-    _hover: { borderColor: 'vscode.accent' },
-    _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
-    // Style for native select options (dark theme)
-    css: nativeSelectOptionsCss
-};
+// Common input styling (extends shared inputStyles with native select option CSS)
+const localInputStyles = { ...inputStyles, css: nativeSelectOptionsCss };
 
 // Searchable fields for search criteria
 const SEARCHABLE_FIELDS = [
@@ -172,7 +164,7 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Enter template name"
                                 required
-                                {...inputStyles}
+                                {...localInputStyles}
                             />
                         </Box>
                         <Box w="200px">
@@ -181,7 +173,7 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
                                 <NativeSelect.Field
                                     value={classification}
                                     onChange={(e) => setClassification(e.target.value as MealClassification)}
-                                    {...inputStyles}
+                                    {...localInputStyles}
                                 >
                                     <option value="">Select...</option>
                                     <option value={MealClassification.BREAKFAST}>Breakfast</option>
@@ -324,7 +316,7 @@ const SlotEditor = ({
                             <NativeSelect.Field
                                 value={slot.strategy}
                                 onChange={(e) => onStrategyChange(e.target.value as MealTemplateSlotStrategy)}
-                                {...inputStyles}
+                                {...localInputStyles}
                             >
                                 <option value={MealTemplateSlotStrategy.DIRECT}>Direct</option>
                                 <option value={MealTemplateSlotStrategy.LIST}>List</option>
@@ -644,7 +636,7 @@ const SearchSlotEditor = ({ criteria, onChange }: SearchSlotEditorProps) => {
                                     <NativeSelect.Field
                                         value={criterion.field}
                                         onChange={(e) => updateCriterion(index, { field: e.target.value, value: '' })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     >
                                         {SEARCHABLE_FIELDS.map(f => (
                                             <option key={f.value} value={f.value}>{f.label}</option>
@@ -657,7 +649,7 @@ const SearchSlotEditor = ({ criteria, onChange }: SearchSlotEditorProps) => {
                                     <NativeSelect.Field
                                         value={criterion.operator}
                                         onChange={(e) => updateCriterion(index, { operator: e.target.value })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     >
                                         {OPERATORS.map(op => (
                                             <option key={op.value} value={op.value}>{op.label}</option>
@@ -671,7 +663,7 @@ const SearchSlotEditor = ({ criteria, onChange }: SearchSlotEditorProps) => {
                                         <NativeSelect.Field
                                             value={String(criterion.value)}
                                             onChange={(e) => updateCriterion(index, { value: e.target.value })}
-                                            {...inputStyles}
+                                            {...localInputStyles}
                                         >
                                             <option value="">Select...</option>
                                             {getValuesForField(criterion.field).map(v => (
@@ -967,7 +959,7 @@ const RecipeSelector = ({ mode, selectedIds, onSelect, onCancel }: RecipeSelecto
                         placeholder="Search recipes..."
                         value={filters.name || ''}
                         onChange={(val) => handleFilterChange('name', val)}
-                        {...inputStyles}
+                        {...localInputStyles}
                     />
 
                     <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={2}>

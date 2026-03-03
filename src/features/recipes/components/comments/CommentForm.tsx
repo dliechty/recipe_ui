@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button, Textarea, VStack, Box } from '@chakra-ui/react';
 import { useAddComment } from '../../../../hooks/useComments';
+import { inputStyles } from '../../../../utils/styles';
 
 interface CommentFormProps {
     recipeId: string;
@@ -42,10 +43,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ recipeId, onCancel, initialVa
                 onChange={(e) => setText(e.target.value)}
                 resize="vertical"
                 minH="100px"
-                bg="vscode.inputBg"
-                borderColor="border.default"
-                _hover={{ borderColor: 'vscode.accent' }}
-                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                {...inputStyles}
             />
 
             <Box display="flex" justifyContent="flex-end" gap={2}>

@@ -22,6 +22,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { RecipeList } from '../../../client';
 import { toaster } from '../../../toaster';
 import ErrorAlert from '../../../components/common/ErrorAlert';
+import { inputStyles } from '../../../utils/styles';
 
 const SnakeGame = lazy(() => import('../components/SnakeGame'));
 
@@ -194,11 +195,7 @@ const RecipeBoxPage = () => {
                                     placeholder="e.g., Favorites, Weeknight Dinners"
                                     value={newListName}
                                     onChange={(e) => setNewListName(e.target.value)}
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                    {...inputStyles}
                                 />
                             </Box>
                             <Box>
@@ -207,11 +204,7 @@ const RecipeBoxPage = () => {
                                     placeholder="Add a description for this list"
                                     value={newListDescription}
                                     onChange={(e) => setNewListDescription(e.target.value)}
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                    {...inputStyles}
                                     rows={3}
                                 />
                             </Box>
@@ -280,11 +273,7 @@ const RecipeBoxPage = () => {
                                                 <Input
                                                     value={editFormData.name}
                                                     onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-                                                    bg="vscode.inputBg"
-                                                    borderColor="border.default"
-                                                    color="fg.default"
-                                                    _hover={{ borderColor: 'vscode.accent' }}
-                                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                                    {...inputStyles}
                                                     size="sm"
                                                 />
                                             </Box>
@@ -293,11 +282,7 @@ const RecipeBoxPage = () => {
                                                 <Textarea
                                                     value={editFormData.description}
                                                     onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                                                    bg="vscode.inputBg"
-                                                    borderColor="border.default"
-                                                    color="fg.default"
-                                                    _hover={{ borderColor: 'vscode.accent' }}
-                                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                                    {...inputStyles}
                                                     rows={2}
                                                     size="sm"
                                                 />

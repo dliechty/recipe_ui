@@ -22,6 +22,7 @@ import {
     useSetPrimaryHousehold,
 } from '../../../hooks/useHouseholds';
 import { Household, HouseholdMember } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 
 // ---------------------------------------------------------------------------
 // Sub-component: single household row
@@ -184,14 +185,7 @@ const HouseholdRow = ({
                         value={renameValue}
                         onChange={(e) => setRenameValue(e.target.value)}
                         size="sm"
-                        bg="vscode.inputBg"
-                        borderColor="border.default"
-                        color="fg.default"
-                        _hover={{ borderColor: 'vscode.accent' }}
-                        _focus={{
-                            borderColor: 'vscode.accent',
-                            boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                        }}
+                        {...inputStyles}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') handleRenameSubmit();
                         }}
@@ -646,14 +640,7 @@ const AccountHouseholdSection = () => {
                                     value={newHouseholdName}
                                     onChange={(e) => setNewHouseholdName(e.target.value)}
                                     placeholder="e.g. Smith Family"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{
-                                        borderColor: 'vscode.accent',
-                                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                                    }}
+                                    {...inputStyles}
                                     disabled={isCreating}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') handleCreateSubmit();
@@ -758,14 +745,7 @@ const AccountHouseholdSection = () => {
                                     value={joinHouseholdId}
                                     onChange={(e) => setJoinHouseholdId(e.target.value)}
                                     placeholder="Enter household ID"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{
-                                        borderColor: 'vscode.accent',
-                                        boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)',
-                                    }}
+                                    {...inputStyles}
                                     disabled={isJoining}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') handleJoinSubmit();

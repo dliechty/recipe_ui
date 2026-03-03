@@ -14,6 +14,7 @@ import { RecipeFilters as RecipeFiltersType } from '../../../hooks/useRecipes';
 import { useRecipeMeta } from '../hooks/useRecipeMeta';
 import RecipeMultiSelect from './RecipeMultiSelect';
 import DebouncedInput from '../../../components/common/DebouncedInput';
+import { inputStyles } from '../../../utils/styles';
 
 interface RecipeFiltersProps {
     filters: RecipeFiltersType;
@@ -73,14 +74,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
     const { data: diets } = useRecipeMeta('suitable_for_diet');
     const { data: proteins } = useRecipeMeta('protein');
 
-    const inputStyles = {
-        bg: "vscode.inputBg",
-        borderColor: "border.default",
-        color: "fg.default",
-        _hover: { borderColor: 'vscode.accent' },
-        _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
-        css: { colorScheme: 'dark' }
-    };
+    const localInputStyles = { ...inputStyles, css: { colorScheme: 'dark' } };
 
     return (
         <Box borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" p={4}>
@@ -94,7 +88,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                             size="sm"
                             value={localFilters.name || ''}
                             onChange={(value) => handleChange('name', value)}
-                            {...inputStyles}
+                            {...localInputStyles}
                         />
                     </Box>
 
@@ -189,7 +183,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.total_time?.gt || ''}
                                         onChange={(val) => handleChange('total_time', { ...localFilters.total_time, gt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -198,7 +192,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.total_time?.lt || ''}
                                         onChange={(val) => handleChange('total_time', { ...localFilters.total_time, lt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>
@@ -227,7 +221,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                             like: String(val) || undefined
                                         });
                                     }}
-                                    {...inputStyles}
+                                    {...localInputStyles}
                                 />
                             </Box>
 
@@ -241,7 +235,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.prep_time?.gt || ''}
                                         onChange={(val) => handleChange('prep_time', { ...localFilters.prep_time, gt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -250,7 +244,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.prep_time?.lt || ''}
                                         onChange={(val) => handleChange('prep_time', { ...localFilters.prep_time, lt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>
@@ -281,7 +275,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.yield?.gt || ''}
                                         onChange={(val) => handleChange('yield', { ...localFilters.yield, gt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -290,7 +284,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.yield?.lt || ''}
                                         onChange={(val) => handleChange('yield', { ...localFilters.yield, lt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>
@@ -305,7 +299,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.cook_time?.gt || ''}
                                         onChange={(val) => handleChange('cook_time', { ...localFilters.cook_time, gt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -314,7 +308,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.cook_time?.lt || ''}
                                         onChange={(val) => handleChange('cook_time', { ...localFilters.cook_time, lt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>
@@ -341,7 +335,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.calories?.gt || ''}
                                         onChange={(val) => handleChange('calories', { ...localFilters.calories, gt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -350,7 +344,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.calories?.lt || ''}
                                         onChange={(val) => handleChange('calories', { ...localFilters.calories, lt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>
@@ -365,7 +359,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.active_time?.gt || ''}
                                         onChange={(val) => handleChange('active_time', { ...localFilters.active_time, gt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -374,7 +368,7 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
                                         type="number"
                                         value={localFilters.active_time?.lt || ''}
                                         onChange={(val) => handleChange('active_time', { ...localFilters.active_time, lt: val ? Number(val) : undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>

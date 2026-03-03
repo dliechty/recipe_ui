@@ -10,6 +10,7 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { AuthenticationService, UserRequest, ApiError } from '../../../client';
+import { inputStyles } from '../../../utils/styles';
 import { toaster } from '../../../toaster';
 
 // Assuming Modal components if Dialog is not correct or if standard names changed. 
@@ -143,11 +144,7 @@ const AdminPendingRequests = () => {
                                     onChange={(e) => setInitialPassword(e.target.value)}
                                     placeholder="Enter initial password"
                                     type="password"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                    {...inputStyles}
                                 />
                             </Box>
                             <HStack justify="flex-end" gap={3}>

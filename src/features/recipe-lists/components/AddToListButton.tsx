@@ -14,6 +14,7 @@ import { Menu } from '@chakra-ui/react';
 import { FaBookmark, FaRegBookmark, FaPlus, FaCheck } from 'react-icons/fa';
 import { useRecipeLists, useCreateRecipeList, useAddRecipeToList, useRemoveRecipeFromList } from '../../../hooks/useRecipeLists';
 import { useAuth } from '../../../context/AuthContext';
+import { inputStyles } from '../../../utils/styles';
 import { toaster } from '../../../toaster';
 
 interface AddToListButtonProps {
@@ -191,12 +192,8 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                         value={newListName}
                                         onChange={(e) => setNewListName(e.target.value)}
                                         onKeyDown={(e) => e.stopPropagation()}
-                                        bg="vscode.inputBg"
-                                        borderColor="border.default"
-                                        color="fg.default"
+                                        {...inputStyles}
                                         size="sm"
-                                        _hover={{ borderColor: 'vscode.accent' }}
-                                        _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                     />
                                 </Box>
                                 <Box>
@@ -206,13 +203,9 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                         value={newListDescription}
                                         onChange={(e) => setNewListDescription(e.target.value)}
                                         onKeyDown={(e) => e.stopPropagation()}
-                                        bg="vscode.inputBg"
-                                        borderColor="border.default"
-                                        color="fg.default"
+                                        {...inputStyles}
                                         size="sm"
                                         rows={2}
-                                        _hover={{ borderColor: 'vscode.accent' }}
-                                        _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                                     />
                                 </Box>
                                 <HStack gap={2}>

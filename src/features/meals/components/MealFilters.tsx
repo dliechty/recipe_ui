@@ -18,6 +18,7 @@ import { useUsers } from '../../../hooks/useUsers';
 import RecipeMultiSelect from '../../recipes/components/RecipeMultiSelect';
 import DebouncedInput from '../../../components/common/DebouncedInput';
 import RecipeFilterModal from './RecipeFilterModal';
+import { inputStyles } from '../../../utils/styles';
 
 interface MealFiltersProps {
     filters: MealFiltersType;
@@ -66,14 +67,7 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
 
     const { data: users } = useUsers();
 
-    const inputStyles = {
-        bg: "vscode.inputBg",
-        borderColor: "border.default",
-        color: "fg.default",
-        _hover: { borderColor: 'vscode.accent' },
-        _focus: { borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' },
-        css: { colorScheme: 'dark' }
-    };
+    const localInputStyles = { ...inputStyles, css: { colorScheme: 'dark' } };
 
     const hasActiveFilters = Object.entries(filters).some(([key, value]) => {
         if (key === 'sort') return false;
@@ -96,7 +90,7 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
                             size="sm"
                             value={localFilters.name || ''}
                             onChange={(value) => handleChange('name', value)}
-                            {...inputStyles}
+                            {...localInputStyles}
                         />
                     </Box>
 
@@ -167,7 +161,7 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
                                         size="xs"
                                         value={localFilters.scheduled_date?.gt || ''}
                                         onChange={(val) => handleChange('scheduled_date', { ...localFilters.scheduled_date, gt: val || undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                     <Text>-</Text>
                                     <DebouncedInput
@@ -175,7 +169,7 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
                                         size="xs"
                                         value={localFilters.scheduled_date?.lt || ''}
                                         onChange={(val) => handleChange('scheduled_date', { ...localFilters.scheduled_date, lt: val || undefined })}
-                                        {...inputStyles}
+                                        {...localInputStyles}
                                     />
                                 </HStack>
                             </Box>

@@ -16,6 +16,7 @@ import { AuthenticationService, UserUpdate } from '../../client';
 import { toaster } from '../../toaster';
 import { FaEdit } from 'react-icons/fa';
 import AccountHouseholdSection from '../households/components/AccountHouseholdSection';
+import { inputStyles } from '../../utils/styles';
 
 const AccountPage = () => {
     const { user, refreshUser } = useAuth();
@@ -84,11 +85,7 @@ const AccountPage = () => {
                                         name="email"
                                         value={editFormData.email || ''}
                                         onChange={handleInputChange}
-                                        bg="vscode.inputBg"
-                                        borderColor="border.default"
-                                        color="fg.default"
-                                        _hover={{ borderColor: 'vscode.accent' }}
-                                        _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                        {...inputStyles}
                                     />
                                 ) : (
                                     <Text fontSize="lg" color="fg.default">{user?.email || 'N/A'}</Text>
@@ -105,11 +102,7 @@ const AccountPage = () => {
                                                 name="first_name"
                                                 value={editFormData.first_name || ''}
                                                 onChange={handleInputChange}
-                                                bg="vscode.inputBg"
-                                                borderColor="border.default"
-                                                color="fg.default"
-                                                _hover={{ borderColor: 'vscode.accent' }}
-                                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                                {...inputStyles}
                                             />
                                         </Box>
                                         <Box flex={1}>
@@ -118,11 +111,7 @@ const AccountPage = () => {
                                                 name="last_name"
                                                 value={editFormData.last_name || ''}
                                                 onChange={handleInputChange}
-                                                bg="vscode.inputBg"
-                                                borderColor="border.default"
-                                                color="fg.default"
-                                                _hover={{ borderColor: 'vscode.accent' }}
-                                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                                {...inputStyles}
                                             />
                                         </Box>
                                     </HStack>

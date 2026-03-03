@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { RecipeCoreCreate, RecipeTimes, DifficultyLevel, RecipeNutrition, DietType } from '../../../client';
 import DietSelect from './DietSelect';
+import { inputStyles } from '../../../utils/styles';
 
 interface RecipeBasicsFormProps {
     core: RecipeCoreCreate;
@@ -143,11 +144,7 @@ const RecipeBasicsForm = ({
                             value={core.name}
                             onChange={handleCoreChange}
                             placeholder="e.g. Chocolate Cake"
-                            bg="vscode.inputBg"
-                            borderColor="border.default"
-                            color="fg.default"
-                            _hover={{ borderColor: 'vscode.accent' }}
-                            _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                            {...inputStyles}
                         />
                     </Box>
 
@@ -160,11 +157,7 @@ const RecipeBasicsForm = ({
                                 value={core.source || ''}
                                 onChange={handleCoreChange}
                                 placeholder="e.g. Grandma's cookbook"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box flex={1}>
@@ -175,11 +168,7 @@ const RecipeBasicsForm = ({
                                 value={core.source_url || ''}
                                 onChange={handleCoreChange}
                                 placeholder="https://example.com"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -194,11 +183,7 @@ const RecipeBasicsForm = ({
                                     value={core.difficulty || ''}
                                     onChange={handleCoreChange}
                                     placeholder="Select difficulty"
-                                    bg="vscode.inputBg"
-                                    borderColor="border.default"
-                                    color="fg.default"
-                                    _hover={{ borderColor: 'vscode.accent' }}
-                                    _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                    {...inputStyles}
                                 >
                                     {Object.values(DifficultyLevel).map((level) => (
                                         <option key={level} value={level}>{level}</option>
@@ -215,11 +200,7 @@ const RecipeBasicsForm = ({
                                 value={core.protein || ''}
                                 onChange={handleCoreChange}
                                 placeholder="e.g. Chicken"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -233,11 +214,7 @@ const RecipeBasicsForm = ({
                                 value={core.cuisine || ''}
                                 onChange={handleCoreChange}
                                 placeholder="e.g. Italian"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box flex={1}>
@@ -248,11 +225,7 @@ const RecipeBasicsForm = ({
                                 value={core.category || ''}
                                 onChange={handleCoreChange}
                                 placeholder="e.g. Dessert"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -273,11 +246,7 @@ const RecipeBasicsForm = ({
                                 min={0}
                                 value={times.active_time_minutes || 0}
                                 onChange={(e) => handleTimesChange('active_time_minutes', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
 
@@ -289,11 +258,7 @@ const RecipeBasicsForm = ({
                                 min={0}
                                 value={times.cook_time_minutes || 0}
                                 onChange={(e) => handleTimesChange('cook_time_minutes', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -307,11 +272,7 @@ const RecipeBasicsForm = ({
                                 min={0}
                                 value={times.prep_time_minutes || 0}
                                 onChange={(e) => handleTimesChange('prep_time_minutes', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
 
@@ -323,11 +284,7 @@ const RecipeBasicsForm = ({
                                 min={0}
                                 value={times.total_time_minutes || 0}
                                 onChange={(e) => handleTimesChange('total_time_minutes', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -341,11 +298,7 @@ const RecipeBasicsForm = ({
                                 min={1}
                                 value={core.yield_amount || 1}
                                 onChange={(e) => handleCoreNumberChange('yield_amount', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box flex={1}>
@@ -356,11 +309,7 @@ const RecipeBasicsForm = ({
                                 value={core.yield_unit || ''}
                                 onChange={handleCoreChange}
                                 placeholder="servings"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -374,11 +323,7 @@ const RecipeBasicsForm = ({
                                 min={0}
                                 value={nutrition.calories || 0}
                                 onChange={(e) => handleNutritionChange('calories', e.target.value)}
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                         <Box flex={1}>
@@ -389,11 +334,7 @@ const RecipeBasicsForm = ({
                                 value={nutrition.serving_size || ''}
                                 onChange={(e) => handleNutritionChange('serving_size', e.target.value)}
                                 placeholder="e.g. 1 slice"
-                                bg="vscode.inputBg"
-                                borderColor="border.default"
-                                color="fg.default"
-                                _hover={{ borderColor: 'vscode.accent' }}
-                                _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                {...inputStyles}
                             />
                         </Box>
                     </HStack>
@@ -409,11 +350,7 @@ const RecipeBasicsForm = ({
                         onChange={handleCoreChange}
                         placeholder="Detailed description"
                         rows={15}
-                        bg="vscode.inputBg"
-                        borderColor="border.default"
-                        color="fg.default"
-                        _hover={{ borderColor: 'vscode.accent' }}
-                        _focus={{ borderColor: 'vscode.accent', boxShadow: '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                        {...inputStyles}
                     />
                 </Box>
             </SimpleGrid>
