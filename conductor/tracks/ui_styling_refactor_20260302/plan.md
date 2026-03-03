@@ -35,14 +35,14 @@
 
 ## Phase 2: Shared Style Utilities [FR-2]
 
-- [ ] Task: Write tests for shared style utilities
+- [x] Task: Write tests for shared style utilities [a0a9b6d]
     - [ ] Test that `inputStyles` utility exports correct focus ring properties
     - [ ] Test that `focusRingStyles` utility produces consistent _focus and _hover props
     - [ ] Test that `nativeSelectStyles` utility returns correct CSS properties using theme tokens
     - [ ] Test that button style utilities (primary, danger, success, secondary) export correct token references
     - [ ] Run tests and confirm they fail (Red Phase)
 
-- [ ] Task: Implement shared style utilities in styles.ts
+- [~] Task: Implement shared style utilities in styles.ts
     - [ ] Create `inputStyles` object with bg, borderColor, _hover, _focus properties using semantic tokens
     - [ ] Create `focusRingStyles` for the common focus ring pattern
     - [ ] Create `buttonStyles.primary`, `buttonStyles.danger`, `buttonStyles.success`, `buttonStyles.secondary` objects
