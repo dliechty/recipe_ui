@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useAdminMode } from '../../../context/AdminModeContext';
 import { useUsers } from '../../../hooks/useUsers';
+import { nativeSelectStyles } from '../../../utils/styles';
 
 const AdminOperatingMode = () => {
     const {
@@ -165,10 +166,8 @@ const AdminOperatingMode = () => {
                                         disabled={isLoading}
                                         aria-label="Select user to impersonate"
                                         style={{
+                                            ...nativeSelectStyles,
                                             width: '100%',
-                                            background: 'var(--chakra-colors-bg-surface)',
-                                            color: 'var(--chakra-colors-fg-default)',
-                                            border: '1px solid var(--chakra-colors-border-default)',
                                             borderRadius: '6px',
                                             padding: '8px 12px',
                                             fontSize: '14px',

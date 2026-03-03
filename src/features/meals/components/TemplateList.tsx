@@ -10,7 +10,7 @@ import { UserDisplay } from '../../../components/common/UserDisplay';
 import GenerateMealModal from './GenerateMealModal';
 import TemplateFilters from './TemplateFilters';
 import { searchParamsToTemplateFilters, templateFiltersToSearchParams } from '../../../utils/mealParams';
-import { themeColors } from '../../../utils/styles';
+import { nativeSelectStyles } from '../../../utils/styles';
 import { useHouseholdContext } from '../../../context/HouseholdContext';
 import { useDisabledTemplates, useDisableTemplate, useEnableTemplate } from '../../../hooks/useHouseholds';
 
@@ -191,14 +191,11 @@ const TemplateList = () => {
                                 value={sortField}
                                 onChange={(e) => handleSortFieldChange(e.target.value)}
                                 style={{
+                                    ...nativeSelectStyles,
                                     width: "100%",
                                     padding: "6px",
                                     borderRadius: "4px",
-                                    backgroundColor: themeColors.inputBg,
-                                    borderColor: themeColors.border,
-                                    borderWidth: "1px",
                                     fontSize: "0.875rem",
-                                    color: themeColors.text,
                                     outline: "none"
                                 }}
                             >
@@ -212,14 +209,11 @@ const TemplateList = () => {
                             value={sortDirection}
                             onChange={(e) => handleSortDirectionChange(e.target.value)}
                             style={{
+                                ...nativeSelectStyles,
                                 width: "100%",
                                 padding: "6px",
                                 borderRadius: "4px",
-                                backgroundColor: themeColors.inputBg,
-                                borderColor: themeColors.border,
-                                borderWidth: "1px",
                                 fontSize: "0.875rem",
-                                color: themeColors.text,
                                 outline: "none"
                             }}
                         >

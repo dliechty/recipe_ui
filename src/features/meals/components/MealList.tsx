@@ -8,7 +8,7 @@ import ErrorAlert from '../../../components/common/ErrorAlert';
 import { UserDisplay } from '../../../components/common/UserDisplay';
 import MealFilters from './MealFilters';
 import { mealFiltersToSearchParams, searchParamsToMealFilters } from '../../../utils/mealParams';
-import { themeColors } from '../../../utils/styles';
+import { nativeSelectStyles } from '../../../utils/styles';
 import { parseLocalDate } from '../../../utils/formatters';
 
 const MealList = () => {
@@ -141,14 +141,11 @@ const MealList = () => {
                                 value={sortField}
                                 onChange={(e) => handleSortFieldChange(e.target.value)}
                                 style={{
+                                    ...nativeSelectStyles,
                                     width: "100%",
                                     padding: "6px",
                                     borderRadius: "4px",
-                                    backgroundColor: themeColors.inputBg,
-                                    borderColor: themeColors.border,
-                                    borderWidth: "1px",
                                     fontSize: "0.875rem",
-                                    color: themeColors.text,
                                     outline: "none"
                                 }}
                             >
@@ -163,14 +160,11 @@ const MealList = () => {
                             value={sortDirection}
                             onChange={(e) => handleSortDirectionChange(e.target.value)}
                             style={{
+                                ...nativeSelectStyles,
                                 width: "100%",
                                 padding: "6px",
                                 borderRadius: "4px",
-                                backgroundColor: themeColors.inputBg,
-                                borderColor: themeColors.border,
-                                borderWidth: "1px",
                                 fontSize: "0.875rem",
-                                color: themeColors.text,
                                 outline: "none"
                             }}
                         >

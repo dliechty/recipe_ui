@@ -32,6 +32,7 @@ import EditableClassificationBadge from './EditableClassificationBadge';
 import EditableMealName from './EditableMealName';
 import EditableMealDate from './EditableMealDate';
 import RecipeSelectionModal from './RecipeSelectionModal';
+import { nativeSelectStyles } from '../../../utils/styles';
 
 const MealDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -304,7 +305,7 @@ const MealDetails = () => {
                                             data-testid="household-reassign-select"
                                             value={meal.household_id || ''}
                                             onChange={(e) => handleHouseholdChange(e.target.value)}
-                                            style={{ background: '#3c3c3c', color: '#d4d4d4', border: '1px solid #454545', borderRadius: '4px', padding: '2px 6px', fontSize: '14px' }}
+                                            style={{ ...nativeSelectStyles, borderRadius: '4px', padding: '2px 6px', fontSize: '14px' }}
                                         >
                                             <option value="">Personal</option>
                                             {households.map(h => (

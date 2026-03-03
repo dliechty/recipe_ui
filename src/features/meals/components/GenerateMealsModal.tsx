@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { FaTimes } from 'react-icons/fa';
 import { MealClassification, MealGenerateRequest } from '../../../client';
-import { inputStyles } from '../../../utils/styles';
+import { inputStyles, nativeSelectStyles } from '../../../utils/styles';
 
 interface GenerateMealsModalProps {
     isOpen: boolean;
@@ -112,12 +112,8 @@ const GenerateMealsModal = ({
                             onChange={(e) => setClassification(e.target.value as MealClassification)}
                             disabled={isGenerating}
                             style={{
-                                backgroundColor: 'var(--chakra-colors-vscode-input-bg, #1e1e1e)',
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderColor: 'var(--chakra-colors-border-default, #3e3e3e)',
-                                color: 'var(--chakra-colors-fg-default, #cccccc)',
-                                borderRadius: 'var(--chakra-radii-md, 6px)',
+                                ...nativeSelectStyles,
+                                borderRadius: '6px',
                                 padding: '8px 12px',
                                 fontSize: '14px',
                                 width: '200px',
