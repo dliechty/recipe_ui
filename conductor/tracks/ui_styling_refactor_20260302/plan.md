@@ -1,6 +1,6 @@
 # Plan: UI Styling Refinement & Code Quality Refactor
 
-## Phase 1: Theme Token System Completion [FR-1]
+## Phase 1: Theme Token System Completion [FR-1] [checkpoint: 5ebf172]
 
 - [x] Task: Write tests for expanded semantic token system [0eeb6e5]
     - [x] Create test file for theme token validation
@@ -31,7 +31,7 @@
     - [x] Run tests and confirm they pass (Green Phase)
     - [x] Run `npm run lint` and `npx tsc --noEmit` to verify no regressions
 
-- [~] Task: Conductor - User Manual Verification 'Phase 1: Theme Token System Completion' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Theme Token System Completion' (Protocol in workflow.md) [5ebf172]
 
 ## Phase 2: Shared Style Utilities [FR-2]
 
