@@ -23,13 +23,13 @@
     - [x] Test that styles.ts does not contain independent hex definitions
     - [x] Run tests and confirm they fail (Red Phase)
 
-- [ ] Task: Eliminate duplicate color definitions in styles.ts
-    - [ ] Refactor `themeColors` in styles.ts to derive values from theme.ts tokens or a shared constants file
-    - [ ] Remove all duplicated hex string definitions from styles.ts
-    - [ ] Update react-select `createSelectStyles` to use the derived values
-    - [ ] Replace hard-coded `'white'` and `rgba(0,0,0,0.4)` in react-select styles with token references
-    - [ ] Run tests and confirm they pass (Green Phase)
-    - [ ] Run `npm run lint` and `npx tsc --noEmit` to verify no regressions
+- [x] Task: Eliminate duplicate color definitions in styles.ts [e628bef]
+    - [x] Refactor `themeColors` in styles.ts to derive values from theme.ts tokens or a shared constants file
+    - [x] Remove all duplicated hex string definitions from styles.ts
+    - [x] Update react-select `createSelectStyles` to use the derived values
+    - [x] Replace hard-coded `'white'` and `rgba(0,0,0,0.4)` in react-select styles with token references
+    - [x] Run tests and confirm they pass (Green Phase)
+    - [x] Run `npm run lint` and `npx tsc --noEmit` to verify no regressions
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Theme Token System Completion' (Protocol in workflow.md)
 
