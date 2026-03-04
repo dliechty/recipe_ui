@@ -230,14 +230,14 @@ const TemplateList = () => {
 
             <VStack align="stretch" gap={6}>
                 <Box flex={1} overflowX="auto" borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" mb={4}>
-                    <Table.Root interactive minW="800px">
+                    <Table.Root interactive>
                         <Table.Header>
                             <Table.Row bg="bg.surface">
                                 <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Slots</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Created At</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Classification</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Slots</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Created By</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Created At</Table.ColumnHeader>
                                 <Table.ColumnHeader color="fg.default" width="80px">Actions</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
@@ -259,14 +259,14 @@ const TemplateList = () => {
                                             )}
                                         </HStack>
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">{template.classification}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>{template.classification}</Table.Cell>
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>
                                         {template.slots?.length || 0}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>
                                         <UserDisplay userId={template.user_id} />
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>
                                         {new Date(template.created_at).toLocaleDateString()}
                                     </Table.Cell>
                                     <Table.Cell borderColor="border.default">

@@ -89,15 +89,15 @@ const MealHistoryList = () => {
         <Box>
             <VStack align="stretch" gap={6}>
                 <Box flex={1} overflowX="auto" borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" mb={4}>
-                    <Table.Root interactive minW="800px">
+                    <Table.Root interactive>
                         <Table.Header>
                             <Table.Row bg="bg.surface">
                                 <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Recipes</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Status</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Classification</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Created By</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Date</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Recipes</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Status</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Classification</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Created By</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Date</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -113,7 +113,7 @@ const MealHistoryList = () => {
                                     <Table.Cell borderColor="border.default" fontWeight="medium">
                                         {meal.name || 'Untitled'}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>
                                         <VStack align="start" gap={1}>
                                             {meal.items?.length > 0 ? (
                                                 meal.items.map((item, idx) => (
@@ -126,16 +126,16 @@ const MealHistoryList = () => {
                                             )}
                                         </VStack>
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>
                                         <Badge colorPalette={meal.status === 'Cooked' ? 'green' : 'red'}>
                                             {meal.status}
                                         </Badge>
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">{meal.classification}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>{meal.classification}</Table.Cell>
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>
                                         <UserDisplay userId={meal.user_id} />
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>
                                         {meal.scheduled_date ? parseLocalDate(meal.scheduled_date).toLocaleDateString() : 'N/A'}
                                     </Table.Cell>
                                 </Table.Row>
