@@ -153,14 +153,14 @@
     - [x] Test RecipeFilters panel at mobile sizes — ensure filter UI is accessible
     - [x] Verify dark theme contrast on mobile viewports
 
-- [~] Task: Audit and fix meal planning views for mobile
-    - [ ] Test CalendarView at 375px and 768px — fix calendar layout, day cell sizing
-    - [ ] Test MealDetails at 375px and 768px — fix content layout
-    - [ ] Test MealForm at 375px and 768px — fix form usability
-    - [ ] Test UpcomingMeals at 375px and 768px — fix list layout
-    - [ ] Test MealTemplates at 375px and 768px — fix card layout
+- [x] Task: Audit and fix meal planning views for mobile [1190206]
+    - [x] Test CalendarView at 375px and 768px — fix calendar layout, day cell sizing
+    - [x] Test MealDetails at 375px and 768px — fix content layout
+    - [x] Test MealForm at 375px and 768px — fix form usability
+    - [x] Test UpcomingMeals at 375px and 768px — fix list layout
+    - [x] Test MealTemplates at 375px and 768px — fix card layout
 
-- [ ] Task: Audit and fix navigation, auth, and admin views for mobile
+- [~] Task: Audit and fix navigation, auth, and admin views for mobile
     - [ ] Test navigation bar/menu at 375px — fix menu usability, hamburger behavior
     - [ ] Test Login page at 375px and 768px — fix form layout
     - [ ] Test Admin Dashboard at 375px and 768px — fix table/list layouts
