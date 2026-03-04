@@ -64,7 +64,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Shared Style Utilities' (Protocol in workflow.md) [3fa381e]
 
-## Phase 3: Component Color Migration [FR-1.3, FR-1.4, FR-3]
+## Phase 3: Component Color Migration [FR-1.3, FR-1.4, FR-3] [checkpoint: 3cda6cf]
 
 - [x] Task: Write tests for component token usage [3c16d08]
     - [ ] Test that button components render with `button.text` token instead of literal "white"
