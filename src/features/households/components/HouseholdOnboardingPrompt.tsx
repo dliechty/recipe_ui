@@ -106,7 +106,7 @@ const HouseholdOnboardingPrompt = () => {
                             variant="outline"
                             borderColor="vscode.accent"
                             color="vscode.accent"
-                            _hover={{ bg: 'whiteAlpha.100' }}
+                            _hover={{ bg: 'overlay.hover' }}
                             onClick={() => setShowJoinDialog(true)}
                         >
                             Join a Household

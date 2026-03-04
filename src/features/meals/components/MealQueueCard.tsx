@@ -108,7 +108,7 @@ const MealQueueCard = ({ meal, recipeNames, selectionMode, isSelected, onToggleS
                             </Text>
                         </HStack>
 
-                        <HStack gap={1} fontSize="sm" color={meal.is_shopped ? 'green.400' : 'fg.muted'}>
+                        <HStack gap={1} fontSize="sm" color={meal.is_shopped ? 'success.fg' : 'fg.muted'}>
                             <FaShoppingBag size={12} />
                             <Text>{meal.is_shopped ? 'Shopped' : 'Not Shopped'}</Text>
                         </HStack>

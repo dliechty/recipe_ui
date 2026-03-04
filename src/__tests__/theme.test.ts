@@ -93,6 +93,22 @@ describe("Theme semantic tokens", () => {
     it("has overlay.backdrop", () => {
       expectTokenExists(colors, "overlay", "backdrop");
     });
+
+    it("has overlay.subtle", () => {
+      expectTokenExists(colors, "overlay", "subtle");
+    });
+
+    it("has overlay.hover", () => {
+      expectTokenExists(colors, "overlay", "hover");
+    });
+
+    it("has overlay.active", () => {
+      expectTokenExists(colors, "overlay", "active");
+    });
+
+    it("has overlay.pressed", () => {
+      expectTokenExists(colors, "overlay", "pressed");
+    });
   });
 
   // ---------------------------------------------------------------
@@ -126,6 +142,14 @@ describe("Theme semantic tokens", () => {
     it("has danger.bgHover", () => {
       expectTokenExists(colors, "danger", "bgHover");
     });
+
+    it("has danger.muted", () => {
+      expectTokenExists(colors, "danger", "muted");
+    });
+
+    it("has danger.bgSubtle", () => {
+      expectTokenExists(colors, "danger", "bgSubtle");
+    });
   });
 
   describe("success semantic tokens", () => {
@@ -139,6 +163,28 @@ describe("Theme semantic tokens", () => {
 
     it("has success.bgHover", () => {
       expectTokenExists(colors, "success", "bgHover");
+    });
+  });
+
+  describe("warning semantic tokens", () => {
+    it("has warning.fg", () => {
+      expectTokenExists(colors, "warning", "fg");
+    });
+
+    it("has warning.bg", () => {
+      expectTokenExists(colors, "warning", "bg");
+    });
+
+    it("has warning.bgHover", () => {
+      expectTokenExists(colors, "warning", "bgHover");
+    });
+
+    it("has warning.border", () => {
+      expectTokenExists(colors, "warning", "border");
+    });
+
+    it("has warning.bgSubtle", () => {
+      expectTokenExists(colors, "warning", "bgSubtle");
     });
   });
 
@@ -163,6 +209,30 @@ describe("Theme semantic tokens", () => {
 
     it("has badge.pending", () => {
       expectTokenExists(colors, "badge", "pending");
+    });
+
+    it("has badge.adminBg", () => {
+      expectTokenExists(colors, "badge", "adminBg");
+    });
+
+    it("has badge.adminText", () => {
+      expectTokenExists(colors, "badge", "adminText");
+    });
+
+    it("has badge.memberBg", () => {
+      expectTokenExists(colors, "badge", "memberBg");
+    });
+
+    it("has badge.memberText", () => {
+      expectTokenExists(colors, "badge", "memberText");
+    });
+
+    it("has badge.pendingBg", () => {
+      expectTokenExists(colors, "badge", "pendingBg");
+    });
+
+    it("has badge.pendingText", () => {
+      expectTokenExists(colors, "badge", "pendingText");
     });
   });
 

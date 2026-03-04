@@ -88,13 +88,13 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 }}
                                 placeholder="Enter meal name"
                                 bg="vscode.inputBg"
-                                borderColor={nameError ? 'red.400' : 'border.default'}
+                                borderColor={nameError ? 'danger.fg' : 'border.default'}
                                 color="fg.default"
-                                _hover={{ borderColor: nameError ? 'red.400' : 'vscode.accent' }}
-                                _focus={{ borderColor: nameError ? 'red.400' : 'vscode.accent', boxShadow: nameError ? '0 0 0 1px var(--chakra-colors-red-400)' : '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
+                                _hover={{ borderColor: nameError ? 'danger.fg' : 'vscode.accent' }}
+                                _focus={{ borderColor: nameError ? 'danger.fg' : 'vscode.accent', boxShadow: nameError ? '0 0 0 1px var(--chakra-colors-danger-fg)' : '0 0 0 1px var(--chakra-colors-vscode-accent)' }}
                             />
                             {nameError && (
-                                <Text color="red.400" fontSize="sm" mt={1}>{nameError}</Text>
+                                <Text color="danger.fg" fontSize="sm" mt={1}>{nameError}</Text>
                             )}
                         </Box>
 

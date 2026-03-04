@@ -244,7 +244,7 @@ const UpcomingMeals = () => {
                             variant="outline"
                             borderColor="vscode.accent"
                             color="vscode.accent"
-                            _hover={{ bg: "whiteAlpha.100" }}
+                            _hover={{ bg: "overlay.hover" }}
                             size="xs"
                         >
                             <Icon as={FaCheckSquare} mr={1} /> Select
@@ -269,7 +269,7 @@ const UpcomingMeals = () => {
                                 onClick={handleExitSelectionMode}
                                 variant="ghost"
                                 color="fg.muted"
-                                _hover={{ bg: "whiteAlpha.100" }}
+                                _hover={{ bg: "overlay.hover" }}
                                 size="xs"
                             >
                                 Cancel
@@ -281,7 +281,7 @@ const UpcomingMeals = () => {
                         variant={viewMode === 'queue' ? 'solid' : 'ghost'}
                         bg={viewMode === 'queue' ? 'vscode.button' : undefined}
                         color={viewMode === 'queue' ? 'white' : 'fg.muted'}
-                        _hover={{ bg: viewMode === 'queue' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
+                        _hover={{ bg: viewMode === 'queue' ? 'vscode.buttonHover' : 'overlay.hover' }}
                         size="xs"
                         onClick={() => setSearchParams(prev => { prev.delete('view'); return prev; })}
                     >
@@ -292,7 +292,7 @@ const UpcomingMeals = () => {
                         variant={viewMode === 'calendar' ? 'solid' : 'ghost'}
                         bg={viewMode === 'calendar' ? 'vscode.button' : undefined}
                         color={viewMode === 'calendar' ? 'white' : 'fg.muted'}
-                        _hover={{ bg: viewMode === 'calendar' ? 'vscode.buttonHover' : 'whiteAlpha.100' }}
+                        _hover={{ bg: viewMode === 'calendar' ? 'vscode.buttonHover' : 'overlay.hover' }}
                         size="xs"
                         onClick={() => setSearchParams(prev => { prev.set('view', 'calendar'); return prev; })}
                     >
@@ -303,7 +303,7 @@ const UpcomingMeals = () => {
                         variant="outline"
                         borderColor="vscode.accent"
                         color="vscode.accent"
-                        _hover={{ bg: "whiteAlpha.100" }}
+                        _hover={{ bg: "overlay.hover" }}
                         size="xs"
                     >
                         <Icon as={FaShoppingCart} mr={1} /> Shopping List
@@ -339,7 +339,7 @@ const UpcomingMeals = () => {
                                 variant="outline"
                                 borderColor="vscode.accent"
                                 color="vscode.accent"
-                                _hover={{ bg: "whiteAlpha.100" }}
+                                _hover={{ bg: "overlay.hover" }}
                                 size="sm"
                             >
                                 <Icon as={FaMagic} mr={1} /> Generate Meals
@@ -424,9 +424,9 @@ const UpcomingMeals = () => {
                         </Text>
                         <Button
                             onClick={() => handleBulkAction({ status: MealStatus.COOKED })}
-                            bg="green.600"
+                            bg="success.bg"
                             color="button.text"
-                            _hover={{ bg: "green.500" }}
+                            _hover={{ bg: "success.bgHover" }}
                             size="xs"
                             loading={bulkStatusUpdate.isPending}
                         >
@@ -434,9 +434,9 @@ const UpcomingMeals = () => {
                         </Button>
                         <Button
                             onClick={() => handleBulkAction({ status: MealStatus.CANCELLED })}
-                            bg="red.600"
+                            bg="danger.bg"
                             color="button.text"
-                            _hover={{ bg: "red.500" }}
+                            _hover={{ bg: "danger.bgHover" }}
                             size="xs"
                             loading={bulkStatusUpdate.isPending}
                         >
@@ -445,9 +445,9 @@ const UpcomingMeals = () => {
                         <Button
                             onClick={() => handleBulkAction({ is_shopped: true })}
                             variant="outline"
-                            borderColor="green.400"
-                            color="green.400"
-                            _hover={{ bg: "whiteAlpha.100" }}
+                            borderColor="success.fg"
+                            color="success.fg"
+                            _hover={{ bg: "overlay.hover" }}
                             size="xs"
                             loading={bulkStatusUpdate.isPending}
                         >
@@ -458,7 +458,7 @@ const UpcomingMeals = () => {
                             variant="outline"
                             borderColor="fg.muted"
                             color="fg.muted"
-                            _hover={{ bg: "whiteAlpha.100" }}
+                            _hover={{ bg: "overlay.hover" }}
                             size="xs"
                             loading={bulkStatusUpdate.isPending}
                         >

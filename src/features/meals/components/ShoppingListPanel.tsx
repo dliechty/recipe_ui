@@ -121,7 +121,7 @@ const ShoppingListPanel = ({ isOpen, onClose, meals, recipes }: ShoppingListPane
                 cursor="pointer"
                 onClick={() => toggleCheck(key)}
                 opacity={isChecked ? 0.5 : 1}
-                _hover={{ bg: 'whiteAlpha.100', borderRadius: 'md' }}
+                _hover={{ bg: 'overlay.hover', borderRadius: 'md' }}
                 p={2}
                 borderRadius="md"
                 transition="all 0.2s"
@@ -129,7 +129,7 @@ const ShoppingListPanel = ({ isOpen, onClose, meals, recipes }: ShoppingListPane
                 <List.Indicator asChild>
                     <Icon
                         as={isChecked ? FaCheckSquare : FaRegSquare}
-                        color={isChecked ? "green.400" : "fg.muted"}
+                        color={isChecked ? "success.fg" : "fg.muted"}
                         mr={3}
                         boxSize={4}
                     />
@@ -317,7 +317,7 @@ const ShoppingListPanel = ({ isOpen, onClose, meals, recipes }: ShoppingListPane
                                         onClick={(e) => toggleRecipe(recipe.core.name, e)}
                                         bg="bg.muted"
                                         justify="space-between"
-                                        _hover={{ bg: 'whiteAlpha.100' }}
+                                        _hover={{ bg: 'overlay.hover' }}
                                     >
                                         <HStack>
                                             <Heading size="sm" fontSize="sm">{recipe.core.name}</Heading>

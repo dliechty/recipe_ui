@@ -25,10 +25,10 @@ const NavItem = ({ to, children }: NavItemProps) => {
             px={3}
             py={2}
             rounded={'md'}
-            bg={isActive ? 'whiteAlpha.200' : undefined}
+            bg={isActive ? 'overlay.active' : undefined}
             _hover={{
                 textDecoration: 'none',
-                bg: 'whiteAlpha.200',
+                bg: 'overlay.active',
             }}
             _active={{
                 bg: 'vscode.button',
@@ -78,8 +78,8 @@ const Layout = ({ children }: LayoutProps) => {
                                             aria-label='Options'
                                             variant='outline'
                                             color="fg.default"
-                                            _hover={{ bg: 'whiteAlpha.200' }}
-                                            _active={{ bg: 'whiteAlpha.300' }}
+                                            _hover={{ bg: 'overlay.active' }}
+                                            _active={{ bg: 'overlay.pressed' }}
                                             _expanded={{
                                                 bg: 'vscode.button',
                                                 color: 'white',
@@ -123,8 +123,8 @@ const Layout = ({ children }: LayoutProps) => {
                                     aria-label="Open household selector"
                                     variant="ghost"
                                     color="fg.default"
-                                    _hover={{ bg: 'whiteAlpha.200' }}
-                                    _active={{ bg: 'whiteAlpha.300' }}
+                                    _hover={{ bg: 'overlay.active' }}
+                                    _active={{ bg: 'overlay.pressed' }}
                                     size="sm"
                                     onClick={() => setIsHouseholdDrawerOpen(true)}
                                     minW="auto"
@@ -159,7 +159,7 @@ const Layout = ({ children }: LayoutProps) => {
                                     aria-label="Open household selector"
                                     variant="ghost"
                                     color="fg.default"
-                                    _hover={{ bg: 'whiteAlpha.200' }}
+                                    _hover={{ bg: 'overlay.active' }}
                                     size="sm"
                                     onClick={() => setIsHouseholdDrawerOpen(true)}
                                 >

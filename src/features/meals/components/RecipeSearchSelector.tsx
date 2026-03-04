@@ -139,7 +139,7 @@ const RecipeSearchSelector = ({ selectedRecipeIds, onChange }: RecipeSearchSelec
                                         onClick={() => handleRemoveSelected(id)}
                                         display="inline-flex"
                                         alignItems="center"
-                                        _hover={{ color: "red.200" }}
+                                        _hover={{ color: "danger.muted" }}
                                         cursor="pointer"
                                     >
                                         <Icon as={FaTimes} />

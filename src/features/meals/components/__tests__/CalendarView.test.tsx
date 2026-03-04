@@ -499,7 +499,7 @@ describe('CalendarView', () => {
             renderWithProviders(<CalendarView meals={shoppedMeals} recipeNames={{}} />);
             const icon = screen.getByTestId('shopping-icon-meal-1');
             expect(icon).toBeInTheDocument();
-            expect(icon).toHaveStyle({ color: 'var(--chakra-colors-green-400)' });
+            expect(icon).toHaveStyle({ color: 'var(--chakra-colors-success-fg)' });
         });
 
         it('renders muted shopping icon when is_shopped is false', () => {

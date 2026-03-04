@@ -161,7 +161,7 @@ const RecipeBoxPage = () => {
                         size="xl"
                         color="fg.default"
                         cursor="pointer"
-                        _hover={{ color: 'green.400' }}
+                        _hover={{ color: 'success.fg' }}
                         transition="color 0.2s"
                         onClick={() => setShowSnake(true)}
                     >

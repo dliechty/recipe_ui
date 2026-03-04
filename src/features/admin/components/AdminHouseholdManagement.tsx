@@ -82,9 +82,9 @@ const AdminMemberList = ({
                                 size="2xs"
                                 variant="outline"
                                 colorPalette="red"
-                                borderColor="red.500"
-                                color="red.400"
-                                _hover={{ bg: 'red.900' }}
+                                borderColor="danger.fg"
+                                color="danger.fg"
+                                _hover={{ bg: 'danger.bgSubtle' }}
                                 onClick={() => removeMember({ householdId: household.id, userId: member.user_id })}
                             >
                                 Remove
@@ -129,7 +129,7 @@ const AdminMemberList = ({
                                     px={3}
                                     py={2}
                                     bg="bg.muted"
-                                    _hover={{ bg: 'whiteAlpha.100' }}
+                                    _hover={{ bg: 'overlay.hover' }}
                                     cursor="pointer"
                                     onClick={() => handleAddMember(user.id)}
                                 >
@@ -261,7 +261,7 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                     variant="outline"
                     borderColor="border.default"
                     color="fg.muted"
-                    _hover={{ bg: 'whiteAlpha.100' }}
+                    _hover={{ bg: 'overlay.hover' }}
                     onClick={() => setShowMembers((prev) => !prev)}
                 >
                     {showMembers ? 'Hide Members' : 'View Members'}
@@ -271,9 +271,9 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                     data-testid={`delete-btn-${household.id}`}
                     size="xs"
                     variant="outline"
-                    borderColor="red.500"
-                    color="red.400"
-                    _hover={{ bg: 'red.900' }}
+                    borderColor="danger.fg"
+                    color="danger.fg"
+                    _hover={{ bg: 'danger.bgSubtle' }}
                     onClick={() => onDelete(household.id)}
                 >
                     Delete
@@ -417,9 +417,9 @@ const AdminHouseholdManagement = () => {
                         <HStack justify="flex-end" p={4} gap={3} borderTopWidth={1} borderColor="border.default">
                             <Button
                                 data-testid="delete-confirm-btn"
-                                bg="red.600"
+                                bg="danger.bg"
                                 color="button.text"
-                                _hover={{ bg: 'red.700' }}
+                                _hover={{ bg: 'danger.bgHover' }}
                                 size="sm"
                                 onClick={handleDeleteConfirm}
                             >

@@ -83,9 +83,9 @@ const HouseholdMemberList = ({
                                     size="2xs"
                                     variant="outline"
                                     colorPalette="red"
-                                    borderColor="red.500"
-                                    color="red.400"
-                                    _hover={{ bg: 'red.900' }}
+                                    borderColor="danger.fg"
+                                    color="danger.fg"
+                                    _hover={{ bg: 'danger.bgSubtle' }}
                                     onClick={() => handleRemove(member.user_id)}
                                 >
                                     Remove
@@ -150,8 +150,8 @@ const HouseholdRow = ({
                             px={2}
                             py={0.5}
                             borderRadius="full"
-                            bg={isCreator ? 'blue.900' : 'gray.700'}
-                            color={isCreator ? 'blue.200' : 'gray.300'}
+                            bg={isCreator ? 'badge.adminBg' : 'badge.memberBg'}
+                            color={isCreator ? 'badge.adminText' : 'badge.memberText'}
                             fontWeight="semibold"
                         >
                             {isCreator ? 'Creator' : 'Member'}
@@ -163,8 +163,8 @@ const HouseholdRow = ({
                                 px={2}
                                 py={0.5}
                                 borderRadius="full"
-                                bg="yellow.900"
-                                color="yellow.300"
+                                bg="badge.pendingBg"
+                                color="badge.pendingText"
                                 fontWeight="semibold"
                             >
                                 Primary
@@ -211,9 +211,9 @@ const HouseholdRow = ({
                     data-testid={`set-primary-btn-${household.id}`}
                     size="xs"
                     variant="outline"
-                    borderColor="yellow.500"
-                    color="yellow.400"
-                    _hover={{ bg: 'yellow.900' }}
+                    borderColor="badge.pending"
+                    color="status.warning"
+                    _hover={{ bg: 'badge.pendingBg' }}
                     onClick={handleTogglePrimary}
                 >
                     {isPrimary ? 'Unset Primary' : 'Set Primary'}
@@ -226,7 +226,7 @@ const HouseholdRow = ({
                     variant="outline"
                     borderColor="border.default"
                     color="fg.muted"
-                    _hover={{ bg: 'whiteAlpha.100' }}
+                    _hover={{ bg: 'overlay.hover' }}
                     onClick={() => setShowMembers((prev) => !prev)}
                 >
                     {showMembers ? 'Hide Members' : 'Manage Members'}
@@ -237,9 +237,9 @@ const HouseholdRow = ({
                     data-testid={`leave-btn-${household.id}`}
                     size="xs"
                     variant="outline"
-                    borderColor="orange.500"
-                    color="orange.400"
-                    _hover={{ bg: 'orange.900' }}
+                    borderColor="warning.border"
+                    color="warning.fg"
+                    _hover={{ bg: 'warning.bgSubtle' }}
                     onClick={() => onLeave(household.id)}
                 >
                     Leave
@@ -251,9 +251,9 @@ const HouseholdRow = ({
                         data-testid={`delete-btn-${household.id}`}
                         size="xs"
                         variant="outline"
-                        borderColor="red.500"
-                        color="red.400"
-                        _hover={{ bg: 'red.900' }}
+                        borderColor="danger.fg"
+                        color="danger.fg"
+                        _hover={{ bg: 'danger.bgSubtle' }}
                         onClick={() => onDelete(household.id)}
                     >
                         Delete
@@ -415,7 +415,7 @@ const AccountHouseholdSection = () => {
                             variant="outline"
                             borderColor="vscode.accent"
                             color="vscode.accent"
-                            _hover={{ bg: 'whiteAlpha.100' }}
+                            _hover={{ bg: 'overlay.hover' }}
                             onClick={() => setShowJoinDialog(true)}
                         >
                             Join Household
@@ -490,9 +490,9 @@ const AccountHouseholdSection = () => {
                         <HStack justify="flex-end" p={4} gap={3} borderTopWidth={1} borderColor="border.default">
                             <Button
                                 data-testid="leave-confirm-btn"
-                                bg="orange.600"
+                                bg="warning.bg"
                                 color="button.text"
-                                _hover={{ bg: 'orange.700' }}
+                                _hover={{ bg: 'warning.bgHover' }}
                                 size="sm"
                                 onClick={handleLeaveConfirm}
                             >
@@ -556,9 +556,9 @@ const AccountHouseholdSection = () => {
                         <HStack justify="flex-end" p={4} gap={3} borderTopWidth={1} borderColor="border.default">
                             <Button
                                 data-testid="delete-confirm-btn"
-                                bg="red.600"
+                                bg="danger.bg"
                                 color="button.text"
-                                _hover={{ bg: 'red.700' }}
+                                _hover={{ bg: 'danger.bgHover' }}
                                 size="sm"
                                 onClick={handleDeleteConfirm}
                             >

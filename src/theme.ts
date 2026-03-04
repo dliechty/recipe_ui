@@ -42,6 +42,24 @@ export const vsCodeColors = {
     badgePending: "#854d0e",
     // Overlay
     backdrop: "rgba(0, 0, 0, 0.6)",
+    overlaySubtle: "rgba(255, 255, 255, 0.04)",
+    overlayHover: "rgba(255, 255, 255, 0.06)",
+    overlayActive: "rgba(255, 255, 255, 0.16)",
+    overlayPressed: "rgba(255, 255, 255, 0.24)",
+    // Danger extended
+    dangerMuted: "#fca5a5",
+    dangerBgSubtle: "#450a0a",
+    // Warning action (for transfer/warning action buttons - amber tones)
+    warningButton: "#b45309",
+    warningButtonHover: "#92400e",
+    warningBgSubtle: "#451a03",
+    // Badge extended
+    badgeAdminBg: "#1e3a5f",
+    badgeAdminText: "#93c5fd",
+    badgeMemberBg: "#374151",
+    badgeMemberText: "#d1d5db",
+    badgePendingBg: "#713f12",
+    badgePendingText: "#fde68a",
     // Shadows
     menuShadow: "rgba(0, 0, 0, 0.4)",
 } as const;
@@ -86,6 +104,24 @@ const config = defineConfig({
                     badgePending: { value: vsCodeColors.badgePending },
                     // Overlay
                     backdrop: { value: vsCodeColors.backdrop },
+                    overlaySubtle: { value: vsCodeColors.overlaySubtle },
+                    overlayHover: { value: vsCodeColors.overlayHover },
+                    overlayActive: { value: vsCodeColors.overlayActive },
+                    overlayPressed: { value: vsCodeColors.overlayPressed },
+                    // Danger extended
+                    dangerMuted: { value: vsCodeColors.dangerMuted },
+                    dangerBgSubtle: { value: vsCodeColors.dangerBgSubtle },
+                    // Warning action
+                    warningButton: { value: vsCodeColors.warningButton },
+                    warningButtonHover: { value: vsCodeColors.warningButtonHover },
+                    warningBgSubtle: { value: vsCodeColors.warningBgSubtle },
+                    // Badge extended
+                    badgeAdminBg: { value: vsCodeColors.badgeAdminBg },
+                    badgeAdminText: { value: vsCodeColors.badgeAdminText },
+                    badgeMemberBg: { value: vsCodeColors.badgeMemberBg },
+                    badgeMemberText: { value: vsCodeColors.badgeMemberText },
+                    badgePendingBg: { value: vsCodeColors.badgePendingBg },
+                    badgePendingText: { value: vsCodeColors.badgePendingText },
                     // Shadows
                     menuShadow: { value: vsCodeColors.menuShadow },
                 },
@@ -139,6 +175,8 @@ const config = defineConfig({
                     fg: { value: "{colors.vscode.errorText}" },
                     bg: { value: "{colors.vscode.dangerButton}" },
                     bgHover: { value: "{colors.vscode.dangerButtonHover}" },
+                    muted: { value: "{colors.vscode.dangerMuted}" },
+                    bgSubtle: { value: "{colors.vscode.dangerBgSubtle}" },
                 },
                 // Success semantic tokens
                 success: {
@@ -151,15 +189,33 @@ const config = defineConfig({
                     fg: { value: "{colors.vscode.accent}" },
                     bg: { value: "{colors.vscode.infoBg}" },
                 },
+                // Warning semantic tokens
+                warning: {
+                    fg: { value: "{colors.vscode.warningText}" },
+                    bg: { value: "{colors.vscode.warningButton}" },
+                    bgHover: { value: "{colors.vscode.warningButtonHover}" },
+                    border: { value: "{colors.vscode.warningBorder}" },
+                    bgSubtle: { value: "{colors.vscode.warningBgSubtle}" },
+                },
                 // Badge semantic tokens
                 badge: {
                     admin: { value: "{colors.vscode.badgeAdmin}" },
                     member: { value: "{colors.vscode.badgeMember}" },
                     pending: { value: "{colors.vscode.badgePending}" },
+                    adminBg: { value: "{colors.vscode.badgeAdminBg}" },
+                    adminText: { value: "{colors.vscode.badgeAdminText}" },
+                    memberBg: { value: "{colors.vscode.badgeMemberBg}" },
+                    memberText: { value: "{colors.vscode.badgeMemberText}" },
+                    pendingBg: { value: "{colors.vscode.badgePendingBg}" },
+                    pendingText: { value: "{colors.vscode.badgePendingText}" },
                 },
                 // Overlay semantic tokens
                 overlay: {
                     backdrop: { value: "{colors.vscode.backdrop}" },
+                    subtle: { value: "{colors.vscode.overlaySubtle}" },
+                    hover: { value: "{colors.vscode.overlayHover}" },
+                    active: { value: "{colors.vscode.overlayActive}" },
+                    pressed: { value: "{colors.vscode.overlayPressed}" },
                 },
             },
         },

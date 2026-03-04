@@ -68,10 +68,10 @@ const DraggableMealCard = ({ meal, recipeNames, onClick, selectionMode, isSelect
             {...(selectionMode ? {} : listeners)}
             p={1}
             borderRadius="sm"
-            bg="whiteAlpha.100"
+            bg="overlay.hover"
             cursor={selectionMode ? 'pointer' : 'grab'}
             opacity={isDragging ? 0.4 : 1}
-            _hover={{ bg: 'whiteAlpha.200' }}
+            _hover={{ bg: 'overlay.active' }}
             onClick={handleClick}
             {...(isSelected ? { borderWidth: 2, borderColor: 'vscode.accent', 'data-selected': 'true' } : {})}
         >
@@ -92,7 +92,7 @@ const DraggableMealCard = ({ meal, recipeNames, onClick, selectionMode, isSelect
                 <Box
                     as={FaShoppingBag}
                     boxSize="10px"
-                    color={meal.is_shopped ? 'green.400' : 'fg.muted'}
+                    color={meal.is_shopped ? 'success.fg' : 'fg.muted'}
                     data-testid={`shopping-icon-${meal.id}`}
                     flexShrink={0}
                 />
@@ -118,9 +118,9 @@ const DroppableDaySlot = ({ dateStr, isToday, dayLabel, children }: DroppableDay
             ref={setNodeRef}
             data-testid={`calendar-day-${dateStr}`}
             borderWidth={isOver ? 2 : 1}
-            borderColor={isOver ? 'green.400' : isToday ? 'vscode.accent' : 'border.default'}
+            borderColor={isOver ? 'success.fg' : isToday ? 'vscode.accent' : 'border.default'}
             borderRadius="md"
-            bg={isOver ? 'whiteAlpha.100' : isToday ? 'whiteAlpha.50' : 'bg.surface'}
+            bg={isOver ? 'overlay.hover' : isToday ? 'overlay.subtle' : 'bg.surface'}
             minH="120px"
             transition="border-color 0.15s, background 0.15s"
         >
@@ -129,7 +129,7 @@ const DroppableDaySlot = ({ dateStr, isToday, dayLabel, children }: DroppableDay
                 py={1}
                 borderBottomWidth={1}
                 borderColor="border.default"
-                bg={isToday ? 'whiteAlpha.100' : undefined}
+                bg={isToday ? 'overlay.hover' : undefined}
             >
                 <Text
                     fontSize="xs"
@@ -160,10 +160,10 @@ const DroppableUnscheduledArea = ({ children }: DroppableUnscheduledAreaProps) =
             ref={setNodeRef}
             data-testid="calendar-unscheduled"
             borderWidth={isOver ? 2 : 1}
-            borderColor={isOver ? 'green.400' : 'border.default'}
+            borderColor={isOver ? 'success.fg' : 'border.default'}
             borderRadius="md"
             p={3}
-            bg={isOver ? 'whiteAlpha.100' : undefined}
+            bg={isOver ? 'overlay.hover' : undefined}
             transition="border-color 0.15s, background 0.15s"
         >
             <Text fontSize="sm" fontWeight="semibold" color="fg.default" mb={2}>

@@ -318,7 +318,7 @@ const RecipeDetails = () => {
                                 {recipe.core.source && (
                                     <Text color="fg.muted" mb={4} fontSize="sm">
                                         Source: {recipe.core.source_url ? (
-                                            <Link href={recipe.core.source_url} target="_blank" rel="noopener noreferrer" color="blue.500" textDecoration="underline">
+                                            <Link href={recipe.core.source_url} target="_blank" rel="noopener noreferrer" color="link.default" textDecoration="underline">
                                                 {recipe.core.source}
                                             </Link>
                                         ) : (

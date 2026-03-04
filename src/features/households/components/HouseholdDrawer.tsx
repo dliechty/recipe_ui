@@ -129,14 +129,14 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                         <Box
                                             data-testid="personal-option"
                                             data-active={activeHouseholdId === null ? 'true' : 'false'}
-                                            bg={activeHouseholdId === null ? 'whiteAlpha.200' : 'transparent'}
+                                            bg={activeHouseholdId === null ? 'overlay.active' : 'transparent'}
                                             borderRadius="md"
                                             px={3}
                                             py={2}
                                             borderWidth={1}
                                             borderColor={activeHouseholdId === null ? 'vscode.accent' : 'border.default'}
                                             cursor="pointer"
-                                            _hover={{ bg: 'whiteAlpha.100' }}
+                                            _hover={{ bg: 'overlay.hover' }}
                                             onClick={handleSwitchToPersonal}
                                         >
                                             <HStack justify="space-between" align="center">
@@ -164,7 +164,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                                     key={household.id}
                                                     data-testid={`household-row-${household.id}`}
                                                     data-active={isActive ? 'true' : 'false'}
-                                                    bg={isActive ? 'whiteAlpha.200' : 'transparent'}
+                                                    bg={isActive ? 'overlay.active' : 'transparent'}
                                                     borderRadius="md"
                                                     px={3}
                                                     py={2}
@@ -182,7 +182,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                                                     {household.name}
                                                                 </Text>
                                                                 {isPrimary && (
-                                                                    <Text fontSize="xs" color="yellow.400" fontWeight="bold">Primary</Text>
+                                                                    <Text fontSize="xs" color="status.warning" fontWeight="bold">Primary</Text>
                                                                 )}
                                                             </HStack>
                                                             {!isActive && (
@@ -193,7 +193,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                                                     colorPalette="blue"
                                                                     borderColor="vscode.accent"
                                                                     color="vscode.accent"
-                                                                    _hover={{ bg: 'whiteAlpha.100' }}
+                                                                    _hover={{ bg: 'overlay.hover' }}
                                                                     onClick={() => handleSwitchToHousehold(household.id)}
                                                                 >
                                                                     Switch
@@ -221,8 +221,8 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                                                 >
                                                                     <Switch.HiddenInput />
                                                                     <Switch.Control
-                                                                        bg={isPrimary ? 'yellow.500' : 'vscode.secondaryButton'}
-                                                                        _checked={{ bg: 'yellow.500' }}
+                                                                        bg={isPrimary ? 'badge.pending' : 'vscode.secondaryButton'}
+                                                                        _checked={{ bg: 'badge.pending' }}
                                                                     >
                                                                         <Switch.Thumb bg="white" />
                                                                     </Switch.Control>
