@@ -1,4 +1,4 @@
-import Select, { MultiValue } from 'react-select';
+import Select, { MultiValue, StylesConfig } from 'react-select';
 import { Box, Text } from '@chakra-ui/react';
 import { selectStyles } from '../../../utils/styles';
 
@@ -32,7 +32,7 @@ const RecipeMultiSelect = ({ label, options, value, onChange, placeholder, testI
                 options={options}
                 value={selectedOptions}
                 onChange={handleChange}
-                styles={selectStyles.compact}
+                styles={selectStyles.compact as StylesConfig<Option, true>}
                 placeholder={placeholder || "Select..."}
                 instanceId={`select-${label.replace(/\s+/g, '-').toLowerCase()}`}
                 menuPortalTarget={document.body}

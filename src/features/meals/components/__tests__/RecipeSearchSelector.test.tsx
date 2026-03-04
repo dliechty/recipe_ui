@@ -35,7 +35,7 @@ describe('RecipeSearchSelector', () => {
         vi.clearAllMocks();
 
         // Mock useRecipeMeta
-        vi.mocked(useRecipeMetaHook.useRecipeMeta).mockReturnValue({ data: ['Dinner', 'Lunch'] } as unknown as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+        vi.mocked(useRecipeMetaHook.useRecipeMeta).mockReturnValue({ data: ['Dinner', 'Lunch'] } as unknown as ReturnType<typeof useRecipeMetaHook.useRecipeMeta>);
 
         // Mock useInfiniteRecipes
         vi.mocked(useRecipesHook.useInfiniteRecipes).mockImplementation((_limit?: number, filters?: useRecipesHook.RecipeFilters) => {
@@ -46,7 +46,7 @@ describe('RecipeSearchSelector', () => {
                     data: { pages: [{ recipes: mockRecipes.filter(r => ids.includes(r.core.id)) }] },
                     isLoading: false,
                     isPending: false
-                } as unknown as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+                } as unknown as ReturnType<typeof useRecipesHook.useInfiniteRecipes>;
             }
             // Default search results
             return {
@@ -56,7 +56,7 @@ describe('RecipeSearchSelector', () => {
                 fetchNextPage: vi.fn(),
                 hasNextPage: false,
                 isFetchingNextPage: false
-            } as unknown as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+            } as unknown as ReturnType<typeof useRecipesHook.useInfiniteRecipes>;
         });
     });
 

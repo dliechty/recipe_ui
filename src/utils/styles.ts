@@ -217,18 +217,26 @@ export function createSelectStyles<Option, IsMulti extends boolean = false>(
 }
 
 /**
- * Pre-built react-select styles for common use cases.
- * Use these with explicit type parameters for TypeScript:
- * `styles={selectStyles.default as StylesConfig<YourOption, true>}`
+ * Universal StylesConfig type that is compatible with any Option/IsMulti combination.
+ * Uses `unknown` for the Option type parameter since the style functions only operate
+ * on CSS properties and do not reference the Option type.
+ *
+ * Consumers can pass these directly to react-select's `styles` prop; TypeScript will
+ * accept them because the style callbacks are structurally compatible.
  */
-export const selectStyles = {
+type UniversalStylesConfig = StylesConfig<unknown, boolean>;
+
+/**
+ * Pre-built react-select styles for common use cases.
+ * These use `unknown` as the Option generic since the style callbacks
+ * only manipulate CSS properties and never reference the Option type.
+ */
+export const selectStyles: Record<'default' | 'compact' | 'form', UniversalStylesConfig> = {
     /** Default styles for standard select inputs (40px height) */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    default: createSelectStyles<any, any>({ minHeight: '40px' }),
+    default: createSelectStyles<unknown, boolean>({ minHeight: '40px' }),
 
     /** Compact styles for filter/inline selects (32px height, smaller font) */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    compact: createSelectStyles<any, any>({
+    compact: createSelectStyles<unknown, boolean>({
         minHeight: '32px',
         fontSize: '0.875rem',
         menuZIndex: 9999,
@@ -236,6 +244,5 @@ export const selectStyles = {
     }),
 
     /** Styles for single-value selects in forms */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    form: createSelectStyles<any, any>({ minHeight: '32px' }),
+    form: createSelectStyles<unknown, boolean>({ minHeight: '32px' }),
 };

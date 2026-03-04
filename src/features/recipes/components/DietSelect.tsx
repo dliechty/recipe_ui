@@ -1,4 +1,4 @@
-import Select, { MultiValue } from 'react-select';
+import Select, { MultiValue, StylesConfig } from 'react-select';
 import { DietType } from '../../../client';
 import { formatDietName } from '../../../utils/formatters';
 import { Box, Text } from '@chakra-ui/react';
@@ -35,7 +35,7 @@ const DietSelect = ({ selectedDiets, onChange }: DietSelectProps) => {
                 options={options}
                 value={value}
                 onChange={handleChange}
-                styles={selectStyles.default}
+                styles={selectStyles.default as StylesConfig<DietOption, true>}
                 placeholder="Select suitable diets..."
                 instanceId="diet-select" // accessiblity
             />

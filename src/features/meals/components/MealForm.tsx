@@ -9,7 +9,7 @@ import {
     Text,
     SimpleGrid
 } from '@chakra-ui/react';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import { MealCreate, MealStatus, MealClassification, MealItemBase } from '../../../client';
 import RecipeSearchSelector from './RecipeSearchSelector';
 import { selectStyles, inputStyles } from '../../../utils/styles';
@@ -106,7 +106,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 onChange={(option) => {
                                     setClassification(option ? (option.value as MealClassification) : '');
                                 }}
-                                styles={selectStyles.form}
+                                styles={selectStyles.form as StylesConfig<Option, false>}
                                 placeholder="Select classification..."
                                 isClearable
                                 aria-label="Classification"
@@ -124,7 +124,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                                 onChange={(option) => {
                                     if (option) setStatus(option.value as MealStatus);
                                 }}
-                                styles={selectStyles.form}
+                                styles={selectStyles.form as StylesConfig<Option, false>}
                                 isSearchable={false}
                                 aria-label="Status"
                                 inputId="status-select"

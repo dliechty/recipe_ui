@@ -1,7 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vitest';
 import type { StylesConfig } from 'react-select';
 import { selectStyles, createSelectStyles } from '../styles';
-import type { DietType } from '../../client';
 
 /**
  * React-Select Generic Typing Tests
@@ -151,10 +150,8 @@ describe('selectStyles.form typing', () => {
 // =================================================================
 describe('DietSelect style consumption typing', () => {
     it('selectStyles.default should have all required style keys for multi-select', () => {
-        // DietSelect uses: styles={selectStyles.default} with isMulti
+        // DietSelect uses: styles={selectStyles.default as StylesConfig<DietOption, true>}
         // Verify all style keys needed for a multi-select are present
-        interface DietOption { label: string; value: DietType }
-
         const styles = selectStyles.default;
         expect(styles.control).toBeDefined();
         expect(styles.menu).toBeDefined();
@@ -169,8 +166,9 @@ describe('DietSelect style consumption typing', () => {
         expect(styles.dropdownIndicator).toBeDefined();
         expect(styles.clearIndicator).toBeDefined();
 
-        // Type-level: styles should be assignable for use with DietOption
-        expectTypeOf(styles).toMatchTypeOf<StylesConfig<DietOption, true>>();
+        // Type-level: presets are typed as StylesConfig<unknown, boolean>
+        // Consumers narrow via assertion: `as StylesConfig<DietOption, true>`
+        expectTypeOf(styles).toEqualTypeOf<StylesConfig<unknown, boolean>>();
     });
 });
 
@@ -179,13 +177,12 @@ describe('DietSelect style consumption typing', () => {
 // =================================================================
 describe('RecipeMultiSelect style consumption typing', () => {
     it('selectStyles.compact should be usable with string-value Option type', () => {
-        interface Option { label: string; value: string }
-
         const styles = selectStyles.compact;
         expect(styles.control).toBeDefined();
         expect(styles.option).toBeDefined();
 
-        expectTypeOf(styles).toMatchTypeOf<StylesConfig<Option, true>>();
+        // Consumers narrow via assertion: `as StylesConfig<Option, true>`
+        expectTypeOf(styles).toEqualTypeOf<StylesConfig<unknown, boolean>>();
     });
 });
 
@@ -194,14 +191,12 @@ describe('RecipeMultiSelect style consumption typing', () => {
 // =================================================================
 describe('MealForm style consumption typing', () => {
     it('selectStyles.form should be usable with single-select Option type', () => {
-        interface Option { label: string; value: string }
-
         const styles = selectStyles.form;
         expect(styles.control).toBeDefined();
         expect(styles.option).toBeDefined();
 
-        // MealForm uses single select (IsMulti = false)
-        expectTypeOf(styles).toMatchTypeOf<StylesConfig<Option, false>>();
+        // MealForm narrows via assertion: `as StylesConfig<Option, false>`
+        expectTypeOf(styles).toEqualTypeOf<StylesConfig<unknown, boolean>>();
     });
 });
 

@@ -14,9 +14,10 @@ import { themeColors } from "../utils/styles";
 
 // Helper to access semantic tokens from the theme config
 function getSemanticColors() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cfg = system._config as any;
-  return cfg.theme?.semanticTokens?.colors ?? {};
+  const cfg = system._config as Record<string, Record<string, unknown>>;
+  const theme = cfg.theme as Record<string, Record<string, unknown>> | undefined;
+  const semanticTokens = theme?.semanticTokens as Record<string, Record<string, unknown>> | undefined;
+  return (semanticTokens?.colors ?? {}) as Record<string, unknown>;
 }
 
 // Helper to check that a token path resolves to an object with a `value` property
@@ -260,9 +261,11 @@ describe("Theme semantic tokens", () => {
 
 // Helper to get raw token values from theme.ts vscode tokens
 function getVscodeTokens(): Record<string, string> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cfg = system._config as any;
-  const vscode = cfg.theme?.tokens?.colors?.vscode ?? {};
+  const cfg = system._config as Record<string, Record<string, unknown>>;
+  const theme = cfg.theme as Record<string, Record<string, unknown>> | undefined;
+  const tokens = theme?.tokens as Record<string, Record<string, unknown>> | undefined;
+  const colorsObj = tokens?.colors as Record<string, Record<string, unknown>> | undefined;
+  const vscode = colorsObj?.vscode ?? {};
   const result: Record<string, string> = {};
   for (const [key, entry] of Object.entries(vscode)) {
     result[key] = (entry as { value: string }).value;
