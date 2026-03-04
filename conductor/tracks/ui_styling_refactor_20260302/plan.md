@@ -77,7 +77,7 @@
     - [ ] Verify each replacement renders correctly
     - [ ] Run full test suite (Green Phase)
 
-- [~] Task: Replace raw Chakra palette colors with semantic tokens
+- [x] Task: Replace raw Chakra palette colors with semantic tokens [9de2771]
     - [ ] Replace `red.400`/`red.600` usage with `danger.fg`/`danger.bg` tokens
     - [ ] Replace `green.400`/`green.600` usage with `success.fg`/`success.bg` tokens
     - [ ] Replace `blue.500`/`blue.900` usage with `link.default`/`info.bg` tokens
