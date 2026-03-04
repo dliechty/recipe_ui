@@ -90,7 +90,6 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
         }
 
         // Remove the UI-only 'id' field before submitting
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const slotsData: MealTemplateSlotCreate[] = slots.map(({ id, ...slot }) => slot);
 
         const templateData: MealTemplateCreate = {

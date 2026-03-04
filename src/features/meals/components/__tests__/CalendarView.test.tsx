@@ -28,7 +28,6 @@ vi.mock('@dnd-kit/core', () => ({
         transform: null,
         isDragging: false,
     }),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     useDroppable: (_opts: { id: string }) => ({
         setNodeRef: vi.fn(),
         isOver: false,

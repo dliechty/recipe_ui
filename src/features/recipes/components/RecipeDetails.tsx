@@ -154,7 +154,6 @@ const RecipeDetails = () => {
                         {currentUser && (
                             <Button
                                 onClick={() => {
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     const { audit, ...rest } = recipe;
                                     const id = recipe.core.id;
                                     navigate('/recipes/new', {
