@@ -160,12 +160,12 @@
     - [x] Test UpcomingMeals at 375px and 768px — fix list layout
     - [x] Test MealTemplates at 375px and 768px — fix card layout
 
-- [~] Task: Audit and fix navigation, auth, and admin views for mobile
-    - [ ] Test navigation bar/menu at 375px — fix menu usability, hamburger behavior
-    - [ ] Test Login page at 375px and 768px — fix form layout
-    - [ ] Test Admin Dashboard at 375px and 768px — fix table/list layouts
-    - [ ] Test User Account / Household pages at 375px and 768px
-    - [ ] Ensure all touch targets meet 44x44px minimum
+- [x] Task: Audit and fix navigation, auth, and admin views for mobile [88173be]
+    - [x] Test navigation bar/menu at 375px — fix menu usability, hamburger behavior
+    - [x] Test Login page at 375px and 768px — fix form layout
+    - [x] Test Admin Dashboard at 375px and 768px — fix table/list layouts
+    - [x] Test User Account / Household pages at 375px and 768px
+    - [x] Ensure all touch targets meet 44x44px minimum
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 5: Mobile Responsive Audit' (Protocol in workflow.md)
 
