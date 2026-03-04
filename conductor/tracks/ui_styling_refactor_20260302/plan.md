@@ -66,7 +66,7 @@
 
 ## Phase 3: Component Color Migration [FR-1.3, FR-1.4, FR-3]
 
-- [ ] Task: Write tests for component token usage
+- [x] Task: Write tests for component token usage [3c16d08]
     - [ ] Test that button components render with `button.text` token instead of literal "white"
     - [ ] Test that status/feedback components render with semantic status tokens
     - [ ] Test that ErrorBoundary uses `colorPalette` prop (Chakra v3)
