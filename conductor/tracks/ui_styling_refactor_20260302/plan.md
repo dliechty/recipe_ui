@@ -111,20 +111,20 @@
     - [x] Replace `any` in test files (RecipeSearchSelector.test.tsx, CalendarView.test.tsx) with proper types or `unknown`
     - [x] Run tests and confirm they pass (Green Phase)
 
-- [ ] Task: Remove `@typescript-eslint/no-unused-vars` suppressions
-    - [ ] Refactor destructuring in RecipeForm.tsx to use rest operator instead of naming unused vars
-    - [ ] Refactor destructuring in RecipeDetails.tsx similarly
-    - [ ] Refactor destructuring in TemplateForm.tsx similarly
-    - [ ] Fix CalendarView.test.tsx unused variable
-    - [ ] Run full test suite to verify no regressions
+- [x] Task: Remove `@typescript-eslint/no-unused-vars` suppressions [f8258af]
+    - [x] Refactor destructuring in RecipeForm.tsx to use rest operator instead of naming unused vars
+    - [x] Refactor destructuring in RecipeDetails.tsx similarly
+    - [x] Refactor destructuring in TemplateForm.tsx similarly
+    - [x] Fix CalendarView.test.tsx unused variable
+    - [x] Run full test suite to verify no regressions
 
-- [ ] Task: Remove `react-hooks/exhaustive-deps` suppressions
-    - [ ] Refactor RecipeFilters.tsx effect to properly declare dependencies (use useCallback or refs)
-    - [ ] Refactor MealFilters.tsx effect similarly
-    - [ ] Refactor TemplateFilters.tsx effect similarly
-    - [ ] Refactor UpcomingMeals.tsx effect similarly
-    - [ ] Refactor HouseholdContext.tsx effect similarly
-    - [ ] Run full test suite to verify no regressions
+- [x] Task: Remove `react-hooks/exhaustive-deps` suppressions [c0db92c]
+    - [x] Refactor RecipeFilters.tsx effect to properly declare dependencies (use useCallback or refs)
+    - [x] Refactor MealFilters.tsx effect similarly
+    - [x] Refactor TemplateFilters.tsx effect similarly
+    - [x] Refactor UpcomingMeals.tsx effect similarly
+    - [x] Refactor HouseholdContext.tsx effect similarly
+    - [x] Run full test suite to verify no regressions
 
 - [ ] Task: Audit and document remaining `react-refresh/only-export-components` suppressions
     - [ ] Evaluate if AuthContext.tsx, HouseholdContext.tsx, AdminModeContext.tsx suppressions can be removed
