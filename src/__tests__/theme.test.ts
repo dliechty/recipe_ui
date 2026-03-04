@@ -306,3 +306,155 @@ describe("styles.ts themeColors single source of truth", () => {
     });
   });
 });
+
+// =================================================================
+// Phase 3: Component Token Usage Validation
+// =================================================================
+
+import { readdirSync, statSync } from "fs";
+
+/**
+ * Recursively collect all .tsx files under the given directory.
+ * Returns absolute paths.
+ */
+function collectTsxFiles(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const full = resolve(dir, entry);
+    const stat = statSync(full);
+    if (stat.isDirectory()) {
+      results.push(...collectTsxFiles(full));
+    } else if (full.endsWith(".tsx")) {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
+/**
+ * Get component files from src/features and src/components,
+ * excluding SnakeGame.tsx and anything under src/client/.
+ */
+function getComponentFiles(extraExcludes: string[] = []): string[] {
+  const srcDir = resolve(__dirname, "..");
+  const dirs = [
+    resolve(srcDir, "features"),
+    resolve(srcDir, "components"),
+  ];
+  const allFiles: string[] = [];
+  for (const d of dirs) {
+    try {
+      allFiles.push(...collectTsxFiles(d));
+    } catch {
+      // directory may not exist
+    }
+  }
+  return allFiles.filter((f) => {
+    const basename = f.split("/").pop() ?? "";
+    if (basename === "SnakeGame.tsx") return false;
+    if (f.includes("/client/")) return false;
+    for (const ex of extraExcludes) {
+      if (basename === ex) return false;
+    }
+    return true;
+  });
+}
+
+describe("Component token usage (Phase 3)", () => {
+  // ---------------------------------------------------------------
+  // 1. No color="white" on buttons in component files
+  // ---------------------------------------------------------------
+  describe('no color="white" on button elements', () => {
+    const files = getComponentFiles();
+
+    it("component files should not use color=\"white\" or color='white'", () => {
+      const violations: string[] = [];
+
+      for (const filePath of files) {
+        const source = readFileSync(filePath, "utf-8");
+        // Match color="white" or color='white' — these are typically
+        // used on Buttons and should be replaced with semantic tokens
+        const pattern = /color=["']white["']/g;
+        let match;
+        while ((match = pattern.exec(source)) !== null) {
+          // Find approximate line number
+          const lineNum =
+            source.substring(0, match.index).split("\n").length;
+          const relPath = filePath.replace(resolve(__dirname, "..") + "/", "");
+          violations.push(`${relPath}:${lineNum}`);
+        }
+      }
+
+      expect(
+        violations,
+        `Found color="white" in component files (should use semantic tokens like button.text):\n` +
+          violations.map((v) => `  - ${v}`).join("\n"),
+      ).toHaveLength(0);
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // 2. No raw Chakra palette colors in component files
+  // ---------------------------------------------------------------
+  describe("no raw Chakra palette colors in components", () => {
+    // Exclude theme.ts, styles.ts, and SnakeGame.tsx
+    const files = getComponentFiles(["theme.ts", "styles.ts"]);
+
+    // Raw palette patterns like red.400, green.500, blue.500, etc.
+    const rawPalettePattern =
+      /(?:["'{, ])((?:red|green|blue|yellow|orange|whiteAlpha|gray|teal|cyan|purple|pink)\.\d{2,3})(?:["'}, ])/g;
+
+    it("component files should not reference raw Chakra palette colors", () => {
+      const violations: string[] = [];
+
+      for (const filePath of files) {
+        const source = readFileSync(filePath, "utf-8");
+        let match;
+        // Reset lastIndex since we reuse the regex
+        rawPalettePattern.lastIndex = 0;
+        while ((match = rawPalettePattern.exec(source)) !== null) {
+          const lineNum =
+            source.substring(0, match.index).split("\n").length;
+          const relPath = filePath.replace(resolve(__dirname, "..") + "/", "");
+          violations.push(`${relPath}:${lineNum} → ${match[1]}`);
+        }
+      }
+
+      expect(
+        violations,
+        `Found raw Chakra palette colors in component files (should use semantic tokens):\n` +
+          violations.map((v) => `  - ${v}`).join("\n"),
+      ).toHaveLength(0);
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // 3. ErrorBoundary uses colorPalette, not colorScheme
+  // ---------------------------------------------------------------
+  describe("ErrorBoundary uses colorPalette not colorScheme", () => {
+    const errorBoundaryPath = resolve(
+      __dirname,
+      "..",
+      "components",
+      "common",
+      "ErrorBoundary.tsx",
+    );
+    const source = readFileSync(errorBoundaryPath, "utf-8");
+
+    it("ErrorBoundary.tsx does NOT contain colorScheme", () => {
+      const hasColorScheme = /colorScheme/.test(source);
+      expect(
+        hasColorScheme,
+        'ErrorBoundary.tsx should not use colorScheme (Chakra v2 API). Use colorPalette instead.',
+      ).toBe(false);
+    });
+
+    it("ErrorBoundary.tsx DOES contain colorPalette", () => {
+      const hasColorPalette = /colorPalette/.test(source);
+      expect(
+        hasColorPalette,
+        'ErrorBoundary.tsx should use colorPalette (Chakra v3 API) for button color theming.',
+      ).toBe(true);
+    });
+  });
+});
