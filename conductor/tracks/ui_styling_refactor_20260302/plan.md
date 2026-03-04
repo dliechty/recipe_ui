@@ -126,11 +126,11 @@
     - [x] Refactor HouseholdContext.tsx effect similarly
     - [x] Run full test suite to verify no regressions
 
-- [ ] Task: Audit and document remaining `react-refresh/only-export-components` suppressions
-    - [ ] Evaluate if AuthContext.tsx, HouseholdContext.tsx, AdminModeContext.tsx suppressions can be removed
-    - [ ] If not removable, add inline justification comment for each
-    - [ ] Confirm test-utils.tsx suppression is documented
-    - [ ] Run full test suite to verify no regressions
+- [x] Task: Audit and document remaining `react-refresh/only-export-components` suppressions [2258564]
+    - [x] Evaluate if AuthContext.tsx, HouseholdContext.tsx, AdminModeContext.tsx suppressions can be removed
+    - [x] If not removable, add inline justification comment for each
+    - [x] Confirm test-utils.tsx suppression is documented
+    - [x] Run full test suite to verify no regressions
 
 - [ ] Task: Escalate `no-explicit-any` to error in ESLint config
     - [ ] Change `@typescript-eslint/no-explicit-any` from `'warn'` to `'error'` in eslint.config.js
