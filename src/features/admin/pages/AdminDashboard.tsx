@@ -1,4 +1,4 @@
-import { Container, Tabs } from '@chakra-ui/react';
+import { Box, Container, Tabs } from '@chakra-ui/react';
 import { useSearchParams } from 'react-router-dom';
 import AdminPendingRequests from '../components/AdminPendingRequests';
 import AdminUserManagement from '../components/AdminUserManagement.tsx';
@@ -23,38 +23,45 @@ const AdminDashboard = () => {
                 <Tabs.List borderBottomWidth="1px" borderColor="border.default" mb={6}>
                     <Tabs.Trigger
                         value="users"
-                        px={4}
+                        px={{ base: 2, md: 4 }}
                         py={2}
+                        fontSize={{ base: "xs", md: "sm" }}
                         borderBottomWidth="2px"
                         borderBottomColor="transparent"
                         _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
                     >
-                        User Management
+                        <Box display={{ base: "none", sm: "inline" }}>User Management</Box>
+                        <Box display={{ base: "inline", sm: "none" }}>Users</Box>
                     </Tabs.Trigger>
                     <Tabs.Trigger
                         value="pending"
-                        px={4}
+                        px={{ base: 2, md: 4 }}
                         py={2}
+                        fontSize={{ base: "xs", md: "sm" }}
                         borderBottomWidth="2px"
                         borderBottomColor="transparent"
                         _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
                     >
-                        Pending Requests
+                        <Box display={{ base: "none", sm: "inline" }}>Pending Requests</Box>
+                        <Box display={{ base: "inline", sm: "none" }}>Pending</Box>
                     </Tabs.Trigger>
                     <Tabs.Trigger
                         value="operating-mode"
-                        px={4}
+                        px={{ base: 2, md: 4 }}
                         py={2}
+                        fontSize={{ base: "xs", md: "sm" }}
                         borderBottomWidth="2px"
                         borderBottomColor="transparent"
                         _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}
                     >
-                        Operating Mode
+                        <Box display={{ base: "none", sm: "inline" }}>Operating Mode</Box>
+                        <Box display={{ base: "inline", sm: "none" }}>Mode</Box>
                     </Tabs.Trigger>
                     <Tabs.Trigger
                         value="households"
-                        px={4}
+                        px={{ base: 2, md: 4 }}
                         py={2}
+                        fontSize={{ base: "xs", md: "sm" }}
                         borderBottomWidth="2px"
                         borderBottomColor="transparent"
                         _selected={{ color: "fg.default", borderBottomColor: "vscode.accent" }}

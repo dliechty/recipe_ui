@@ -93,14 +93,14 @@ const AdminUserManagement = () => {
     return (
         <Box>
             <Box borderRadius="xl" overflowX="auto" borderWidth="1px" borderColor="border.default">
-                <Table.Root minW="800px">
+                <Table.Root>
                     <Table.Header>
                         <Table.Row bg="bg.surface">
                             <Table.ColumnHeader color="fg.default">Email</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">First Name</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Last Name</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">Admin</Table.ColumnHeader>
-                            <Table.ColumnHeader color="fg.default">ID</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>First Name</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Last Name</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Admin</Table.ColumnHeader>
+                            <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>ID</Table.ColumnHeader>
                             <Table.ColumnHeader color="fg.default">Actions</Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
@@ -121,7 +121,7 @@ const AdminUserManagement = () => {
                                             user.email
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>
                                         {isEditing ? (
                                             <Input
                                                 name="first_name"
@@ -133,7 +133,7 @@ const AdminUserManagement = () => {
                                             user.first_name
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>
                                         {isEditing ? (
                                             <Input
                                                 name="last_name"
@@ -145,7 +145,7 @@ const AdminUserManagement = () => {
                                             user.last_name
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>
                                         {isEditing ? (
                                             <Checkbox.Root
                                                 checked={!!editFormData.is_admin}
@@ -160,7 +160,7 @@ const AdminUserManagement = () => {
                                             user.is_admin ? "Yes" : "No"
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">{user.id}</Table.Cell>
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>{user.id}</Table.Cell>
                                     <Table.Cell borderColor="border.default">
                                         <HStack>
                                             {isEditing ? (

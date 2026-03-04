@@ -394,14 +394,14 @@ const AccountHouseholdSection = () => {
                 boxShadow="lg"
                 bg="bg.surface"
             >
-                <HStack justify="space-between" align="center" mb={4}>
+                <HStack justify="space-between" align="center" mb={4} flexWrap="wrap" gap={2}>
                     <Heading size="md" color="fg.default">
                         My Households
                     </Heading>
-                    <HStack gap={2}>
+                    <HStack gap={2} flexWrap="wrap">
                         <Button
                             data-testid="create-household-btn"
-                            size="sm"
+                            size={{ base: 'xs', md: 'sm' }}
                             bg="vscode.button"
                             color="button.text"
                             _hover={{ bg: 'vscode.buttonHover' }}
@@ -411,7 +411,7 @@ const AccountHouseholdSection = () => {
                         </Button>
                         <Button
                             data-testid="join-household-btn"
-                            size="sm"
+                            size={{ base: 'xs', md: 'sm' }}
                             variant="outline"
                             borderColor="vscode.accent"
                             color="vscode.accent"
