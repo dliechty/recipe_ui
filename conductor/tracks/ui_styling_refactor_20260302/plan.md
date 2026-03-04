@@ -139,7 +139,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Linting Exception Cleanup' (Protocol in workflow.md)
 
-## Phase 5: Mobile Responsive Audit [FR-5]
+## Phase 5: Mobile Responsive Audit [FR-5] [checkpoint: dc17bbe]
 
 - [x] Task: Set up Playwright mobile viewport tests [3e4bfa7]
     - [x] Configure Playwright test files for mobile viewports (375px iPhone SE, 768px iPad)
