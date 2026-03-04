@@ -158,8 +158,7 @@ export const HouseholdProvider = ({ children }: { children: ReactNode }) => {
             cancelled = true;
         };
     // Re-fetch when user or impersonation context changes, or when a mutation signals a change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user?.id, impersonatedUserId, fetchVersion]);
+    }, [user, impersonatedUserId, fetchVersion]);
 
     return (
         <HouseholdContext.Provider

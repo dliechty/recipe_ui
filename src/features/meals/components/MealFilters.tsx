@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     VStack,
@@ -35,9 +35,11 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
         setLocalFilters(filters);
     }, [filters]);
 
-    // Auto-expand if advanced filters are present on mount
+    // Auto-expand if advanced filters are present on mount.
+    // Capture initial filters in a ref so the effect has no external deps.
+    const initialFiltersRef = useRef(filters);
     useEffect(() => {
-        const hasAdvancedFilters = Object.entries(filters).some(([key, value]) => {
+        const hasAdvancedFilters = Object.entries(initialFiltersRef.current).some(([key, value]) => {
             if (['sort', 'name', 'status'].includes(key)) return false;
 
             if (Array.isArray(value)) return value.length > 0;
@@ -50,7 +52,6 @@ const MealFilters: React.FC<MealFiltersProps> = ({ filters, onFilterChange }) =>
         if (hasAdvancedFilters) {
             setIsExpanded(true);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = (key: keyof MealFiltersType, value: unknown) => {

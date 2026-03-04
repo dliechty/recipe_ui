@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     VStack,
@@ -30,9 +30,12 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
         setLocalFilters(filters);
     }, [filters]);
 
-    // Auto-expand if advanced filters are present on mount
+    // Auto-expand if advanced filters are present on mount.
+    // We capture the initial filters in a ref so the effect has no external deps
+    // and only runs once, respecting user's manual toggling afterwards.
+    const initialFiltersRef = useRef(filters);
     useEffect(() => {
-        const hasAdvancedFilters = Object.entries(filters).some(([key, value]) => {
+        const hasAdvancedFilters = Object.entries(initialFiltersRef.current).some(([key, value]) => {
             if (['sort', 'name', 'category'].includes(key)) return false;
 
             if (Array.isArray(value)) return value.length > 0;
@@ -48,8 +51,6 @@ const RecipeFiltersDisplay: React.FC<RecipeFiltersProps> = ({ filters, onFilterC
         if (hasAdvancedFilters) {
             setIsExpanded(true);
         }
-        // We only want to run this check on mount to respect user's manual toggling afterwards
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = (key: keyof RecipeFiltersType, value: unknown) => {

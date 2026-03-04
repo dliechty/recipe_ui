@@ -62,12 +62,14 @@ const UpcomingMeals = () => {
     // After a drag reorder, server syncs are blocked until the server data
     // reflects the new order, preventing stale data from flickering through.
     const [localMeals, setLocalMeals] = useState<Meal[]>([]);
+    const localMealsRef = useRef(localMeals);
+    localMealsRef.current = localMeals;
     const reorderPendingRef = useRef(false);
     useEffect(() => {
         if (reorderPendingRef.current) {
             // Only accept server data once it matches the local order
             const serverIds = serverMeals.map(m => m.id).join(',');
-            const localIds = localMeals.map(m => m.id).join(',');
+            const localIds = localMealsRef.current.map(m => m.id).join(',');
             if (serverIds === localIds) {
                 reorderPendingRef.current = false;
                 setLocalMeals(serverMeals);
@@ -75,7 +77,7 @@ const UpcomingMeals = () => {
             return;
         }
         setLocalMeals(serverMeals);
-    }, [serverMeals]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [serverMeals]);
 
     // Use local order for rendering; fall back to server data if local is empty
     const meals = localMeals.length > 0 ? localMeals : serverMeals;
