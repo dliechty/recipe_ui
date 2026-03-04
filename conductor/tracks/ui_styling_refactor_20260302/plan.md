@@ -132,10 +132,10 @@
     - [x] Confirm test-utils.tsx suppression is documented
     - [x] Run full test suite to verify no regressions
 
-- [ ] Task: Escalate `no-explicit-any` to error in ESLint config
-    - [ ] Change `@typescript-eslint/no-explicit-any` from `'warn'` to `'error'` in eslint.config.js
-    - [ ] Run `npm run lint` and confirm zero violations
-    - [ ] Run `npx tsc --noEmit` to confirm type safety
+- [x] Task: Escalate `no-explicit-any` to error in ESLint config [fbb84c2]
+    - [x] Change `@typescript-eslint/no-explicit-any` from `'warn'` to `'error'` in eslint.config.js
+    - [x] Run `npm run lint` and confirm zero violations
+    - [x] Run `npx tsc --noEmit` to confirm type safety
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Linting Exception Cleanup' (Protocol in workflow.md)
 
