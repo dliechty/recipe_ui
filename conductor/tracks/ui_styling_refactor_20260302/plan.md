@@ -101,10 +101,10 @@
 
 ## Phase 4: Linting Exception Cleanup [FR-4]
 
-- [ ] Task: Write tests for properly typed react-select generics
-    - [ ] Test that selectStyles exports are properly typed without `any`
-    - [ ] Test that DietSelect, RecipeMultiSelect, and MealForm consume typed select styles
-    - [ ] Run tests and confirm they fail (Red Phase)
+- [x] Task: Write tests for properly typed react-select generics [fa48498]
+    - [x] Test that selectStyles exports are properly typed without `any`
+    - [x] Test that DietSelect, RecipeMultiSelect, and MealForm consume typed select styles
+    - [x] Run tests and confirm they fail (Red Phase)
 
 - [ ] Task: Remove `@typescript-eslint/no-explicit-any` suppressions
     - [ ] Properly type react-select generics in styles.ts (replace `any` with proper Option/IsMulti types)
