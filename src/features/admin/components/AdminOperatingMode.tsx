@@ -143,7 +143,7 @@ const AdminOperatingMode = () => {
                             <HStack>
                                 <Text color="fg.default">
                                     Currently impersonating:{' '}
-                                    <Text as="span" fontWeight="bold" color="cyan.400">
+                                    <Text as="span" fontWeight="bold" color="info.fg">
                                         {impersonatedUserName ?? impersonatedUserId}
                                     </Text>
                                 </Text>

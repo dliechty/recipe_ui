@@ -81,14 +81,14 @@ class ErrorBoundary extends Component<Props, State> {
                         <HStack gap={3}>
                             <Button
                                 onClick={this.handleReset}
-                                colorScheme="blue"
+                                colorPalette="blue"
                                 variant="solid"
                             >
                                 Try Again
                             </Button>
                             <Button
                                 onClick={this.handleReload}
-                                colorScheme="gray"
+                                colorPalette="gray"
                                 variant="outline"
                             >
                                 Reload Page
