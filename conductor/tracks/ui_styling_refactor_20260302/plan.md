@@ -146,14 +146,14 @@
     - [x] Create test scenarios for all major views: Login, Recipes List, Recipe Detail, Meal Calendar, Meal Detail, Admin Dashboard, User Account
     - [x] Run tests to establish baseline
 
-- [~] Task: Audit and fix recipe views for mobile
-    - [ ] Test RecipeList page at 375px and 768px — fix overflow, layout, touch targets
-    - [ ] Test RecipeDetails page at 375px and 768px — fix content clipping, readability
-    - [ ] Test RecipeForm (create/edit) at 375px and 768px — fix form usability
-    - [ ] Test RecipeFilters panel at mobile sizes — ensure filter UI is accessible
-    - [ ] Verify dark theme contrast on mobile viewports
+- [x] Task: Audit and fix recipe views for mobile [563ba1b]
+    - [x] Test RecipeList page at 375px and 768px — fix overflow, layout, touch targets
+    - [x] Test RecipeDetails page at 375px and 768px — fix content clipping, readability
+    - [x] Test RecipeForm (create/edit) at 375px and 768px — fix form usability
+    - [x] Test RecipeFilters panel at mobile sizes — ensure filter UI is accessible
+    - [x] Verify dark theme contrast on mobile viewports
 
-- [ ] Task: Audit and fix meal planning views for mobile
+- [~] Task: Audit and fix meal planning views for mobile
     - [ ] Test CalendarView at 375px and 768px — fix calendar layout, day cell sizing
     - [ ] Test MealDetails at 375px and 768px — fix content layout
     - [ ] Test MealForm at 375px and 768px — fix form usability
