@@ -95,7 +95,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, recipeId }) => {
                                 onClick={() => setIsEditing(true)}
                                 title="Edit"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                             >
                                 <Icon as={FaEdit} />
@@ -104,7 +104,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, recipeId }) => {
                                 size="xs"
                                 aria-label="Delete comment"
                                 bg="button.danger"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "button.dangerHover" }}
                                 onClick={handleDelete}
                                 title="Delete"

@@ -178,7 +178,7 @@ const RecipeList = () => {
                 <Button
                     onClick={() => navigate('/recipes/new')}
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="flex-start"
                     size="xs"

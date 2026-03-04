@@ -142,7 +142,7 @@ const AdminMemberList = ({
                                     <Button
                                         size="2xs"
                                         bg="vscode.button"
-                                        color="white"
+                                        color="button.text"
                                         _hover={{ bg: 'vscode.buttonHover' }}
                                         disabled={isAdding}
                                         onClick={(e) => {
@@ -244,7 +244,7 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                     data-testid={`rename-submit-btn-${household.id}`}
                     size="sm"
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: 'vscode.buttonHover' }}
                     onClick={handleRenameSubmit}
                     disabled={!renameValue.trim() || renameValue.trim() === household.name}
@@ -348,7 +348,7 @@ const AdminHouseholdManagement = () => {
                         data-testid="create-household-btn"
                         size="sm"
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: 'vscode.buttonHover' }}
                         onClick={() => setShowCreateDialog(true)}
                     >
@@ -418,7 +418,7 @@ const AdminHouseholdManagement = () => {
                             <Button
                                 data-testid="delete-confirm-btn"
                                 bg="red.600"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'red.700' }}
                                 size="sm"
                                 onClick={handleDeleteConfirm}
@@ -429,7 +429,7 @@ const AdminHouseholdManagement = () => {
                                 data-testid="delete-cancel-btn"
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleDeleteCancel}
@@ -520,7 +520,7 @@ const AdminHouseholdManagement = () => {
                             <Button
                                 data-testid="create-household-submit-btn"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'vscode.buttonHover' }}
                                 size="sm"
                                 onClick={handleCreateSubmit}
@@ -533,7 +533,7 @@ const AdminHouseholdManagement = () => {
                                 data-testid="create-household-cancel-btn"
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleCreateCancel}

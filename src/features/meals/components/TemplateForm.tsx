@@ -194,7 +194,7 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
                                 onClick={addSlot}
                                 size="xs"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                                 type="button"
                             >
@@ -224,7 +224,7 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
                             <Button
                                 onClick={onCancel}
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "button.secondaryHover" }}
                                 disabled={isLoading}
                             >
@@ -234,7 +234,7 @@ const TemplateForm = ({ onSubmit, isLoading, initialData, onCancel }: TemplateFo
                         <Button
                             type="submit"
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: "vscode.buttonHover" }}
                             loading={isLoading}
                             disabled={!name.trim() || slots.length === 0}
@@ -421,7 +421,7 @@ const DirectSlotEditor = ({ recipeId, onChange }: DirectSlotEditorProps) => {
                             <Button
                                 size="xs"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                                 onClick={() => setIsSelecting(true)}
                             >
@@ -498,7 +498,7 @@ const ListSlotEditor = ({ recipeIds, onChange }: ListSlotEditorProps) => {
                 <Button
                     size="xs"
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     onClick={() => setIsSelecting(true)}
                 >
@@ -701,7 +701,7 @@ const SearchSlotEditor = ({ criteria, onChange }: SearchSlotEditorProps) => {
                 <Button
                     size="xs"
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     onClick={addCriterion}
                 >
@@ -711,7 +711,7 @@ const SearchSlotEditor = ({ criteria, onChange }: SearchSlotEditorProps) => {
                     <Button
                         size="xs"
                         bg="button.secondary"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.secondaryHover" }}
                         onClick={() => setShowPreview(!showPreview)}
                     >
@@ -894,7 +894,7 @@ const RecipeSelector = ({ mode, selectedIds, onSelect, onCancel }: RecipeSelecto
                     <Button
                         size="xs"
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         onClick={() => onSelect(localSelectedIds)}
                     >
@@ -903,7 +903,7 @@ const RecipeSelector = ({ mode, selectedIds, onSelect, onCancel }: RecipeSelecto
                     <Button
                         size="xs"
                         bg="button.secondary"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.secondaryHover" }}
                         onClick={onCancel}
                     >

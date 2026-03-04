@@ -118,7 +118,7 @@ const RequestAccountPage = () => {
                         <Button
                             type="submit"
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: 'vscode.buttonHover' }}
                             width="full"
                             mt={4}

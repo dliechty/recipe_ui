@@ -157,7 +157,7 @@ const GenerateMealsModal = ({
                 >
                     <Button
                         bg="button.success"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.successHover" }}
                         size="sm"
                         onClick={handleConfirm}
@@ -168,7 +168,7 @@ const GenerateMealsModal = ({
                     <Button
                         variant="ghost"
                         bg="button.secondary"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.secondaryHover" }}
                         size="sm"
                         onClick={onClose}

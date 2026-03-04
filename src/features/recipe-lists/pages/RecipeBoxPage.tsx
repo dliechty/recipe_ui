@@ -170,7 +170,7 @@ const RecipeBoxPage = () => {
                     <Button
                         onClick={() => setIsCreating(true)}
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: 'vscode.buttonHover' }}
                         size="sm"
                         disabled={isCreating}
@@ -212,7 +212,7 @@ const RecipeBoxPage = () => {
                                 <Button
                                     onClick={handleCreateList}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: 'vscode.buttonHover' }}
                                     size="sm"
                                     loading={createList.isPending}
@@ -226,7 +226,7 @@ const RecipeBoxPage = () => {
                                         setNewListDescription('');
                                     }}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: 'vscode.buttonHover' }}
                                     size="sm"
                                 >
@@ -291,7 +291,7 @@ const RecipeBoxPage = () => {
                                                 <Button
                                                     onClick={() => handleSaveEdit(list.id)}
                                                     bg="vscode.button"
-                                                    color="white"
+                                                    color="button.text"
                                                     _hover={{ bg: 'vscode.buttonHover' }}
                                                     size="xs"
                                                     loading={updateList.isPending}
@@ -301,7 +301,7 @@ const RecipeBoxPage = () => {
                                                 <Button
                                                     onClick={handleCancelEdit}
                                                     bg="vscode.button"
-                                                    color="white"
+                                                    color="button.text"
                                                     _hover={{ bg: 'vscode.buttonHover' }}
                                                     size="xs"
                                                 >
@@ -333,7 +333,7 @@ const RecipeBoxPage = () => {
                                                 aria-label="Edit list"
                                                 size="xs"
                                                 bg="vscode.button"
-                                                color="white"
+                                                color="button.text"
                                                 _hover={{ bg: 'vscode.buttonHover' }}
                                                 onClick={() => handleStartEdit(list)}
                                             >
@@ -343,7 +343,7 @@ const RecipeBoxPage = () => {
                                                 aria-label="Delete list"
                                                 size="xs"
                                                 bg="button.danger"
-                                                color="white"
+                                                color="button.text"
                                                 _hover={{ bg: 'button.dangerHover' }}
                                                 onClick={() => handleDeleteList(list.id, list.name)}
                                                 loading={deleteList.isPending}

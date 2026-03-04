@@ -89,7 +89,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
         return (
             <Button
                 bg="vscode.button"
-                color="white"
+                color="button.text"
                 _hover={{ bg: 'vscode.buttonHover' }}
                 size="xs"
                 disabled
@@ -104,7 +104,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
             <Menu.Trigger asChild>
                 <Button
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: 'vscode.buttonHover' }}
                     size="xs"
                 >
@@ -171,7 +171,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                     w="100%"
                                     size="sm"
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: 'vscode.buttonHover' }}
                                     onClick={() => setIsCreatingNewList(true)}
                                 >
@@ -212,7 +212,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                     <Button
                                         onClick={handleCreateNewList}
                                         bg="vscode.button"
-                                        color="white"
+                                        color="button.text"
                                         _hover={{ bg: 'vscode.buttonHover' }}
                                         size="sm"
                                         flex="1"
@@ -227,7 +227,7 @@ const AddToListButton = ({ recipeId }: AddToListButtonProps) => {
                                             setNewListDescription('');
                                         }}
                                         bg="vscode.button"
-                                        color="white"
+                                        color="button.text"
                                         _hover={{ bg: 'vscode.buttonHover' }}
                                         size="sm"
                                         flex="1"

@@ -126,7 +126,7 @@ const ChangePasswordPage = () => {
                         <Button
                             type="submit"
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: 'vscode.buttonHover' }}
                             width="auto"
                             mt={4}

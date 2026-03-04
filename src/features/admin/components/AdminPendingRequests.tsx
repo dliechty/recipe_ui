@@ -100,7 +100,7 @@ const AdminPendingRequests = () => {
                                         <Button
                                             size="sm"
                                             bg="vscode.button"
-                                            color="white"
+                                            color="button.text"
                                             _hover={{ bg: 'vscode.buttonHover' }}
                                             onClick={() => handleApproveClick(request)}
                                         >
@@ -154,7 +154,7 @@ const AdminPendingRequests = () => {
                                     loading={isApproving}
                                     disabled={!initialPassword}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: 'vscode.buttonHover' }}
                                 >
                                     Confirm

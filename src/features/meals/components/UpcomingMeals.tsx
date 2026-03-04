@@ -221,7 +221,7 @@ const UpcomingMeals = () => {
                     <Button
                         onClick={() => navigate('/meals/new')}
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         size="xs"
                     >
@@ -230,7 +230,7 @@ const UpcomingMeals = () => {
                     <Button
                         onClick={() => setGenerateModalOpen(true)}
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         size="xs"
                     >
@@ -328,7 +328,7 @@ const UpcomingMeals = () => {
                             <Button
                                 onClick={() => navigate('/meals/new')}
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                                 size="sm"
                             >
@@ -425,7 +425,7 @@ const UpcomingMeals = () => {
                         <Button
                             onClick={() => handleBulkAction({ status: MealStatus.COOKED })}
                             bg="green.600"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: "green.500" }}
                             size="xs"
                             loading={bulkStatusUpdate.isPending}
@@ -435,7 +435,7 @@ const UpcomingMeals = () => {
                         <Button
                             onClick={() => handleBulkAction({ status: MealStatus.CANCELLED })}
                             bg="red.600"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: "red.500" }}
                             size="xs"
                             loading={bulkStatusUpdate.isPending}

@@ -67,7 +67,7 @@ const RecipeListItemDisplay = ({ item, onRemove }: RecipeListItemDisplayProps) =
                     aria-label="Remove recipe"
                     size="xs"
                     bg="button.danger"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: 'button.dangerHover' }}
                     onClick={() => onRemove(item.recipe_id, recipeName)}
                 >

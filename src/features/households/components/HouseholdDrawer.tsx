@@ -245,7 +245,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                                         <Button
                                             size="sm"
                                             bg="vscode.button"
-                                            color="white"
+                                            color="button.text"
                                             _hover={{ bg: 'vscode.buttonHover' }}
                                             onClick={() => setShowCreateDialog(true)}
                                         >
@@ -350,7 +350,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                         >
                             <Button
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'vscode.buttonHover' }}
                                 size="sm"
                                 onClick={handleCreateSubmit}
@@ -362,7 +362,7 @@ const HouseholdDrawer = ({ isOpen, onClose }: HouseholdDrawerProps) => {
                             <Button
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleCreateDialogClose}

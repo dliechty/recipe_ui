@@ -194,7 +194,7 @@ const HouseholdRow = ({
                         data-testid={`rename-submit-btn-${household.id}`}
                         size="sm"
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: 'vscode.buttonHover' }}
                         onClick={handleRenameSubmit}
                         disabled={!renameValue.trim() || renameValue.trim() === household.name}
@@ -403,7 +403,7 @@ const AccountHouseholdSection = () => {
                             data-testid="create-household-btn"
                             size="sm"
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: 'vscode.buttonHover' }}
                             onClick={() => setShowCreateDialog(true)}
                         >
@@ -491,7 +491,7 @@ const AccountHouseholdSection = () => {
                             <Button
                                 data-testid="leave-confirm-btn"
                                 bg="orange.600"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'orange.700' }}
                                 size="sm"
                                 onClick={handleLeaveConfirm}
@@ -502,7 +502,7 @@ const AccountHouseholdSection = () => {
                                 data-testid="leave-cancel-btn"
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleLeaveCancel}
@@ -557,7 +557,7 @@ const AccountHouseholdSection = () => {
                             <Button
                                 data-testid="delete-confirm-btn"
                                 bg="red.600"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'red.700' }}
                                 size="sm"
                                 onClick={handleDeleteConfirm}
@@ -568,7 +568,7 @@ const AccountHouseholdSection = () => {
                                 data-testid="delete-cancel-btn"
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleDeleteCancel}
@@ -659,7 +659,7 @@ const AccountHouseholdSection = () => {
                             <Button
                                 data-testid="create-household-submit-btn"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'vscode.buttonHover' }}
                                 size="sm"
                                 onClick={handleCreateSubmit}
@@ -672,7 +672,7 @@ const AccountHouseholdSection = () => {
                                 data-testid="create-household-cancel-btn"
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleCreateCancel}
@@ -764,7 +764,7 @@ const AccountHouseholdSection = () => {
                             <Button
                                 data-testid="join-household-submit-btn"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'vscode.buttonHover' }}
                                 size="sm"
                                 onClick={handleJoinSubmit}
@@ -777,7 +777,7 @@ const AccountHouseholdSection = () => {
                                 data-testid="join-household-cancel-btn"
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleJoinCancel}

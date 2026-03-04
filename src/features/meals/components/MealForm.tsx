@@ -155,7 +155,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                         <Button
                             type="submit"
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: "vscode.buttonHover" }}
                             loading={isLoading}
                             size="xs"
@@ -166,7 +166,7 @@ const MealForm = ({ onSubmit, isLoading, initialData, onCancel }: MealFormProps)
                             <Button
                                 onClick={onCancel}
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "button.secondaryHover" }}
                                 disabled={isLoading}
                                 size="xs"

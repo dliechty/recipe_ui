@@ -209,7 +209,7 @@ const TemplateDetails = () => {
                         onClick={() => setIsGenerateModalOpen(true)}
                         loading={isGenerating}
                         bg="button.success"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.successHover" }}
                         size="xs"
                     >
@@ -234,7 +234,7 @@ const TemplateDetails = () => {
                             });
                         }}
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         size="xs"
                     >
@@ -245,7 +245,7 @@ const TemplateDetails = () => {
                     <Button
                         onClick={() => navigate(`/meals/templates/${template.id}/edit`)}
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         size="xs"
                     >
@@ -257,7 +257,7 @@ const TemplateDetails = () => {
                         onClick={handleDelete}
                         loading={isDeleting}
                         bg="button.danger"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.dangerHover" }}
                         size="xs"
                     >
@@ -302,7 +302,7 @@ const TemplateDetails = () => {
                          <Button
                              size="xs"
                              bg="vscode.button"
-                             color="white"
+                             color="button.text"
                              _hover={{ bg: "vscode.buttonHover" }}
                              onClick={handleToggleAll}
                          >

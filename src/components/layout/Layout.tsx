@@ -144,7 +144,7 @@ const Layout = ({ children }: LayoutProps) => {
                                 <Button
                                     variant={'solid'}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: 'vscode.buttonHover' }}
                                     size={'sm'}
                                     onClick={logout}

@@ -28,7 +28,7 @@ const CommentList: React.FC<CommentListProps> = ({ recipeId }) => {
                     <Collapsible.Trigger asChild>
                         <Button
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: "vscode.buttonHover" }}
                             fontWeight="bold"
                             display="flex"

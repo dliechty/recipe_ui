@@ -176,7 +176,7 @@ const TemplateList = () => {
                 <Button
                     onClick={() => navigate('/meals/templates/new')}
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     size="xs"
                 >
@@ -276,7 +276,7 @@ const TemplateList = () => {
                                                 title="Generate Meal"
                                                 size="xs"
                                                 bg="button.success"
-                                                color="white"
+                                                color="button.text"
                                                 _hover={{ bg: "button.successHover" }}
                                                 onClick={(e) => handleGenerateClick(template, e)}
                                                 loading={generatingTemplateId === template.id}

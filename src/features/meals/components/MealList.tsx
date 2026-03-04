@@ -126,7 +126,7 @@ const MealList = () => {
                 <Button
                     onClick={() => navigate('/meals/new')}
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     size="xs"
                 >

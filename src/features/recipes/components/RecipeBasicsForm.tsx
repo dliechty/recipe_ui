@@ -128,7 +128,7 @@ const RecipeBasicsForm = ({
                             >
                                 Cancel
                             </Button>
-                            <Button size="sm" bg="vscode.button" color="white" _hover={{ bg: "vscode.buttonHover" }} onClick={saveParentId}>Save</Button>
+                            <Button size="sm" bg="vscode.button" color="button.text" _hover={{ bg: "vscode.buttonHover" }} onClick={saveParentId}>Save</Button>
                         </HStack>
                     </Box>
                 </Box>

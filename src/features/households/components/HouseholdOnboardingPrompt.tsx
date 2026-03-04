@@ -94,7 +94,7 @@ const HouseholdOnboardingPrompt = () => {
                             data-testid="onboarding-create-btn"
                             size="sm"
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: 'vscode.buttonHover' }}
                             onClick={() => setShowCreateDialog(true)}
                         >
@@ -202,7 +202,7 @@ const HouseholdOnboardingPrompt = () => {
                             <Button
                                 data-testid="onboarding-create-submit-btn"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'vscode.buttonHover' }}
                                 size="sm"
                                 onClick={handleCreateSubmit}
@@ -214,7 +214,7 @@ const HouseholdOnboardingPrompt = () => {
                             <Button
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleCreateCancel}
@@ -304,7 +304,7 @@ const HouseholdOnboardingPrompt = () => {
                             <Button
                                 data-testid="onboarding-join-submit-btn"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'vscode.buttonHover' }}
                                 size="sm"
                                 onClick={handleJoinSubmit}
@@ -316,7 +316,7 @@ const HouseholdOnboardingPrompt = () => {
                             <Button
                                 variant="ghost"
                                 bg="button.secondary"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: 'button.secondaryHover' }}
                                 size="sm"
                                 onClick={handleJoinCancel}

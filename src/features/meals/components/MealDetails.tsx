@@ -233,7 +233,7 @@ const MealDetails = () => {
                             });
                         }}
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         size="xs"
                     >
@@ -245,7 +245,7 @@ const MealDetails = () => {
                         onClick={handleDelete}
                         loading={isDeleting}
                         bg="button.danger"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.dangerHover" }}
                         size="xs"
                     >
@@ -349,7 +349,7 @@ const MealDetails = () => {
                                 <Button
                                     size="xs"
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: "vscode.buttonHover" }}
                                     onClick={() => setIsRecipeModalOpen(true)}
                                     mr={2}
@@ -360,7 +360,7 @@ const MealDetails = () => {
                             <Button
                                 size="xs"
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                                 onClick={() => setAllExpanded(!allExpanded)}
                             >

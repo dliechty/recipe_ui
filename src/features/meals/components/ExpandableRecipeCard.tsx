@@ -143,7 +143,7 @@ const ExpandableRecipeCard = ({ recipe, mealName, defaultExpanded = false }: Exp
                     <Button
                         size="xs"
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         onClick={handleViewRecipe}
                     >

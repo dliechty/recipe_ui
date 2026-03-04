@@ -72,7 +72,7 @@
     - [ ] Test that ErrorBoundary uses `colorPalette` prop (Chakra v3)
     - [ ] Run tests and confirm they fail (Red Phase)
 
-- [ ] Task: Replace all `color="white"` with `color="button.text"` on buttons
+- [~] Task: Replace all `color="white"` with `color="button.text"` on buttons
     - [ ] Systematically update all ~85 instances across the codebase
     - [ ] Verify each replacement renders correctly
     - [ ] Run full test suite (Green Phase)

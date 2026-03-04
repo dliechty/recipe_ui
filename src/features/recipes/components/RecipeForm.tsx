@@ -357,7 +357,7 @@ const RecipeForm = ({ initialData, onSubmit, isLoading }: RecipeFormProps) => {
                 <Button
                     type="submit"
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     size="sm"
                     loading={isLoading}

@@ -149,7 +149,7 @@ const AccountPage = () => {
                                 <Button
                                     onClick={handleSave}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: "vscode.buttonHover" }}
                                     loading={isLoading}
                                     size="xs"
@@ -159,7 +159,7 @@ const AccountPage = () => {
                                 <Button
                                     onClick={handleCancel}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: "vscode.buttonHover" }}
                                     size="xs"
                                 >
@@ -171,7 +171,7 @@ const AccountPage = () => {
                                 <Button
                                     onClick={() => navigate('/change-password')}
                                     bg="vscode.button"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: "vscode.buttonHover" }}
                                     size="xs"
                                 >

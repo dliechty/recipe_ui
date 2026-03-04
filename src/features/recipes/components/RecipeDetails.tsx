@@ -91,7 +91,7 @@ const RecipeDetails = () => {
                     mt={4}
                     onClick={() => navigate(backUrl)}
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                 >
                     Back to {backLabel}
@@ -168,7 +168,7 @@ const RecipeDetails = () => {
                                     });
                                 }}
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                                 size="xs"
                             >
@@ -182,7 +182,7 @@ const RecipeDetails = () => {
                             <Button
                                 onClick={() => navigate(`/recipes/${id}/edit`)}
                                 bg="vscode.button"
-                                color="white"
+                                color="button.text"
                                 _hover={{ bg: "vscode.buttonHover" }}
                                 size="xs"
                             >
@@ -193,7 +193,7 @@ const RecipeDetails = () => {
                             <>
                                 <Button
                                     bg="button.danger"
-                                    color="white"
+                                    color="button.text"
                                     _hover={{ bg: "button.dangerHover" }}
                                     disabled={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0}
                                     title={recipe.variant_recipe_ids && recipe.variant_recipe_ids.length > 0 ? "Cannot delete recipe with variants" : "Delete Recipe"}
@@ -239,7 +239,7 @@ const RecipeDetails = () => {
                                                 <Button
                                                     onClick={() => setIsDeleteDialogOpen(false)}
                                                     bg="button.secondary"
-                                                    color="white"
+                                                    color="button.text"
                                                     _hover={{ bg: "button.secondaryHover" }}
                                                 >
                                                     Cancel
@@ -247,7 +247,7 @@ const RecipeDetails = () => {
                                                 <Button
                                                     data-testid="confirm-delete-btn"
                                                     bg="button.danger"
-                                                    color="white"
+                                                    color="button.text"
                                                     _hover={{ bg: "button.dangerHover" }}
                                                     onClick={() => {
                                                         if (id) {

@@ -52,7 +52,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ recipeId, onCancel, initialVa
                         onClick={onCancel}
                         size="sm"
                         bg="button.secondary"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.secondaryHover" }}
                     >
                         Cancel
@@ -64,7 +64,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ recipeId, onCancel, initialVa
                     loading={isLoading}
                     disabled={!text.trim() || isLoading}
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     size="sm"
                 >

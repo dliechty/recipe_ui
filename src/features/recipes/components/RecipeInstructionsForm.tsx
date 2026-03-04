@@ -181,7 +181,7 @@ const RecipeInstructionsForm = ({
             <Button
                 onClick={addInstruction}
                 bg="vscode.button"
-                color="white"
+                color="button.text"
                 _hover={{ bg: "vscode.buttonHover" }}
                 alignSelf="start"
                 size="xs"

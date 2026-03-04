@@ -257,7 +257,7 @@ const RecipeIngredientsForm = ({
                         <Button
                             onClick={() => addIngredient(componentIndex)}
                             bg="vscode.button"
-                            color="white"
+                            color="button.text"
                             _hover={{ bg: "vscode.buttonHover" }}
                             alignSelf="start"
                             size="xs"
@@ -272,7 +272,7 @@ const RecipeIngredientsForm = ({
                 <Button
                     onClick={addComponent}
                     bg="vscode.button"
-                    color="white"
+                    color="button.text"
                     _hover={{ bg: "vscode.buttonHover" }}
                     alignSelf="start"
                     size="xs"

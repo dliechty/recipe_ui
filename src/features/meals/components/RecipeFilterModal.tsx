@@ -112,7 +112,7 @@ const RecipeFilterModal = ({
                 >
                     <Button
                         bg="vscode.button"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "vscode.buttonHover" }}
                         size="sm"
                         onClick={handleApply}
@@ -122,7 +122,7 @@ const RecipeFilterModal = ({
                     <Button
                         variant="ghost"
                         bg="button.secondary"
-                        color="white"
+                        color="button.text"
                         _hover={{ bg: "button.secondaryHover" }}
                         size="sm"
                         onClick={handleCancel}
