@@ -248,15 +248,15 @@ const RecipeList = () => {
 
 
                 <Box flex={1} overflowX="auto" borderWidth={1} borderColor="border.default" borderRadius="lg" bg="bg.surface" mb={4}>
-                    <Table.Root interactive minW="800px">
+                    <Table.Root interactive>
                         <Table.Header>
                             <Table.Row bg="bg.surface">
                                 <Table.ColumnHeader color="fg.default">Name</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Category</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Cuisine</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Difficulty</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Total Time</Table.ColumnHeader>
-                                <Table.ColumnHeader color="fg.default">Yield</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Category</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Cuisine</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", md: "table-cell" }}>Difficulty</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Total Time</Table.ColumnHeader>
+                                <Table.ColumnHeader color="fg.default" display={{ base: "none", lg: "table-cell" }}>Yield</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -293,19 +293,19 @@ const RecipeList = () => {
                                             <Text>{recipe.core.name}</Text>
                                         </HStack>
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">{recipe.core.category || '-'}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">{recipe.core.cuisine || '-'}</Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>{recipe.core.category || '-'}</Table.Cell>
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>{recipe.core.cuisine || '-'}</Table.Cell>
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", md: "table-cell" }}>
                                         {recipe.core.difficulty && (
                                             <Badge colorPalette={recipe.core.difficulty === 'Easy' ? 'green' : recipe.core.difficulty === 'Medium' ? 'yellow' : 'red'}>
                                                 {recipe.core.difficulty}
                                             </Badge>
                                         )}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>
                                         {(recipe.times.total_time_minutes ?? 0) > 0 ? formatDuration(recipe.times.total_time_minutes) : '-'}
                                     </Table.Cell>
-                                    <Table.Cell borderColor="border.default">{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
+                                    <Table.Cell borderColor="border.default" display={{ base: "none", lg: "table-cell" }}>{recipe.core.yield_amount} {recipe.core.yield_unit}</Table.Cell>
                                 </Table.Row>
                             ))}
                         </Table.Body>

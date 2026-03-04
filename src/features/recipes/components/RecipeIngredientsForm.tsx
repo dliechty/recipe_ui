@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Flex,
     Input,
     VStack,
     HStack,
@@ -83,27 +84,59 @@ const SortableIngredientRow = ({
     };
 
     return (
-        <HStack
+        <Flex
             ref={setNodeRef}
             style={style}
             gap={2}
-            align="end"
-            bg="bg.surface" // Ensure background is opaque when dragging
+            direction={{ base: "column", md: "row" }}
+            align={{ base: "stretch", md: "end" }}
+            bg="bg.surface"
+            p={{ base: 3, md: 0 }}
+            borderRadius={{ base: "md", md: "none" }}
+            borderWidth={{ base: 1, md: 0 }}
+            borderColor="border.default"
         >
-            <IconButton
-                aria-label="Drag to reorder"
-                variant="ghost"
-                cursor="grab"
-                color="fg.muted"
-                size="sm"
-                {...attributes}
-                {...listeners}
-                _active={{ cursor: 'grabbing' }}
+            {/* Drag handle + delete row on mobile, inline on desktop */}
+            <HStack
+                display={{ base: "flex", md: "contents" }}
+                justify="space-between"
             >
-                <FaGripVertical />
-            </IconButton>
+                <IconButton
+                    aria-label="Drag to reorder"
+                    variant="ghost"
+                    cursor="grab"
+                    color="fg.muted"
+                    size="sm"
+                    {...attributes}
+                    {...listeners}
+                    _active={{ cursor: 'grabbing' }}
+                >
+                    <FaGripVertical />
+                </IconButton>
+                {/* Delete button visible on mobile in the top row */}
+                <Box display={{ base: "block", md: "none" }}>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger asChild>
+                            <IconButton
+                                colorPalette="red"
+                                variant="ghost"
+                                onClick={() => removeIngredient(componentIndex, index)}
+                                aria-label="Remove ingredient"
+                                size="sm"
+                            >
+                                <FaTrash />
+                            </IconButton>
+                        </Tooltip.Trigger>
+                        <Tooltip.Positioner>
+                            <Tooltip.Content>
+                                Delete ingredient
+                            </Tooltip.Content>
+                        </Tooltip.Positioner>
+                    </Tooltip.Root>
+                </Box>
+            </HStack>
             <Box flex={2}>
-                {index === 0 && <Text fontSize="sm" mb={1}>Name</Text>}
+                <Text fontSize="sm" mb={1} display={{ base: "block", md: index === 0 ? "block" : "none" }}>Name</Text>
                 <Input
                     placeholder="Ingredient"
                     value={ingredient.ingredient_name}
@@ -111,26 +144,28 @@ const SortableIngredientRow = ({
                     {...inputStyles}
                 />
             </Box>
-            <Box flex={1}>
-                {index === 0 && <Text fontSize="sm" mb={1}>Quantity</Text>}
-                <Input
-                    placeholder="Qty"
-                    value={ingredient.quantity}
-                    onChange={(e) => handleIngredientChange(componentIndex, index, 'quantity', e.target.value)}
-                    {...inputStyles}
-                />
-            </Box>
-            <Box flex={1}>
-                {index === 0 && <Text fontSize="sm" mb={1}>Unit</Text>}
-                <Input
-                    placeholder="Unit"
-                    value={ingredient.unit}
-                    onChange={(e) => handleIngredientChange(componentIndex, index, 'unit', e.target.value)}
-                    {...inputStyles}
-                />
-            </Box>
+            <Flex gap={2} direction="row">
+                <Box flex={1}>
+                    <Text fontSize="sm" mb={1} display={{ base: "block", md: index === 0 ? "block" : "none" }}>Quantity</Text>
+                    <Input
+                        placeholder="Qty"
+                        value={ingredient.quantity}
+                        onChange={(e) => handleIngredientChange(componentIndex, index, 'quantity', e.target.value)}
+                        {...inputStyles}
+                    />
+                </Box>
+                <Box flex={1}>
+                    <Text fontSize="sm" mb={1} display={{ base: "block", md: index === 0 ? "block" : "none" }}>Unit</Text>
+                    <Input
+                        placeholder="Unit"
+                        value={ingredient.unit}
+                        onChange={(e) => handleIngredientChange(componentIndex, index, 'unit', e.target.value)}
+                        {...inputStyles}
+                    />
+                </Box>
+            </Flex>
             <Box flex={2}>
-                {index === 0 && <Text fontSize="sm" mb={1}>Notes</Text>}
+                <Text fontSize="sm" mb={1} display={{ base: "block", md: index === 0 ? "block" : "none" }}>Notes</Text>
                 <Input
                     placeholder="Notes (optional)"
                     value={ingredient.notes || ''}
@@ -138,25 +173,28 @@ const SortableIngredientRow = ({
                     {...inputStyles}
                 />
             </Box>
-            <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                    <IconButton
-                        colorPalette="red"
-                        variant="ghost"
-                        onClick={() => removeIngredient(componentIndex, index)}
-                        aria-label="Remove ingredient"
-                        size="sm"
-                    >
-                        <FaTrash />
-                    </IconButton>
-                </Tooltip.Trigger>
-                <Tooltip.Positioner>
-                    <Tooltip.Content>
-                        Delete ingredient
-                    </Tooltip.Content>
-                </Tooltip.Positioner>
-            </Tooltip.Root>
-        </HStack>
+            {/* Delete button on desktop - inline at end of row */}
+            <Box display={{ base: "none", md: "block" }}>
+                <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                        <IconButton
+                            colorPalette="red"
+                            variant="ghost"
+                            onClick={() => removeIngredient(componentIndex, index)}
+                            aria-label="Remove ingredient"
+                            size="sm"
+                        >
+                            <FaTrash />
+                        </IconButton>
+                    </Tooltip.Trigger>
+                    <Tooltip.Positioner>
+                        <Tooltip.Content>
+                            Delete ingredient
+                        </Tooltip.Content>
+                    </Tooltip.Positioner>
+                </Tooltip.Root>
+            </Box>
+        </Flex>
     );
 };
 

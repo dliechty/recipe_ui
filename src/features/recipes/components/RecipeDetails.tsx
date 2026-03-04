@@ -148,9 +148,9 @@ const RecipeDetails = () => {
                 </Breadcrumb.List>
             </Breadcrumb.Root>
 
-            <HStack mb={6} className="no-print">
+            <Box mb={6} className="no-print">
                 {(canEdit || currentUser) && (
-                    <HStack gap={2}>
+                    <HStack gap={2} flexWrap="wrap">
                         {currentUser && (
                             <Button
                                 onClick={() => {
@@ -270,7 +270,7 @@ const RecipeDetails = () => {
                         )}
                     </HStack>
                 )}
-            </HStack>
+            </Box>
 
 
 
