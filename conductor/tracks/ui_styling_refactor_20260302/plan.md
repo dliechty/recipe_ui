@@ -99,7 +99,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Component Color Migration' (Protocol in workflow.md)
 
-## Phase 4: Linting Exception Cleanup [FR-4]
+## Phase 4: Linting Exception Cleanup [FR-4] [checkpoint: 57f0ad6]
 
 - [x] Task: Write tests for properly typed react-select generics [fa48498]
     - [x] Test that selectStyles exports are properly typed without `any`
