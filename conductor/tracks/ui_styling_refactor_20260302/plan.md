@@ -106,10 +106,10 @@
     - [x] Test that DietSelect, RecipeMultiSelect, and MealForm consume typed select styles
     - [x] Run tests and confirm they fail (Red Phase)
 
-- [ ] Task: Remove `@typescript-eslint/no-explicit-any` suppressions
-    - [ ] Properly type react-select generics in styles.ts (replace `any` with proper Option/IsMulti types)
-    - [ ] Replace `any` in test files (RecipeSearchSelector.test.tsx, CalendarView.test.tsx) with proper types or `unknown`
-    - [ ] Run tests and confirm they pass (Green Phase)
+- [x] Task: Remove `@typescript-eslint/no-explicit-any` suppressions [685aaf1]
+    - [x] Properly type react-select generics in styles.ts (replace `any` with proper Option/IsMulti types)
+    - [x] Replace `any` in test files (RecipeSearchSelector.test.tsx, CalendarView.test.tsx) with proper types or `unknown`
+    - [x] Run tests and confirm they pass (Green Phase)
 
 - [ ] Task: Remove `@typescript-eslint/no-unused-vars` suppressions
     - [ ] Refactor destructuring in RecipeForm.tsx to use rest operator instead of naming unused vars
