@@ -426,7 +426,7 @@ const RecipeDetails = () => {
                                                 bg={scale === s ? 'vscode.button' : 'transparent'}
                                                 borderColor="vscode.button"
                                                 color={scale === s ? 'white' : 'vscode.button'}
-                                                _hover={{ bg: scale === s ? 'vscode.buttonHover' : 'rgba(14, 99, 156, 0.1)' }}
+                                                _hover={{ bg: scale === s ? 'vscode.buttonHover' : 'button.ghostHover' }}
                                                 onClick={() => setScale(s)}
                                                 borderTopRightRadius={index === arr.length - 1 ? 'md' : 0}
                                                 borderBottomRightRadius={index === arr.length - 1 ? 'md' : 0}

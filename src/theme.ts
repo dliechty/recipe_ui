@@ -16,6 +16,7 @@ export const vsCodeColors = {
     button: "#0e639c",
     buttonHover: "#1177bb",
     buttonText: "#ffffff",
+    buttonGhostHover: "rgba(14, 99, 156, 0.1)",
     inputBg: "#3c3c3c",
     // Status colors (dark theme friendly)
     errorBg: "#4a1515",
@@ -78,6 +79,7 @@ const config = defineConfig({
                     button: { value: vsCodeColors.button },
                     buttonHover: { value: vsCodeColors.buttonHover },
                     buttonText: { value: vsCodeColors.buttonText },
+                    buttonGhostHover: { value: vsCodeColors.buttonGhostHover },
                     inputBg: { value: vsCodeColors.inputBg },
                     // Status colors (dark theme friendly)
                     errorBg: { value: vsCodeColors.errorBg },
@@ -164,6 +166,7 @@ const config = defineConfig({
                     success: { value: "{colors.vscode.successButton}" },
                     successHover: { value: "{colors.vscode.successButtonHover}" },
                     text: { value: "{colors.vscode.buttonText}" },
+                    ghostHover: { value: "{colors.vscode.buttonGhostHover}" },
                 },
                 // Link semantic tokens
                 link: {
