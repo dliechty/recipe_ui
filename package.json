@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test:once": "vitest --run",
     "test": "vitest",
-    "api:sync": "openapi --input ./openapi.json --output ./src/client --client axios"
+    "api:sync": "openapi --input ./openapi.json --output ./src/client --client axios",
+    "test:e2e": "npx playwright test",
+    "test:e2e:mobile": "npx playwright test --project=mobile-iphone-se --project=mobile-ipad"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.30.0",
@@ -33,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@playwright/test": "^1.58.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
