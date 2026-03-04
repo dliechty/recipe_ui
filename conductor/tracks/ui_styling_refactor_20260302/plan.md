@@ -92,7 +92,7 @@
     - [ ] Audit all remaining `colorScheme` usage and migrate to `colorPalette` where needed
     - [ ] Run full test suite (Green Phase)
 
-- [~] Task: Remove all remaining hard-coded color values from components
+- [x] Task: Remove all remaining hard-coded color values from components [13f846a]
     - [ ] Fix RecipeDetails.tsx rgba fallback in _hover
     - [ ] Final sweep: grep for hex codes, rgb(), rgba() in component files (excluding SnakeGame.tsx, theme.ts, and src/client/)
     - [ ] Run `npm run lint` and `npx tsc --noEmit` to verify clean
