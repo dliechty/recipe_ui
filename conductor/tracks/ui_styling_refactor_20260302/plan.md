@@ -141,12 +141,12 @@
 
 ## Phase 5: Mobile Responsive Audit [FR-5]
 
-- [ ] Task: Set up Playwright mobile viewport tests
-    - [ ] Configure Playwright test files for mobile viewports (375px iPhone SE, 768px iPad)
-    - [ ] Create test scenarios for all major views: Login, Recipes List, Recipe Detail, Meal Calendar, Meal Detail, Admin Dashboard, User Account
-    - [ ] Run tests to establish baseline
+- [x] Task: Set up Playwright mobile viewport tests [3e4bfa7]
+    - [x] Configure Playwright test files for mobile viewports (375px iPhone SE, 768px iPad)
+    - [x] Create test scenarios for all major views: Login, Recipes List, Recipe Detail, Meal Calendar, Meal Detail, Admin Dashboard, User Account
+    - [x] Run tests to establish baseline
 
-- [ ] Task: Audit and fix recipe views for mobile
+- [~] Task: Audit and fix recipe views for mobile
     - [ ] Test RecipeList page at 375px and 768px — fix overflow, layout, touch targets
     - [ ] Test RecipeDetails page at 375px and 768px — fix content clipping, readability
     - [ ] Test RecipeForm (create/edit) at 375px and 768px — fix form usability
