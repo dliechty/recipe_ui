@@ -153,7 +153,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Context module exports both AuthProvider component and useAuth hook; splitting would add complexity without benefit
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {

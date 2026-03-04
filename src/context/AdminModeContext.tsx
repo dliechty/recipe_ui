@@ -12,7 +12,7 @@ interface AdminModeContextType {
     clearMode: () => void;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Context object must be exported for cross-context consumption in AuthContext.tsx (HeaderInjector)
 export const AdminModeContext = createContext<AdminModeContextType | null>(null);
 
 export const AdminModeProvider = ({ children }: { children: ReactNode }) => {
@@ -82,7 +82,7 @@ export const AdminModeProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Context module exports both AdminModeProvider component and useAdminMode hook; splitting would add complexity without benefit
 export const useAdminMode = () => {
     const context = useContext(AdminModeContext);
     if (!context) {

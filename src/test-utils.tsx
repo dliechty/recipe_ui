@@ -13,7 +13,7 @@ const createTestQueryClient = () => new QueryClient({
     },
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Test utility file, not subject to Fast Refresh
 export function renderWithProviders(ui: React.ReactElement) {
     const testQueryClient = createTestQueryClient();
     return render(
@@ -37,7 +37,7 @@ export const TestWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 // re-export everything
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Test utility file, not subject to Fast Refresh
 export * from '@testing-library/react';
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Test utility file, not subject to Fast Refresh
 export { default as userEvent } from '@testing-library/user-event';

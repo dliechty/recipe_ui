@@ -13,7 +13,7 @@ interface HouseholdContextType {
     households: Household[];
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Context object must be exported for cross-context consumption in AuthContext.tsx (HeaderInjector)
 export const HouseholdContext = createContext<HouseholdContextType | null>(null);
 
 export const HouseholdProvider = ({ children }: { children: ReactNode }) => {
@@ -174,7 +174,7 @@ export const HouseholdProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- Context module exports both HouseholdProvider component and useHouseholdContext hook; splitting would add complexity without benefit
 export const useHouseholdContext = () => {
     const context = useContext(HouseholdContext);
     if (!context) {
