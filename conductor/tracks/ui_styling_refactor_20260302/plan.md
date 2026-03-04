@@ -87,7 +87,7 @@
     - [ ] Replace `gray.700` badge usage with semantic badge tokens
     - [ ] Run full test suite to verify no regressions
 
-- [ ] Task: Fix Chakra v3 API alignment
+- [x] Task: Fix Chakra v3 API alignment [de45de3]
     - [ ] Replace `colorScheme` with `colorPalette` in ErrorBoundary.tsx
     - [ ] Audit all remaining `colorScheme` usage and migrate to `colorPalette` where needed
     - [ ] Run full test suite (Green Phase)
