@@ -114,6 +114,51 @@ Configure via `.env` file (see `.env.example`):
 - Recipe forms support complex nested structures (components with ingredients, multiple instructions)
 - The codebase uses TypeScript strict mode with ESLint configured for React hooks and TypeScript
 
+## Design System Rules
+
+### Color Token Rules
+
+All colors come from semantic tokens defined in `src/theme.ts`. The `vsCodeColors` object is the single source of truth for the color palette. `src/utils/styles.ts` derives its values from `theme.ts` — always use these tokens rather than raw color values.
+
+### Prohibited Patterns
+
+- Never use hard-coded hex values (`#007acc`), `rgb()`, or `rgba()` in component files
+- Never use raw Chakra palette colors (`red.600`, `green.400`, `blue.500`, `yellow.400`, `orange.500`, `whiteAlpha.200`)
+- Never use `color="white"` on buttons — use `color="button.text"`
+- Never use `colorScheme` — use `colorPalette` (Chakra v3)
+- Never define local input style objects — import from `src/utils/styles.ts`
+- Never add new `eslint-disable` comments — fix the root cause
+- **Exceptions**: `SnakeGame.tsx` (canvas rendering) and `src/client/` (auto-generated)
+
+### Shared Style Utilities
+
+`src/utils/styles.ts` exports the following — use them instead of writing ad-hoc styles:
+
+- `inputStyles` — spread onto Chakra input components
+- `focusRingStyles` — consistent focus ring for interactive elements
+- `buttonStyles.primary/danger/success/secondary` — button variant styles
+- `selectStyles.default/compact/form` — react-select styling
+- `nativeSelectStyles` — native select element styling
+- `scrollbarStyles` — custom scrollbar for dark theme
+
+### Component Styling Reference
+
+| Element | Approach |
+|---|---|
+| Chakra components | Use semantic token props (e.g., `bg="bg.surface"`, `color="fg.default"`) |
+| Input elements | Spread `inputStyles` |
+| Buttons | Spread `buttonStyles.*` |
+| react-select | Use `selectStyles.*` |
+| Font sizes | Use Chakra tokens (`"sm"`, `"md"`) — never raw pixel/rem values |
+
+### Mobile Guidelines
+
+- All views must work at 375px and 768px viewports
+- Touch targets minimum 44x44px
+- Use Chakra responsive props for layout (e.g., `{{ base: "column", md: "row" }}`)
+
+See `docs/design-system.md` for full design system documentation.
+
 ## General Workflow Requirements
 
 - **Before finalizing changes or committing**:
