@@ -81,11 +81,8 @@ const HouseholdMemberList = ({
                                 <Button
                                     data-testid={`remove-member-btn-${household.id}-${member.user_id}`}
                                     size="2xs"
-                                    variant="outline"
                                     colorPalette="red"
-                                    borderColor="danger.fg"
-                                    color="danger.fg"
-                                    _hover={{ bg: 'danger.bgSubtle' }}
+                                    variant="outline"
                                     onClick={() => handleRemove(member.user_id)}
                                 >
                                     Remove
@@ -131,11 +128,11 @@ const HouseholdRow = ({
     return (
         <Box
             data-testid={`household-row-${household.id}`}
-            bg="bg.muted"
+            bg="bg.surface"
             borderRadius="md"
-            borderWidth={1}
+            borderWidth="1px"
             borderColor="border.default"
-            p={4}
+            p={5}
         >
             {/* Header row: name + badges */}
             <HStack justify="space-between" align="start" mb={3}>
@@ -193,9 +190,7 @@ const HouseholdRow = ({
                     <Button
                         data-testid={`rename-submit-btn-${household.id}`}
                         size="sm"
-                        bg="vscode.button"
-                        color="button.text"
-                        _hover={{ bg: 'vscode.buttonHover' }}
+                        colorPalette="blue"
                         onClick={handleRenameSubmit}
                         disabled={!renameValue.trim() || renameValue.trim() === household.name}
                     >
@@ -209,11 +204,9 @@ const HouseholdRow = ({
                 {/* Set/Unset Primary */}
                 <Button
                     data-testid={`set-primary-btn-${household.id}`}
-                    size="xs"
+                    size="sm"
+                    colorPalette="orange"
                     variant="outline"
-                    borderColor="badge.pending"
-                    color="status.warning"
-                    _hover={{ bg: 'badge.pendingBg' }}
                     onClick={handleTogglePrimary}
                 >
                     {isPrimary ? 'Unset Primary' : 'Set Primary'}
@@ -222,10 +215,10 @@ const HouseholdRow = ({
                 {/* Manage Members */}
                 <Button
                     data-testid={`manage-members-btn-${household.id}`}
-                    size="xs"
+                    size="sm"
                     variant="outline"
                     borderColor="border.default"
-                    color="fg.muted"
+                    color="fg.default"
                     _hover={{ bg: 'overlay.hover' }}
                     onClick={() => setShowMembers((prev) => !prev)}
                 >
@@ -235,11 +228,9 @@ const HouseholdRow = ({
                 {/* Leave */}
                 <Button
                     data-testid={`leave-btn-${household.id}`}
-                    size="xs"
+                    size="sm"
+                    colorPalette="yellow"
                     variant="outline"
-                    borderColor="warning.border"
-                    color="warning.fg"
-                    _hover={{ bg: 'warning.bgSubtle' }}
                     onClick={() => onLeave(household.id)}
                 >
                     Leave
@@ -249,11 +240,9 @@ const HouseholdRow = ({
                 {isCreator && (
                     <Button
                         data-testid={`delete-btn-${household.id}`}
-                        size="xs"
+                        size="sm"
+                        colorPalette="red"
                         variant="outline"
-                        borderColor="danger.fg"
-                        color="danger.fg"
-                        _hover={{ bg: 'danger.bgSubtle' }}
                         onClick={() => onDelete(household.id)}
                     >
                         Delete
@@ -388,7 +377,7 @@ const AccountHouseholdSection = () => {
             <Box
                 mt={6}
                 p={8}
-                borderWidth={1}
+                borderWidth="1px"
                 borderColor="border.default"
                 borderRadius="lg"
                 boxShadow="lg"
@@ -402,9 +391,7 @@ const AccountHouseholdSection = () => {
                         <Button
                             data-testid="create-household-btn"
                             size={{ base: 'xs', md: 'sm' }}
-                            bg="vscode.button"
-                            color="button.text"
-                            _hover={{ bg: 'vscode.buttonHover' }}
+                            colorPalette="blue"
                             onClick={() => setShowCreateDialog(true)}
                         >
                             Create Household
@@ -412,10 +399,8 @@ const AccountHouseholdSection = () => {
                         <Button
                             data-testid="join-household-btn"
                             size={{ base: 'xs', md: 'sm' }}
+                            colorPalette="blue"
                             variant="outline"
-                            borderColor="vscode.accent"
-                            color="vscode.accent"
-                            _hover={{ bg: 'overlay.hover' }}
                             onClick={() => setShowJoinDialog(true)}
                         >
                             Join Household
@@ -475,11 +460,11 @@ const AccountHouseholdSection = () => {
                         maxW="400px"
                         w="90%"
                         boxShadow="xl"
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <Box p={4} borderBottomWidth={1} borderColor="border.default">
+                        <Box p={4} borderBottomWidth="1px" borderColor="border.default">
                             <Heading size="md" color="fg.default">Leave Household</Heading>
                         </Box>
                         <Box p={6}>
@@ -487,12 +472,10 @@ const AccountHouseholdSection = () => {
                                 Are you sure you want to leave this household?
                             </Text>
                         </Box>
-                        <HStack justify="flex-end" p={4} gap={3} borderTopWidth={1} borderColor="border.default">
+                        <HStack justify="flex-end" p={4} gap={3} borderTopWidth="1px" borderColor="border.default">
                             <Button
                                 data-testid="leave-confirm-btn"
-                                bg="warning.bg"
-                                color="button.text"
-                                _hover={{ bg: 'warning.bgHover' }}
+                                colorPalette="yellow"
                                 size="sm"
                                 onClick={handleLeaveConfirm}
                             >
@@ -500,10 +483,8 @@ const AccountHouseholdSection = () => {
                             </Button>
                             <Button
                                 data-testid="leave-cancel-btn"
-                                variant="ghost"
-                                bg="button.secondary"
-                                color="button.text"
-                                _hover={{ bg: 'button.secondaryHover' }}
+                                colorPalette="gray"
+                                variant="outline"
                                 size="sm"
                                 onClick={handleLeaveCancel}
                             >
@@ -541,11 +522,11 @@ const AccountHouseholdSection = () => {
                         maxW="400px"
                         w="90%"
                         boxShadow="xl"
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <Box p={4} borderBottomWidth={1} borderColor="border.default">
+                        <Box p={4} borderBottomWidth="1px" borderColor="border.default">
                             <Heading size="md" color="fg.default">Delete Household</Heading>
                         </Box>
                         <Box p={6}>
@@ -553,12 +534,10 @@ const AccountHouseholdSection = () => {
                                 Are you sure you want to permanently delete this household? This action cannot be undone.
                             </Text>
                         </Box>
-                        <HStack justify="flex-end" p={4} gap={3} borderTopWidth={1} borderColor="border.default">
+                        <HStack justify="flex-end" p={4} gap={3} borderTopWidth="1px" borderColor="border.default">
                             <Button
                                 data-testid="delete-confirm-btn"
-                                bg="danger.bg"
-                                color="button.text"
-                                _hover={{ bg: 'danger.bgHover' }}
+                                colorPalette="red"
                                 size="sm"
                                 onClick={handleDeleteConfirm}
                             >
@@ -566,10 +545,8 @@ const AccountHouseholdSection = () => {
                             </Button>
                             <Button
                                 data-testid="delete-cancel-btn"
-                                variant="ghost"
-                                bg="button.secondary"
-                                color="button.text"
-                                _hover={{ bg: 'button.secondaryHover' }}
+                                colorPalette="gray"
+                                variant="outline"
                                 size="sm"
                                 onClick={handleDeleteCancel}
                             >
@@ -607,14 +584,14 @@ const AccountHouseholdSection = () => {
                         maxW="400px"
                         w="90%"
                         boxShadow="xl"
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <HStack
                             justify="space-between"
                             p={4}
-                            borderBottomWidth={1}
+                            borderBottomWidth="1px"
                             borderColor="border.default"
                         >
                             <Heading size="md" color="fg.default">Create Household</Heading>
@@ -653,14 +630,12 @@ const AccountHouseholdSection = () => {
                             justify="flex-end"
                             p={4}
                             gap={3}
-                            borderTopWidth={1}
+                            borderTopWidth="1px"
                             borderColor="border.default"
                         >
                             <Button
                                 data-testid="create-household-submit-btn"
-                                bg="vscode.button"
-                                color="button.text"
-                                _hover={{ bg: 'vscode.buttonHover' }}
+                                colorPalette="blue"
                                 size="sm"
                                 onClick={handleCreateSubmit}
                                 loading={isCreating}
@@ -670,10 +645,8 @@ const AccountHouseholdSection = () => {
                             </Button>
                             <Button
                                 data-testid="create-household-cancel-btn"
-                                variant="ghost"
-                                bg="button.secondary"
-                                color="button.text"
-                                _hover={{ bg: 'button.secondaryHover' }}
+                                colorPalette="gray"
+                                variant="outline"
                                 size="sm"
                                 onClick={handleCreateCancel}
                                 disabled={isCreating}
@@ -712,14 +685,14 @@ const AccountHouseholdSection = () => {
                         maxW="400px"
                         w="90%"
                         boxShadow="xl"
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <HStack
                             justify="space-between"
                             p={4}
-                            borderBottomWidth={1}
+                            borderBottomWidth="1px"
                             borderColor="border.default"
                         >
                             <Heading size="md" color="fg.default">Join Household</Heading>
@@ -758,14 +731,12 @@ const AccountHouseholdSection = () => {
                             justify="flex-end"
                             p={4}
                             gap={3}
-                            borderTopWidth={1}
+                            borderTopWidth="1px"
                             borderColor="border.default"
                         >
                             <Button
                                 data-testid="join-household-submit-btn"
-                                bg="vscode.button"
-                                color="button.text"
-                                _hover={{ bg: 'vscode.buttonHover' }}
+                                colorPalette="blue"
                                 size="sm"
                                 onClick={handleJoinSubmit}
                                 loading={isJoining}
@@ -775,10 +746,8 @@ const AccountHouseholdSection = () => {
                             </Button>
                             <Button
                                 data-testid="join-household-cancel-btn"
-                                variant="ghost"
-                                bg="button.secondary"
-                                color="button.text"
-                                _hover={{ bg: 'button.secondaryHover' }}
+                                colorPalette="gray"
+                                variant="outline"
                                 size="sm"
                                 onClick={handleJoinCancel}
                                 disabled={isJoining}

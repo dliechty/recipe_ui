@@ -80,11 +80,8 @@ const AdminMemberList = ({
                             <Button
                                 data-testid={`remove-member-btn-${household.id}-${member.user_id}`}
                                 size="2xs"
-                                variant="outline"
                                 colorPalette="red"
-                                borderColor="danger.fg"
-                                color="danger.fg"
-                                _hover={{ bg: 'danger.bgSubtle' }}
+                                variant="outline"
                                 onClick={() => removeMember({ householdId: household.id, userId: member.user_id })}
                             >
                                 Remove
@@ -113,7 +110,7 @@ const AdminMemberList = ({
                         align="stretch"
                         gap={0}
                         mt={1}
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         borderRadius="md"
                         overflow="hidden"
@@ -141,9 +138,7 @@ const AdminMemberList = ({
                                     </VStack>
                                     <Button
                                         size="2xs"
-                                        bg="vscode.button"
-                                        color="button.text"
-                                        _hover={{ bg: 'vscode.buttonHover' }}
+                                        colorPalette="blue"
                                         disabled={isAdding}
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -202,11 +197,11 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
     return (
         <Box
             data-testid={`household-row-${household.id}`}
-            bg="bg.muted"
+            bg="bg.surface"
             borderRadius="md"
-            borderWidth={1}
+            borderWidth="1px"
             borderColor="border.default"
-            p={4}
+            p={5}
         >
             {/* Header: name + meta */}
             <HStack justify="space-between" align="start" mb={3}>
@@ -243,9 +238,7 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                 <Button
                     data-testid={`rename-submit-btn-${household.id}`}
                     size="sm"
-                    bg="vscode.button"
-                    color="button.text"
-                    _hover={{ bg: 'vscode.buttonHover' }}
+                    colorPalette="blue"
                     onClick={handleRenameSubmit}
                     disabled={!renameValue.trim() || renameValue.trim() === household.name}
                 >
@@ -257,10 +250,10 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
             <HStack gap={2} flexWrap="wrap">
                 <Button
                     data-testid={`view-members-btn-${household.id}`}
-                    size="xs"
+                    size="sm"
                     variant="outline"
                     borderColor="border.default"
-                    color="fg.muted"
+                    color="fg.default"
                     _hover={{ bg: 'overlay.hover' }}
                     onClick={() => setShowMembers((prev) => !prev)}
                 >
@@ -269,11 +262,9 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
 
                 <Button
                     data-testid={`delete-btn-${household.id}`}
-                    size="xs"
+                    size="sm"
+                    colorPalette="red"
                     variant="outline"
-                    borderColor="danger.fg"
-                    color="danger.fg"
-                    _hover={{ bg: 'danger.bgSubtle' }}
                     onClick={() => onDelete(household.id)}
                 >
                     Delete
@@ -347,9 +338,7 @@ const AdminHouseholdManagement = () => {
                     <Button
                         data-testid="create-household-btn"
                         size="sm"
-                        bg="vscode.button"
-                        color="button.text"
-                        _hover={{ bg: 'vscode.buttonHover' }}
+                        colorPalette="blue"
                         onClick={() => setShowCreateDialog(true)}
                     >
                         Create Household
@@ -402,11 +391,11 @@ const AdminHouseholdManagement = () => {
                         maxW="400px"
                         w="90%"
                         boxShadow="xl"
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <Box p={4} borderBottomWidth={1} borderColor="border.default">
+                        <Box p={4} borderBottomWidth="1px" borderColor="border.default">
                             <Heading size="md" color="fg.default">Delete Household</Heading>
                         </Box>
                         <Box p={6}>
@@ -414,12 +403,10 @@ const AdminHouseholdManagement = () => {
                                 Are you sure you want to permanently delete this household? Meals linked to this household will be unlinked. This action cannot be undone.
                             </Text>
                         </Box>
-                        <HStack justify="flex-end" p={4} gap={3} borderTopWidth={1} borderColor="border.default">
+                        <HStack justify="flex-end" p={4} gap={3} borderTopWidth="1px" borderColor="border.default">
                             <Button
                                 data-testid="delete-confirm-btn"
-                                bg="danger.bg"
-                                color="button.text"
-                                _hover={{ bg: 'danger.bgHover' }}
+                                colorPalette="red"
                                 size="sm"
                                 onClick={handleDeleteConfirm}
                             >
@@ -427,10 +414,8 @@ const AdminHouseholdManagement = () => {
                             </Button>
                             <Button
                                 data-testid="delete-cancel-btn"
-                                variant="ghost"
-                                bg="button.secondary"
-                                color="button.text"
-                                _hover={{ bg: 'button.secondaryHover' }}
+                                colorPalette="gray"
+                                variant="outline"
                                 size="sm"
                                 onClick={handleDeleteCancel}
                             >
@@ -468,14 +453,14 @@ const AdminHouseholdManagement = () => {
                         maxW="400px"
                         w="90%"
                         boxShadow="xl"
-                        borderWidth={1}
+                        borderWidth="1px"
                         borderColor="border.default"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <HStack
                             justify="space-between"
                             p={4}
-                            borderBottomWidth={1}
+                            borderBottomWidth="1px"
                             borderColor="border.default"
                         >
                             <Heading size="md" color="fg.default">Create Household</Heading>
@@ -514,14 +499,12 @@ const AdminHouseholdManagement = () => {
                             justify="flex-end"
                             p={4}
                             gap={3}
-                            borderTopWidth={1}
+                            borderTopWidth="1px"
                             borderColor="border.default"
                         >
                             <Button
                                 data-testid="create-household-submit-btn"
-                                bg="vscode.button"
-                                color="button.text"
-                                _hover={{ bg: 'vscode.buttonHover' }}
+                                colorPalette="blue"
                                 size="sm"
                                 onClick={handleCreateSubmit}
                                 loading={isCreating}
@@ -531,10 +514,8 @@ const AdminHouseholdManagement = () => {
                             </Button>
                             <Button
                                 data-testid="create-household-cancel-btn"
-                                variant="ghost"
-                                bg="button.secondary"
-                                color="button.text"
-                                _hover={{ bg: 'button.secondaryHover' }}
+                                colorPalette="gray"
+                                variant="outline"
                                 size="sm"
                                 onClick={handleCreateCancel}
                                 disabled={isCreating}
