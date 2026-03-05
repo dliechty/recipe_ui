@@ -169,7 +169,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 5: Mobile Responsive Audit' (Protocol in workflow.md) [dc17bbe]
 
-## Phase 6: Design Guidelines Documentation [FR-6]
+## Phase 6: Design Guidelines Documentation [FR-6] [checkpoint: b90b40b]
 
 - [x] Task: Draft design guidelines content [6b5c750]
     - [x] Document color token naming conventions and the complete semantic token map
@@ -199,4 +199,4 @@
     - [x] Grep for any remaining hard-coded colors in component files — clean
     - [x] Grep for any remaining `eslint-disable` comments (document justified exceptions) — only justified react-refresh exceptions remain
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 6: Design Guidelines Documentation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 6: Design Guidelines Documentation' (Protocol in workflow.md) [b90b40b]
