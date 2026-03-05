@@ -78,6 +78,53 @@ This command runs `openapi-typescript-codegen` to regenerate the typed client co
 
 **Note**: Do not modify files in `src/client` manually, as they will be overwritten the next time the sync command is run.
 
+## Design System
+
+The app uses a **VS Code-inspired dark theme** with a semantic token system. All colors are defined as semantic tokens in the Chakra UI theme, ensuring consistency and easy maintenance. Avoid using raw color values — always use semantic tokens.
+
+### Semantic Token Quick Reference
+
+| Token | Purpose |
+|---|---|
+| `bg.canvas` | Page background |
+| `bg.surface` | Card/panel background |
+| `bg.muted` | Subtle background (hover states, secondary areas) |
+| `fg.default` | Primary text |
+| `fg.muted` | Secondary/helper text |
+| `border.default` | Standard borders |
+| `button.primary` | Primary button background |
+| `button.text` | Button text color |
+| `button.danger` | Destructive action button |
+| `button.success` | Positive action button |
+| `button.secondary` | Secondary button background |
+| `status.error` / `.errorBg` / `.errorBorder` | Error states |
+| `status.success` / `.successBg` / `.successBorder` | Success states |
+| `status.warning` / `.warningBg` / `.warningBorder` | Warning states |
+| `danger.fg` / `danger.bg` | Danger text and background |
+| `success.fg` / `success.bg` | Success text and background |
+| `info.fg` / `info.bg` | Informational text and background |
+| `link.default` | Link color |
+| `badge.admin` / `badge.member` / `badge.pending` | User role badge colors |
+
+### Do / Don't
+
+| Do | Don't |
+|---|---|
+| `color="button.text"` | `color="white"` on buttons |
+| `color="danger.fg"` | `color="red.600"` |
+| Import `inputStyles` from `src/utils/styles.ts` | Define local input style objects |
+| Use `colorPalette` prop | Use `colorScheme` prop |
+
+### Shared Style Utilities
+
+`src/utils/styles.ts` exports reusable style objects: `inputStyles`, `focusRingStyles`, `buttonStyles`, `selectStyles`, and `scrollbarStyles`. Use these instead of defining one-off styles in components.
+
+### Mobile Responsiveness
+
+All views are tested at **375px** and **768px** breakpoints. Interactive touch targets maintain a minimum size of **44x44px**.
+
+For full details, see [Design System Documentation](./docs/design-system.md).
+
 ## Deployment
 
 For instructions on how to deploy this application using Docker, please refer to the [Deployment Guide](./deployment_guide.md).
