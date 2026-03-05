@@ -114,6 +114,51 @@ Configure via `.env` file (see `.env.example`):
 - Recipe forms support complex nested structures (components with ingredients, multiple instructions)
 - The codebase uses TypeScript strict mode with ESLint configured for React hooks and TypeScript
 
+## Design System Rules
+
+All visual styling follows a centralized token system. See `docs/design-system.md` for full documentation.
+
+### Color Token Rules
+
+All colors come from semantic tokens defined in `src/theme.ts`. The `vsCodeColors` object is the single source of truth for the palette. `src/utils/styles.ts` derives its values from `theme.ts` — always use these tokens and utilities rather than inventing colors.
+
+### Prohibited Patterns
+
+- Never use hard-coded hex values (`#007acc`), `rgb()`, or `rgba()` in component files
+- Never use raw Chakra palette colors (`red.600`, `green.400`, `blue.500`, `yellow.400`, `orange.500`, `whiteAlpha.200`)
+- Never use `color="white"` on buttons — use `color="button.text"`
+- Never use `colorScheme` — use `colorPalette` (Chakra v3)
+- Never define local input style objects — import from `src/utils/styles.ts`
+- Never add new `eslint-disable` comments — fix the root cause
+- **Exceptions**: `SnakeGame.tsx` (canvas rendering) and `src/client/` (auto-generated)
+
+### Shared Style Utilities
+
+`src/utils/styles.ts` exports reusable style objects:
+
+- `inputStyles` — spread onto Chakra input components
+- `focusRingStyles` — consistent focus ring for interactive elements
+- `buttonStyles.primary / danger / success / secondary` — button variant styles
+- `selectStyles.default / compact / form` — react-select styling
+- `nativeSelectStyles` — native select element styling
+- `scrollbarStyles` — custom scrollbar for dark theme
+
+### Component Styling Reference
+
+| Element | Approach |
+|---|---|
+| Chakra components | Use semantic token props (e.g., `bg="bg.surface"`, `color="fg.default"`) |
+| Input elements | Spread `inputStyles` from `src/utils/styles.ts` |
+| Buttons | Spread `buttonStyles.*` from `src/utils/styles.ts` |
+| react-select | Use `selectStyles.*` from `src/utils/styles.ts` |
+| Font sizes | Use Chakra tokens (`"sm"`, `"md"`) — never raw pixel/rem values |
+
+### Mobile Guidelines
+
+- All views must work at 375px and 768px viewports
+- Touch targets minimum 44x44px
+- Use Chakra responsive props for layout (e.g., `flexDir={{ base: "column", md: "row" }}`)
+
 ## General Workflow Requirements
 
 - **Before finalizing changes or committing**:
