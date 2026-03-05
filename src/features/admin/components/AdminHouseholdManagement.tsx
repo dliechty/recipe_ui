@@ -251,7 +251,6 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                 <Button
                     data-testid={`view-members-btn-${household.id}`}
                     size="sm"
-                    variant="outline"
                     borderColor="border.default"
                     color="fg.default"
                     _hover={{ bg: 'overlay.hover' }}
@@ -264,7 +263,6 @@ const AdminHouseholdRow = ({ household, allUsers, onDelete, onRename }: AdminHou
                     data-testid={`delete-btn-${household.id}`}
                     size="sm"
                     colorPalette="red"
-                    variant="outline"
                     onClick={() => onDelete(household.id)}
                 >
                     Delete

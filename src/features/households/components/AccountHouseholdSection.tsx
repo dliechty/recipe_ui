@@ -206,7 +206,6 @@ const HouseholdRow = ({
                     data-testid={`set-primary-btn-${household.id}`}
                     size="sm"
                     colorPalette="orange"
-                    variant="outline"
                     onClick={handleTogglePrimary}
                 >
                     {isPrimary ? 'Unset Primary' : 'Set Primary'}
@@ -216,7 +215,6 @@ const HouseholdRow = ({
                 <Button
                     data-testid={`manage-members-btn-${household.id}`}
                     size="sm"
-                    variant="outline"
                     borderColor="border.default"
                     color="fg.default"
                     _hover={{ bg: 'overlay.hover' }}
@@ -230,7 +228,6 @@ const HouseholdRow = ({
                     data-testid={`leave-btn-${household.id}`}
                     size="sm"
                     colorPalette="yellow"
-                    variant="outline"
                     onClick={() => onLeave(household.id)}
                 >
                     Leave
@@ -242,7 +239,6 @@ const HouseholdRow = ({
                         data-testid={`delete-btn-${household.id}`}
                         size="sm"
                         colorPalette="red"
-                        variant="outline"
                         onClick={() => onDelete(household.id)}
                     >
                         Delete
@@ -400,7 +396,6 @@ const AccountHouseholdSection = () => {
                             data-testid="join-household-btn"
                             size={{ base: 'xs', md: 'sm' }}
                             colorPalette="blue"
-                            variant="outline"
                             onClick={() => setShowJoinDialog(true)}
                         >
                             Join Household

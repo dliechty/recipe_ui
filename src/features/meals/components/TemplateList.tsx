@@ -287,7 +287,6 @@ const TemplateList = () => {
                                                 disabledTemplateIds.has(template.id) ? (
                                                     <Button
                                                         size="xs"
-                                                        variant="outline"
                                                         borderColor="vscode.successBorder"
                                                         color="vscode.successText"
                                                         _hover={{ bg: 'vscode.successBg' }}
@@ -299,7 +298,6 @@ const TemplateList = () => {
                                                 ) : (
                                                     <Button
                                                         size="xs"
-                                                        variant="outline"
                                                         borderColor="vscode.errorBorder"
                                                         color="vscode.errorText"
                                                         _hover={{ bg: 'vscode.errorBg' }}
