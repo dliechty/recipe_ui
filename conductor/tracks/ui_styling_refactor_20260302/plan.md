@@ -178,19 +178,19 @@
     - [x] Document mobile responsiveness guidelines (breakpoints, touch targets, layout patterns)
     - [x] Document component styling conventions (when to use Chakra props vs utilities vs CSS)
 
-- [ ] Task: Update README.md with Design System section
-    - [ ] Add "Design System" section covering token usage, styling patterns, and mobile guidelines
-    - [ ] Include quick-reference table of semantic tokens
-    - [ ] Include "do / don't" examples for color usage
+- [x] Task: Update README.md with Design System section [bf4bda5]
+    - [x] Add "Design System" section covering token usage, styling patterns, and mobile guidelines
+    - [x] Include quick-reference table of semantic tokens
+    - [x] Include "do / don't" examples for color usage
 
-- [ ] Task: Update CLAUDE.md with design guidelines
-    - [ ] Add explicit design rules: always use semantic tokens, never hard-code colors, use shared utilities
-    - [ ] Add prohibited patterns list
-    - [ ] Add component styling reference
+- [x] Task: Update CLAUDE.md with design guidelines [147bef2]
+    - [x] Add explicit design rules: always use semantic tokens, never hard-code colors, use shared utilities
+    - [x] Add prohibited patterns list
+    - [x] Add component styling reference
 
-- [ ] Task: Update GEMINI.md with design guidelines
-    - [ ] Mirror the same design guidelines from CLAUDE.md
-    - [ ] Ensure consistent instructions across both AI assistant files
+- [x] Task: Update GEMINI.md with design guidelines [45efc1c]
+    - [x] Mirror the same design guidelines from CLAUDE.md
+    - [x] Ensure consistent instructions across both AI assistant files
 
 - [ ] Task: Final validation sweep
     - [ ] Run `npm run test:once` — all tests pass
