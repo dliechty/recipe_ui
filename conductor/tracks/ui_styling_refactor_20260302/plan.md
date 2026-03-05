@@ -192,11 +192,11 @@
     - [x] Mirror the same design guidelines from CLAUDE.md
     - [x] Ensure consistent instructions across both AI assistant files
 
-- [ ] Task: Final validation sweep
-    - [ ] Run `npm run test:once` — all tests pass
-    - [ ] Run `npm run lint` — zero warnings, zero errors
-    - [ ] Run `npx tsc --noEmit` — zero type errors
-    - [ ] Grep for any remaining hard-coded colors in component files
-    - [ ] Grep for any remaining `eslint-disable` comments (document justified exceptions)
+- [x] Task: Final validation sweep
+    - [x] Run `npm run test:once` — all tests pass (676/676)
+    - [x] Run `npm run lint` — zero warnings, zero errors
+    - [x] Run `npx tsc --noEmit` — zero type errors
+    - [x] Grep for any remaining hard-coded colors in component files — clean
+    - [x] Grep for any remaining `eslint-disable` comments (document justified exceptions) — only justified react-refresh exceptions remain
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 6: Design Guidelines Documentation' (Protocol in workflow.md)
