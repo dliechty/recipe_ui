@@ -167,16 +167,16 @@
     - [x] Test User Account / Household pages at 375px and 768px
     - [x] Ensure all touch targets meet 44x44px minimum
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Mobile Responsive Audit' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Mobile Responsive Audit' (Protocol in workflow.md) [dc17bbe]
 
 ## Phase 6: Design Guidelines Documentation [FR-6]
 
-- [ ] Task: Draft design guidelines content
-    - [ ] Document color token naming conventions and the complete semantic token map
-    - [ ] Document prohibited patterns (no hard-coded colors, no raw Chakra palette colors)
-    - [ ] Document shared utility API (inputStyles, focusRingStyles, buttonStyles, nativeSelectStyles, selectStyles, scrollbarStyles)
-    - [ ] Document mobile responsiveness guidelines (breakpoints, touch targets, layout patterns)
-    - [ ] Document component styling conventions (when to use Chakra props vs utilities vs CSS)
+- [x] Task: Draft design guidelines content [6b5c750]
+    - [x] Document color token naming conventions and the complete semantic token map
+    - [x] Document prohibited patterns (no hard-coded colors, no raw Chakra palette colors)
+    - [x] Document shared utility API (inputStyles, focusRingStyles, buttonStyles, nativeSelectStyles, selectStyles, scrollbarStyles)
+    - [x] Document mobile responsiveness guidelines (breakpoints, touch targets, layout patterns)
+    - [x] Document component styling conventions (when to use Chakra props vs utilities vs CSS)
 
 - [ ] Task: Update README.md with Design System section
     - [ ] Add "Design System" section covering token usage, styling patterns, and mobile guidelines
