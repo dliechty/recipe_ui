@@ -68,7 +68,7 @@ src/
 
 **Route Code Splitting**: All page components are lazy-loaded via `React.lazy()` in `AppRoutes.tsx` for optimal bundle size.
 
-**Base URL Configuration**: The app is served from `/recipes/` base path (see `vite.config.ts` and router basename). This affects routing and asset URLs.
+**Base URL Configuration**: The app is served from the root `/` base path (see `vite.config.ts` and router basename).
 
 **MSW for Mocking**: In development mode, Mock Service Worker intercepts API requests. Handlers are in `src/mocks/`. The worker is conditionally enabled in `src/main.tsx`.
 
