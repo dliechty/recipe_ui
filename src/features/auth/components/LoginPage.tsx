@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
+    Checkbox,
     Container,
     Heading,
     Input,
@@ -17,6 +18,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [rememberMe, setRememberMe] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
@@ -40,7 +42,7 @@ const LoginPage = () => {
                 username: email,
                 password: password
             });
-            login(response.access_token);
+            login(response.access_token, rememberMe);
         } catch (err: unknown) {
             console.error("Login failed:", err);
             setError("Login failed. Please check your credentials and try again.");
@@ -98,6 +100,21 @@ const LoginPage = () => {
                                 required
                                 {...inputStyles}
                             />
+                        </Box>
+                        <Box w="full">
+                            <Checkbox.Root
+                                checked={rememberMe}
+                                onCheckedChange={(e) => setRememberMe(!!e.checked)}
+                                colorPalette="blue"
+                            >
+                                <Checkbox.HiddenInput />
+                                <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                <Checkbox.Label color="fg.muted" fontSize="sm">
+                                    Remember me for 30 days
+                                </Checkbox.Label>
+                            </Checkbox.Root>
                         </Box>
                         <Button
                             type="submit"
