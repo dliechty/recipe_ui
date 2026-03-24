@@ -5,16 +5,60 @@ import { OpenAPI, AuthenticationService, UserPublic } from '../client';
 import { AdminModeContext } from './AdminModeContext';
 import { HouseholdContext } from './HouseholdContext';
 
+const STORAGE_KEY_TOKEN = 'token';
+const STORAGE_KEY_REMEMBER_ME = 'rememberMe';
+const STORAGE_KEY_SESSION_EXPIRY = 'sessionExpiry';
+const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
 interface AuthContextType {
     token: string | null;
     isAuthenticated: boolean;
     user: UserPublic | null;
-    login: (newToken: string) => void;
+    login: (newToken: string, rememberMe?: boolean) => void;
     logout: () => void;
     refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+function getStoredToken(): string | null {
+    // Check if "remember me" was used (localStorage) or session-only (sessionStorage)
+    const rememberMe = localStorage.getItem(STORAGE_KEY_REMEMBER_ME) === 'true';
+    if (rememberMe) {
+        const expiry = localStorage.getItem(STORAGE_KEY_SESSION_EXPIRY);
+        if (expiry && Date.now() > Number(expiry)) {
+            // Session expired — clear stored auth data
+            localStorage.removeItem(STORAGE_KEY_TOKEN);
+            localStorage.removeItem(STORAGE_KEY_SESSION_EXPIRY);
+            localStorage.removeItem(STORAGE_KEY_REMEMBER_ME);
+            return null;
+        }
+        return localStorage.getItem(STORAGE_KEY_TOKEN);
+    }
+    // Fall back to sessionStorage for non-remembered sessions
+    return sessionStorage.getItem(STORAGE_KEY_TOKEN);
+}
+
+function clearStoredToken() {
+    localStorage.removeItem(STORAGE_KEY_TOKEN);
+    localStorage.removeItem(STORAGE_KEY_SESSION_EXPIRY);
+    localStorage.removeItem(STORAGE_KEY_REMEMBER_ME);
+    sessionStorage.removeItem(STORAGE_KEY_TOKEN);
+}
+
+function storeToken(token: string, rememberMe: boolean) {
+    if (rememberMe) {
+        localStorage.setItem(STORAGE_KEY_TOKEN, token);
+        localStorage.setItem(STORAGE_KEY_REMEMBER_ME, 'true');
+        localStorage.setItem(STORAGE_KEY_SESSION_EXPIRY, String(Date.now() + SESSION_DURATION_MS));
+        sessionStorage.removeItem(STORAGE_KEY_TOKEN);
+    } else {
+        sessionStorage.setItem(STORAGE_KEY_TOKEN, token);
+        localStorage.removeItem(STORAGE_KEY_TOKEN);
+        localStorage.removeItem(STORAGE_KEY_SESSION_EXPIRY);
+        localStorage.setItem(STORAGE_KEY_REMEMBER_ME, 'false');
+    }
+}
 
 /**
  * Inner component that reads AdminModeContext and sets OpenAPI.HEADERS reactively.
@@ -61,7 +105,7 @@ export function HeaderInjector({ user }: { user: UserPublic | null }) {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(() => {
-        const stored = localStorage.getItem('token');
+        const stored = getStoredToken();
         // Set synchronously so React Query hooks don't fire unauthenticated
         // requests before the useEffect below has a chance to run.
         if (stored) OpenAPI.TOKEN = stored;
@@ -104,23 +148,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (token) {
             OpenAPI.TOKEN = token;
-            localStorage.setItem('token', token);
             // Fetch user details
             fetchUser();
         } else {
             OpenAPI.TOKEN = undefined;
-            localStorage.removeItem('token');
+            clearStoredToken();
             setUser(null);
         }
     }, [token, fetchUser]);
 
-    const login = useCallback((newToken: string) => {
+    const login = useCallback((newToken: string, rememberMe = true) => {
         OpenAPI.TOKEN = newToken;
+        storeToken(newToken, rememberMe);
         setToken(newToken);
     }, []);
 
     const logout = useCallback(() => {
         OpenAPI.TOKEN = undefined;
+        clearStoredToken();
         setToken(null);
     }, []);
 

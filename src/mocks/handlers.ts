@@ -392,7 +392,9 @@ export const handlers = [
 
         // Create a JWT with a valid payload structure
         const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-        const payload = btoa(JSON.stringify({ sub: userId, name: user ? `${user.first_name} ${user.last_name}` : "Test User", iat: Date.now() / 1000 }));
+        const iat = Math.floor(Date.now() / 1000);
+        const exp = iat + 30 * 24 * 60 * 60; // 30 days
+        const payload = btoa(JSON.stringify({ sub: userId, name: user ? `${user.first_name} ${user.last_name}` : "Test User", iat, exp }));
         const signature = "fake-signature";
         const token = `${header}.${payload}.${signature}`;
 
