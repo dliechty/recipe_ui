@@ -2,6 +2,22 @@ import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tansta
 import { RecipesService, Recipe, RecipeCreate, OpenAPI, UnitSystem } from '../client';
 import axios from 'axios';
 
+/**
+ * Extract context headers (admin mode, impersonation, household) from OpenAPI.HEADERS
+ * so they can be passed explicitly to generated client methods.
+ *
+ * The generated client spreads endpoint-specific headers AFTER OpenAPI.HEADERS,
+ * so any undefined optional header params silently overwrite the global values.
+ */
+function getContextHeaders() {
+    const headers = typeof OpenAPI.HEADERS !== 'function' ? OpenAPI.HEADERS : undefined;
+    return {
+        xAdminMode: headers?.['X-Admin-Mode'] as string | undefined,
+        xActAsUser: headers?.['X-Act-As-User'] as string | undefined,
+        xActiveHousehold: headers?.['X-Active-Household'] as string | undefined,
+    };
+}
+
 interface RecipesResponse {
     recipes: Recipe[];
     totalCount: number;
@@ -120,7 +136,10 @@ export const useInfiniteRecipes = (limit: number = 50, filters: RecipeFilters = 
 export const useRecipe = (id: string, scale?: number, units?: UnitSystem | null) => {
     return useQuery<Recipe>({
         queryKey: ['recipes', id, scale, units],
-        queryFn: () => RecipesService.readRecipeRecipesRecipeIdGet(id, scale, units),
+        queryFn: () => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return RecipesService.readRecipeRecipesRecipeIdGet(id, scale, units, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         enabled: !!id,
     });
 };
@@ -128,7 +147,10 @@ export const useRecipe = (id: string, scale?: number, units?: UnitSystem | null)
 export const useCreateRecipe = () => {
     const queryClient = useQueryClient();
     return useMutation<Recipe, Error, RecipeCreate>({
-        mutationFn: (requestBody) => RecipesService.createRecipeRecipesPost(requestBody),
+        mutationFn: (requestBody) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return RecipesService.createRecipeRecipesPost(requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['recipes'] });
         },
@@ -138,7 +160,10 @@ export const useCreateRecipe = () => {
 export const useUpdateRecipe = () => {
     const queryClient = useQueryClient();
     return useMutation<Recipe, Error, { id: string, requestBody: RecipeCreate }>({
-        mutationFn: ({ id, requestBody }) => RecipesService.updateRecipeRecipesRecipeIdPut(id, requestBody),
+        mutationFn: ({ id, requestBody }) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return RecipesService.updateRecipeRecipesRecipeIdPut(id, requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['recipes'] });
             queryClient.invalidateQueries({ queryKey: ['recipes', variables.id] });
@@ -148,7 +173,10 @@ export const useUpdateRecipe = () => {
 export const useDeleteRecipe = () => {
     const queryClient = useQueryClient();
     return useMutation<Recipe, Error, string>({
-        mutationFn: (id) => RecipesService.deleteRecipeRecipesRecipeIdDelete(id),
+        mutationFn: (id) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return RecipesService.deleteRecipeRecipesRecipeIdDelete(id, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['recipes'] });
         },

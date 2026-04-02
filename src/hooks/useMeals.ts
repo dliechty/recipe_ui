@@ -5,6 +5,24 @@ import { useContext } from 'react';
 import { HouseholdContext } from '../context/HouseholdContext';
 import axios from 'axios';
 
+/**
+ * Extract context headers (admin mode, impersonation, household) from OpenAPI.HEADERS
+ * so they can be passed explicitly to generated client methods.
+ *
+ * The generated client spreads endpoint-specific headers AFTER OpenAPI.HEADERS,
+ * so any undefined optional header params silently overwrite the global values.
+ * By reading the current values and forwarding them, we ensure the generated
+ * client sends the correct headers.
+ */
+function getContextHeaders() {
+    const headers = typeof OpenAPI.HEADERS !== 'function' ? OpenAPI.HEADERS : undefined;
+    return {
+        xAdminMode: headers?.['X-Admin-Mode'] as string | undefined,
+        xActAsUser: headers?.['X-Act-As-User'] as string | undefined,
+        xActiveHousehold: headers?.['X-Active-Household'] as string | undefined,
+    };
+}
+
 interface MealsResponse {
     meals: Meal[];
     totalCount: number;
@@ -76,7 +94,10 @@ export const useMeal = (id: string) => {
 
     return useQuery<Meal>({
         queryKey: ['meals', id, activeHouseholdId],
-        queryFn: () => MealsService.getMealMealsMealIdGet(id),
+        queryFn: () => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.getMealMealsMealIdGet(id, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         enabled: !!id,
     });
 };
@@ -84,7 +105,10 @@ export const useMeal = (id: string) => {
 export const useCreateMeal = () => {
     const queryClient = useQueryClient();
     return useMutation<Meal, Error, MealCreate>({
-        mutationFn: (requestBody) => MealsService.createMealMealsPost(requestBody),
+        mutationFn: (requestBody) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.createMealMealsPost(requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
         },
@@ -94,7 +118,10 @@ export const useCreateMeal = () => {
 export const useUpdateMeal = () => {
     const queryClient = useQueryClient();
     return useMutation<Meal, Error, { id: string, requestBody: MealUpdate }>({
-        mutationFn: ({ id, requestBody }) => MealsService.updateMealMealsMealIdPut(id, requestBody),
+        mutationFn: ({ id, requestBody }) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.updateMealMealsMealIdPut(id, requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
             queryClient.invalidateQueries({ queryKey: ['meals', variables.id] });
@@ -105,7 +132,10 @@ export const useUpdateMeal = () => {
 export const useDeleteMeal = () => {
     const queryClient = useQueryClient();
     return useMutation<void, Error, string>({
-        mutationFn: (id) => MealsService.deleteMealMealsMealIdDelete(id),
+        mutationFn: (id) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.deleteMealMealsMealIdDelete(id, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
         },
@@ -180,7 +210,10 @@ export const useMealTemplate = (id: string) => {
 
     return useQuery<MealTemplate>({
         queryKey: ['meal-templates', id, activeHouseholdId],
-        queryFn: () => MealsService.getMealTemplateMealsTemplatesTemplateIdGet(id),
+        queryFn: () => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.getMealTemplateMealsTemplatesTemplateIdGet(id, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         enabled: !!id,
     });
 };
@@ -188,7 +221,10 @@ export const useMealTemplate = (id: string) => {
 export const useCreateMealTemplate = () => {
     const queryClient = useQueryClient();
     return useMutation<MealTemplate, Error, MealTemplateCreate>({
-        mutationFn: (requestBody) => MealsService.createMealTemplateMealsTemplatesPost(requestBody),
+        mutationFn: (requestBody) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.createMealTemplateMealsTemplatesPost(requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meal-templates'] });
         },
@@ -198,7 +234,10 @@ export const useCreateMealTemplate = () => {
 export const useUpdateMealTemplate = () => {
     const queryClient = useQueryClient();
     return useMutation<MealTemplate, Error, { id: string, requestBody: MealTemplateUpdate }>({
-        mutationFn: ({ id, requestBody }) => MealsService.updateMealTemplateMealsTemplatesTemplateIdPut(id, requestBody),
+        mutationFn: ({ id, requestBody }) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.updateMealTemplateMealsTemplatesTemplateIdPut(id, requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ['meal-templates'] });
             queryClient.invalidateQueries({ queryKey: ['meal-templates', variables.id] });
@@ -209,7 +248,10 @@ export const useUpdateMealTemplate = () => {
 export const useDeleteMealTemplate = () => {
     const queryClient = useQueryClient();
     return useMutation<void, Error, string>({
-        mutationFn: (id) => MealsService.deleteMealTemplateMealsTemplatesTemplateIdDelete(id),
+        mutationFn: (id) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.deleteMealTemplateMealsTemplatesTemplateIdDelete(id, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meal-templates'] });
         },
@@ -219,7 +261,10 @@ export const useDeleteMealTemplate = () => {
 export const useGenerateMeals = () => {
     const queryClient = useQueryClient();
     return useMutation<Meal[], Error, MealGenerateRequest>({
-        mutationFn: (requestBody) => MealsService.generateMealsMealsGeneratePost(requestBody),
+        mutationFn: (requestBody) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
+            return MealsService.generateMealsMealsGeneratePost(requestBody, xAdminMode, xActAsUser, xActiveHousehold);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['meals'] });
         },
@@ -230,9 +275,10 @@ export const useBulkUpdateMeals = () => {
     const queryClient = useQueryClient();
     return useMutation<Meal[], Error, Array<{ id: string, requestBody: MealUpdate }>>({
         mutationFn: async (updates) => {
+            const { xAdminMode, xActAsUser, xActiveHousehold } = getContextHeaders();
             const results = await Promise.all(
                 updates.map(({ id, requestBody }) =>
-                    MealsService.updateMealMealsMealIdPut(id, requestBody)
+                    MealsService.updateMealMealsMealIdPut(id, requestBody, xAdminMode, xActAsUser, xActiveHousehold)
                 )
             );
             return results;
